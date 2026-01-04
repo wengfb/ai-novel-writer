@@ -1,0 +1,210 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// 小说项目
+model Project {
+  id            String         @id @default(cuid())
+  title         String
+  description   String?
+  genre         String         // 小说类型
+  tags          String?        // JSON数组字符串
+  status        String         @default("draft") // draft, writing, completed
+  coverImage    String?
+
+  // 统计信息
+  totalWords    Int            @default(0)
+  chapterCount  Int            @default(0)
+
+  // 关联数据
+  outlines      Outline[]
+  chapters      Chapter[]
+  characters    Character[]
+  worldElements WorldElement[]
+  generations   Generation[]
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([status])
+  @@index([genre])
+}
+
+// 大纲节点
+model Outline {
+  id        String    @id @default(cuid())
+  projectId String
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  type      String    // volume, chapter, scene
+  order     Int       // 排序
+  title     String
+  description String?
+  targetWords Int?
+
+  // 树形结构
+  parentId  String?
+  parent    Outline?  @relation("OutlineHierarchy", fields: [parentId], references: [id])
+  children  Outline[] @relation("OutlineHierarchy")
+
+  // 关联章节
+  chapterId String?  @unique
+  chapter   Chapter?  @relation(fields: [chapterId], references: [id])
+
+  status    String    @default("planned") // planned, writing, completed
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([projectId])
+  @@index([parentId])
+}
+
+// 章节
+model Chapter {
+  id             String    @id @default(cuid())
+  projectId      String
+  project        Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  chapterNumber  Int
+  title          String
+  content        String    // Markdown格式
+
+  // 统计
+  wordCount      Int       @default(0)
+
+  // 元数据
+  summary        String?   // 章节摘要(用于上下文)
+  notes          String?   // 作者笔记
+
+  // 关联
+  outline        Outline?
+  scenes         Scene[]
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([projectId, chapterNumber])
+  @@index([projectId])
+}
+
+// 场景(章节内的细分)
+model Scene {
+  id          String    @id @default(cuid())
+  chapterId   String
+  chapter     Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  order       Int
+  title       String?
+  content     String
+  characters  String?   // JSON数组 - 出场角色ID
+  location    String?   // 场景地点
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([chapterId])
+}
+
+// 角色
+model Character {
+  id             String    @id @default(cuid())
+  projectId      String
+  project        Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  name           String
+  nickname       String?
+  age            Int?
+  gender         String?
+
+  // 外貌描述
+  appearance     String?
+
+  // 性格特点
+  personality    String?
+  backstory      String?
+  motivation     String?   // 角色动机
+
+  // 对话风格示例
+  dialogueStyle  String?
+
+  // 关系图谱 (JSON字符串)
+  relationships  String?   // { characterId: { relation: string, description: string } }
+
+  // 角色弧光
+  characterArc   String?
+
+  // 头像
+  avatar         String?
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([projectId])
+}
+
+// 世界观元素
+model WorldElement {
+  id          String    @id @default(cuid())
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  type        String    // location, history, magic, organization, item, other
+  name        String
+  description String
+
+  // 动态属性 (JSON字符串)
+  attributes  String?
+
+  // 关联 (JSON字符串)
+  relatedTo   String?   // [{ elementId, relationType }]
+
+  // 引用 (JSON字符串)
+  references  String?   // [{ chapterId, context }]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([projectId])
+  @@index([type])
+}
+
+// AI生成记录(用于成本控制和历史追溯)
+model Generation {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  type      String   // chapter, outline, character, dialogue, world
+  targetId  String?  // 生成目标的ID
+
+  // AI配置
+  provider  String   // google, openai, claude
+  model     String   // gemini-2.5-flash, gemini-2.5-pro, etc.
+
+  // 提示词
+  prompt    String
+  systemPrompt String?
+
+  // 结果
+  output    String
+  tokensUsed String?  // JSON字符串 - { promptTokens, completionTokens, totalTokens }
+  cost      Float?
+
+  // 时间
+  duration  Int?     // 毫秒
+  status    String   // success, error, partial
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@index([type])
+  @@index([createdAt])
+}
