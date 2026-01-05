@@ -24,19 +24,24 @@ export class GeminiProvider {
         prompt: params.prompt,
         system: params.systemPrompt,
         temperature: params.temperature ?? 0.8,
-        maxTokens: params.maxTokens ?? 4000,
       })
 
       const duration = Date.now() - startTime
 
+      // 获取 token 使用情况
+      const usage = result.usage as any
+      const promptTokens = usage?.promptTokens || usage?.prompt || 0
+      const completionTokens = usage?.completionTokens || usage?.completion || 0
+      const totalTokens = usage?.totalTokens || usage?.total || 0
+
       return {
         output: result.text,
         tokensUsed: {
-          promptTokens: result.usage?.promptTokens || 0,
-          completionTokens: result.usage?.completionTokens || 0,
-          totalTokens: result.usage?.totalTokens || 0,
+          promptTokens,
+          completionTokens,
+          totalTokens,
         },
-        cost: this.estimateCost(result.usage?.promptTokens || 0, result.usage?.completionTokens || 0, params.model),
+        cost: this.estimateCost(promptTokens, completionTokens, params.model),
         duration,
         status: 'success',
       }
@@ -62,7 +67,6 @@ export class GeminiProvider {
         prompt: params.prompt,
         system: params.systemPrompt,
         temperature: params.temperature ?? 0.8,
-        maxTokens: params.maxTokens ?? 4000,
       })
 
       for await (const chunk of result.textStream) {

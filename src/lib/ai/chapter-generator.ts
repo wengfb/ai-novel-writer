@@ -51,12 +51,35 @@ export class ChapterGenerator {
       throw new Error('Project not found')
     }
 
-    // 2. 构建上下文
+    // 2. 构建上下文（类型转换以处理 null vs undefined）
     const context = this.contextManager.buildContext({
       currentChapter: chapterNumber,
-      allChapters: project.chapters,
-      characters: project.characters,
-      worldElements: project.worldElements,
+      allChapters: project.chapters.map(ch => ({
+        ...ch,
+        summary: ch.summary ?? undefined,
+        notes: ch.notes ?? undefined,
+      })) as any,
+      characters: project.characters.map(ch => ({
+        ...ch,
+        nickname: ch.nickname ?? undefined,
+        age: ch.age ?? undefined,
+        gender: ch.gender ?? undefined,
+        appearance: ch.appearance ?? undefined,
+        personality: ch.personality ?? undefined,
+        backstory: ch.backstory ?? undefined,
+        motivation: ch.motivation ?? undefined,
+        dialogueStyle: ch.dialogueStyle ?? undefined,
+        relationships: ch.relationships ?? undefined,
+        characterArc: ch.characterArc ?? undefined,
+        avatar: ch.avatar ?? undefined,
+      })) as any,
+      worldElements: project.worldElements.map(we => ({
+        ...we,
+        type: we.type as any,
+        attributes: we.attributes ?? undefined,
+        relatedTo: we.relatedTo ?? undefined,
+        references: we.references ?? undefined,
+      })) as any,
       genre: project.genre,
     })
 
@@ -214,6 +237,7 @@ ${this.contextManager.formatContextForPrompt(context)}
       {
         title: '完整章节',
         goal: chapterOutline,
+        characters: [],
         estimatedWords: 3000,
       },
     ]
@@ -351,7 +375,7 @@ ${content}
       chapterOutline,
       characters: JSON.stringify(context.characters),
       worldSettings: JSON.stringify(context.worldElements),
-      previousSummary: context.chapterSummaries.map(s => s.summary).join('\n'),
+      previousSummary: context.chapterSummaries.map((s: any) => s.summary).join('\n'),
       targetWords: 3000,
     })
   }
@@ -403,9 +427,32 @@ ${content}
 
     const context = this.contextManager.buildContext({
       currentChapter: chapter.chapterNumber,
-      allChapters: project.chapters,
-      characters: project.characters,
-      worldElements: project.worldElements,
+      allChapters: project.chapters.map(ch => ({
+        ...ch,
+        summary: ch.summary ?? undefined,
+        notes: ch.notes ?? undefined,
+      })) as any,
+      characters: project.characters.map(ch => ({
+        ...ch,
+        nickname: ch.nickname ?? undefined,
+        age: ch.age ?? undefined,
+        gender: ch.gender ?? undefined,
+        appearance: ch.appearance ?? undefined,
+        personality: ch.personality ?? undefined,
+        backstory: ch.backstory ?? undefined,
+        motivation: ch.motivation ?? undefined,
+        dialogueStyle: ch.dialogueStyle ?? undefined,
+        relationships: ch.relationships ?? undefined,
+        characterArc: ch.characterArc ?? undefined,
+        avatar: ch.avatar ?? undefined,
+      })) as any,
+      worldElements: project.worldElements.map(we => ({
+        ...we,
+        type: we.type as any,
+        attributes: we.attributes ?? undefined,
+        relatedTo: we.relatedTo ?? undefined,
+        references: we.references ?? undefined,
+      })) as any,
       genre: project.genre,
     })
 
