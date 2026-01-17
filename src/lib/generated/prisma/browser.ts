@@ -63,6 +63,11 @@ export type Foreshadowing = Prisma.ForeshadowingModel
  */
 export type CharacterSnapshot = Prisma.CharacterSnapshotModel
 /**
+ * Model WorldElementSnapshot
+ * 
+ */
+export type WorldElementSnapshot = Prisma.WorldElementSnapshotModel
+/**
  * Model SystemSetting
  * 
  */

@@ -833,10 +833,6 @@ export type ForeshadowingUncheckedUpdateManyWithoutResolvedInChapterNestedInput 
   deleteMany?: Prisma.ForeshadowingScalarWhereInput | Prisma.ForeshadowingScalarWhereInput[]
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type ForeshadowingCreateWithoutProjectInput = {
   id?: string
   title: string

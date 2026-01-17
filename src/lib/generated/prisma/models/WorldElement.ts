@@ -20,8 +20,20 @@ export type WorldElementModel = runtime.Types.Result.DefaultSelection<Prisma.$Wo
 
 export type AggregateWorldElement = {
   _count: WorldElementCountAggregateOutputType | null
+  _avg: WorldElementAvgAggregateOutputType | null
+  _sum: WorldElementSumAggregateOutputType | null
   _min: WorldElementMinAggregateOutputType | null
   _max: WorldElementMaxAggregateOutputType | null
+}
+
+export type WorldElementAvgAggregateOutputType = {
+  importance: number | null
+  usageCount: number | null
+}
+
+export type WorldElementSumAggregateOutputType = {
+  importance: number | null
+  usageCount: number | null
 }
 
 export type WorldElementMinAggregateOutputType = {
@@ -31,8 +43,18 @@ export type WorldElementMinAggregateOutputType = {
   name: string | null
   description: string | null
   attributes: string | null
+  importance: number | null
+  scope: string | null
+  category: string | null
+  isEvolvable: boolean | null
+  parentId: string | null
+  constraints: string | null
+  exceptions: string | null
+  evolutionSpace: string | null
   relatedTo: string | null
   references: string | null
+  usageCount: number | null
+  lastUsedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,8 +66,18 @@ export type WorldElementMaxAggregateOutputType = {
   name: string | null
   description: string | null
   attributes: string | null
+  importance: number | null
+  scope: string | null
+  category: string | null
+  isEvolvable: boolean | null
+  parentId: string | null
+  constraints: string | null
+  exceptions: string | null
+  evolutionSpace: string | null
   relatedTo: string | null
   references: string | null
+  usageCount: number | null
+  lastUsedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -57,13 +89,33 @@ export type WorldElementCountAggregateOutputType = {
   name: number
   description: number
   attributes: number
+  importance: number
+  scope: number
+  category: number
+  isEvolvable: number
+  parentId: number
+  constraints: number
+  exceptions: number
+  evolutionSpace: number
   relatedTo: number
   references: number
+  usageCount: number
+  lastUsedAt: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type WorldElementAvgAggregateInputType = {
+  importance?: true
+  usageCount?: true
+}
+
+export type WorldElementSumAggregateInputType = {
+  importance?: true
+  usageCount?: true
+}
 
 export type WorldElementMinAggregateInputType = {
   id?: true
@@ -72,8 +124,18 @@ export type WorldElementMinAggregateInputType = {
   name?: true
   description?: true
   attributes?: true
+  importance?: true
+  scope?: true
+  category?: true
+  isEvolvable?: true
+  parentId?: true
+  constraints?: true
+  exceptions?: true
+  evolutionSpace?: true
   relatedTo?: true
   references?: true
+  usageCount?: true
+  lastUsedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -85,8 +147,18 @@ export type WorldElementMaxAggregateInputType = {
   name?: true
   description?: true
   attributes?: true
+  importance?: true
+  scope?: true
+  category?: true
+  isEvolvable?: true
+  parentId?: true
+  constraints?: true
+  exceptions?: true
+  evolutionSpace?: true
   relatedTo?: true
   references?: true
+  usageCount?: true
+  lastUsedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -98,8 +170,18 @@ export type WorldElementCountAggregateInputType = {
   name?: true
   description?: true
   attributes?: true
+  importance?: true
+  scope?: true
+  category?: true
+  isEvolvable?: true
+  parentId?: true
+  constraints?: true
+  exceptions?: true
+  evolutionSpace?: true
   relatedTo?: true
   references?: true
+  usageCount?: true
+  lastUsedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -143,6 +225,18 @@ export type WorldElementAggregateArgs<ExtArgs extends runtime.Types.Extensions.I
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: WorldElementAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: WorldElementSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: WorldElementMinAggregateInputType
@@ -173,6 +267,8 @@ export type WorldElementGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   _count?: WorldElementCountAggregateInputType | true
+  _avg?: WorldElementAvgAggregateInputType
+  _sum?: WorldElementSumAggregateInputType
   _min?: WorldElementMinAggregateInputType
   _max?: WorldElementMaxAggregateInputType
 }
@@ -184,11 +280,23 @@ export type WorldElementGroupByOutputType = {
   name: string
   description: string
   attributes: string | null
+  importance: number
+  scope: string
+  category: string
+  isEvolvable: boolean
+  parentId: string | null
+  constraints: string | null
+  exceptions: string | null
+  evolutionSpace: string | null
   relatedTo: string | null
   references: string | null
+  usageCount: number
+  lastUsedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: WorldElementCountAggregateOutputType | null
+  _avg: WorldElementAvgAggregateOutputType | null
+  _sum: WorldElementSumAggregateOutputType | null
   _min: WorldElementMinAggregateOutputType | null
   _max: WorldElementMaxAggregateOutputType | null
 }
@@ -218,11 +326,24 @@ export type WorldElementWhereInput = {
   name?: Prisma.StringFilter<"WorldElement"> | string
   description?: Prisma.StringFilter<"WorldElement"> | string
   attributes?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  importance?: Prisma.IntFilter<"WorldElement"> | number
+  scope?: Prisma.StringFilter<"WorldElement"> | string
+  category?: Prisma.StringFilter<"WorldElement"> | string
+  isEvolvable?: Prisma.BoolFilter<"WorldElement"> | boolean
+  parentId?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  constraints?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  exceptions?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  evolutionSpace?: Prisma.StringNullableFilter<"WorldElement"> | string | null
   relatedTo?: Prisma.StringNullableFilter<"WorldElement"> | string | null
   references?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  usageCount?: Prisma.IntFilter<"WorldElement"> | number
+  lastUsedAt?: Prisma.DateTimeNullableFilter<"WorldElement"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"WorldElement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorldElement"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  parent?: Prisma.XOR<Prisma.WorldElementNullableScalarRelationFilter, Prisma.WorldElementWhereInput> | null
+  children?: Prisma.WorldElementListRelationFilter
+  snapshots?: Prisma.WorldElementSnapshotListRelationFilter
 }
 
 export type WorldElementOrderByWithRelationInput = {
@@ -232,11 +353,24 @@ export type WorldElementOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   attributes?: Prisma.SortOrderInput | Prisma.SortOrder
+  importance?: Prisma.SortOrder
+  scope?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  isEvolvable?: Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  constraints?: Prisma.SortOrderInput | Prisma.SortOrder
+  exceptions?: Prisma.SortOrderInput | Prisma.SortOrder
+  evolutionSpace?: Prisma.SortOrderInput | Prisma.SortOrder
   relatedTo?: Prisma.SortOrderInput | Prisma.SortOrder
   references?: Prisma.SortOrderInput | Prisma.SortOrder
+  usageCount?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
+  parent?: Prisma.WorldElementOrderByWithRelationInput
+  children?: Prisma.WorldElementOrderByRelationAggregateInput
+  snapshots?: Prisma.WorldElementSnapshotOrderByRelationAggregateInput
 }
 
 export type WorldElementWhereUniqueInput = Prisma.AtLeast<{
@@ -249,11 +383,24 @@ export type WorldElementWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"WorldElement"> | string
   description?: Prisma.StringFilter<"WorldElement"> | string
   attributes?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  importance?: Prisma.IntFilter<"WorldElement"> | number
+  scope?: Prisma.StringFilter<"WorldElement"> | string
+  category?: Prisma.StringFilter<"WorldElement"> | string
+  isEvolvable?: Prisma.BoolFilter<"WorldElement"> | boolean
+  parentId?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  constraints?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  exceptions?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  evolutionSpace?: Prisma.StringNullableFilter<"WorldElement"> | string | null
   relatedTo?: Prisma.StringNullableFilter<"WorldElement"> | string | null
   references?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  usageCount?: Prisma.IntFilter<"WorldElement"> | number
+  lastUsedAt?: Prisma.DateTimeNullableFilter<"WorldElement"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"WorldElement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorldElement"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  parent?: Prisma.XOR<Prisma.WorldElementNullableScalarRelationFilter, Prisma.WorldElementWhereInput> | null
+  children?: Prisma.WorldElementListRelationFilter
+  snapshots?: Prisma.WorldElementSnapshotListRelationFilter
 }, "id">
 
 export type WorldElementOrderByWithAggregationInput = {
@@ -263,13 +410,25 @@ export type WorldElementOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   attributes?: Prisma.SortOrderInput | Prisma.SortOrder
+  importance?: Prisma.SortOrder
+  scope?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  isEvolvable?: Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  constraints?: Prisma.SortOrderInput | Prisma.SortOrder
+  exceptions?: Prisma.SortOrderInput | Prisma.SortOrder
+  evolutionSpace?: Prisma.SortOrderInput | Prisma.SortOrder
   relatedTo?: Prisma.SortOrderInput | Prisma.SortOrder
   references?: Prisma.SortOrderInput | Prisma.SortOrder
+  usageCount?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.WorldElementCountOrderByAggregateInput
+  _avg?: Prisma.WorldElementAvgOrderByAggregateInput
   _max?: Prisma.WorldElementMaxOrderByAggregateInput
   _min?: Prisma.WorldElementMinOrderByAggregateInput
+  _sum?: Prisma.WorldElementSumOrderByAggregateInput
 }
 
 export type WorldElementScalarWhereWithAggregatesInput = {
@@ -282,8 +441,18 @@ export type WorldElementScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"WorldElement"> | string
   description?: Prisma.StringWithAggregatesFilter<"WorldElement"> | string
   attributes?: Prisma.StringNullableWithAggregatesFilter<"WorldElement"> | string | null
+  importance?: Prisma.IntWithAggregatesFilter<"WorldElement"> | number
+  scope?: Prisma.StringWithAggregatesFilter<"WorldElement"> | string
+  category?: Prisma.StringWithAggregatesFilter<"WorldElement"> | string
+  isEvolvable?: Prisma.BoolWithAggregatesFilter<"WorldElement"> | boolean
+  parentId?: Prisma.StringNullableWithAggregatesFilter<"WorldElement"> | string | null
+  constraints?: Prisma.StringNullableWithAggregatesFilter<"WorldElement"> | string | null
+  exceptions?: Prisma.StringNullableWithAggregatesFilter<"WorldElement"> | string | null
+  evolutionSpace?: Prisma.StringNullableWithAggregatesFilter<"WorldElement"> | string | null
   relatedTo?: Prisma.StringNullableWithAggregatesFilter<"WorldElement"> | string | null
   references?: Prisma.StringNullableWithAggregatesFilter<"WorldElement"> | string | null
+  usageCount?: Prisma.IntWithAggregatesFilter<"WorldElement"> | number
+  lastUsedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"WorldElement"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WorldElement"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"WorldElement"> | Date | string
 }
@@ -294,11 +463,23 @@ export type WorldElementCreateInput = {
   name: string
   description: string
   attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
   relatedTo?: string | null
   references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutWorldElementsInput
+  parent?: Prisma.WorldElementCreateNestedOneWithoutChildrenInput
+  children?: Prisma.WorldElementCreateNestedManyWithoutParentInput
+  snapshots?: Prisma.WorldElementSnapshotCreateNestedManyWithoutElementInput
 }
 
 export type WorldElementUncheckedCreateInput = {
@@ -308,10 +489,22 @@ export type WorldElementUncheckedCreateInput = {
   name: string
   description: string
   attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  parentId?: string | null
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
   relatedTo?: string | null
   references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  children?: Prisma.WorldElementUncheckedCreateNestedManyWithoutParentInput
+  snapshots?: Prisma.WorldElementSnapshotUncheckedCreateNestedManyWithoutElementInput
 }
 
 export type WorldElementUpdateInput = {
@@ -320,11 +513,23 @@ export type WorldElementUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutWorldElementsNestedInput
+  parent?: Prisma.WorldElementUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.WorldElementUpdateManyWithoutParentNestedInput
+  snapshots?: Prisma.WorldElementSnapshotUpdateManyWithoutElementNestedInput
 }
 
 export type WorldElementUncheckedUpdateInput = {
@@ -334,10 +539,22 @@ export type WorldElementUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.WorldElementUncheckedUpdateManyWithoutParentNestedInput
+  snapshots?: Prisma.WorldElementSnapshotUncheckedUpdateManyWithoutElementNestedInput
 }
 
 export type WorldElementCreateManyInput = {
@@ -347,8 +564,18 @@ export type WorldElementCreateManyInput = {
   name: string
   description: string
   attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  parentId?: string | null
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
   relatedTo?: string | null
   references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -359,8 +586,17 @@ export type WorldElementUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -372,8 +608,18 @@ export type WorldElementUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -388,6 +634,11 @@ export type WorldElementOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type WorldElementNullableScalarRelationFilter = {
+  is?: Prisma.WorldElementWhereInput | null
+  isNot?: Prisma.WorldElementWhereInput | null
+}
+
 export type WorldElementCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -395,10 +646,25 @@ export type WorldElementCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   attributes?: Prisma.SortOrder
+  importance?: Prisma.SortOrder
+  scope?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  isEvolvable?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
+  constraints?: Prisma.SortOrder
+  exceptions?: Prisma.SortOrder
+  evolutionSpace?: Prisma.SortOrder
   relatedTo?: Prisma.SortOrder
   references?: Prisma.SortOrder
+  usageCount?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type WorldElementAvgOrderByAggregateInput = {
+  importance?: Prisma.SortOrder
+  usageCount?: Prisma.SortOrder
 }
 
 export type WorldElementMaxOrderByAggregateInput = {
@@ -408,8 +674,18 @@ export type WorldElementMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   attributes?: Prisma.SortOrder
+  importance?: Prisma.SortOrder
+  scope?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  isEvolvable?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
+  constraints?: Prisma.SortOrder
+  exceptions?: Prisma.SortOrder
+  evolutionSpace?: Prisma.SortOrder
   relatedTo?: Prisma.SortOrder
   references?: Prisma.SortOrder
+  usageCount?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -421,10 +697,30 @@ export type WorldElementMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   attributes?: Prisma.SortOrder
+  importance?: Prisma.SortOrder
+  scope?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  isEvolvable?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
+  constraints?: Prisma.SortOrder
+  exceptions?: Prisma.SortOrder
+  evolutionSpace?: Prisma.SortOrder
   relatedTo?: Prisma.SortOrder
   references?: Prisma.SortOrder
+  usageCount?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type WorldElementSumOrderByAggregateInput = {
+  importance?: Prisma.SortOrder
+  usageCount?: Prisma.SortOrder
+}
+
+export type WorldElementScalarRelationFilter = {
+  is?: Prisma.WorldElementWhereInput
+  isNot?: Prisma.WorldElementWhereInput
 }
 
 export type WorldElementCreateNestedManyWithoutProjectInput = {
@@ -469,16 +765,104 @@ export type WorldElementUncheckedUpdateManyWithoutProjectNestedInput = {
   deleteMany?: Prisma.WorldElementScalarWhereInput | Prisma.WorldElementScalarWhereInput[]
 }
 
+export type WorldElementCreateNestedOneWithoutChildrenInput = {
+  create?: Prisma.XOR<Prisma.WorldElementCreateWithoutChildrenInput, Prisma.WorldElementUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.WorldElementCreateOrConnectWithoutChildrenInput
+  connect?: Prisma.WorldElementWhereUniqueInput
+}
+
+export type WorldElementCreateNestedManyWithoutParentInput = {
+  create?: Prisma.XOR<Prisma.WorldElementCreateWithoutParentInput, Prisma.WorldElementUncheckedCreateWithoutParentInput> | Prisma.WorldElementCreateWithoutParentInput[] | Prisma.WorldElementUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.WorldElementCreateOrConnectWithoutParentInput | Prisma.WorldElementCreateOrConnectWithoutParentInput[]
+  createMany?: Prisma.WorldElementCreateManyParentInputEnvelope
+  connect?: Prisma.WorldElementWhereUniqueInput | Prisma.WorldElementWhereUniqueInput[]
+}
+
+export type WorldElementUncheckedCreateNestedManyWithoutParentInput = {
+  create?: Prisma.XOR<Prisma.WorldElementCreateWithoutParentInput, Prisma.WorldElementUncheckedCreateWithoutParentInput> | Prisma.WorldElementCreateWithoutParentInput[] | Prisma.WorldElementUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.WorldElementCreateOrConnectWithoutParentInput | Prisma.WorldElementCreateOrConnectWithoutParentInput[]
+  createMany?: Prisma.WorldElementCreateManyParentInputEnvelope
+  connect?: Prisma.WorldElementWhereUniqueInput | Prisma.WorldElementWhereUniqueInput[]
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
+export type WorldElementUpdateOneWithoutChildrenNestedInput = {
+  create?: Prisma.XOR<Prisma.WorldElementCreateWithoutChildrenInput, Prisma.WorldElementUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.WorldElementCreateOrConnectWithoutChildrenInput
+  upsert?: Prisma.WorldElementUpsertWithoutChildrenInput
+  disconnect?: Prisma.WorldElementWhereInput | boolean
+  delete?: Prisma.WorldElementWhereInput | boolean
+  connect?: Prisma.WorldElementWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorldElementUpdateToOneWithWhereWithoutChildrenInput, Prisma.WorldElementUpdateWithoutChildrenInput>, Prisma.WorldElementUncheckedUpdateWithoutChildrenInput>
+}
+
+export type WorldElementUpdateManyWithoutParentNestedInput = {
+  create?: Prisma.XOR<Prisma.WorldElementCreateWithoutParentInput, Prisma.WorldElementUncheckedCreateWithoutParentInput> | Prisma.WorldElementCreateWithoutParentInput[] | Prisma.WorldElementUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.WorldElementCreateOrConnectWithoutParentInput | Prisma.WorldElementCreateOrConnectWithoutParentInput[]
+  upsert?: Prisma.WorldElementUpsertWithWhereUniqueWithoutParentInput | Prisma.WorldElementUpsertWithWhereUniqueWithoutParentInput[]
+  createMany?: Prisma.WorldElementCreateManyParentInputEnvelope
+  set?: Prisma.WorldElementWhereUniqueInput | Prisma.WorldElementWhereUniqueInput[]
+  disconnect?: Prisma.WorldElementWhereUniqueInput | Prisma.WorldElementWhereUniqueInput[]
+  delete?: Prisma.WorldElementWhereUniqueInput | Prisma.WorldElementWhereUniqueInput[]
+  connect?: Prisma.WorldElementWhereUniqueInput | Prisma.WorldElementWhereUniqueInput[]
+  update?: Prisma.WorldElementUpdateWithWhereUniqueWithoutParentInput | Prisma.WorldElementUpdateWithWhereUniqueWithoutParentInput[]
+  updateMany?: Prisma.WorldElementUpdateManyWithWhereWithoutParentInput | Prisma.WorldElementUpdateManyWithWhereWithoutParentInput[]
+  deleteMany?: Prisma.WorldElementScalarWhereInput | Prisma.WorldElementScalarWhereInput[]
+}
+
+export type WorldElementUncheckedUpdateManyWithoutParentNestedInput = {
+  create?: Prisma.XOR<Prisma.WorldElementCreateWithoutParentInput, Prisma.WorldElementUncheckedCreateWithoutParentInput> | Prisma.WorldElementCreateWithoutParentInput[] | Prisma.WorldElementUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.WorldElementCreateOrConnectWithoutParentInput | Prisma.WorldElementCreateOrConnectWithoutParentInput[]
+  upsert?: Prisma.WorldElementUpsertWithWhereUniqueWithoutParentInput | Prisma.WorldElementUpsertWithWhereUniqueWithoutParentInput[]
+  createMany?: Prisma.WorldElementCreateManyParentInputEnvelope
+  set?: Prisma.WorldElementWhereUniqueInput | Prisma.WorldElementWhereUniqueInput[]
+  disconnect?: Prisma.WorldElementWhereUniqueInput | Prisma.WorldElementWhereUniqueInput[]
+  delete?: Prisma.WorldElementWhereUniqueInput | Prisma.WorldElementWhereUniqueInput[]
+  connect?: Prisma.WorldElementWhereUniqueInput | Prisma.WorldElementWhereUniqueInput[]
+  update?: Prisma.WorldElementUpdateWithWhereUniqueWithoutParentInput | Prisma.WorldElementUpdateWithWhereUniqueWithoutParentInput[]
+  updateMany?: Prisma.WorldElementUpdateManyWithWhereWithoutParentInput | Prisma.WorldElementUpdateManyWithWhereWithoutParentInput[]
+  deleteMany?: Prisma.WorldElementScalarWhereInput | Prisma.WorldElementScalarWhereInput[]
+}
+
+export type WorldElementCreateNestedOneWithoutSnapshotsInput = {
+  create?: Prisma.XOR<Prisma.WorldElementCreateWithoutSnapshotsInput, Prisma.WorldElementUncheckedCreateWithoutSnapshotsInput>
+  connectOrCreate?: Prisma.WorldElementCreateOrConnectWithoutSnapshotsInput
+  connect?: Prisma.WorldElementWhereUniqueInput
+}
+
+export type WorldElementUpdateOneRequiredWithoutSnapshotsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorldElementCreateWithoutSnapshotsInput, Prisma.WorldElementUncheckedCreateWithoutSnapshotsInput>
+  connectOrCreate?: Prisma.WorldElementCreateOrConnectWithoutSnapshotsInput
+  upsert?: Prisma.WorldElementUpsertWithoutSnapshotsInput
+  connect?: Prisma.WorldElementWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorldElementUpdateToOneWithWhereWithoutSnapshotsInput, Prisma.WorldElementUpdateWithoutSnapshotsInput>, Prisma.WorldElementUncheckedUpdateWithoutSnapshotsInput>
+}
+
 export type WorldElementCreateWithoutProjectInput = {
   id?: string
   type: string
   name: string
   description: string
   attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
   relatedTo?: string | null
   references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  parent?: Prisma.WorldElementCreateNestedOneWithoutChildrenInput
+  children?: Prisma.WorldElementCreateNestedManyWithoutParentInput
+  snapshots?: Prisma.WorldElementSnapshotCreateNestedManyWithoutElementInput
 }
 
 export type WorldElementUncheckedCreateWithoutProjectInput = {
@@ -487,10 +871,22 @@ export type WorldElementUncheckedCreateWithoutProjectInput = {
   name: string
   description: string
   attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  parentId?: string | null
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
   relatedTo?: string | null
   references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  children?: Prisma.WorldElementUncheckedCreateNestedManyWithoutParentInput
+  snapshots?: Prisma.WorldElementSnapshotUncheckedCreateNestedManyWithoutElementInput
 }
 
 export type WorldElementCreateOrConnectWithoutProjectInput = {
@@ -528,10 +924,317 @@ export type WorldElementScalarWhereInput = {
   name?: Prisma.StringFilter<"WorldElement"> | string
   description?: Prisma.StringFilter<"WorldElement"> | string
   attributes?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  importance?: Prisma.IntFilter<"WorldElement"> | number
+  scope?: Prisma.StringFilter<"WorldElement"> | string
+  category?: Prisma.StringFilter<"WorldElement"> | string
+  isEvolvable?: Prisma.BoolFilter<"WorldElement"> | boolean
+  parentId?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  constraints?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  exceptions?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  evolutionSpace?: Prisma.StringNullableFilter<"WorldElement"> | string | null
   relatedTo?: Prisma.StringNullableFilter<"WorldElement"> | string | null
   references?: Prisma.StringNullableFilter<"WorldElement"> | string | null
+  usageCount?: Prisma.IntFilter<"WorldElement"> | number
+  lastUsedAt?: Prisma.DateTimeNullableFilter<"WorldElement"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"WorldElement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorldElement"> | Date | string
+}
+
+export type WorldElementCreateWithoutChildrenInput = {
+  id?: string
+  type: string
+  name: string
+  description: string
+  attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
+  relatedTo?: string | null
+  references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutWorldElementsInput
+  parent?: Prisma.WorldElementCreateNestedOneWithoutChildrenInput
+  snapshots?: Prisma.WorldElementSnapshotCreateNestedManyWithoutElementInput
+}
+
+export type WorldElementUncheckedCreateWithoutChildrenInput = {
+  id?: string
+  projectId: string
+  type: string
+  name: string
+  description: string
+  attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  parentId?: string | null
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
+  relatedTo?: string | null
+  references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  snapshots?: Prisma.WorldElementSnapshotUncheckedCreateNestedManyWithoutElementInput
+}
+
+export type WorldElementCreateOrConnectWithoutChildrenInput = {
+  where: Prisma.WorldElementWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorldElementCreateWithoutChildrenInput, Prisma.WorldElementUncheckedCreateWithoutChildrenInput>
+}
+
+export type WorldElementCreateWithoutParentInput = {
+  id?: string
+  type: string
+  name: string
+  description: string
+  attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
+  relatedTo?: string | null
+  references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutWorldElementsInput
+  children?: Prisma.WorldElementCreateNestedManyWithoutParentInput
+  snapshots?: Prisma.WorldElementSnapshotCreateNestedManyWithoutElementInput
+}
+
+export type WorldElementUncheckedCreateWithoutParentInput = {
+  id?: string
+  projectId: string
+  type: string
+  name: string
+  description: string
+  attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
+  relatedTo?: string | null
+  references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.WorldElementUncheckedCreateNestedManyWithoutParentInput
+  snapshots?: Prisma.WorldElementSnapshotUncheckedCreateNestedManyWithoutElementInput
+}
+
+export type WorldElementCreateOrConnectWithoutParentInput = {
+  where: Prisma.WorldElementWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorldElementCreateWithoutParentInput, Prisma.WorldElementUncheckedCreateWithoutParentInput>
+}
+
+export type WorldElementCreateManyParentInputEnvelope = {
+  data: Prisma.WorldElementCreateManyParentInput | Prisma.WorldElementCreateManyParentInput[]
+}
+
+export type WorldElementUpsertWithoutChildrenInput = {
+  update: Prisma.XOR<Prisma.WorldElementUpdateWithoutChildrenInput, Prisma.WorldElementUncheckedUpdateWithoutChildrenInput>
+  create: Prisma.XOR<Prisma.WorldElementCreateWithoutChildrenInput, Prisma.WorldElementUncheckedCreateWithoutChildrenInput>
+  where?: Prisma.WorldElementWhereInput
+}
+
+export type WorldElementUpdateToOneWithWhereWithoutChildrenInput = {
+  where?: Prisma.WorldElementWhereInput
+  data: Prisma.XOR<Prisma.WorldElementUpdateWithoutChildrenInput, Prisma.WorldElementUncheckedUpdateWithoutChildrenInput>
+}
+
+export type WorldElementUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutWorldElementsNestedInput
+  parent?: Prisma.WorldElementUpdateOneWithoutChildrenNestedInput
+  snapshots?: Prisma.WorldElementSnapshotUpdateManyWithoutElementNestedInput
+}
+
+export type WorldElementUncheckedUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  snapshots?: Prisma.WorldElementSnapshotUncheckedUpdateManyWithoutElementNestedInput
+}
+
+export type WorldElementUpsertWithWhereUniqueWithoutParentInput = {
+  where: Prisma.WorldElementWhereUniqueInput
+  update: Prisma.XOR<Prisma.WorldElementUpdateWithoutParentInput, Prisma.WorldElementUncheckedUpdateWithoutParentInput>
+  create: Prisma.XOR<Prisma.WorldElementCreateWithoutParentInput, Prisma.WorldElementUncheckedCreateWithoutParentInput>
+}
+
+export type WorldElementUpdateWithWhereUniqueWithoutParentInput = {
+  where: Prisma.WorldElementWhereUniqueInput
+  data: Prisma.XOR<Prisma.WorldElementUpdateWithoutParentInput, Prisma.WorldElementUncheckedUpdateWithoutParentInput>
+}
+
+export type WorldElementUpdateManyWithWhereWithoutParentInput = {
+  where: Prisma.WorldElementScalarWhereInput
+  data: Prisma.XOR<Prisma.WorldElementUpdateManyMutationInput, Prisma.WorldElementUncheckedUpdateManyWithoutParentInput>
+}
+
+export type WorldElementCreateWithoutSnapshotsInput = {
+  id?: string
+  type: string
+  name: string
+  description: string
+  attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
+  relatedTo?: string | null
+  references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutWorldElementsInput
+  parent?: Prisma.WorldElementCreateNestedOneWithoutChildrenInput
+  children?: Prisma.WorldElementCreateNestedManyWithoutParentInput
+}
+
+export type WorldElementUncheckedCreateWithoutSnapshotsInput = {
+  id?: string
+  projectId: string
+  type: string
+  name: string
+  description: string
+  attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  parentId?: string | null
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
+  relatedTo?: string | null
+  references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.WorldElementUncheckedCreateNestedManyWithoutParentInput
+}
+
+export type WorldElementCreateOrConnectWithoutSnapshotsInput = {
+  where: Prisma.WorldElementWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorldElementCreateWithoutSnapshotsInput, Prisma.WorldElementUncheckedCreateWithoutSnapshotsInput>
+}
+
+export type WorldElementUpsertWithoutSnapshotsInput = {
+  update: Prisma.XOR<Prisma.WorldElementUpdateWithoutSnapshotsInput, Prisma.WorldElementUncheckedUpdateWithoutSnapshotsInput>
+  create: Prisma.XOR<Prisma.WorldElementCreateWithoutSnapshotsInput, Prisma.WorldElementUncheckedCreateWithoutSnapshotsInput>
+  where?: Prisma.WorldElementWhereInput
+}
+
+export type WorldElementUpdateToOneWithWhereWithoutSnapshotsInput = {
+  where?: Prisma.WorldElementWhereInput
+  data: Prisma.XOR<Prisma.WorldElementUpdateWithoutSnapshotsInput, Prisma.WorldElementUncheckedUpdateWithoutSnapshotsInput>
+}
+
+export type WorldElementUpdateWithoutSnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutWorldElementsNestedInput
+  parent?: Prisma.WorldElementUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.WorldElementUpdateManyWithoutParentNestedInput
+}
+
+export type WorldElementUncheckedUpdateWithoutSnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.WorldElementUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type WorldElementCreateManyProjectInput = {
@@ -540,8 +1243,18 @@ export type WorldElementCreateManyProjectInput = {
   name: string
   description: string
   attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  parentId?: string | null
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
   relatedTo?: string | null
   references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -552,10 +1265,22 @@ export type WorldElementUpdateWithoutProjectInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.WorldElementUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.WorldElementUpdateManyWithoutParentNestedInput
+  snapshots?: Prisma.WorldElementSnapshotUpdateManyWithoutElementNestedInput
 }
 
 export type WorldElementUncheckedUpdateWithoutProjectInput = {
@@ -564,10 +1289,22 @@ export type WorldElementUncheckedUpdateWithoutProjectInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.WorldElementUncheckedUpdateManyWithoutParentNestedInput
+  snapshots?: Prisma.WorldElementSnapshotUncheckedUpdateManyWithoutElementNestedInput
 }
 
 export type WorldElementUncheckedUpdateManyWithoutProjectInput = {
@@ -576,12 +1313,152 @@ export type WorldElementUncheckedUpdateManyWithoutProjectInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type WorldElementCreateManyParentInput = {
+  id?: string
+  projectId: string
+  type: string
+  name: string
+  description: string
+  attributes?: string | null
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  constraints?: string | null
+  exceptions?: string | null
+  evolutionSpace?: string | null
+  relatedTo?: string | null
+  references?: string | null
+  usageCount?: number
+  lastUsedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type WorldElementUpdateWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutWorldElementsNestedInput
+  children?: Prisma.WorldElementUpdateManyWithoutParentNestedInput
+  snapshots?: Prisma.WorldElementSnapshotUpdateManyWithoutElementNestedInput
+}
+
+export type WorldElementUncheckedUpdateWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.WorldElementUncheckedUpdateManyWithoutParentNestedInput
+  snapshots?: Prisma.WorldElementSnapshotUncheckedUpdateManyWithoutElementNestedInput
+}
+
+export type WorldElementUncheckedUpdateManyWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  attributes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  scope?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isEvolvable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  constraints?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  evolutionSpace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relatedTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type WorldElementCountOutputType
+ */
+
+export type WorldElementCountOutputType = {
+  children: number
+  snapshots: number
+}
+
+export type WorldElementCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  children?: boolean | WorldElementCountOutputTypeCountChildrenArgs
+  snapshots?: boolean | WorldElementCountOutputTypeCountSnapshotsArgs
+}
+
+/**
+ * WorldElementCountOutputType without action
+ */
+export type WorldElementCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorldElementCountOutputType
+   */
+  select?: Prisma.WorldElementCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * WorldElementCountOutputType without action
+ */
+export type WorldElementCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WorldElementWhereInput
+}
+
+/**
+ * WorldElementCountOutputType without action
+ */
+export type WorldElementCountOutputTypeCountSnapshotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WorldElementSnapshotWhereInput
+}
 
 
 export type WorldElementSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -591,11 +1468,25 @@ export type WorldElementSelect<ExtArgs extends runtime.Types.Extensions.Internal
   name?: boolean
   description?: boolean
   attributes?: boolean
+  importance?: boolean
+  scope?: boolean
+  category?: boolean
+  isEvolvable?: boolean
+  parentId?: boolean
+  constraints?: boolean
+  exceptions?: boolean
+  evolutionSpace?: boolean
   relatedTo?: boolean
   references?: boolean
+  usageCount?: boolean
+  lastUsedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.WorldElement$parentArgs<ExtArgs>
+  children?: boolean | Prisma.WorldElement$childrenArgs<ExtArgs>
+  snapshots?: boolean | Prisma.WorldElement$snapshotsArgs<ExtArgs>
+  _count?: boolean | Prisma.WorldElementCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["worldElement"]>
 
 export type WorldElementSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -605,11 +1496,22 @@ export type WorldElementSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   name?: boolean
   description?: boolean
   attributes?: boolean
+  importance?: boolean
+  scope?: boolean
+  category?: boolean
+  isEvolvable?: boolean
+  parentId?: boolean
+  constraints?: boolean
+  exceptions?: boolean
+  evolutionSpace?: boolean
   relatedTo?: boolean
   references?: boolean
+  usageCount?: boolean
+  lastUsedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.WorldElement$parentArgs<ExtArgs>
 }, ExtArgs["result"]["worldElement"]>
 
 export type WorldElementSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -619,11 +1521,22 @@ export type WorldElementSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   name?: boolean
   description?: boolean
   attributes?: boolean
+  importance?: boolean
+  scope?: boolean
+  category?: boolean
+  isEvolvable?: boolean
+  parentId?: boolean
+  constraints?: boolean
+  exceptions?: boolean
+  evolutionSpace?: boolean
   relatedTo?: boolean
   references?: boolean
+  usageCount?: boolean
+  lastUsedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.WorldElement$parentArgs<ExtArgs>
 }, ExtArgs["result"]["worldElement"]>
 
 export type WorldElementSelectScalar = {
@@ -633,27 +1546,46 @@ export type WorldElementSelectScalar = {
   name?: boolean
   description?: boolean
   attributes?: boolean
+  importance?: boolean
+  scope?: boolean
+  category?: boolean
+  isEvolvable?: boolean
+  parentId?: boolean
+  constraints?: boolean
+  exceptions?: boolean
+  evolutionSpace?: boolean
   relatedTo?: boolean
   references?: boolean
+  usageCount?: boolean
+  lastUsedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type WorldElementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "type" | "name" | "description" | "attributes" | "relatedTo" | "references" | "createdAt" | "updatedAt", ExtArgs["result"]["worldElement"]>
+export type WorldElementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "type" | "name" | "description" | "attributes" | "importance" | "scope" | "category" | "isEvolvable" | "parentId" | "constraints" | "exceptions" | "evolutionSpace" | "relatedTo" | "references" | "usageCount" | "lastUsedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["worldElement"]>
 export type WorldElementInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.WorldElement$parentArgs<ExtArgs>
+  children?: boolean | Prisma.WorldElement$childrenArgs<ExtArgs>
+  snapshots?: boolean | Prisma.WorldElement$snapshotsArgs<ExtArgs>
+  _count?: boolean | Prisma.WorldElementCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorldElementIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.WorldElement$parentArgs<ExtArgs>
 }
 export type WorldElementIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.WorldElement$parentArgs<ExtArgs>
 }
 
 export type $WorldElementPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "WorldElement"
   objects: {
     project: Prisma.$ProjectPayload<ExtArgs>
+    parent: Prisma.$WorldElementPayload<ExtArgs> | null
+    children: Prisma.$WorldElementPayload<ExtArgs>[]
+    snapshots: Prisma.$WorldElementSnapshotPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -662,8 +1594,18 @@ export type $WorldElementPayload<ExtArgs extends runtime.Types.Extensions.Intern
     name: string
     description: string
     attributes: string | null
+    importance: number
+    scope: string
+    category: string
+    isEvolvable: boolean
+    parentId: string | null
+    constraints: string | null
+    exceptions: string | null
+    evolutionSpace: string | null
     relatedTo: string | null
     references: string | null
+    usageCount: number
+    lastUsedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["worldElement"]>
@@ -1061,6 +2003,9 @@ readonly fields: WorldElementFieldRefs;
 export interface Prisma__WorldElementClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  parent<T extends Prisma.WorldElement$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldElement$parentArgs<ExtArgs>>): Prisma.Prisma__WorldElementClient<runtime.Types.Result.GetResult<Prisma.$WorldElementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  children<T extends Prisma.WorldElement$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldElement$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldElementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  snapshots<T extends Prisma.WorldElement$snapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldElement$snapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldElementSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1096,8 +2041,18 @@ export interface WorldElementFieldRefs {
   readonly name: Prisma.FieldRef<"WorldElement", 'String'>
   readonly description: Prisma.FieldRef<"WorldElement", 'String'>
   readonly attributes: Prisma.FieldRef<"WorldElement", 'String'>
+  readonly importance: Prisma.FieldRef<"WorldElement", 'Int'>
+  readonly scope: Prisma.FieldRef<"WorldElement", 'String'>
+  readonly category: Prisma.FieldRef<"WorldElement", 'String'>
+  readonly isEvolvable: Prisma.FieldRef<"WorldElement", 'Boolean'>
+  readonly parentId: Prisma.FieldRef<"WorldElement", 'String'>
+  readonly constraints: Prisma.FieldRef<"WorldElement", 'String'>
+  readonly exceptions: Prisma.FieldRef<"WorldElement", 'String'>
+  readonly evolutionSpace: Prisma.FieldRef<"WorldElement", 'String'>
   readonly relatedTo: Prisma.FieldRef<"WorldElement", 'String'>
   readonly references: Prisma.FieldRef<"WorldElement", 'String'>
+  readonly usageCount: Prisma.FieldRef<"WorldElement", 'Int'>
+  readonly lastUsedAt: Prisma.FieldRef<"WorldElement", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"WorldElement", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"WorldElement", 'DateTime'>
 }
@@ -1491,6 +2446,73 @@ export type WorldElementDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many WorldElements to delete.
    */
   limit?: number
+}
+
+/**
+ * WorldElement.parent
+ */
+export type WorldElement$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorldElement
+   */
+  select?: Prisma.WorldElementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorldElement
+   */
+  omit?: Prisma.WorldElementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorldElementInclude<ExtArgs> | null
+  where?: Prisma.WorldElementWhereInput
+}
+
+/**
+ * WorldElement.children
+ */
+export type WorldElement$childrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorldElement
+   */
+  select?: Prisma.WorldElementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorldElement
+   */
+  omit?: Prisma.WorldElementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorldElementInclude<ExtArgs> | null
+  where?: Prisma.WorldElementWhereInput
+  orderBy?: Prisma.WorldElementOrderByWithRelationInput | Prisma.WorldElementOrderByWithRelationInput[]
+  cursor?: Prisma.WorldElementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WorldElementScalarFieldEnum | Prisma.WorldElementScalarFieldEnum[]
+}
+
+/**
+ * WorldElement.snapshots
+ */
+export type WorldElement$snapshotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorldElementSnapshot
+   */
+  select?: Prisma.WorldElementSnapshotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorldElementSnapshot
+   */
+  omit?: Prisma.WorldElementSnapshotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorldElementSnapshotInclude<ExtArgs> | null
+  where?: Prisma.WorldElementSnapshotWhereInput
+  orderBy?: Prisma.WorldElementSnapshotOrderByWithRelationInput | Prisma.WorldElementSnapshotOrderByWithRelationInput[]
+  cursor?: Prisma.WorldElementSnapshotWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WorldElementSnapshotScalarFieldEnum | Prisma.WorldElementSnapshotScalarFieldEnum[]
 }
 
 /**

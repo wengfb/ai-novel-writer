@@ -393,6 +393,7 @@ export const ModelName = {
   Generation: 'Generation',
   Foreshadowing: 'Foreshadowing',
   CharacterSnapshot: 'CharacterSnapshot',
+  WorldElementSnapshot: 'WorldElementSnapshot',
   SystemSetting: 'SystemSetting'
 } as const
 
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "project" | "outline" | "chapter" | "scene" | "character" | "worldElement" | "generation" | "foreshadowing" | "characterSnapshot" | "systemSetting"
+    modelProps: "project" | "outline" | "chapter" | "scene" | "character" | "worldElement" | "generation" | "foreshadowing" | "characterSnapshot" | "worldElementSnapshot" | "systemSetting"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1079,6 +1080,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WorldElementSnapshot: {
+      payload: Prisma.$WorldElementSnapshotPayload<ExtArgs>
+      fields: Prisma.WorldElementSnapshotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorldElementSnapshotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldElementSnapshotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorldElementSnapshotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldElementSnapshotPayload>
+        }
+        findFirst: {
+          args: Prisma.WorldElementSnapshotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldElementSnapshotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorldElementSnapshotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldElementSnapshotPayload>
+        }
+        findMany: {
+          args: Prisma.WorldElementSnapshotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldElementSnapshotPayload>[]
+        }
+        create: {
+          args: Prisma.WorldElementSnapshotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldElementSnapshotPayload>
+        }
+        createMany: {
+          args: Prisma.WorldElementSnapshotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WorldElementSnapshotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldElementSnapshotPayload>[]
+        }
+        delete: {
+          args: Prisma.WorldElementSnapshotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldElementSnapshotPayload>
+        }
+        update: {
+          args: Prisma.WorldElementSnapshotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldElementSnapshotPayload>
+        }
+        deleteMany: {
+          args: Prisma.WorldElementSnapshotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorldElementSnapshotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WorldElementSnapshotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldElementSnapshotPayload>[]
+        }
+        upsert: {
+          args: Prisma.WorldElementSnapshotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldElementSnapshotPayload>
+        }
+        aggregate: {
+          args: Prisma.WorldElementSnapshotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorldElementSnapshot>
+        }
+        groupBy: {
+          args: Prisma.WorldElementSnapshotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorldElementSnapshotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorldElementSnapshotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorldElementSnapshotCountAggregateOutputType> | number
+        }
+      }
+    }
     SystemSetting: {
       payload: Prisma.$SystemSettingPayload<ExtArgs>
       fields: Prisma.SystemSettingFieldRefs
@@ -1294,8 +1369,18 @@ export const WorldElementScalarFieldEnum = {
   name: 'name',
   description: 'description',
   attributes: 'attributes',
+  importance: 'importance',
+  scope: 'scope',
+  category: 'category',
+  isEvolvable: 'isEvolvable',
+  parentId: 'parentId',
+  constraints: 'constraints',
+  exceptions: 'exceptions',
+  evolutionSpace: 'evolutionSpace',
   relatedTo: 'relatedTo',
   references: 'references',
+  usageCount: 'usageCount',
+  lastUsedAt: 'lastUsedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1371,6 +1456,26 @@ export const CharacterSnapshotScalarFieldEnum = {
 } as const
 
 export type CharacterSnapshotScalarFieldEnum = (typeof CharacterSnapshotScalarFieldEnum)[keyof typeof CharacterSnapshotScalarFieldEnum]
+
+
+export const WorldElementSnapshotScalarFieldEnum = {
+  id: 'id',
+  elementId: 'elementId',
+  chapterId: 'chapterId',
+  chapterNumber: 'chapterNumber',
+  description: 'description',
+  attributes: 'attributes',
+  constraints: 'constraints',
+  changeReason: 'changeReason',
+  changeType: 'changeType',
+  affectedCharacters: 'affectedCharacters',
+  affectedPlots: 'affectedPlots',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorldElementSnapshotScalarFieldEnum = (typeof WorldElementSnapshotScalarFieldEnum)[keyof typeof WorldElementSnapshotScalarFieldEnum]
 
 
 export const SystemSettingScalarFieldEnum = {
@@ -1545,6 +1650,7 @@ export type GlobalOmitConfig = {
   generation?: Prisma.GenerationOmit
   foreshadowing?: Prisma.ForeshadowingOmit
   characterSnapshot?: Prisma.CharacterSnapshotOmit
+  worldElementSnapshot?: Prisma.WorldElementSnapshotOmit
   systemSetting?: Prisma.SystemSettingOmit
 }
 

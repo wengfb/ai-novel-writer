@@ -17,6 +17,13 @@ const UpdateWorldElementSchema = z.object({
   name: z.string().min(1, '名称不能为空').max(200, '名称最多200个字符').optional(),
   description: z.string().optional(),
   attributes: z.union([z.record(z.any(), z.any()), z.string()]).optional(),
+  importance: z.number().min(1).max(10).optional(),
+  scope: z.enum(['global', 'regional', 'local']).optional(),
+  category: z.enum(['core_rule', 'detail', 'background']).optional(),
+  isEvolvable: z.boolean().optional(),
+  constraints: z.union([z.array(z.any()), z.string()]).optional(),
+  exceptions: z.union([z.array(z.any()), z.string()]).optional(),
+  evolutionSpace: z.string().optional(),
   rules: z.array(z.string()).optional(),
   relatedTo: z.union([z.array(z.string()), z.string()]).optional(),
   references: z.union([z.array(z.string()), z.string()]).optional(),
@@ -73,6 +80,23 @@ export async function PUT(
     if (data.type !== undefined) updateData.type = data.type as any
     if (data.name !== undefined) updateData.name = data.name
     if (data.description !== undefined) updateData.description = data.description
+    if (data.importance !== undefined) updateData.importance = data.importance
+    if (data.scope !== undefined) updateData.scope = data.scope as any
+    if (data.category !== undefined) updateData.category = data.category as any
+    if (data.isEvolvable !== undefined) updateData.isEvolvable = data.isEvolvable
+    if (data.evolutionSpace !== undefined) updateData.evolutionSpace = data.evolutionSpace
+
+    if (data.constraints !== undefined) {
+      updateData.constraints = typeof data.constraints === 'object'
+        ? JSON.stringify(data.constraints)
+        : data.constraints
+    }
+
+    if (data.exceptions !== undefined) {
+      updateData.exceptions = typeof data.exceptions === 'object'
+        ? JSON.stringify(data.exceptions)
+        : data.exceptions
+    }
 
     if (data.attributes !== undefined || data.rules !== undefined) {
       const attrs = typeof data.attributes === 'object' ? data.attributes : {}

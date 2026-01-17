@@ -104,6 +104,7 @@ model Chapter {
   plantedForeshadowings   Foreshadowing[] @relation("PlantedForeshadowing")
   resolvedForeshadowings  Foreshadowing[] @relation("ResolvedForeshadowing")
   characterSnapshots      CharacterSnapshot[]
+  worldElementSnapshots   WorldElementSnapshot[]
 
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -187,17 +188,44 @@ model WorldElement {
   // 动态属性 (JSON字符串)
   attributes  String?
 
+  // 分层管理
+  importance  Int       @default(5)      // 重要性 1-10，影响上下文权重
+  scope       String    @default("local") // global(全局), regional(区域), local(局部)
+  category    String    @default("detail") // core_rule(核心规则), detail(细节), background(背景)
+  isEvolvable Boolean   @default(false)  // 是否可演化（如势力、角色状态等）
+
+  // 层级关系（支持世界观元素的树形结构）
+  parentId    String?
+  parent      WorldElement?  @relation("WorldHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    WorldElement[] @relation("WorldHierarchy")
+
+  // 约束和规则
+  constraints String?   // JSON字符串 - 设定的约束条件
+  exceptions  String?   // JSON字符串 - 例外情况
+  evolutionSpace String? // 演化空间描述
+
   // 关联 (JSON字符串)
   relatedTo   String?   // [{ elementId, relationType }]
 
   // 引用 (JSON字符串)
   references  String?   // [{ chapterId, context }]
 
+  // 使用统计
+  usageCount  Int       @default(0)      // 被引用次数
+  lastUsedAt  DateTime?                  // 最后使用时间
+
+  // 关联快照
+  snapshots   WorldElementSnapshot[]
+
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
   @@index([projectId])
   @@index([type])
+  @@index([importance])
+  @@index([scope])
+  @@index([category])
+  @@index([parentId])
 }
 
 // AI生成记录(用于成本控制和历史追溯)
@@ -304,6 +332,38 @@ model CharacterSnapshot {
   @@index([chapterId])
   @@index([chapterNumber])
   @@unique([characterId, chapterNumber])
+}
+
+// 世界观元素快照
+model WorldElementSnapshot {
+  id          String       @id @default(cuid())
+  elementId   String
+  element     WorldElement @relation(fields: [elementId], references: [id], onDelete: Cascade)
+
+  chapterId     String?
+  chapter       Chapter?   @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+  chapterNumber Int
+
+  // 快照数据
+  description   String     // 当时的描述
+  attributes    String?    // 当时的属性（JSON）
+  constraints   String?    // 当时的约束条件
+  changeReason  String?    // 变化原因
+  changeType    String?    // 变化类型：expansion(扩展), modification(修改), evolution(演化)
+
+  // 影响范围
+  affectedCharacters String? // JSON数组 - 受影响的角色ID
+  affectedPlots      String? // 对情节的影响描述
+
+  notes         String?    // 备注
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([elementId])
+  @@index([chapterId])
+  @@index([chapterNumber])
+  @@unique([elementId, chapterNumber])
 }
 
 // 系统配置

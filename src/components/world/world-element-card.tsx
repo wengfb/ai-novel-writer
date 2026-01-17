@@ -17,6 +17,9 @@ interface WorldElementCardProps {
   type: "location" | "item" | "faction" | "setting"
   description?: string
   tags?: string[]
+  importance?: number
+  scope?: string
+  category?: string
   onClick: (id: string) => void
 }
 
@@ -26,6 +29,9 @@ export function WorldElementCard({
   type,
   description,
   tags = [],
+  importance = 5,
+  scope = 'local',
+  category = 'detail',
   onClick,
 }: WorldElementCardProps) {
   const Icon = iconMap[type]
@@ -57,6 +63,24 @@ export function WorldElementCard({
             {description}
           </p>
         )}
+
+        {/* 新增字段显示 */}
+        <div className="flex flex-wrap gap-2 mb-3">
+          <Badge variant="secondary" className="text-xs">
+            重要性: {importance}/10
+          </Badge>
+          <Badge variant="secondary" className="text-xs">
+            {scope === 'global' && '全局'}
+            {scope === 'regional' && '区域'}
+            {scope === 'local' && '局部'}
+          </Badge>
+          <Badge variant="secondary" className="text-xs">
+            {category === 'core_rule' && '核心规则'}
+            {category === 'detail' && '细节'}
+            {category === 'background' && '背景'}
+          </Badge>
+        </div>
+
         {tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {tags.map((tag) => (

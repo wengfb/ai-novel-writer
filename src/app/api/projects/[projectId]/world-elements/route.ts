@@ -25,6 +25,13 @@ const CreateWorldElementSchema = z.object({
   name: z.string().min(1, '名称不能为空').max(200, '名称最多200个字符'),
   description: z.string().optional(),
   attributes: z.union([z.record(z.any(), z.any()), z.string()]).optional(),
+  importance: z.number().min(1).max(10).optional().default(5),
+  scope: z.enum(['global', 'regional', 'local']).optional().default('local'),
+  category: z.enum(['core_rule', 'detail', 'background']).optional().default('detail'),
+  isEvolvable: z.boolean().optional().default(false),
+  constraints: z.union([z.array(z.any()), z.string()]).optional(),
+  exceptions: z.union([z.array(z.any()), z.string()]).optional(),
+  evolutionSpace: z.string().optional(),
   rules: z.array(z.string()).optional(),
   relatedTo: z.union([z.array(z.string()), z.string()]).optional(),
   references: z.union([z.array(z.string()), z.string()]).optional(),
@@ -122,6 +129,14 @@ export async function POST(
       ? JSON.stringify(data.references)
       : data.references
 
+    const constraintsValue = typeof data.constraints === 'object'
+      ? JSON.stringify(data.constraints)
+      : data.constraints
+
+    const exceptionsValue = typeof data.exceptions === 'object'
+      ? JSON.stringify(data.exceptions)
+      : data.exceptions
+
     // 将 rules 合并到 attributes
     let finalAttributes = attributesValue
     if (data.rules && data.rules.length > 0) {
@@ -140,6 +155,13 @@ export async function POST(
         name: data.name,
         description: data.description || '',
         attributes: finalAttributes,
+        importance: data.importance,
+        scope: data.scope as any,
+        category: data.category as any,
+        isEvolvable: data.isEvolvable,
+        constraints: constraintsValue,
+        exceptions: exceptionsValue,
+        evolutionSpace: data.evolutionSpace,
         relatedTo: relatedToValue,
         references: referencesValue,
       },

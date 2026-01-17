@@ -1,13 +1,46 @@
 import type { Chapter, Character, WorldElement, ContextPackage } from '@/types'
 
 /**
+ * 上下文权重配置
+ */
+interface ContextRatios {
+  world: number        // 世界观元素权重
+  character: number    // 角色权重
+  chapter: number      // 完整章节权重
+  summary: number      // 章节摘要权重
+  foreshadowing: number // 伏笔权重
+}
+
+/**
  * 上下文管理器
  * 负责管理长文本生成的上下文，使用滑动窗口+摘要策略
+ * 支持根据小说类型动态调整上下文权重
  */
 export class ContextManager {
   private readonly MAX_TOKENS = 100000 // Gemini 2.5 有1M tokens，我们预留100K
-  private readonly FULL_CHAPTER_RATIO = 0.4 // 40%用于完整章节
-  private readonly SUMMARY_RATIO = 0.2 // 20%用于摘要
+
+  /**
+   * 根据小说类型获取上下文权重配置
+   */
+  private getContextRatios(genre: string): ContextRatios {
+    const ratiosMap: Record<string, ContextRatios> = {
+      '修仙': { world: 0.30, character: 0.15, chapter: 0.35, summary: 0.15, foreshadowing: 0.05 },
+      '玄幻': { world: 0.28, character: 0.17, chapter: 0.35, summary: 0.15, foreshadowing: 0.05 },
+      '仙侠': { world: 0.30, character: 0.15, chapter: 0.35, summary: 0.15, foreshadowing: 0.05 },
+      '科幻': { world: 0.28, character: 0.17, chapter: 0.35, summary: 0.15, foreshadowing: 0.05 },
+      '奇幻': { world: 0.26, character: 0.19, chapter: 0.35, summary: 0.15, foreshadowing: 0.05 },
+      '武侠': { world: 0.22, character: 0.23, chapter: 0.35, summary: 0.15, foreshadowing: 0.05 },
+      '都市': { world: 0.10, character: 0.30, chapter: 0.40, summary: 0.15, foreshadowing: 0.05 },
+      '言情': { world: 0.08, character: 0.32, chapter: 0.40, summary: 0.15, foreshadowing: 0.05 },
+      '现代': { world: 0.10, character: 0.30, chapter: 0.40, summary: 0.15, foreshadowing: 0.05 },
+      '历史': { world: 0.20, character: 0.25, chapter: 0.35, summary: 0.15, foreshadowing: 0.05 },
+      '军事': { world: 0.22, character: 0.23, chapter: 0.35, summary: 0.15, foreshadowing: 0.05 },
+      '游戏': { world: 0.25, character: 0.20, chapter: 0.35, summary: 0.15, foreshadowing: 0.05 },
+    }
+
+    // 默认配置（中等世界观权重）
+    return ratiosMap[genre] || { world: 0.20, character: 0.20, chapter: 0.40, summary: 0.15, foreshadowing: 0.05 }
+  }
 
   /**
    * 构建上下文包
@@ -22,11 +55,14 @@ export class ContextManager {
   }): ContextPackage {
     const { currentChapter, allChapters, characters, worldElements, genre, style } = params
 
+    // 获取该类型小说的上下文权重配置
+    const ratios = this.getContextRatios(genre)
+
     // 1. 获取最近N章的完整内容
     const fullChapters = this.getRecentFullChapters(
       allChapters,
       currentChapter,
-      Math.floor(this.MAX_TOKENS * this.FULL_CHAPTER_RATIO)
+      Math.floor(this.MAX_TOKENS * ratios.chapter)
     )
 
     // 2. 获取更早章节的摘要
@@ -36,7 +72,7 @@ export class ContextManager {
       fullChapters.length
     )
 
-    // 3. 获取相关角色（按相关性排序）
+    // 3. 获取相关角色（按相关性和重要性排序）
     const relevantCharacters = this.getRelevantCharacters(
       characters,
       allChapters[currentChapter - 1]
@@ -120,52 +156,88 @@ export class ContextManager {
   }
 
   /**
-   * 获取相关角色
+   * 获取相关角色（按重要性和相关性排序）
    */
   private getRelevantCharacters(
     characters: Character[],
     currentChapter?: Chapter
   ): Character[] {
     if (!currentChapter || !currentChapter.content) {
-      // 如果没有当前章节内容，返回所有角色
-      return characters
+      // 如果没有当前章节内容，按重要性排序返回
+      return characters.sort((a, b) => (b.importance || 5) - (a.importance || 5))
     }
 
-    // 简单策略：检查角色名称是否在章节内容中出现
-    const relevant: Character[] = []
     const content = currentChapter.content.toLowerCase()
+    const scored: Array<{ character: Character; score: number }> = []
 
     for (const character of characters) {
-      if (content.includes(character.name.toLowerCase())) {
-        relevant.push(character)
-      }
+      let score = 0
+
+      // 1. 基础重要性分数（权重40%）
+      score += (character.importance || 5) * 4
+
+      // 2. 名称出现次数（权重60%）
+      const nameMatches = (content.match(new RegExp(character.name.toLowerCase(), 'g')) || []).length
+      score += nameMatches * 6
+
+      // 3. 主角/反派额外加分
+      if (character.role === 'protagonist') score += 20
+      if (character.role === 'antagonist') score += 15
+
+      scored.push({ character, score })
     }
 
-    // 如果没有找到相关角色，返回所有角色（避免空上下文）
-    return relevant.length > 0 ? relevant : characters
+    // 按分数降序排序
+    scored.sort((a, b) => b.score - a.score)
+
+    return scored.map(s => s.character)
   }
 
   /**
-   * 获取相关世界观元素
+   * 获取相关世界观元素（按重要性、范围和相关性排序）
    */
   private getRelevantWorldElements(
     worldElements: WorldElement[],
     currentChapter?: Chapter
   ): WorldElement[] {
     if (!currentChapter || !currentChapter.content) {
-      return worldElements
+      // 按重要性和范围排序
+      return worldElements.sort((a, b) => {
+        const scopeWeight = { global: 3, regional: 2, local: 1 }
+        const scoreA = (a.importance || 5) * 10 + (scopeWeight[a.scope as keyof typeof scopeWeight] || 1)
+        const scoreB = (b.importance || 5) * 10 + (scopeWeight[b.scope as keyof typeof scopeWeight] || 1)
+        return scoreB - scoreA
+      })
     }
 
-    const relevant: WorldElement[] = []
     const content = currentChapter.content.toLowerCase()
+    const scored: Array<{ element: WorldElement; score: number }> = []
 
     for (const element of worldElements) {
-      if (content.includes(element.name.toLowerCase())) {
-        relevant.push(element)
-      }
+      let score = 0
+
+      // 1. 基础重要性分数（权重30%）
+      score += (element.importance || 5) * 3
+
+      // 2. 范围权重（权重20%）
+      const scopeWeight = { global: 20, regional: 10, local: 5 }
+      score += scopeWeight[element.scope as keyof typeof scopeWeight] || 5
+
+      // 3. 分类权重（权重20%）
+      const categoryWeight = { core_rule: 20, detail: 10, background: 5 }
+      score += categoryWeight[element.category as keyof typeof categoryWeight] || 10
+
+      // 4. 名称出现次数（权重30%）
+      const nameMatches = (content.match(new RegExp(element.name.toLowerCase(), 'g')) || []).length
+      score += nameMatches * 3
+
+      scored.push({ element, score })
     }
 
-    return relevant.length > 0 ? relevant : worldElements
+    // 按分数降序排序
+    scored.sort((a, b) => b.score - a.score)
+
+    return scored.map(s => s.element)
   }
 
   /**

@@ -60,6 +60,7 @@ export const ModelName = {
   Generation: 'Generation',
   Foreshadowing: 'Foreshadowing',
   CharacterSnapshot: 'CharacterSnapshot',
+  WorldElementSnapshot: 'WorldElementSnapshot',
   SystemSetting: 'SystemSetting'
 } as const
 
@@ -181,8 +182,18 @@ export const WorldElementScalarFieldEnum = {
   name: 'name',
   description: 'description',
   attributes: 'attributes',
+  importance: 'importance',
+  scope: 'scope',
+  category: 'category',
+  isEvolvable: 'isEvolvable',
+  parentId: 'parentId',
+  constraints: 'constraints',
+  exceptions: 'exceptions',
+  evolutionSpace: 'evolutionSpace',
   relatedTo: 'relatedTo',
   references: 'references',
+  usageCount: 'usageCount',
+  lastUsedAt: 'lastUsedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -258,6 +269,26 @@ export const CharacterSnapshotScalarFieldEnum = {
 } as const
 
 export type CharacterSnapshotScalarFieldEnum = (typeof CharacterSnapshotScalarFieldEnum)[keyof typeof CharacterSnapshotScalarFieldEnum]
+
+
+export const WorldElementSnapshotScalarFieldEnum = {
+  id: 'id',
+  elementId: 'elementId',
+  chapterId: 'chapterId',
+  chapterNumber: 'chapterNumber',
+  description: 'description',
+  attributes: 'attributes',
+  constraints: 'constraints',
+  changeReason: 'changeReason',
+  changeType: 'changeType',
+  affectedCharacters: 'affectedCharacters',
+  affectedPlots: 'affectedPlots',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorldElementSnapshotScalarFieldEnum = (typeof WorldElementSnapshotScalarFieldEnum)[keyof typeof WorldElementSnapshotScalarFieldEnum]
 
 
 export const SystemSettingScalarFieldEnum = {
