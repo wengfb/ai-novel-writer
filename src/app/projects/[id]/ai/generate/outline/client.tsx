@@ -17,8 +17,10 @@ interface AIGenerateOutlineClientProps {
 }
 
 const modelOptions = [
-  { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash（推荐）', description: '快速生成，成本较低' },
-  { value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', description: '高质量生成，成本较高' },
+  { value: 'gemini-3-flash', label: 'Gemini 3 Flash（推荐）', description: '快速生成，成本较低' },
+  { value: 'gemini-3-pro', label: 'Gemini 3 Pro', description: '高质量生成，成本较高' },
+  { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash', description: '快速生成' },
+  { value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', description: '高质量生成' },
 ]
 
 export function AIGenerateOutlineClient({ projectId, projectTitle }: AIGenerateOutlineClientProps) {
@@ -30,7 +32,7 @@ export function AIGenerateOutlineClient({ projectId, projectTitle }: AIGenerateO
     style: '',
     targetWords: '100000',
     chapterCount: '50',
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-flash',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -250,7 +252,7 @@ export function AIGenerateOutlineClient({ projectId, projectTitle }: AIGenerateO
                         style: '',
                         targetWords: '100000',
                         chapterCount: '50',
-                        model: 'gemini-2.5-flash',
+                        model: 'gemini-3-flash',
                       })
                     }}
                   >

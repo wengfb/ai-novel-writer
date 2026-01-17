@@ -16,7 +16,9 @@ interface AIGenerateCharacterClientProps {
 }
 
 const modelOptions = [
-  { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash（推荐）' },
+  { value: 'gemini-3-flash', label: 'Gemini 3 Flash（推荐）' },
+  { value: 'gemini-3-pro', label: 'Gemini 3 Pro' },
+  { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
   { value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
 ]
 
@@ -27,7 +29,7 @@ export function AIGenerateCharacterClient({ projectId, projectTitle }: AIGenerat
     role: '',
     storyContext: '',
     requirements: '',
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-flash',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -235,7 +237,7 @@ export function AIGenerateCharacterClient({ projectId, projectTitle }: AIGenerat
                         role: '',
                         storyContext: '',
                         requirements: '',
-                        model: 'gemini-2.5-flash',
+                        model: 'gemini-3-flash',
                       })
                     }}
                   >

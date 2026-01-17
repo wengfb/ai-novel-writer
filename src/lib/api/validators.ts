@@ -27,6 +27,9 @@ export function validateRequest<T extends z.ZodType>(
         field: e.path.join('.'),
         message: e.message,
       }))
+      // 输出详细的验证错误信息
+      console.error('Validation failed:', JSON.stringify(errors, null, 2))
+      console.error('Received data:', JSON.stringify(data, null, 2))
       throw new Validation_error('Validation failed', errors)
     }
     throw error

@@ -34,8 +34,10 @@ const aiFields = [
     type: 'select',
     description: '选择默认使用的 AI 模型',
     options: [
-      { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash (快速)' },
-      { value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro (高质量)' },
+      { value: 'gemini-3-flash', label: 'Gemini 3 Flash (快速)' },
+      { value: 'gemini-3-pro', label: 'Gemini 3 Pro (高质量)' },
+      { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
+      { value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
     ],
   },
   {

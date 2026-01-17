@@ -16,7 +16,7 @@ const GenerateCharacterSchema = z.object({
   role: z.string().min(1, '角色定位不能为空'),
   storyContext: z.string().optional(),
   requirements: z.string().optional(),
-  model: z.enum(['gemini-2.5-flash', 'gemini-2.5-pro']).default('gemini-2.5-flash'),
+  model: z.enum(['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-3-flash', 'gemini-3-pro']).default('gemini-3-flash'),
 })
 
 export async function POST(request: NextRequest) {
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
           prompt,
           output: result.output,
           status: 'success',
-          tokensUsed: result.tokensUsed as any,
+          tokensUsed: result.tokensUsed ? JSON.stringify(result.tokensUsed) : null,
           cost: result.cost,
           duration,
         },

@@ -1,15 +1,25 @@
-import { google } from '@ai-sdk/google'
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { streamText, generateText } from 'ai'
 import type { GenerationParams, GenerationResult } from '@/types'
 
 export class GeminiProvider {
   private apiKey: string
+  private baseURL?: string
+  private google: ReturnType<typeof createGoogleGenerativeAI>
 
-  constructor(apiKey?: string) {
+  constructor(apiKey?: string, baseURL?: string) {
     this.apiKey = apiKey || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
+    this.baseURL = baseURL || process.env.GEMINI_BASE_URL
+
     if (!this.apiKey) {
       throw new Error('GOOGLE_GENERATIVE_AI_API_KEY is not set')
     }
+
+    // 创建 Google AI 实例，支持自定义 Base URL
+    this.google = createGoogleGenerativeAI({
+      apiKey: this.apiKey,
+      baseURL: this.baseURL,
+    })
   }
 
   /**
@@ -20,7 +30,7 @@ export class GeminiProvider {
 
     try {
       const result = await generateText({
-        model: google(params.model),
+        model: this.google(params.model),
         prompt: params.prompt,
         system: params.systemPrompt,
         temperature: params.temperature ?? 0.8,
@@ -63,7 +73,7 @@ export class GeminiProvider {
   async *streamGenerate(params: GenerationParams): AsyncGenerator<string, void, unknown> {
     try {
       const result = await streamText({
-        model: google(params.model),
+        model: this.google(params.model),
         prompt: params.prompt,
         system: params.systemPrompt,
         temperature: params.temperature ?? 0.8,
@@ -81,6 +91,8 @@ export class GeminiProvider {
   /**
    * 估算成本
    * Gemini 定价（参考）:
+   * - Gemini 3 Flash: $0.075/1M input, $0.30/1M output
+   * - Gemini 3 Pro: $1.25/1M input, $5.00/1M output
    * - Gemini 2.5 Flash: $0.075/1M input, $0.30/1M output
    * - Gemini 2.5 Pro: $1.25/1M input, $5.00/1M output
    */
@@ -88,10 +100,10 @@ export class GeminiProvider {
     let inputCostPer1M = 0
     let outputCostPer1M = 0
 
-    if (model === 'gemini-2.5-flash') {
+    if (model.includes('flash')) {
       inputCostPer1M = 0.075
       outputCostPer1M = 0.30
-    } else if (model === 'gemini-2.5-pro') {
+    } else if (model.includes('pro')) {
       inputCostPer1M = 1.25
       outputCostPer1M = 5.00
     }

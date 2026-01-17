@@ -26,7 +26,9 @@ const elementTypes = [
 ]
 
 const modelOptions = [
-  { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash（推荐）' },
+  { value: 'gemini-3-flash', label: 'Gemini 3 Flash（推荐）' },
+  { value: 'gemini-3-pro', label: 'Gemini 3 Pro' },
+  { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
   { value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
 ]
 
@@ -38,11 +40,18 @@ export function AIGenerateWorldElementClient({ projectId, projectTitle }: AIGene
     elementType: '',
     storyContext: '',
     requirements: '',
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-flash',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // 客户端验证
+    if (!formData.elementType) {
+      alert('请选择设定类型')
+      return
+    }
+
     setIsLoading(true)
     setResult(null)
 
@@ -236,7 +245,7 @@ export function AIGenerateWorldElementClient({ projectId, projectTitle }: AIGene
                         elementType: '',
                         storyContext: '',
                         requirements: '',
-                        model: 'gemini-2.5-flash',
+                        model: 'gemini-3-flash',
                       })
                     }}
                   >

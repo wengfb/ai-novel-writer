@@ -122,4 +122,28 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* 文学工坊主题 - 优雅的衬线字体 */
+  .literary-title {
+    @apply font-serif text-2xl font-semibold tracking-tight;
+  }
+
+  .literary-body {
+    @apply font-serif leading-relaxed;
+  }
+
+  /* 装饰性边框 */
+  .literary-border {
+    @apply border-l-2 border-primary/20 pl-4;
+  }
+
+  /* 卡片阴影效果 */
+  .literary-card {
+    @apply bg-card border border-border/50 rounded-lg shadow-sm hover:shadow-md transition-shadow;
+  }
+
+  /* 页面过渡动画 */
+  .page-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
 }
