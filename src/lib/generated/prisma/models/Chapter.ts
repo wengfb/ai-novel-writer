@@ -45,6 +45,8 @@ export type ChapterMinAggregateOutputType = {
   wordCount: number | null
   summary: string | null
   notes: string | null
+  isKeyChapter: boolean | null
+  plotType: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,6 +60,8 @@ export type ChapterMaxAggregateOutputType = {
   wordCount: number | null
   summary: string | null
   notes: string | null
+  isKeyChapter: boolean | null
+  plotType: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -71,6 +75,8 @@ export type ChapterCountAggregateOutputType = {
   wordCount: number
   summary: number
   notes: number
+  isKeyChapter: number
+  plotType: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -96,6 +102,8 @@ export type ChapterMinAggregateInputType = {
   wordCount?: true
   summary?: true
   notes?: true
+  isKeyChapter?: true
+  plotType?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -109,6 +117,8 @@ export type ChapterMaxAggregateInputType = {
   wordCount?: true
   summary?: true
   notes?: true
+  isKeyChapter?: true
+  plotType?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -122,6 +132,8 @@ export type ChapterCountAggregateInputType = {
   wordCount?: true
   summary?: true
   notes?: true
+  isKeyChapter?: true
+  plotType?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -222,6 +234,8 @@ export type ChapterGroupByOutputType = {
   wordCount: number
   summary: string | null
   notes: string | null
+  isKeyChapter: boolean
+  plotType: string | null
   createdAt: Date
   updatedAt: Date
   _count: ChapterCountAggregateOutputType | null
@@ -258,11 +272,16 @@ export type ChapterWhereInput = {
   wordCount?: Prisma.IntFilter<"Chapter"> | number
   summary?: Prisma.StringNullableFilter<"Chapter"> | string | null
   notes?: Prisma.StringNullableFilter<"Chapter"> | string | null
+  isKeyChapter?: Prisma.BoolFilter<"Chapter"> | boolean
+  plotType?: Prisma.StringNullableFilter<"Chapter"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Chapter"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Chapter"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   outline?: Prisma.XOR<Prisma.OutlineNullableScalarRelationFilter, Prisma.OutlineWhereInput> | null
   scenes?: Prisma.SceneListRelationFilter
+  plantedForeshadowings?: Prisma.ForeshadowingListRelationFilter
+  resolvedForeshadowings?: Prisma.ForeshadowingListRelationFilter
+  characterSnapshots?: Prisma.CharacterSnapshotListRelationFilter
 }
 
 export type ChapterOrderByWithRelationInput = {
@@ -274,11 +293,16 @@ export type ChapterOrderByWithRelationInput = {
   wordCount?: Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  isKeyChapter?: Prisma.SortOrder
+  plotType?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
   outline?: Prisma.OutlineOrderByWithRelationInput
   scenes?: Prisma.SceneOrderByRelationAggregateInput
+  plantedForeshadowings?: Prisma.ForeshadowingOrderByRelationAggregateInput
+  resolvedForeshadowings?: Prisma.ForeshadowingOrderByRelationAggregateInput
+  characterSnapshots?: Prisma.CharacterSnapshotOrderByRelationAggregateInput
 }
 
 export type ChapterWhereUniqueInput = Prisma.AtLeast<{
@@ -294,11 +318,16 @@ export type ChapterWhereUniqueInput = Prisma.AtLeast<{
   wordCount?: Prisma.IntFilter<"Chapter"> | number
   summary?: Prisma.StringNullableFilter<"Chapter"> | string | null
   notes?: Prisma.StringNullableFilter<"Chapter"> | string | null
+  isKeyChapter?: Prisma.BoolFilter<"Chapter"> | boolean
+  plotType?: Prisma.StringNullableFilter<"Chapter"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Chapter"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Chapter"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   outline?: Prisma.XOR<Prisma.OutlineNullableScalarRelationFilter, Prisma.OutlineWhereInput> | null
   scenes?: Prisma.SceneListRelationFilter
+  plantedForeshadowings?: Prisma.ForeshadowingListRelationFilter
+  resolvedForeshadowings?: Prisma.ForeshadowingListRelationFilter
+  characterSnapshots?: Prisma.CharacterSnapshotListRelationFilter
 }, "id" | "projectId_chapterNumber">
 
 export type ChapterOrderByWithAggregationInput = {
@@ -310,6 +339,8 @@ export type ChapterOrderByWithAggregationInput = {
   wordCount?: Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  isKeyChapter?: Prisma.SortOrder
+  plotType?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ChapterCountOrderByAggregateInput
@@ -331,6 +362,8 @@ export type ChapterScalarWhereWithAggregatesInput = {
   wordCount?: Prisma.IntWithAggregatesFilter<"Chapter"> | number
   summary?: Prisma.StringNullableWithAggregatesFilter<"Chapter"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Chapter"> | string | null
+  isKeyChapter?: Prisma.BoolWithAggregatesFilter<"Chapter"> | boolean
+  plotType?: Prisma.StringNullableWithAggregatesFilter<"Chapter"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Chapter"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Chapter"> | Date | string
 }
@@ -343,11 +376,16 @@ export type ChapterCreateInput = {
   wordCount?: number
   summary?: string | null
   notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutChaptersInput
   outline?: Prisma.OutlineCreateNestedOneWithoutChapterInput
   scenes?: Prisma.SceneCreateNestedManyWithoutChapterInput
+  plantedForeshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutPlantedInChapterInput
+  resolvedForeshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutResolvedInChapterInput
+  characterSnapshots?: Prisma.CharacterSnapshotCreateNestedManyWithoutChapterInput
 }
 
 export type ChapterUncheckedCreateInput = {
@@ -359,10 +397,15 @@ export type ChapterUncheckedCreateInput = {
   wordCount?: number
   summary?: string | null
   notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outline?: Prisma.OutlineUncheckedCreateNestedOneWithoutChapterInput
   scenes?: Prisma.SceneUncheckedCreateNestedManyWithoutChapterInput
+  plantedForeshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutPlantedInChapterInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutResolvedInChapterInput
+  characterSnapshots?: Prisma.CharacterSnapshotUncheckedCreateNestedManyWithoutChapterInput
 }
 
 export type ChapterUpdateInput = {
@@ -373,11 +416,16 @@ export type ChapterUpdateInput = {
   wordCount?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutChaptersNestedInput
   outline?: Prisma.OutlineUpdateOneWithoutChapterNestedInput
   scenes?: Prisma.SceneUpdateManyWithoutChapterNestedInput
+  plantedForeshadowings?: Prisma.ForeshadowingUpdateManyWithoutPlantedInChapterNestedInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUpdateManyWithoutResolvedInChapterNestedInput
+  characterSnapshots?: Prisma.CharacterSnapshotUpdateManyWithoutChapterNestedInput
 }
 
 export type ChapterUncheckedUpdateInput = {
@@ -389,10 +437,15 @@ export type ChapterUncheckedUpdateInput = {
   wordCount?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outline?: Prisma.OutlineUncheckedUpdateOneWithoutChapterNestedInput
   scenes?: Prisma.SceneUncheckedUpdateManyWithoutChapterNestedInput
+  plantedForeshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutPlantedInChapterNestedInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutResolvedInChapterNestedInput
+  characterSnapshots?: Prisma.CharacterSnapshotUncheckedUpdateManyWithoutChapterNestedInput
 }
 
 export type ChapterCreateManyInput = {
@@ -404,6 +457,8 @@ export type ChapterCreateManyInput = {
   wordCount?: number
   summary?: string | null
   notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -416,6 +471,8 @@ export type ChapterUpdateManyMutationInput = {
   wordCount?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -429,6 +486,8 @@ export type ChapterUncheckedUpdateManyInput = {
   wordCount?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -462,6 +521,8 @@ export type ChapterCountOrderByAggregateInput = {
   wordCount?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  isKeyChapter?: Prisma.SortOrder
+  plotType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -480,6 +541,8 @@ export type ChapterMaxOrderByAggregateInput = {
   wordCount?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  isKeyChapter?: Prisma.SortOrder
+  plotType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -493,6 +556,8 @@ export type ChapterMinOrderByAggregateInput = {
   wordCount?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  isKeyChapter?: Prisma.SortOrder
+  plotType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -579,6 +644,54 @@ export type ChapterUpdateOneRequiredWithoutScenesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ChapterUpdateToOneWithWhereWithoutScenesInput, Prisma.ChapterUpdateWithoutScenesInput>, Prisma.ChapterUncheckedUpdateWithoutScenesInput>
 }
 
+export type ChapterCreateNestedOneWithoutPlantedForeshadowingsInput = {
+  create?: Prisma.XOR<Prisma.ChapterCreateWithoutPlantedForeshadowingsInput, Prisma.ChapterUncheckedCreateWithoutPlantedForeshadowingsInput>
+  connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutPlantedForeshadowingsInput
+  connect?: Prisma.ChapterWhereUniqueInput
+}
+
+export type ChapterCreateNestedOneWithoutResolvedForeshadowingsInput = {
+  create?: Prisma.XOR<Prisma.ChapterCreateWithoutResolvedForeshadowingsInput, Prisma.ChapterUncheckedCreateWithoutResolvedForeshadowingsInput>
+  connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutResolvedForeshadowingsInput
+  connect?: Prisma.ChapterWhereUniqueInput
+}
+
+export type ChapterUpdateOneWithoutPlantedForeshadowingsNestedInput = {
+  create?: Prisma.XOR<Prisma.ChapterCreateWithoutPlantedForeshadowingsInput, Prisma.ChapterUncheckedCreateWithoutPlantedForeshadowingsInput>
+  connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutPlantedForeshadowingsInput
+  upsert?: Prisma.ChapterUpsertWithoutPlantedForeshadowingsInput
+  disconnect?: Prisma.ChapterWhereInput | boolean
+  delete?: Prisma.ChapterWhereInput | boolean
+  connect?: Prisma.ChapterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ChapterUpdateToOneWithWhereWithoutPlantedForeshadowingsInput, Prisma.ChapterUpdateWithoutPlantedForeshadowingsInput>, Prisma.ChapterUncheckedUpdateWithoutPlantedForeshadowingsInput>
+}
+
+export type ChapterUpdateOneWithoutResolvedForeshadowingsNestedInput = {
+  create?: Prisma.XOR<Prisma.ChapterCreateWithoutResolvedForeshadowingsInput, Prisma.ChapterUncheckedCreateWithoutResolvedForeshadowingsInput>
+  connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutResolvedForeshadowingsInput
+  upsert?: Prisma.ChapterUpsertWithoutResolvedForeshadowingsInput
+  disconnect?: Prisma.ChapterWhereInput | boolean
+  delete?: Prisma.ChapterWhereInput | boolean
+  connect?: Prisma.ChapterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ChapterUpdateToOneWithWhereWithoutResolvedForeshadowingsInput, Prisma.ChapterUpdateWithoutResolvedForeshadowingsInput>, Prisma.ChapterUncheckedUpdateWithoutResolvedForeshadowingsInput>
+}
+
+export type ChapterCreateNestedOneWithoutCharacterSnapshotsInput = {
+  create?: Prisma.XOR<Prisma.ChapterCreateWithoutCharacterSnapshotsInput, Prisma.ChapterUncheckedCreateWithoutCharacterSnapshotsInput>
+  connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutCharacterSnapshotsInput
+  connect?: Prisma.ChapterWhereUniqueInput
+}
+
+export type ChapterUpdateOneWithoutCharacterSnapshotsNestedInput = {
+  create?: Prisma.XOR<Prisma.ChapterCreateWithoutCharacterSnapshotsInput, Prisma.ChapterUncheckedCreateWithoutCharacterSnapshotsInput>
+  connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutCharacterSnapshotsInput
+  upsert?: Prisma.ChapterUpsertWithoutCharacterSnapshotsInput
+  disconnect?: Prisma.ChapterWhereInput | boolean
+  delete?: Prisma.ChapterWhereInput | boolean
+  connect?: Prisma.ChapterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ChapterUpdateToOneWithWhereWithoutCharacterSnapshotsInput, Prisma.ChapterUpdateWithoutCharacterSnapshotsInput>, Prisma.ChapterUncheckedUpdateWithoutCharacterSnapshotsInput>
+}
+
 export type ChapterCreateWithoutProjectInput = {
   id?: string
   chapterNumber: number
@@ -587,10 +700,15 @@ export type ChapterCreateWithoutProjectInput = {
   wordCount?: number
   summary?: string | null
   notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outline?: Prisma.OutlineCreateNestedOneWithoutChapterInput
   scenes?: Prisma.SceneCreateNestedManyWithoutChapterInput
+  plantedForeshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutPlantedInChapterInput
+  resolvedForeshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutResolvedInChapterInput
+  characterSnapshots?: Prisma.CharacterSnapshotCreateNestedManyWithoutChapterInput
 }
 
 export type ChapterUncheckedCreateWithoutProjectInput = {
@@ -601,10 +719,15 @@ export type ChapterUncheckedCreateWithoutProjectInput = {
   wordCount?: number
   summary?: string | null
   notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outline?: Prisma.OutlineUncheckedCreateNestedOneWithoutChapterInput
   scenes?: Prisma.SceneUncheckedCreateNestedManyWithoutChapterInput
+  plantedForeshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutPlantedInChapterInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutResolvedInChapterInput
+  characterSnapshots?: Prisma.CharacterSnapshotUncheckedCreateNestedManyWithoutChapterInput
 }
 
 export type ChapterCreateOrConnectWithoutProjectInput = {
@@ -644,6 +767,8 @@ export type ChapterScalarWhereInput = {
   wordCount?: Prisma.IntFilter<"Chapter"> | number
   summary?: Prisma.StringNullableFilter<"Chapter"> | string | null
   notes?: Prisma.StringNullableFilter<"Chapter"> | string | null
+  isKeyChapter?: Prisma.BoolFilter<"Chapter"> | boolean
+  plotType?: Prisma.StringNullableFilter<"Chapter"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Chapter"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Chapter"> | Date | string
 }
@@ -656,10 +781,15 @@ export type ChapterCreateWithoutOutlineInput = {
   wordCount?: number
   summary?: string | null
   notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutChaptersInput
   scenes?: Prisma.SceneCreateNestedManyWithoutChapterInput
+  plantedForeshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutPlantedInChapterInput
+  resolvedForeshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutResolvedInChapterInput
+  characterSnapshots?: Prisma.CharacterSnapshotCreateNestedManyWithoutChapterInput
 }
 
 export type ChapterUncheckedCreateWithoutOutlineInput = {
@@ -671,9 +801,14 @@ export type ChapterUncheckedCreateWithoutOutlineInput = {
   wordCount?: number
   summary?: string | null
   notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   scenes?: Prisma.SceneUncheckedCreateNestedManyWithoutChapterInput
+  plantedForeshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutPlantedInChapterInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutResolvedInChapterInput
+  characterSnapshots?: Prisma.CharacterSnapshotUncheckedCreateNestedManyWithoutChapterInput
 }
 
 export type ChapterCreateOrConnectWithoutOutlineInput = {
@@ -700,10 +835,15 @@ export type ChapterUpdateWithoutOutlineInput = {
   wordCount?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutChaptersNestedInput
   scenes?: Prisma.SceneUpdateManyWithoutChapterNestedInput
+  plantedForeshadowings?: Prisma.ForeshadowingUpdateManyWithoutPlantedInChapterNestedInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUpdateManyWithoutResolvedInChapterNestedInput
+  characterSnapshots?: Prisma.CharacterSnapshotUpdateManyWithoutChapterNestedInput
 }
 
 export type ChapterUncheckedUpdateWithoutOutlineInput = {
@@ -715,9 +855,14 @@ export type ChapterUncheckedUpdateWithoutOutlineInput = {
   wordCount?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scenes?: Prisma.SceneUncheckedUpdateManyWithoutChapterNestedInput
+  plantedForeshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutPlantedInChapterNestedInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutResolvedInChapterNestedInput
+  characterSnapshots?: Prisma.CharacterSnapshotUncheckedUpdateManyWithoutChapterNestedInput
 }
 
 export type ChapterCreateWithoutScenesInput = {
@@ -728,10 +873,15 @@ export type ChapterCreateWithoutScenesInput = {
   wordCount?: number
   summary?: string | null
   notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutChaptersInput
   outline?: Prisma.OutlineCreateNestedOneWithoutChapterInput
+  plantedForeshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutPlantedInChapterInput
+  resolvedForeshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutResolvedInChapterInput
+  characterSnapshots?: Prisma.CharacterSnapshotCreateNestedManyWithoutChapterInput
 }
 
 export type ChapterUncheckedCreateWithoutScenesInput = {
@@ -743,9 +893,14 @@ export type ChapterUncheckedCreateWithoutScenesInput = {
   wordCount?: number
   summary?: string | null
   notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outline?: Prisma.OutlineUncheckedCreateNestedOneWithoutChapterInput
+  plantedForeshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutPlantedInChapterInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutResolvedInChapterInput
+  characterSnapshots?: Prisma.CharacterSnapshotUncheckedCreateNestedManyWithoutChapterInput
 }
 
 export type ChapterCreateOrConnectWithoutScenesInput = {
@@ -772,10 +927,15 @@ export type ChapterUpdateWithoutScenesInput = {
   wordCount?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutChaptersNestedInput
   outline?: Prisma.OutlineUpdateOneWithoutChapterNestedInput
+  plantedForeshadowings?: Prisma.ForeshadowingUpdateManyWithoutPlantedInChapterNestedInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUpdateManyWithoutResolvedInChapterNestedInput
+  characterSnapshots?: Prisma.CharacterSnapshotUpdateManyWithoutChapterNestedInput
 }
 
 export type ChapterUncheckedUpdateWithoutScenesInput = {
@@ -787,9 +947,290 @@ export type ChapterUncheckedUpdateWithoutScenesInput = {
   wordCount?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outline?: Prisma.OutlineUncheckedUpdateOneWithoutChapterNestedInput
+  plantedForeshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutPlantedInChapterNestedInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutResolvedInChapterNestedInput
+  characterSnapshots?: Prisma.CharacterSnapshotUncheckedUpdateManyWithoutChapterNestedInput
+}
+
+export type ChapterCreateWithoutPlantedForeshadowingsInput = {
+  id?: string
+  chapterNumber: number
+  title: string
+  content: string
+  wordCount?: number
+  summary?: string | null
+  notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutChaptersInput
+  outline?: Prisma.OutlineCreateNestedOneWithoutChapterInput
+  scenes?: Prisma.SceneCreateNestedManyWithoutChapterInput
+  resolvedForeshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutResolvedInChapterInput
+  characterSnapshots?: Prisma.CharacterSnapshotCreateNestedManyWithoutChapterInput
+}
+
+export type ChapterUncheckedCreateWithoutPlantedForeshadowingsInput = {
+  id?: string
+  projectId: string
+  chapterNumber: number
+  title: string
+  content: string
+  wordCount?: number
+  summary?: string | null
+  notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  outline?: Prisma.OutlineUncheckedCreateNestedOneWithoutChapterInput
+  scenes?: Prisma.SceneUncheckedCreateNestedManyWithoutChapterInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutResolvedInChapterInput
+  characterSnapshots?: Prisma.CharacterSnapshotUncheckedCreateNestedManyWithoutChapterInput
+}
+
+export type ChapterCreateOrConnectWithoutPlantedForeshadowingsInput = {
+  where: Prisma.ChapterWhereUniqueInput
+  create: Prisma.XOR<Prisma.ChapterCreateWithoutPlantedForeshadowingsInput, Prisma.ChapterUncheckedCreateWithoutPlantedForeshadowingsInput>
+}
+
+export type ChapterCreateWithoutResolvedForeshadowingsInput = {
+  id?: string
+  chapterNumber: number
+  title: string
+  content: string
+  wordCount?: number
+  summary?: string | null
+  notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutChaptersInput
+  outline?: Prisma.OutlineCreateNestedOneWithoutChapterInput
+  scenes?: Prisma.SceneCreateNestedManyWithoutChapterInput
+  plantedForeshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutPlantedInChapterInput
+  characterSnapshots?: Prisma.CharacterSnapshotCreateNestedManyWithoutChapterInput
+}
+
+export type ChapterUncheckedCreateWithoutResolvedForeshadowingsInput = {
+  id?: string
+  projectId: string
+  chapterNumber: number
+  title: string
+  content: string
+  wordCount?: number
+  summary?: string | null
+  notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  outline?: Prisma.OutlineUncheckedCreateNestedOneWithoutChapterInput
+  scenes?: Prisma.SceneUncheckedCreateNestedManyWithoutChapterInput
+  plantedForeshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutPlantedInChapterInput
+  characterSnapshots?: Prisma.CharacterSnapshotUncheckedCreateNestedManyWithoutChapterInput
+}
+
+export type ChapterCreateOrConnectWithoutResolvedForeshadowingsInput = {
+  where: Prisma.ChapterWhereUniqueInput
+  create: Prisma.XOR<Prisma.ChapterCreateWithoutResolvedForeshadowingsInput, Prisma.ChapterUncheckedCreateWithoutResolvedForeshadowingsInput>
+}
+
+export type ChapterUpsertWithoutPlantedForeshadowingsInput = {
+  update: Prisma.XOR<Prisma.ChapterUpdateWithoutPlantedForeshadowingsInput, Prisma.ChapterUncheckedUpdateWithoutPlantedForeshadowingsInput>
+  create: Prisma.XOR<Prisma.ChapterCreateWithoutPlantedForeshadowingsInput, Prisma.ChapterUncheckedCreateWithoutPlantedForeshadowingsInput>
+  where?: Prisma.ChapterWhereInput
+}
+
+export type ChapterUpdateToOneWithWhereWithoutPlantedForeshadowingsInput = {
+  where?: Prisma.ChapterWhereInput
+  data: Prisma.XOR<Prisma.ChapterUpdateWithoutPlantedForeshadowingsInput, Prisma.ChapterUncheckedUpdateWithoutPlantedForeshadowingsInput>
+}
+
+export type ChapterUpdateWithoutPlantedForeshadowingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutChaptersNestedInput
+  outline?: Prisma.OutlineUpdateOneWithoutChapterNestedInput
+  scenes?: Prisma.SceneUpdateManyWithoutChapterNestedInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUpdateManyWithoutResolvedInChapterNestedInput
+  characterSnapshots?: Prisma.CharacterSnapshotUpdateManyWithoutChapterNestedInput
+}
+
+export type ChapterUncheckedUpdateWithoutPlantedForeshadowingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  outline?: Prisma.OutlineUncheckedUpdateOneWithoutChapterNestedInput
+  scenes?: Prisma.SceneUncheckedUpdateManyWithoutChapterNestedInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutResolvedInChapterNestedInput
+  characterSnapshots?: Prisma.CharacterSnapshotUncheckedUpdateManyWithoutChapterNestedInput
+}
+
+export type ChapterUpsertWithoutResolvedForeshadowingsInput = {
+  update: Prisma.XOR<Prisma.ChapterUpdateWithoutResolvedForeshadowingsInput, Prisma.ChapterUncheckedUpdateWithoutResolvedForeshadowingsInput>
+  create: Prisma.XOR<Prisma.ChapterCreateWithoutResolvedForeshadowingsInput, Prisma.ChapterUncheckedCreateWithoutResolvedForeshadowingsInput>
+  where?: Prisma.ChapterWhereInput
+}
+
+export type ChapterUpdateToOneWithWhereWithoutResolvedForeshadowingsInput = {
+  where?: Prisma.ChapterWhereInput
+  data: Prisma.XOR<Prisma.ChapterUpdateWithoutResolvedForeshadowingsInput, Prisma.ChapterUncheckedUpdateWithoutResolvedForeshadowingsInput>
+}
+
+export type ChapterUpdateWithoutResolvedForeshadowingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutChaptersNestedInput
+  outline?: Prisma.OutlineUpdateOneWithoutChapterNestedInput
+  scenes?: Prisma.SceneUpdateManyWithoutChapterNestedInput
+  plantedForeshadowings?: Prisma.ForeshadowingUpdateManyWithoutPlantedInChapterNestedInput
+  characterSnapshots?: Prisma.CharacterSnapshotUpdateManyWithoutChapterNestedInput
+}
+
+export type ChapterUncheckedUpdateWithoutResolvedForeshadowingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  outline?: Prisma.OutlineUncheckedUpdateOneWithoutChapterNestedInput
+  scenes?: Prisma.SceneUncheckedUpdateManyWithoutChapterNestedInput
+  plantedForeshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutPlantedInChapterNestedInput
+  characterSnapshots?: Prisma.CharacterSnapshotUncheckedUpdateManyWithoutChapterNestedInput
+}
+
+export type ChapterCreateWithoutCharacterSnapshotsInput = {
+  id?: string
+  chapterNumber: number
+  title: string
+  content: string
+  wordCount?: number
+  summary?: string | null
+  notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutChaptersInput
+  outline?: Prisma.OutlineCreateNestedOneWithoutChapterInput
+  scenes?: Prisma.SceneCreateNestedManyWithoutChapterInput
+  plantedForeshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutPlantedInChapterInput
+  resolvedForeshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutResolvedInChapterInput
+}
+
+export type ChapterUncheckedCreateWithoutCharacterSnapshotsInput = {
+  id?: string
+  projectId: string
+  chapterNumber: number
+  title: string
+  content: string
+  wordCount?: number
+  summary?: string | null
+  notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  outline?: Prisma.OutlineUncheckedCreateNestedOneWithoutChapterInput
+  scenes?: Prisma.SceneUncheckedCreateNestedManyWithoutChapterInput
+  plantedForeshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutPlantedInChapterInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutResolvedInChapterInput
+}
+
+export type ChapterCreateOrConnectWithoutCharacterSnapshotsInput = {
+  where: Prisma.ChapterWhereUniqueInput
+  create: Prisma.XOR<Prisma.ChapterCreateWithoutCharacterSnapshotsInput, Prisma.ChapterUncheckedCreateWithoutCharacterSnapshotsInput>
+}
+
+export type ChapterUpsertWithoutCharacterSnapshotsInput = {
+  update: Prisma.XOR<Prisma.ChapterUpdateWithoutCharacterSnapshotsInput, Prisma.ChapterUncheckedUpdateWithoutCharacterSnapshotsInput>
+  create: Prisma.XOR<Prisma.ChapterCreateWithoutCharacterSnapshotsInput, Prisma.ChapterUncheckedCreateWithoutCharacterSnapshotsInput>
+  where?: Prisma.ChapterWhereInput
+}
+
+export type ChapterUpdateToOneWithWhereWithoutCharacterSnapshotsInput = {
+  where?: Prisma.ChapterWhereInput
+  data: Prisma.XOR<Prisma.ChapterUpdateWithoutCharacterSnapshotsInput, Prisma.ChapterUncheckedUpdateWithoutCharacterSnapshotsInput>
+}
+
+export type ChapterUpdateWithoutCharacterSnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutChaptersNestedInput
+  outline?: Prisma.OutlineUpdateOneWithoutChapterNestedInput
+  scenes?: Prisma.SceneUpdateManyWithoutChapterNestedInput
+  plantedForeshadowings?: Prisma.ForeshadowingUpdateManyWithoutPlantedInChapterNestedInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUpdateManyWithoutResolvedInChapterNestedInput
+}
+
+export type ChapterUncheckedUpdateWithoutCharacterSnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  wordCount?: Prisma.IntFieldUpdateOperationsInput | number
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  outline?: Prisma.OutlineUncheckedUpdateOneWithoutChapterNestedInput
+  scenes?: Prisma.SceneUncheckedUpdateManyWithoutChapterNestedInput
+  plantedForeshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutPlantedInChapterNestedInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutResolvedInChapterNestedInput
 }
 
 export type ChapterCreateManyProjectInput = {
@@ -800,6 +1241,8 @@ export type ChapterCreateManyProjectInput = {
   wordCount?: number
   summary?: string | null
   notes?: string | null
+  isKeyChapter?: boolean
+  plotType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -812,10 +1255,15 @@ export type ChapterUpdateWithoutProjectInput = {
   wordCount?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outline?: Prisma.OutlineUpdateOneWithoutChapterNestedInput
   scenes?: Prisma.SceneUpdateManyWithoutChapterNestedInput
+  plantedForeshadowings?: Prisma.ForeshadowingUpdateManyWithoutPlantedInChapterNestedInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUpdateManyWithoutResolvedInChapterNestedInput
+  characterSnapshots?: Prisma.CharacterSnapshotUpdateManyWithoutChapterNestedInput
 }
 
 export type ChapterUncheckedUpdateWithoutProjectInput = {
@@ -826,10 +1274,15 @@ export type ChapterUncheckedUpdateWithoutProjectInput = {
   wordCount?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outline?: Prisma.OutlineUncheckedUpdateOneWithoutChapterNestedInput
   scenes?: Prisma.SceneUncheckedUpdateManyWithoutChapterNestedInput
+  plantedForeshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutPlantedInChapterNestedInput
+  resolvedForeshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutResolvedInChapterNestedInput
+  characterSnapshots?: Prisma.CharacterSnapshotUncheckedUpdateManyWithoutChapterNestedInput
 }
 
 export type ChapterUncheckedUpdateManyWithoutProjectInput = {
@@ -840,6 +1293,8 @@ export type ChapterUncheckedUpdateManyWithoutProjectInput = {
   wordCount?: Prisma.IntFieldUpdateOperationsInput | number
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isKeyChapter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plotType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -851,10 +1306,16 @@ export type ChapterUncheckedUpdateManyWithoutProjectInput = {
 
 export type ChapterCountOutputType = {
   scenes: number
+  plantedForeshadowings: number
+  resolvedForeshadowings: number
+  characterSnapshots: number
 }
 
 export type ChapterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   scenes?: boolean | ChapterCountOutputTypeCountScenesArgs
+  plantedForeshadowings?: boolean | ChapterCountOutputTypeCountPlantedForeshadowingsArgs
+  resolvedForeshadowings?: boolean | ChapterCountOutputTypeCountResolvedForeshadowingsArgs
+  characterSnapshots?: boolean | ChapterCountOutputTypeCountCharacterSnapshotsArgs
 }
 
 /**
@@ -874,6 +1335,27 @@ export type ChapterCountOutputTypeCountScenesArgs<ExtArgs extends runtime.Types.
   where?: Prisma.SceneWhereInput
 }
 
+/**
+ * ChapterCountOutputType without action
+ */
+export type ChapterCountOutputTypeCountPlantedForeshadowingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForeshadowingWhereInput
+}
+
+/**
+ * ChapterCountOutputType without action
+ */
+export type ChapterCountOutputTypeCountResolvedForeshadowingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForeshadowingWhereInput
+}
+
+/**
+ * ChapterCountOutputType without action
+ */
+export type ChapterCountOutputTypeCountCharacterSnapshotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CharacterSnapshotWhereInput
+}
+
 
 export type ChapterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -884,11 +1366,16 @@ export type ChapterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   wordCount?: boolean
   summary?: boolean
   notes?: boolean
+  isKeyChapter?: boolean
+  plotType?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   outline?: boolean | Prisma.Chapter$outlineArgs<ExtArgs>
   scenes?: boolean | Prisma.Chapter$scenesArgs<ExtArgs>
+  plantedForeshadowings?: boolean | Prisma.Chapter$plantedForeshadowingsArgs<ExtArgs>
+  resolvedForeshadowings?: boolean | Prisma.Chapter$resolvedForeshadowingsArgs<ExtArgs>
+  characterSnapshots?: boolean | Prisma.Chapter$characterSnapshotsArgs<ExtArgs>
   _count?: boolean | Prisma.ChapterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chapter"]>
 
@@ -901,6 +1388,8 @@ export type ChapterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   wordCount?: boolean
   summary?: boolean
   notes?: boolean
+  isKeyChapter?: boolean
+  plotType?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -915,6 +1404,8 @@ export type ChapterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   wordCount?: boolean
   summary?: boolean
   notes?: boolean
+  isKeyChapter?: boolean
+  plotType?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -929,15 +1420,20 @@ export type ChapterSelectScalar = {
   wordCount?: boolean
   summary?: boolean
   notes?: boolean
+  isKeyChapter?: boolean
+  plotType?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ChapterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "chapterNumber" | "title" | "content" | "wordCount" | "summary" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["chapter"]>
+export type ChapterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "chapterNumber" | "title" | "content" | "wordCount" | "summary" | "notes" | "isKeyChapter" | "plotType" | "createdAt" | "updatedAt", ExtArgs["result"]["chapter"]>
 export type ChapterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   outline?: boolean | Prisma.Chapter$outlineArgs<ExtArgs>
   scenes?: boolean | Prisma.Chapter$scenesArgs<ExtArgs>
+  plantedForeshadowings?: boolean | Prisma.Chapter$plantedForeshadowingsArgs<ExtArgs>
+  resolvedForeshadowings?: boolean | Prisma.Chapter$resolvedForeshadowingsArgs<ExtArgs>
+  characterSnapshots?: boolean | Prisma.Chapter$characterSnapshotsArgs<ExtArgs>
   _count?: boolean | Prisma.ChapterCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ChapterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -953,6 +1449,9 @@ export type $ChapterPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     project: Prisma.$ProjectPayload<ExtArgs>
     outline: Prisma.$OutlinePayload<ExtArgs> | null
     scenes: Prisma.$ScenePayload<ExtArgs>[]
+    plantedForeshadowings: Prisma.$ForeshadowingPayload<ExtArgs>[]
+    resolvedForeshadowings: Prisma.$ForeshadowingPayload<ExtArgs>[]
+    characterSnapshots: Prisma.$CharacterSnapshotPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -963,6 +1462,8 @@ export type $ChapterPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     wordCount: number
     summary: string | null
     notes: string | null
+    isKeyChapter: boolean
+    plotType: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["chapter"]>
@@ -1362,6 +1863,9 @@ export interface Prisma__ChapterClient<T, Null = never, ExtArgs extends runtime.
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   outline<T extends Prisma.Chapter$outlineArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$outlineArgs<ExtArgs>>): Prisma.Prisma__OutlineClient<runtime.Types.Result.GetResult<Prisma.$OutlinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   scenes<T extends Prisma.Chapter$scenesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$scenesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ScenePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  plantedForeshadowings<T extends Prisma.Chapter$plantedForeshadowingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$plantedForeshadowingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForeshadowingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  resolvedForeshadowings<T extends Prisma.Chapter$resolvedForeshadowingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$resolvedForeshadowingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForeshadowingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  characterSnapshots<T extends Prisma.Chapter$characterSnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$characterSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1399,6 +1903,8 @@ export interface ChapterFieldRefs {
   readonly wordCount: Prisma.FieldRef<"Chapter", 'Int'>
   readonly summary: Prisma.FieldRef<"Chapter", 'String'>
   readonly notes: Prisma.FieldRef<"Chapter", 'String'>
+  readonly isKeyChapter: Prisma.FieldRef<"Chapter", 'Boolean'>
+  readonly plotType: Prisma.FieldRef<"Chapter", 'String'>
   readonly createdAt: Prisma.FieldRef<"Chapter", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Chapter", 'DateTime'>
 }
@@ -1835,6 +2341,78 @@ export type Chapter$scenesArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.SceneScalarFieldEnum | Prisma.SceneScalarFieldEnum[]
+}
+
+/**
+ * Chapter.plantedForeshadowings
+ */
+export type Chapter$plantedForeshadowingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Foreshadowing
+   */
+  select?: Prisma.ForeshadowingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Foreshadowing
+   */
+  omit?: Prisma.ForeshadowingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForeshadowingInclude<ExtArgs> | null
+  where?: Prisma.ForeshadowingWhereInput
+  orderBy?: Prisma.ForeshadowingOrderByWithRelationInput | Prisma.ForeshadowingOrderByWithRelationInput[]
+  cursor?: Prisma.ForeshadowingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForeshadowingScalarFieldEnum | Prisma.ForeshadowingScalarFieldEnum[]
+}
+
+/**
+ * Chapter.resolvedForeshadowings
+ */
+export type Chapter$resolvedForeshadowingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Foreshadowing
+   */
+  select?: Prisma.ForeshadowingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Foreshadowing
+   */
+  omit?: Prisma.ForeshadowingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForeshadowingInclude<ExtArgs> | null
+  where?: Prisma.ForeshadowingWhereInput
+  orderBy?: Prisma.ForeshadowingOrderByWithRelationInput | Prisma.ForeshadowingOrderByWithRelationInput[]
+  cursor?: Prisma.ForeshadowingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForeshadowingScalarFieldEnum | Prisma.ForeshadowingScalarFieldEnum[]
+}
+
+/**
+ * Chapter.characterSnapshots
+ */
+export type Chapter$characterSnapshotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CharacterSnapshot
+   */
+  select?: Prisma.CharacterSnapshotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CharacterSnapshot
+   */
+  omit?: Prisma.CharacterSnapshotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CharacterSnapshotInclude<ExtArgs> | null
+  where?: Prisma.CharacterSnapshotWhereInput
+  orderBy?: Prisma.CharacterSnapshotOrderByWithRelationInput | Prisma.CharacterSnapshotOrderByWithRelationInput[]
+  cursor?: Prisma.CharacterSnapshotWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CharacterSnapshotScalarFieldEnum | Prisma.CharacterSnapshotScalarFieldEnum[]
 }
 
 /**

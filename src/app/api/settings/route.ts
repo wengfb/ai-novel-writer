@@ -21,7 +21,7 @@ export async function GET() {
     })
   } catch (error) {
     console.error('获取系统设置失败:', error)
-    return apiError('获取系统设置失败')
+    return apiError('SERVER_ERROR', '获取系统设置失败')
   }
 }
 
@@ -32,7 +32,7 @@ export async function PUT(request: NextRequest) {
     const { settings } = body
 
     if (!settings || typeof settings !== 'object') {
-      return apiError('无效的设置数据', null, 400)
+      return apiError('INVALID_SETTINGS', '无效的设置数据', undefined, 400)
     }
 
     // 使用事务批量更新
@@ -54,7 +54,7 @@ export async function PUT(request: NextRequest) {
     return apiSuccess({ message: '设置已保存' })
   } catch (error) {
     console.error('保存系统设置失败:', error)
-    return apiError('保存系统设置失败')
+    return apiError('SERVER_ERROR', '保存系统设置失败')
   }
 }
 

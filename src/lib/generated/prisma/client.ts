@@ -75,6 +75,16 @@ export type WorldElement = Prisma.WorldElementModel
  */
 export type Generation = Prisma.GenerationModel
 /**
+ * Model Foreshadowing
+ * 
+ */
+export type Foreshadowing = Prisma.ForeshadowingModel
+/**
+ * Model CharacterSnapshot
+ * 
+ */
+export type CharacterSnapshot = Prisma.CharacterSnapshotModel
+/**
  * Model SystemSetting
  * 
  */

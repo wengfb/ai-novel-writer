@@ -391,6 +391,8 @@ export const ModelName = {
   Character: 'Character',
   WorldElement: 'WorldElement',
   Generation: 'Generation',
+  Foreshadowing: 'Foreshadowing',
+  CharacterSnapshot: 'CharacterSnapshot',
   SystemSetting: 'SystemSetting'
 } as const
 
@@ -407,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "project" | "outline" | "chapter" | "scene" | "character" | "worldElement" | "generation" | "systemSetting"
+    modelProps: "project" | "outline" | "chapter" | "scene" | "character" | "worldElement" | "generation" | "foreshadowing" | "characterSnapshot" | "systemSetting"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -929,6 +931,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Foreshadowing: {
+      payload: Prisma.$ForeshadowingPayload<ExtArgs>
+      fields: Prisma.ForeshadowingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ForeshadowingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ForeshadowingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ForeshadowingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ForeshadowingPayload>
+        }
+        findFirst: {
+          args: Prisma.ForeshadowingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ForeshadowingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ForeshadowingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ForeshadowingPayload>
+        }
+        findMany: {
+          args: Prisma.ForeshadowingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ForeshadowingPayload>[]
+        }
+        create: {
+          args: Prisma.ForeshadowingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ForeshadowingPayload>
+        }
+        createMany: {
+          args: Prisma.ForeshadowingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ForeshadowingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ForeshadowingPayload>[]
+        }
+        delete: {
+          args: Prisma.ForeshadowingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ForeshadowingPayload>
+        }
+        update: {
+          args: Prisma.ForeshadowingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ForeshadowingPayload>
+        }
+        deleteMany: {
+          args: Prisma.ForeshadowingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ForeshadowingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ForeshadowingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ForeshadowingPayload>[]
+        }
+        upsert: {
+          args: Prisma.ForeshadowingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ForeshadowingPayload>
+        }
+        aggregate: {
+          args: Prisma.ForeshadowingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateForeshadowing>
+        }
+        groupBy: {
+          args: Prisma.ForeshadowingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ForeshadowingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ForeshadowingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ForeshadowingCountAggregateOutputType> | number
+        }
+      }
+    }
+    CharacterSnapshot: {
+      payload: Prisma.$CharacterSnapshotPayload<ExtArgs>
+      fields: Prisma.CharacterSnapshotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CharacterSnapshotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterSnapshotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CharacterSnapshotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterSnapshotPayload>
+        }
+        findFirst: {
+          args: Prisma.CharacterSnapshotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterSnapshotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CharacterSnapshotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterSnapshotPayload>
+        }
+        findMany: {
+          args: Prisma.CharacterSnapshotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterSnapshotPayload>[]
+        }
+        create: {
+          args: Prisma.CharacterSnapshotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterSnapshotPayload>
+        }
+        createMany: {
+          args: Prisma.CharacterSnapshotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CharacterSnapshotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterSnapshotPayload>[]
+        }
+        delete: {
+          args: Prisma.CharacterSnapshotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterSnapshotPayload>
+        }
+        update: {
+          args: Prisma.CharacterSnapshotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterSnapshotPayload>
+        }
+        deleteMany: {
+          args: Prisma.CharacterSnapshotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CharacterSnapshotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CharacterSnapshotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterSnapshotPayload>[]
+        }
+        upsert: {
+          args: Prisma.CharacterSnapshotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterSnapshotPayload>
+        }
+        aggregate: {
+          args: Prisma.CharacterSnapshotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCharacterSnapshot>
+        }
+        groupBy: {
+          args: Prisma.CharacterSnapshotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CharacterSnapshotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CharacterSnapshotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CharacterSnapshotCountAggregateOutputType> | number
+        }
+      }
+    }
     SystemSetting: {
       payload: Prisma.$SystemSettingPayload<ExtArgs>
       fields: Prisma.SystemSettingFieldRefs
@@ -1049,6 +1199,8 @@ export const ProjectScalarFieldEnum = {
   coverImage: 'coverImage',
   totalWords: 'totalWords',
   chapterCount: 'chapterCount',
+  outlineMode: 'outlineMode',
+  planningRange: 'planningRange',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1064,6 +1216,10 @@ export const OutlineScalarFieldEnum = {
   title: 'title',
   description: 'description',
   targetWords: 'targetWords',
+  planningMode: 'planningMode',
+  planningRange: 'planningRange',
+  isFlexible: 'isFlexible',
+  confidence: 'confidence',
   parentId: 'parentId',
   chapterId: 'chapterId',
   status: 'status',
@@ -1083,6 +1239,8 @@ export const ChapterScalarFieldEnum = {
   wordCount: 'wordCount',
   summary: 'summary',
   notes: 'notes',
+  isKeyChapter: 'isKeyChapter',
+  plotType: 'plotType',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1112,6 +1270,8 @@ export const CharacterScalarFieldEnum = {
   nickname: 'nickname',
   age: 'age',
   gender: 'gender',
+  importance: 'importance',
+  role: 'role',
   appearance: 'appearance',
   personality: 'personality',
   backstory: 'backstory',
@@ -1161,6 +1321,56 @@ export const GenerationScalarFieldEnum = {
 } as const
 
 export type GenerationScalarFieldEnum = (typeof GenerationScalarFieldEnum)[keyof typeof GenerationScalarFieldEnum]
+
+
+export const ForeshadowingScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  importance: 'importance',
+  plantedInChapterId: 'plantedInChapterId',
+  plantedContent: 'plantedContent',
+  plantedAt: 'plantedAt',
+  expectedChapterNumber: 'expectedChapterNumber',
+  resolvedInChapterId: 'resolvedInChapterId',
+  resolvedContent: 'resolvedContent',
+  resolvedAt: 'resolvedAt',
+  status: 'status',
+  relatedCharacters: 'relatedCharacters',
+  relatedElements: 'relatedElements',
+  tags: 'tags',
+  reminderChapterNumber: 'reminderChapterNumber',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ForeshadowingScalarFieldEnum = (typeof ForeshadowingScalarFieldEnum)[keyof typeof ForeshadowingScalarFieldEnum]
+
+
+export const CharacterSnapshotScalarFieldEnum = {
+  id: 'id',
+  characterId: 'characterId',
+  chapterId: 'chapterId',
+  chapterNumber: 'chapterNumber',
+  age: 'age',
+  appearance: 'appearance',
+  personality: 'personality',
+  powerLevel: 'powerLevel',
+  skills: 'skills',
+  items: 'items',
+  status: 'status',
+  relationships: 'relationships',
+  mentalState: 'mentalState',
+  motivation: 'motivation',
+  majorEvents: 'majorEvents',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CharacterSnapshotScalarFieldEnum = (typeof CharacterSnapshotScalarFieldEnum)[keyof typeof CharacterSnapshotScalarFieldEnum]
 
 
 export const SystemSettingScalarFieldEnum = {
@@ -1215,6 +1425,13 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1326,6 +1543,8 @@ export type GlobalOmitConfig = {
   character?: Prisma.CharacterOmit
   worldElement?: Prisma.WorldElementOmit
   generation?: Prisma.GenerationOmit
+  foreshadowing?: Prisma.ForeshadowingOmit
+  characterSnapshot?: Prisma.CharacterSnapshotOmit
   systemSetting?: Prisma.SystemSettingOmit
 }
 

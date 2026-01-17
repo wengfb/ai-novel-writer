@@ -9,6 +9,8 @@ export interface Project {
   coverImage?: string
   totalWords: number
   chapterCount: number
+  outlineMode: 'full' | 'progressive'
+  planningRange?: number
   createdAt: Date
   updatedAt: Date
 }
@@ -23,6 +25,8 @@ export interface Chapter {
   wordCount: number
   summary?: string
   notes?: string
+  isKeyChapter: boolean
+  plotType?: 'setup' | 'conflict' | 'climax' | 'resolution'
   createdAt: Date
   updatedAt: Date
 }
@@ -35,6 +39,8 @@ export interface Character {
   nickname?: string
   age?: number
   gender?: string
+  importance: number
+  role: 'protagonist' | 'antagonist' | 'supporting' | 'minor'
   appearance?: string
   personality?: string
   backstory?: string
@@ -73,6 +79,10 @@ export interface Outline {
   parentId?: string
   chapterId?: string
   status: 'planned' | 'writing' | 'completed'
+  planningMode: 'full' | 'progressive'
+  planningRange?: number
+  isFlexible: boolean
+  confidence: number
   createdAt: Date
   updatedAt: Date
 }
@@ -111,4 +121,80 @@ export interface ContextPackage {
     genre: string
     style?: string
   }
+}
+
+// 伏笔类型
+export interface Foreshadowing {
+  id: string
+  projectId: string
+  title: string
+  description: string
+  type: 'plot' | 'character' | 'world' | 'mystery'
+  importance: number
+  plantedInChapterId?: string
+  plantedContent?: string
+  plantedAt?: Date
+  expectedChapterNumber?: number
+  resolvedInChapterId?: string
+  resolvedContent?: string
+  resolvedAt?: Date
+  status: 'planned' | 'planted' | 'resolved' | 'abandoned'
+  relatedCharacters?: string
+  relatedElements?: string
+  tags?: string
+  reminderChapterNumber?: number
+  createdAt: Date
+  updatedAt: Date
+}
+
+// 角色快照类型
+export interface CharacterSnapshot {
+  id: string
+  characterId: string
+  chapterId?: string
+  chapterNumber: number
+  age?: number
+  appearance?: string
+  personality?: string
+  powerLevel?: string
+  skills?: string
+  items?: string
+  status?: string
+  relationships?: string
+  mentalState?: string
+  motivation?: string
+  majorEvents?: string
+  notes?: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+// 伏笔创建参数
+export interface CreateForeshadowingParams {
+  title: string
+  description: string
+  type: 'plot' | 'character' | 'world' | 'mystery'
+  importance?: number
+  expectedChapterNumber?: number
+  relatedCharacters?: string[]
+  relatedElements?: string[]
+  tags?: string[]
+}
+
+// 角色快照创建参数
+export interface CreateCharacterSnapshotParams {
+  characterId: string
+  chapterNumber: number
+  age?: number
+  appearance?: string
+  personality?: string
+  powerLevel?: string
+  skills?: string[]
+  items?: string[]
+  status?: string
+  relationships?: Record<string, string>
+  mentalState?: string
+  motivation?: string
+  majorEvents?: string[]
+  notes?: string
 }

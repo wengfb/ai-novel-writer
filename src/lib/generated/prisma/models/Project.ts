@@ -29,11 +29,13 @@ export type AggregateProject = {
 export type ProjectAvgAggregateOutputType = {
   totalWords: number | null
   chapterCount: number | null
+  planningRange: number | null
 }
 
 export type ProjectSumAggregateOutputType = {
   totalWords: number | null
   chapterCount: number | null
+  planningRange: number | null
 }
 
 export type ProjectMinAggregateOutputType = {
@@ -46,6 +48,8 @@ export type ProjectMinAggregateOutputType = {
   coverImage: string | null
   totalWords: number | null
   chapterCount: number | null
+  outlineMode: string | null
+  planningRange: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,6 +64,8 @@ export type ProjectMaxAggregateOutputType = {
   coverImage: string | null
   totalWords: number | null
   chapterCount: number | null
+  outlineMode: string | null
+  planningRange: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -74,6 +80,8 @@ export type ProjectCountAggregateOutputType = {
   coverImage: number
   totalWords: number
   chapterCount: number
+  outlineMode: number
+  planningRange: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -83,11 +91,13 @@ export type ProjectCountAggregateOutputType = {
 export type ProjectAvgAggregateInputType = {
   totalWords?: true
   chapterCount?: true
+  planningRange?: true
 }
 
 export type ProjectSumAggregateInputType = {
   totalWords?: true
   chapterCount?: true
+  planningRange?: true
 }
 
 export type ProjectMinAggregateInputType = {
@@ -100,6 +110,8 @@ export type ProjectMinAggregateInputType = {
   coverImage?: true
   totalWords?: true
   chapterCount?: true
+  outlineMode?: true
+  planningRange?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -114,6 +126,8 @@ export type ProjectMaxAggregateInputType = {
   coverImage?: true
   totalWords?: true
   chapterCount?: true
+  outlineMode?: true
+  planningRange?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -128,6 +142,8 @@ export type ProjectCountAggregateInputType = {
   coverImage?: true
   totalWords?: true
   chapterCount?: true
+  outlineMode?: true
+  planningRange?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -229,6 +245,8 @@ export type ProjectGroupByOutputType = {
   coverImage: string | null
   totalWords: number
   chapterCount: number
+  outlineMode: string
+  planningRange: number | null
   createdAt: Date
   updatedAt: Date
   _count: ProjectCountAggregateOutputType | null
@@ -266,6 +284,8 @@ export type ProjectWhereInput = {
   coverImage?: Prisma.StringNullableFilter<"Project"> | string | null
   totalWords?: Prisma.IntFilter<"Project"> | number
   chapterCount?: Prisma.IntFilter<"Project"> | number
+  outlineMode?: Prisma.StringFilter<"Project"> | string
+  planningRange?: Prisma.IntNullableFilter<"Project"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   outlines?: Prisma.OutlineListRelationFilter
@@ -273,6 +293,7 @@ export type ProjectWhereInput = {
   characters?: Prisma.CharacterListRelationFilter
   worldElements?: Prisma.WorldElementListRelationFilter
   generations?: Prisma.GenerationListRelationFilter
+  foreshadowings?: Prisma.ForeshadowingListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -285,6 +306,8 @@ export type ProjectOrderByWithRelationInput = {
   coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
   totalWords?: Prisma.SortOrder
   chapterCount?: Prisma.SortOrder
+  outlineMode?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   outlines?: Prisma.OutlineOrderByRelationAggregateInput
@@ -292,6 +315,7 @@ export type ProjectOrderByWithRelationInput = {
   characters?: Prisma.CharacterOrderByRelationAggregateInput
   worldElements?: Prisma.WorldElementOrderByRelationAggregateInput
   generations?: Prisma.GenerationOrderByRelationAggregateInput
+  foreshadowings?: Prisma.ForeshadowingOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -307,6 +331,8 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   coverImage?: Prisma.StringNullableFilter<"Project"> | string | null
   totalWords?: Prisma.IntFilter<"Project"> | number
   chapterCount?: Prisma.IntFilter<"Project"> | number
+  outlineMode?: Prisma.StringFilter<"Project"> | string
+  planningRange?: Prisma.IntNullableFilter<"Project"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   outlines?: Prisma.OutlineListRelationFilter
@@ -314,6 +340,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   characters?: Prisma.CharacterListRelationFilter
   worldElements?: Prisma.WorldElementListRelationFilter
   generations?: Prisma.GenerationListRelationFilter
+  foreshadowings?: Prisma.ForeshadowingListRelationFilter
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -326,6 +353,8 @@ export type ProjectOrderByWithAggregationInput = {
   coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
   totalWords?: Prisma.SortOrder
   chapterCount?: Prisma.SortOrder
+  outlineMode?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProjectCountOrderByAggregateInput
@@ -348,6 +377,8 @@ export type ProjectScalarWhereWithAggregatesInput = {
   coverImage?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
   totalWords?: Prisma.IntWithAggregatesFilter<"Project"> | number
   chapterCount?: Prisma.IntWithAggregatesFilter<"Project"> | number
+  outlineMode?: Prisma.StringWithAggregatesFilter<"Project"> | string
+  planningRange?: Prisma.IntNullableWithAggregatesFilter<"Project"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
 }
@@ -362,6 +393,8 @@ export type ProjectCreateInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outlines?: Prisma.OutlineCreateNestedManyWithoutProjectInput
@@ -369,6 +402,7 @@ export type ProjectCreateInput = {
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -381,6 +415,8 @@ export type ProjectUncheckedCreateInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outlines?: Prisma.OutlineUncheckedCreateNestedManyWithoutProjectInput
@@ -388,6 +424,7 @@ export type ProjectUncheckedCreateInput = {
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -400,6 +437,8 @@ export type ProjectUpdateInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outlines?: Prisma.OutlineUpdateManyWithoutProjectNestedInput
@@ -407,6 +446,7 @@ export type ProjectUpdateInput = {
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -419,6 +459,8 @@ export type ProjectUncheckedUpdateInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outlines?: Prisma.OutlineUncheckedUpdateManyWithoutProjectNestedInput
@@ -426,6 +468,7 @@ export type ProjectUncheckedUpdateInput = {
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -438,6 +481,8 @@ export type ProjectCreateManyInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -452,6 +497,8 @@ export type ProjectUpdateManyMutationInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -466,6 +513,8 @@ export type ProjectUncheckedUpdateManyInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -480,6 +529,8 @@ export type ProjectCountOrderByAggregateInput = {
   coverImage?: Prisma.SortOrder
   totalWords?: Prisma.SortOrder
   chapterCount?: Prisma.SortOrder
+  outlineMode?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -487,6 +538,7 @@ export type ProjectCountOrderByAggregateInput = {
 export type ProjectAvgOrderByAggregateInput = {
   totalWords?: Prisma.SortOrder
   chapterCount?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrder
 }
 
 export type ProjectMaxOrderByAggregateInput = {
@@ -499,6 +551,8 @@ export type ProjectMaxOrderByAggregateInput = {
   coverImage?: Prisma.SortOrder
   totalWords?: Prisma.SortOrder
   chapterCount?: Prisma.SortOrder
+  outlineMode?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -513,6 +567,8 @@ export type ProjectMinOrderByAggregateInput = {
   coverImage?: Prisma.SortOrder
   totalWords?: Prisma.SortOrder
   chapterCount?: Prisma.SortOrder
+  outlineMode?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -520,6 +576,7 @@ export type ProjectMinOrderByAggregateInput = {
 export type ProjectSumOrderByAggregateInput = {
   totalWords?: Prisma.SortOrder
   chapterCount?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrder
 }
 
 export type ProjectScalarRelationFilter = {
@@ -537,6 +594,14 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type IntFieldUpdateOperationsInput = {
   set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -617,6 +682,20 @@ export type ProjectUpdateOneRequiredWithoutGenerationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutGenerationsInput, Prisma.ProjectUpdateWithoutGenerationsInput>, Prisma.ProjectUncheckedUpdateWithoutGenerationsInput>
 }
 
+export type ProjectCreateNestedOneWithoutForeshadowingsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutForeshadowingsInput, Prisma.ProjectUncheckedCreateWithoutForeshadowingsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutForeshadowingsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutForeshadowingsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutForeshadowingsInput, Prisma.ProjectUncheckedCreateWithoutForeshadowingsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutForeshadowingsInput
+  upsert?: Prisma.ProjectUpsertWithoutForeshadowingsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutForeshadowingsInput, Prisma.ProjectUpdateWithoutForeshadowingsInput>, Prisma.ProjectUncheckedUpdateWithoutForeshadowingsInput>
+}
+
 export type ProjectCreateWithoutOutlinesInput = {
   id?: string
   title: string
@@ -627,12 +706,15 @@ export type ProjectCreateWithoutOutlinesInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   chapters?: Prisma.ChapterCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutOutlinesInput = {
@@ -645,12 +727,15 @@ export type ProjectUncheckedCreateWithoutOutlinesInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   chapters?: Prisma.ChapterUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutOutlinesInput = {
@@ -679,12 +764,15 @@ export type ProjectUpdateWithoutOutlinesInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chapters?: Prisma.ChapterUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutOutlinesInput = {
@@ -697,12 +785,15 @@ export type ProjectUncheckedUpdateWithoutOutlinesInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chapters?: Prisma.ChapterUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutChaptersInput = {
@@ -715,12 +806,15 @@ export type ProjectCreateWithoutChaptersInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outlines?: Prisma.OutlineCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutChaptersInput = {
@@ -733,12 +827,15 @@ export type ProjectUncheckedCreateWithoutChaptersInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outlines?: Prisma.OutlineUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutChaptersInput = {
@@ -767,12 +864,15 @@ export type ProjectUpdateWithoutChaptersInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outlines?: Prisma.OutlineUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutChaptersInput = {
@@ -785,12 +885,15 @@ export type ProjectUncheckedUpdateWithoutChaptersInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outlines?: Prisma.OutlineUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutCharactersInput = {
@@ -803,12 +906,15 @@ export type ProjectCreateWithoutCharactersInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outlines?: Prisma.OutlineCreateNestedManyWithoutProjectInput
   chapters?: Prisma.ChapterCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutCharactersInput = {
@@ -821,12 +927,15 @@ export type ProjectUncheckedCreateWithoutCharactersInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outlines?: Prisma.OutlineUncheckedCreateNestedManyWithoutProjectInput
   chapters?: Prisma.ChapterUncheckedCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutCharactersInput = {
@@ -855,12 +964,15 @@ export type ProjectUpdateWithoutCharactersInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outlines?: Prisma.OutlineUpdateManyWithoutProjectNestedInput
   chapters?: Prisma.ChapterUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutCharactersInput = {
@@ -873,12 +985,15 @@ export type ProjectUncheckedUpdateWithoutCharactersInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outlines?: Prisma.OutlineUncheckedUpdateManyWithoutProjectNestedInput
   chapters?: Prisma.ChapterUncheckedUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutWorldElementsInput = {
@@ -891,12 +1006,15 @@ export type ProjectCreateWithoutWorldElementsInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outlines?: Prisma.OutlineCreateNestedManyWithoutProjectInput
   chapters?: Prisma.ChapterCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutWorldElementsInput = {
@@ -909,12 +1027,15 @@ export type ProjectUncheckedCreateWithoutWorldElementsInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outlines?: Prisma.OutlineUncheckedCreateNestedManyWithoutProjectInput
   chapters?: Prisma.ChapterUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutWorldElementsInput = {
@@ -943,12 +1064,15 @@ export type ProjectUpdateWithoutWorldElementsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outlines?: Prisma.OutlineUpdateManyWithoutProjectNestedInput
   chapters?: Prisma.ChapterUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutWorldElementsInput = {
@@ -961,12 +1085,15 @@ export type ProjectUncheckedUpdateWithoutWorldElementsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outlines?: Prisma.OutlineUncheckedUpdateManyWithoutProjectNestedInput
   chapters?: Prisma.ChapterUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutGenerationsInput = {
@@ -979,12 +1106,15 @@ export type ProjectCreateWithoutGenerationsInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outlines?: Prisma.OutlineCreateNestedManyWithoutProjectInput
   chapters?: Prisma.ChapterCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutGenerationsInput = {
@@ -997,12 +1127,15 @@ export type ProjectUncheckedCreateWithoutGenerationsInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outlines?: Prisma.OutlineUncheckedCreateNestedManyWithoutProjectInput
   chapters?: Prisma.ChapterUncheckedCreateNestedManyWithoutProjectInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutGenerationsInput = {
@@ -1031,12 +1164,15 @@ export type ProjectUpdateWithoutGenerationsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outlines?: Prisma.OutlineUpdateManyWithoutProjectNestedInput
   chapters?: Prisma.ChapterUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutGenerationsInput = {
@@ -1049,12 +1185,115 @@ export type ProjectUncheckedUpdateWithoutGenerationsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outlines?: Prisma.OutlineUncheckedUpdateManyWithoutProjectNestedInput
   chapters?: Prisma.ChapterUncheckedUpdateManyWithoutProjectNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutForeshadowingsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  genre: string
+  tags?: string | null
+  status?: string
+  coverImage?: string | null
+  totalWords?: number
+  chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  outlines?: Prisma.OutlineCreateNestedManyWithoutProjectInput
+  chapters?: Prisma.ChapterCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
+  generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutForeshadowingsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  genre: string
+  tags?: string | null
+  status?: string
+  coverImage?: string | null
+  totalWords?: number
+  chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  outlines?: Prisma.OutlineUncheckedCreateNestedManyWithoutProjectInput
+  chapters?: Prisma.ChapterUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
+  generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutForeshadowingsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutForeshadowingsInput, Prisma.ProjectUncheckedCreateWithoutForeshadowingsInput>
+}
+
+export type ProjectUpsertWithoutForeshadowingsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutForeshadowingsInput, Prisma.ProjectUncheckedUpdateWithoutForeshadowingsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutForeshadowingsInput, Prisma.ProjectUncheckedCreateWithoutForeshadowingsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutForeshadowingsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutForeshadowingsInput, Prisma.ProjectUncheckedUpdateWithoutForeshadowingsInput>
+}
+
+export type ProjectUpdateWithoutForeshadowingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalWords?: Prisma.IntFieldUpdateOperationsInput | number
+  chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  outlines?: Prisma.OutlineUpdateManyWithoutProjectNestedInput
+  chapters?: Prisma.ChapterUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
+  generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutForeshadowingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalWords?: Prisma.IntFieldUpdateOperationsInput | number
+  chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  outlines?: Prisma.OutlineUncheckedUpdateManyWithoutProjectNestedInput
+  chapters?: Prisma.ChapterUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
+  generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 
@@ -1068,6 +1307,7 @@ export type ProjectCountOutputType = {
   characters: number
   worldElements: number
   generations: number
+  foreshadowings: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1076,6 +1316,7 @@ export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   characters?: boolean | ProjectCountOutputTypeCountCharactersArgs
   worldElements?: boolean | ProjectCountOutputTypeCountWorldElementsArgs
   generations?: boolean | ProjectCountOutputTypeCountGenerationsArgs
+  foreshadowings?: boolean | ProjectCountOutputTypeCountForeshadowingsArgs
 }
 
 /**
@@ -1123,6 +1364,13 @@ export type ProjectCountOutputTypeCountGenerationsArgs<ExtArgs extends runtime.T
   where?: Prisma.GenerationWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountForeshadowingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForeshadowingWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1134,6 +1382,8 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   coverImage?: boolean
   totalWords?: boolean
   chapterCount?: boolean
+  outlineMode?: boolean
+  planningRange?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   outlines?: boolean | Prisma.Project$outlinesArgs<ExtArgs>
@@ -1141,6 +1391,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   characters?: boolean | Prisma.Project$charactersArgs<ExtArgs>
   worldElements?: boolean | Prisma.Project$worldElementsArgs<ExtArgs>
   generations?: boolean | Prisma.Project$generationsArgs<ExtArgs>
+  foreshadowings?: boolean | Prisma.Project$foreshadowingsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -1154,6 +1405,8 @@ export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   coverImage?: boolean
   totalWords?: boolean
   chapterCount?: boolean
+  outlineMode?: boolean
+  planningRange?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["project"]>
@@ -1168,6 +1421,8 @@ export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   coverImage?: boolean
   totalWords?: boolean
   chapterCount?: boolean
+  outlineMode?: boolean
+  planningRange?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["project"]>
@@ -1182,17 +1437,20 @@ export type ProjectSelectScalar = {
   coverImage?: boolean
   totalWords?: boolean
   chapterCount?: boolean
+  outlineMode?: boolean
+  planningRange?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "genre" | "tags" | "status" | "coverImage" | "totalWords" | "chapterCount" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "genre" | "tags" | "status" | "coverImage" | "totalWords" | "chapterCount" | "outlineMode" | "planningRange" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   outlines?: boolean | Prisma.Project$outlinesArgs<ExtArgs>
   chapters?: boolean | Prisma.Project$chaptersArgs<ExtArgs>
   characters?: boolean | Prisma.Project$charactersArgs<ExtArgs>
   worldElements?: boolean | Prisma.Project$worldElementsArgs<ExtArgs>
   generations?: boolean | Prisma.Project$generationsArgs<ExtArgs>
+  foreshadowings?: boolean | Prisma.Project$foreshadowingsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1206,6 +1464,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     characters: Prisma.$CharacterPayload<ExtArgs>[]
     worldElements: Prisma.$WorldElementPayload<ExtArgs>[]
     generations: Prisma.$GenerationPayload<ExtArgs>[]
+    foreshadowings: Prisma.$ForeshadowingPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1217,6 +1476,8 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     coverImage: string | null
     totalWords: number
     chapterCount: number
+    outlineMode: string
+    planningRange: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["project"]>
@@ -1618,6 +1879,7 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   characters<T extends Prisma.Project$charactersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$charactersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   worldElements<T extends Prisma.Project$worldElementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$worldElementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldElementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   generations<T extends Prisma.Project$generationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$generationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GenerationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  foreshadowings<T extends Prisma.Project$foreshadowingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$foreshadowingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForeshadowingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1656,6 +1918,8 @@ export interface ProjectFieldRefs {
   readonly coverImage: Prisma.FieldRef<"Project", 'String'>
   readonly totalWords: Prisma.FieldRef<"Project", 'Int'>
   readonly chapterCount: Prisma.FieldRef<"Project", 'Int'>
+  readonly outlineMode: Prisma.FieldRef<"Project", 'String'>
+  readonly planningRange: Prisma.FieldRef<"Project", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Project", 'DateTime'>
 }
@@ -2161,6 +2425,30 @@ export type Project$generationsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.GenerationScalarFieldEnum | Prisma.GenerationScalarFieldEnum[]
+}
+
+/**
+ * Project.foreshadowings
+ */
+export type Project$foreshadowingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Foreshadowing
+   */
+  select?: Prisma.ForeshadowingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Foreshadowing
+   */
+  omit?: Prisma.ForeshadowingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForeshadowingInclude<ExtArgs> | null
+  where?: Prisma.ForeshadowingWhereInput
+  orderBy?: Prisma.ForeshadowingOrderByWithRelationInput | Prisma.ForeshadowingOrderByWithRelationInput[]
+  cursor?: Prisma.ForeshadowingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForeshadowingScalarFieldEnum | Prisma.ForeshadowingScalarFieldEnum[]
 }
 
 /**

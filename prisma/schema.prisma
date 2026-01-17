@@ -24,12 +24,17 @@ model Project {
   totalWords    Int            @default(0)
   chapterCount  Int            @default(0)
 
+  // 大纲模式
+  outlineMode   String         @default("full") // full, progressive
+  planningRange Int?           @default(10)     // 渐进式规划时的章节范围
+
   // 关联数据
   outlines      Outline[]
   chapters      Chapter[]
   characters    Character[]
   worldElements WorldElement[]
   generations   Generation[]
+  foreshadowings Foreshadowing[]
 
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
@@ -49,6 +54,12 @@ model Outline {
   title     String
   description String?
   targetWords Int?
+
+  // 渐进式规划
+  planningMode String   @default("full") // full, progressive
+  planningRange Int?                     // 规划范围
+  isFlexible   Boolean  @default(false)  // 是否允许灵活调整
+  confidence   Int      @default(5)      // 规划置信度(1-10)
 
   // 树形结构
   parentId  String?
@@ -84,10 +95,15 @@ model Chapter {
   // 元数据
   summary        String?   // 章节摘要(用于上下文)
   notes          String?   // 作者笔记
+  isKeyChapter   Boolean   @default(false) // 是否为关键章节
+  plotType       String?   // 情节类型: setup, conflict, climax, resolution
 
   // 关联
   outline        Outline?
   scenes         Scene[]
+  plantedForeshadowings   Foreshadowing[] @relation("PlantedForeshadowing")
+  resolvedForeshadowings  Foreshadowing[] @relation("ResolvedForeshadowing")
+  characterSnapshots      CharacterSnapshot[]
 
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -125,6 +141,10 @@ model Character {
   age            Int?
   gender         String?
 
+  // 角色重要性
+  importance     Int       @default(5)      // 1-10，影响上下文权重
+  role           String    @default("supporting") // protagonist, antagonist, supporting, minor
+
   // 外貌描述
   appearance     String?
 
@@ -144,6 +164,9 @@ model Character {
 
   // 头像
   avatar         String?
+
+  // 关联
+  snapshots      CharacterSnapshot[]
 
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -208,6 +231,79 @@ model Generation {
   @@index([projectId])
   @@index([type])
   @@index([createdAt])
+}
+
+// 伏笔管理
+model Foreshadowing {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String
+  type        String   // plot, character, world, mystery
+  importance  Int      @default(5) // 1-10
+
+  // 埋设信息
+  plantedInChapterId   String?
+  plantedInChapter     Chapter? @relation("PlantedForeshadowing", fields: [plantedInChapterId], references: [id], onDelete: SetNull)
+  plantedContent       String?
+  plantedAt            DateTime?
+
+  // 回收信息
+  expectedChapterNumber Int?
+  resolvedInChapterId   String?
+  resolvedInChapter     Chapter? @relation("ResolvedForeshadowing", fields: [resolvedInChapterId], references: [id], onDelete: SetNull)
+  resolvedContent       String?
+  resolvedAt            DateTime?
+
+  // 状态和关联
+  status      String   @default("planned") // planned, planted, resolved, abandoned
+  relatedCharacters String? // JSON数组 - 相关角色ID
+  relatedElements   String? // JSON数组 - 相关世界观元素ID
+  tags              String? // JSON数组 - 标签
+  reminderChapterNumber Int? // 提醒章节号
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([status])
+  @@index([plantedInChapterId])
+  @@index([resolvedInChapterId])
+}
+
+// 角色快照
+model CharacterSnapshot {
+  id          String    @id @default(cuid())
+  characterId String
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  chapterId     String?
+  chapter       Chapter?  @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+  chapterNumber Int
+
+  // 快照数据
+  age         Int?
+  appearance  String?
+  personality String?
+  powerLevel  String?
+  skills      String?   // JSON数组
+  items       String?   // JSON数组
+  status      String?   // 状态描述
+  relationships String? // JSON对象 - 关系变化
+  mentalState String?   // 心理状态
+  motivation  String?   // 当前动机
+  majorEvents String?   // 重大事件记录
+  notes       String?   // 备注
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([characterId])
+  @@index([chapterId])
+  @@index([chapterNumber])
+  @@unique([characterId, chapterNumber])
 }
 
 // 系统配置

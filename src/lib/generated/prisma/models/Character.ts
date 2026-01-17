@@ -28,10 +28,12 @@ export type AggregateCharacter = {
 
 export type CharacterAvgAggregateOutputType = {
   age: number | null
+  importance: number | null
 }
 
 export type CharacterSumAggregateOutputType = {
   age: number | null
+  importance: number | null
 }
 
 export type CharacterMinAggregateOutputType = {
@@ -41,6 +43,8 @@ export type CharacterMinAggregateOutputType = {
   nickname: string | null
   age: number | null
   gender: string | null
+  importance: number | null
+  role: string | null
   appearance: string | null
   personality: string | null
   backstory: string | null
@@ -60,6 +64,8 @@ export type CharacterMaxAggregateOutputType = {
   nickname: string | null
   age: number | null
   gender: string | null
+  importance: number | null
+  role: string | null
   appearance: string | null
   personality: string | null
   backstory: string | null
@@ -79,6 +85,8 @@ export type CharacterCountAggregateOutputType = {
   nickname: number
   age: number
   gender: number
+  importance: number
+  role: number
   appearance: number
   personality: number
   backstory: number
@@ -95,10 +103,12 @@ export type CharacterCountAggregateOutputType = {
 
 export type CharacterAvgAggregateInputType = {
   age?: true
+  importance?: true
 }
 
 export type CharacterSumAggregateInputType = {
   age?: true
+  importance?: true
 }
 
 export type CharacterMinAggregateInputType = {
@@ -108,6 +118,8 @@ export type CharacterMinAggregateInputType = {
   nickname?: true
   age?: true
   gender?: true
+  importance?: true
+  role?: true
   appearance?: true
   personality?: true
   backstory?: true
@@ -127,6 +139,8 @@ export type CharacterMaxAggregateInputType = {
   nickname?: true
   age?: true
   gender?: true
+  importance?: true
+  role?: true
   appearance?: true
   personality?: true
   backstory?: true
@@ -146,6 +160,8 @@ export type CharacterCountAggregateInputType = {
   nickname?: true
   age?: true
   gender?: true
+  importance?: true
+  role?: true
   appearance?: true
   personality?: true
   backstory?: true
@@ -252,6 +268,8 @@ export type CharacterGroupByOutputType = {
   nickname: string | null
   age: number | null
   gender: string | null
+  importance: number
+  role: string
   appearance: string | null
   personality: string | null
   backstory: string | null
@@ -294,6 +312,8 @@ export type CharacterWhereInput = {
   nickname?: Prisma.StringNullableFilter<"Character"> | string | null
   age?: Prisma.IntNullableFilter<"Character"> | number | null
   gender?: Prisma.StringNullableFilter<"Character"> | string | null
+  importance?: Prisma.IntFilter<"Character"> | number
+  role?: Prisma.StringFilter<"Character"> | string
   appearance?: Prisma.StringNullableFilter<"Character"> | string | null
   personality?: Prisma.StringNullableFilter<"Character"> | string | null
   backstory?: Prisma.StringNullableFilter<"Character"> | string | null
@@ -305,6 +325,7 @@ export type CharacterWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  snapshots?: Prisma.CharacterSnapshotListRelationFilter
 }
 
 export type CharacterOrderByWithRelationInput = {
@@ -314,6 +335,8 @@ export type CharacterOrderByWithRelationInput = {
   nickname?: Prisma.SortOrderInput | Prisma.SortOrder
   age?: Prisma.SortOrderInput | Prisma.SortOrder
   gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  importance?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   appearance?: Prisma.SortOrderInput | Prisma.SortOrder
   personality?: Prisma.SortOrderInput | Prisma.SortOrder
   backstory?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -325,6 +348,7 @@ export type CharacterOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
+  snapshots?: Prisma.CharacterSnapshotOrderByRelationAggregateInput
 }
 
 export type CharacterWhereUniqueInput = Prisma.AtLeast<{
@@ -337,6 +361,8 @@ export type CharacterWhereUniqueInput = Prisma.AtLeast<{
   nickname?: Prisma.StringNullableFilter<"Character"> | string | null
   age?: Prisma.IntNullableFilter<"Character"> | number | null
   gender?: Prisma.StringNullableFilter<"Character"> | string | null
+  importance?: Prisma.IntFilter<"Character"> | number
+  role?: Prisma.StringFilter<"Character"> | string
   appearance?: Prisma.StringNullableFilter<"Character"> | string | null
   personality?: Prisma.StringNullableFilter<"Character"> | string | null
   backstory?: Prisma.StringNullableFilter<"Character"> | string | null
@@ -348,6 +374,7 @@ export type CharacterWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Character"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  snapshots?: Prisma.CharacterSnapshotListRelationFilter
 }, "id">
 
 export type CharacterOrderByWithAggregationInput = {
@@ -357,6 +384,8 @@ export type CharacterOrderByWithAggregationInput = {
   nickname?: Prisma.SortOrderInput | Prisma.SortOrder
   age?: Prisma.SortOrderInput | Prisma.SortOrder
   gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  importance?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   appearance?: Prisma.SortOrderInput | Prisma.SortOrder
   personality?: Prisma.SortOrderInput | Prisma.SortOrder
   backstory?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -384,6 +413,8 @@ export type CharacterScalarWhereWithAggregatesInput = {
   nickname?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
   age?: Prisma.IntNullableWithAggregatesFilter<"Character"> | number | null
   gender?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  importance?: Prisma.IntWithAggregatesFilter<"Character"> | number
+  role?: Prisma.StringWithAggregatesFilter<"Character"> | string
   appearance?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
   personality?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
   backstory?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
@@ -402,6 +433,8 @@ export type CharacterCreateInput = {
   nickname?: string | null
   age?: number | null
   gender?: string | null
+  importance?: number
+  role?: string
   appearance?: string | null
   personality?: string | null
   backstory?: string | null
@@ -413,6 +446,7 @@ export type CharacterCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutCharactersInput
+  snapshots?: Prisma.CharacterSnapshotCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUncheckedCreateInput = {
@@ -422,6 +456,8 @@ export type CharacterUncheckedCreateInput = {
   nickname?: string | null
   age?: number | null
   gender?: string | null
+  importance?: number
+  role?: string
   appearance?: string | null
   personality?: string | null
   backstory?: string | null
@@ -432,6 +468,7 @@ export type CharacterUncheckedCreateInput = {
   avatar?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  snapshots?: Prisma.CharacterSnapshotUncheckedCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUpdateInput = {
@@ -440,6 +477,8 @@ export type CharacterUpdateInput = {
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   appearance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backstory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -451,6 +490,7 @@ export type CharacterUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutCharactersNestedInput
+  snapshots?: Prisma.CharacterSnapshotUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateInput = {
@@ -460,6 +500,8 @@ export type CharacterUncheckedUpdateInput = {
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   appearance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backstory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -470,6 +512,7 @@ export type CharacterUncheckedUpdateInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  snapshots?: Prisma.CharacterSnapshotUncheckedUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterCreateManyInput = {
@@ -479,6 +522,8 @@ export type CharacterCreateManyInput = {
   nickname?: string | null
   age?: number | null
   gender?: string | null
+  importance?: number
+  role?: string
   appearance?: string | null
   personality?: string | null
   backstory?: string | null
@@ -497,6 +542,8 @@ export type CharacterUpdateManyMutationInput = {
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   appearance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backstory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -516,6 +563,8 @@ export type CharacterUncheckedUpdateManyInput = {
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   appearance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backstory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -545,6 +594,8 @@ export type CharacterCountOrderByAggregateInput = {
   nickname?: Prisma.SortOrder
   age?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  importance?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   appearance?: Prisma.SortOrder
   personality?: Prisma.SortOrder
   backstory?: Prisma.SortOrder
@@ -559,6 +610,7 @@ export type CharacterCountOrderByAggregateInput = {
 
 export type CharacterAvgOrderByAggregateInput = {
   age?: Prisma.SortOrder
+  importance?: Prisma.SortOrder
 }
 
 export type CharacterMaxOrderByAggregateInput = {
@@ -568,6 +620,8 @@ export type CharacterMaxOrderByAggregateInput = {
   nickname?: Prisma.SortOrder
   age?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  importance?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   appearance?: Prisma.SortOrder
   personality?: Prisma.SortOrder
   backstory?: Prisma.SortOrder
@@ -587,6 +641,8 @@ export type CharacterMinOrderByAggregateInput = {
   nickname?: Prisma.SortOrder
   age?: Prisma.SortOrder
   gender?: Prisma.SortOrder
+  importance?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   appearance?: Prisma.SortOrder
   personality?: Prisma.SortOrder
   backstory?: Prisma.SortOrder
@@ -601,6 +657,12 @@ export type CharacterMinOrderByAggregateInput = {
 
 export type CharacterSumOrderByAggregateInput = {
   age?: Prisma.SortOrder
+  importance?: Prisma.SortOrder
+}
+
+export type CharacterScalarRelationFilter = {
+  is?: Prisma.CharacterWhereInput
+  isNot?: Prisma.CharacterWhereInput
 }
 
 export type CharacterCreateNestedManyWithoutProjectInput = {
@@ -645,12 +707,28 @@ export type CharacterUncheckedUpdateManyWithoutProjectNestedInput = {
   deleteMany?: Prisma.CharacterScalarWhereInput | Prisma.CharacterScalarWhereInput[]
 }
 
+export type CharacterCreateNestedOneWithoutSnapshotsInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutSnapshotsInput, Prisma.CharacterUncheckedCreateWithoutSnapshotsInput>
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutSnapshotsInput
+  connect?: Prisma.CharacterWhereUniqueInput
+}
+
+export type CharacterUpdateOneRequiredWithoutSnapshotsNestedInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutSnapshotsInput, Prisma.CharacterUncheckedCreateWithoutSnapshotsInput>
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutSnapshotsInput
+  upsert?: Prisma.CharacterUpsertWithoutSnapshotsInput
+  connect?: Prisma.CharacterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CharacterUpdateToOneWithWhereWithoutSnapshotsInput, Prisma.CharacterUpdateWithoutSnapshotsInput>, Prisma.CharacterUncheckedUpdateWithoutSnapshotsInput>
+}
+
 export type CharacterCreateWithoutProjectInput = {
   id?: string
   name: string
   nickname?: string | null
   age?: number | null
   gender?: string | null
+  importance?: number
+  role?: string
   appearance?: string | null
   personality?: string | null
   backstory?: string | null
@@ -661,6 +739,7 @@ export type CharacterCreateWithoutProjectInput = {
   avatar?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  snapshots?: Prisma.CharacterSnapshotCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUncheckedCreateWithoutProjectInput = {
@@ -669,6 +748,8 @@ export type CharacterUncheckedCreateWithoutProjectInput = {
   nickname?: string | null
   age?: number | null
   gender?: string | null
+  importance?: number
+  role?: string
   appearance?: string | null
   personality?: string | null
   backstory?: string | null
@@ -679,6 +760,7 @@ export type CharacterUncheckedCreateWithoutProjectInput = {
   avatar?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  snapshots?: Prisma.CharacterSnapshotUncheckedCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterCreateOrConnectWithoutProjectInput = {
@@ -716,6 +798,8 @@ export type CharacterScalarWhereInput = {
   nickname?: Prisma.StringNullableFilter<"Character"> | string | null
   age?: Prisma.IntNullableFilter<"Character"> | number | null
   gender?: Prisma.StringNullableFilter<"Character"> | string | null
+  importance?: Prisma.IntFilter<"Character"> | number
+  role?: Prisma.StringFilter<"Character"> | string
   appearance?: Prisma.StringNullableFilter<"Character"> | string | null
   personality?: Prisma.StringNullableFilter<"Character"> | string | null
   backstory?: Prisma.StringNullableFilter<"Character"> | string | null
@@ -728,12 +812,114 @@ export type CharacterScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Character"> | Date | string
 }
 
+export type CharacterCreateWithoutSnapshotsInput = {
+  id?: string
+  name: string
+  nickname?: string | null
+  age?: number | null
+  gender?: string | null
+  importance?: number
+  role?: string
+  appearance?: string | null
+  personality?: string | null
+  backstory?: string | null
+  motivation?: string | null
+  dialogueStyle?: string | null
+  relationships?: string | null
+  characterArc?: string | null
+  avatar?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutCharactersInput
+}
+
+export type CharacterUncheckedCreateWithoutSnapshotsInput = {
+  id?: string
+  projectId: string
+  name: string
+  nickname?: string | null
+  age?: number | null
+  gender?: string | null
+  importance?: number
+  role?: string
+  appearance?: string | null
+  personality?: string | null
+  backstory?: string | null
+  motivation?: string | null
+  dialogueStyle?: string | null
+  relationships?: string | null
+  characterArc?: string | null
+  avatar?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CharacterCreateOrConnectWithoutSnapshotsInput = {
+  where: Prisma.CharacterWhereUniqueInput
+  create: Prisma.XOR<Prisma.CharacterCreateWithoutSnapshotsInput, Prisma.CharacterUncheckedCreateWithoutSnapshotsInput>
+}
+
+export type CharacterUpsertWithoutSnapshotsInput = {
+  update: Prisma.XOR<Prisma.CharacterUpdateWithoutSnapshotsInput, Prisma.CharacterUncheckedUpdateWithoutSnapshotsInput>
+  create: Prisma.XOR<Prisma.CharacterCreateWithoutSnapshotsInput, Prisma.CharacterUncheckedCreateWithoutSnapshotsInput>
+  where?: Prisma.CharacterWhereInput
+}
+
+export type CharacterUpdateToOneWithWhereWithoutSnapshotsInput = {
+  where?: Prisma.CharacterWhereInput
+  data: Prisma.XOR<Prisma.CharacterUpdateWithoutSnapshotsInput, Prisma.CharacterUncheckedUpdateWithoutSnapshotsInput>
+}
+
+export type CharacterUpdateWithoutSnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  appearance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backstory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motivation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dialogueStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationships?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  characterArc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutCharactersNestedInput
+}
+
+export type CharacterUncheckedUpdateWithoutSnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  appearance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backstory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motivation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dialogueStyle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationships?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  characterArc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type CharacterCreateManyProjectInput = {
   id?: string
   name: string
   nickname?: string | null
   age?: number | null
   gender?: string | null
+  importance?: number
+  role?: string
   appearance?: string | null
   personality?: string | null
   backstory?: string | null
@@ -752,6 +938,8 @@ export type CharacterUpdateWithoutProjectInput = {
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   appearance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backstory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -762,6 +950,7 @@ export type CharacterUpdateWithoutProjectInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  snapshots?: Prisma.CharacterSnapshotUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateWithoutProjectInput = {
@@ -770,6 +959,8 @@ export type CharacterUncheckedUpdateWithoutProjectInput = {
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   appearance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backstory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -780,6 +971,7 @@ export type CharacterUncheckedUpdateWithoutProjectInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  snapshots?: Prisma.CharacterSnapshotUncheckedUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateManyWithoutProjectInput = {
@@ -788,6 +980,8 @@ export type CharacterUncheckedUpdateManyWithoutProjectInput = {
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importance?: Prisma.IntFieldUpdateOperationsInput | number
+  role?: Prisma.StringFieldUpdateOperationsInput | string
   appearance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backstory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -800,6 +994,35 @@ export type CharacterUncheckedUpdateManyWithoutProjectInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type CharacterCountOutputType
+ */
+
+export type CharacterCountOutputType = {
+  snapshots: number
+}
+
+export type CharacterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  snapshots?: boolean | CharacterCountOutputTypeCountSnapshotsArgs
+}
+
+/**
+ * CharacterCountOutputType without action
+ */
+export type CharacterCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CharacterCountOutputType
+   */
+  select?: Prisma.CharacterCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CharacterCountOutputType without action
+ */
+export type CharacterCountOutputTypeCountSnapshotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CharacterSnapshotWhereInput
+}
 
 
 export type CharacterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -809,6 +1032,8 @@ export type CharacterSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   nickname?: boolean
   age?: boolean
   gender?: boolean
+  importance?: boolean
+  role?: boolean
   appearance?: boolean
   personality?: boolean
   backstory?: boolean
@@ -820,6 +1045,8 @@ export type CharacterSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  snapshots?: boolean | Prisma.Character$snapshotsArgs<ExtArgs>
+  _count?: boolean | Prisma.CharacterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["character"]>
 
 export type CharacterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -829,6 +1056,8 @@ export type CharacterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   nickname?: boolean
   age?: boolean
   gender?: boolean
+  importance?: boolean
+  role?: boolean
   appearance?: boolean
   personality?: boolean
   backstory?: boolean
@@ -849,6 +1078,8 @@ export type CharacterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   nickname?: boolean
   age?: boolean
   gender?: boolean
+  importance?: boolean
+  role?: boolean
   appearance?: boolean
   personality?: boolean
   backstory?: boolean
@@ -869,6 +1100,8 @@ export type CharacterSelectScalar = {
   nickname?: boolean
   age?: boolean
   gender?: boolean
+  importance?: boolean
+  role?: boolean
   appearance?: boolean
   personality?: boolean
   backstory?: boolean
@@ -881,9 +1114,11 @@ export type CharacterSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CharacterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "nickname" | "age" | "gender" | "appearance" | "personality" | "backstory" | "motivation" | "dialogueStyle" | "relationships" | "characterArc" | "avatar" | "createdAt" | "updatedAt", ExtArgs["result"]["character"]>
+export type CharacterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "nickname" | "age" | "gender" | "importance" | "role" | "appearance" | "personality" | "backstory" | "motivation" | "dialogueStyle" | "relationships" | "characterArc" | "avatar" | "createdAt" | "updatedAt", ExtArgs["result"]["character"]>
 export type CharacterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  snapshots?: boolean | Prisma.Character$snapshotsArgs<ExtArgs>
+  _count?: boolean | Prisma.CharacterCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CharacterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -896,6 +1131,7 @@ export type $CharacterPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "Character"
   objects: {
     project: Prisma.$ProjectPayload<ExtArgs>
+    snapshots: Prisma.$CharacterSnapshotPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -904,6 +1140,8 @@ export type $CharacterPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     nickname: string | null
     age: number | null
     gender: string | null
+    importance: number
+    role: string
     appearance: string | null
     personality: string | null
     backstory: string | null
@@ -1309,6 +1547,7 @@ readonly fields: CharacterFieldRefs;
 export interface Prisma__CharacterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  snapshots<T extends Prisma.Character$snapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Character$snapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1344,6 +1583,8 @@ export interface CharacterFieldRefs {
   readonly nickname: Prisma.FieldRef<"Character", 'String'>
   readonly age: Prisma.FieldRef<"Character", 'Int'>
   readonly gender: Prisma.FieldRef<"Character", 'String'>
+  readonly importance: Prisma.FieldRef<"Character", 'Int'>
+  readonly role: Prisma.FieldRef<"Character", 'String'>
   readonly appearance: Prisma.FieldRef<"Character", 'String'>
   readonly personality: Prisma.FieldRef<"Character", 'String'>
   readonly backstory: Prisma.FieldRef<"Character", 'String'>
@@ -1745,6 +1986,30 @@ export type CharacterDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many Characters to delete.
    */
   limit?: number
+}
+
+/**
+ * Character.snapshots
+ */
+export type Character$snapshotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CharacterSnapshot
+   */
+  select?: Prisma.CharacterSnapshotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CharacterSnapshot
+   */
+  omit?: Prisma.CharacterSnapshotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CharacterSnapshotInclude<ExtArgs> | null
+  where?: Prisma.CharacterSnapshotWhereInput
+  orderBy?: Prisma.CharacterSnapshotOrderByWithRelationInput | Prisma.CharacterSnapshotOrderByWithRelationInput[]
+  cursor?: Prisma.CharacterSnapshotWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CharacterSnapshotScalarFieldEnum | Prisma.CharacterSnapshotScalarFieldEnum[]
 }
 
 /**

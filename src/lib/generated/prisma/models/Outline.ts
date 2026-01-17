@@ -29,11 +29,15 @@ export type AggregateOutline = {
 export type OutlineAvgAggregateOutputType = {
   order: number | null
   targetWords: number | null
+  planningRange: number | null
+  confidence: number | null
 }
 
 export type OutlineSumAggregateOutputType = {
   order: number | null
   targetWords: number | null
+  planningRange: number | null
+  confidence: number | null
 }
 
 export type OutlineMinAggregateOutputType = {
@@ -44,6 +48,10 @@ export type OutlineMinAggregateOutputType = {
   title: string | null
   description: string | null
   targetWords: number | null
+  planningMode: string | null
+  planningRange: number | null
+  isFlexible: boolean | null
+  confidence: number | null
   parentId: string | null
   chapterId: string | null
   status: string | null
@@ -59,6 +67,10 @@ export type OutlineMaxAggregateOutputType = {
   title: string | null
   description: string | null
   targetWords: number | null
+  planningMode: string | null
+  planningRange: number | null
+  isFlexible: boolean | null
+  confidence: number | null
   parentId: string | null
   chapterId: string | null
   status: string | null
@@ -74,6 +86,10 @@ export type OutlineCountAggregateOutputType = {
   title: number
   description: number
   targetWords: number
+  planningMode: number
+  planningRange: number
+  isFlexible: number
+  confidence: number
   parentId: number
   chapterId: number
   status: number
@@ -86,11 +102,15 @@ export type OutlineCountAggregateOutputType = {
 export type OutlineAvgAggregateInputType = {
   order?: true
   targetWords?: true
+  planningRange?: true
+  confidence?: true
 }
 
 export type OutlineSumAggregateInputType = {
   order?: true
   targetWords?: true
+  planningRange?: true
+  confidence?: true
 }
 
 export type OutlineMinAggregateInputType = {
@@ -101,6 +121,10 @@ export type OutlineMinAggregateInputType = {
   title?: true
   description?: true
   targetWords?: true
+  planningMode?: true
+  planningRange?: true
+  isFlexible?: true
+  confidence?: true
   parentId?: true
   chapterId?: true
   status?: true
@@ -116,6 +140,10 @@ export type OutlineMaxAggregateInputType = {
   title?: true
   description?: true
   targetWords?: true
+  planningMode?: true
+  planningRange?: true
+  isFlexible?: true
+  confidence?: true
   parentId?: true
   chapterId?: true
   status?: true
@@ -131,6 +159,10 @@ export type OutlineCountAggregateInputType = {
   title?: true
   description?: true
   targetWords?: true
+  planningMode?: true
+  planningRange?: true
+  isFlexible?: true
+  confidence?: true
   parentId?: true
   chapterId?: true
   status?: true
@@ -233,6 +265,10 @@ export type OutlineGroupByOutputType = {
   title: string
   description: string | null
   targetWords: number | null
+  planningMode: string
+  planningRange: number | null
+  isFlexible: boolean
+  confidence: number
   parentId: string | null
   chapterId: string | null
   status: string
@@ -271,6 +307,10 @@ export type OutlineWhereInput = {
   title?: Prisma.StringFilter<"Outline"> | string
   description?: Prisma.StringNullableFilter<"Outline"> | string | null
   targetWords?: Prisma.IntNullableFilter<"Outline"> | number | null
+  planningMode?: Prisma.StringFilter<"Outline"> | string
+  planningRange?: Prisma.IntNullableFilter<"Outline"> | number | null
+  isFlexible?: Prisma.BoolFilter<"Outline"> | boolean
+  confidence?: Prisma.IntFilter<"Outline"> | number
   parentId?: Prisma.StringNullableFilter<"Outline"> | string | null
   chapterId?: Prisma.StringNullableFilter<"Outline"> | string | null
   status?: Prisma.StringFilter<"Outline"> | string
@@ -290,6 +330,10 @@ export type OutlineOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   targetWords?: Prisma.SortOrderInput | Prisma.SortOrder
+  planningMode?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrderInput | Prisma.SortOrder
+  isFlexible?: Prisma.SortOrder
+  confidence?: Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   chapterId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -313,6 +357,10 @@ export type OutlineWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Outline"> | string
   description?: Prisma.StringNullableFilter<"Outline"> | string | null
   targetWords?: Prisma.IntNullableFilter<"Outline"> | number | null
+  planningMode?: Prisma.StringFilter<"Outline"> | string
+  planningRange?: Prisma.IntNullableFilter<"Outline"> | number | null
+  isFlexible?: Prisma.BoolFilter<"Outline"> | boolean
+  confidence?: Prisma.IntFilter<"Outline"> | number
   parentId?: Prisma.StringNullableFilter<"Outline"> | string | null
   status?: Prisma.StringFilter<"Outline"> | string
   createdAt?: Prisma.DateTimeFilter<"Outline"> | Date | string
@@ -331,6 +379,10 @@ export type OutlineOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   targetWords?: Prisma.SortOrderInput | Prisma.SortOrder
+  planningMode?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrderInput | Prisma.SortOrder
+  isFlexible?: Prisma.SortOrder
+  confidence?: Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   chapterId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -354,6 +406,10 @@ export type OutlineScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Outline"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Outline"> | string | null
   targetWords?: Prisma.IntNullableWithAggregatesFilter<"Outline"> | number | null
+  planningMode?: Prisma.StringWithAggregatesFilter<"Outline"> | string
+  planningRange?: Prisma.IntNullableWithAggregatesFilter<"Outline"> | number | null
+  isFlexible?: Prisma.BoolWithAggregatesFilter<"Outline"> | boolean
+  confidence?: Prisma.IntWithAggregatesFilter<"Outline"> | number
   parentId?: Prisma.StringNullableWithAggregatesFilter<"Outline"> | string | null
   chapterId?: Prisma.StringNullableWithAggregatesFilter<"Outline"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"Outline"> | string
@@ -368,6 +424,10 @@ export type OutlineCreateInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -385,6 +445,10 @@ export type OutlineUncheckedCreateInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   parentId?: string | null
   chapterId?: string | null
   status?: string
@@ -400,6 +464,10 @@ export type OutlineUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -417,6 +485,10 @@ export type OutlineUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -433,6 +505,10 @@ export type OutlineCreateManyInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   parentId?: string | null
   chapterId?: string | null
   status?: string
@@ -447,6 +523,10 @@ export type OutlineUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -460,6 +540,10 @@ export type OutlineUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -490,6 +574,10 @@ export type OutlineCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   targetWords?: Prisma.SortOrder
+  planningMode?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrder
+  isFlexible?: Prisma.SortOrder
+  confidence?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -500,6 +588,8 @@ export type OutlineCountOrderByAggregateInput = {
 export type OutlineAvgOrderByAggregateInput = {
   order?: Prisma.SortOrder
   targetWords?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrder
+  confidence?: Prisma.SortOrder
 }
 
 export type OutlineMaxOrderByAggregateInput = {
@@ -510,6 +600,10 @@ export type OutlineMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   targetWords?: Prisma.SortOrder
+  planningMode?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrder
+  isFlexible?: Prisma.SortOrder
+  confidence?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -525,6 +619,10 @@ export type OutlineMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   targetWords?: Prisma.SortOrder
+  planningMode?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrder
+  isFlexible?: Prisma.SortOrder
+  confidence?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -535,6 +633,8 @@ export type OutlineMinOrderByAggregateInput = {
 export type OutlineSumOrderByAggregateInput = {
   order?: Prisma.SortOrder
   targetWords?: Prisma.SortOrder
+  planningRange?: Prisma.SortOrder
+  confidence?: Prisma.SortOrder
 }
 
 export type OutlineCreateNestedManyWithoutProjectInput = {
@@ -599,12 +699,8 @@ export type OutlineUncheckedCreateNestedManyWithoutParentInput = {
   connect?: Prisma.OutlineWhereUniqueInput | Prisma.OutlineWhereUniqueInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type OutlineUpdateOneWithoutChildrenNestedInput = {
@@ -684,6 +780,10 @@ export type OutlineCreateWithoutProjectInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -699,6 +799,10 @@ export type OutlineUncheckedCreateWithoutProjectInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   parentId?: string | null
   chapterId?: string | null
   status?: string
@@ -743,6 +847,10 @@ export type OutlineScalarWhereInput = {
   title?: Prisma.StringFilter<"Outline"> | string
   description?: Prisma.StringNullableFilter<"Outline"> | string | null
   targetWords?: Prisma.IntNullableFilter<"Outline"> | number | null
+  planningMode?: Prisma.StringFilter<"Outline"> | string
+  planningRange?: Prisma.IntNullableFilter<"Outline"> | number | null
+  isFlexible?: Prisma.BoolFilter<"Outline"> | boolean
+  confidence?: Prisma.IntFilter<"Outline"> | number
   parentId?: Prisma.StringNullableFilter<"Outline"> | string | null
   chapterId?: Prisma.StringNullableFilter<"Outline"> | string | null
   status?: Prisma.StringFilter<"Outline"> | string
@@ -757,6 +865,10 @@ export type OutlineCreateWithoutChildrenInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -773,6 +885,10 @@ export type OutlineUncheckedCreateWithoutChildrenInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   parentId?: string | null
   chapterId?: string | null
   status?: string
@@ -792,6 +908,10 @@ export type OutlineCreateWithoutParentInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -808,6 +928,10 @@ export type OutlineUncheckedCreateWithoutParentInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   chapterId?: string | null
   status?: string
   createdAt?: Date | string
@@ -842,6 +966,10 @@ export type OutlineUpdateWithoutChildrenInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -858,6 +986,10 @@ export type OutlineUncheckedUpdateWithoutChildrenInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -888,6 +1020,10 @@ export type OutlineCreateWithoutChapterInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -904,6 +1040,10 @@ export type OutlineUncheckedCreateWithoutChapterInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   parentId?: string | null
   status?: string
   createdAt?: Date | string
@@ -934,6 +1074,10 @@ export type OutlineUpdateWithoutChapterInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -950,6 +1094,10 @@ export type OutlineUncheckedUpdateWithoutChapterInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -964,6 +1112,10 @@ export type OutlineCreateManyProjectInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   parentId?: string | null
   chapterId?: string | null
   status?: string
@@ -978,6 +1130,10 @@ export type OutlineUpdateWithoutProjectInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -993,6 +1149,10 @@ export type OutlineUncheckedUpdateWithoutProjectInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1008,6 +1168,10 @@ export type OutlineUncheckedUpdateManyWithoutProjectInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1023,6 +1187,10 @@ export type OutlineCreateManyParentInput = {
   title: string
   description?: string | null
   targetWords?: number | null
+  planningMode?: string
+  planningRange?: number | null
+  isFlexible?: boolean
+  confidence?: number
   chapterId?: string | null
   status?: string
   createdAt?: Date | string
@@ -1036,6 +1204,10 @@ export type OutlineUpdateWithoutParentInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1052,6 +1224,10 @@ export type OutlineUncheckedUpdateWithoutParentInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1067,6 +1243,10 @@ export type OutlineUncheckedUpdateManyWithoutParentInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetWords?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  planningMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFlexible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  confidence?: Prisma.IntFieldUpdateOperationsInput | number
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1112,6 +1292,10 @@ export type OutlineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   title?: boolean
   description?: boolean
   targetWords?: boolean
+  planningMode?: boolean
+  planningRange?: boolean
+  isFlexible?: boolean
+  confidence?: boolean
   parentId?: boolean
   chapterId?: boolean
   status?: boolean
@@ -1132,6 +1316,10 @@ export type OutlineSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   title?: boolean
   description?: boolean
   targetWords?: boolean
+  planningMode?: boolean
+  planningRange?: boolean
+  isFlexible?: boolean
+  confidence?: boolean
   parentId?: boolean
   chapterId?: boolean
   status?: boolean
@@ -1150,6 +1338,10 @@ export type OutlineSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   title?: boolean
   description?: boolean
   targetWords?: boolean
+  planningMode?: boolean
+  planningRange?: boolean
+  isFlexible?: boolean
+  confidence?: boolean
   parentId?: boolean
   chapterId?: boolean
   status?: boolean
@@ -1168,6 +1360,10 @@ export type OutlineSelectScalar = {
   title?: boolean
   description?: boolean
   targetWords?: boolean
+  planningMode?: boolean
+  planningRange?: boolean
+  isFlexible?: boolean
+  confidence?: boolean
   parentId?: boolean
   chapterId?: boolean
   status?: boolean
@@ -1175,7 +1371,7 @@ export type OutlineSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OutlineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "type" | "order" | "title" | "description" | "targetWords" | "parentId" | "chapterId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["outline"]>
+export type OutlineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "type" | "order" | "title" | "description" | "targetWords" | "planningMode" | "planningRange" | "isFlexible" | "confidence" | "parentId" | "chapterId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["outline"]>
 export type OutlineInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.Outline$parentArgs<ExtArgs>
@@ -1210,6 +1406,10 @@ export type $OutlinePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     title: string
     description: string | null
     targetWords: number | null
+    planningMode: string
+    planningRange: number | null
+    isFlexible: boolean
+    confidence: number
     parentId: string | null
     chapterId: string | null
     status: string
@@ -1649,6 +1849,10 @@ export interface OutlineFieldRefs {
   readonly title: Prisma.FieldRef<"Outline", 'String'>
   readonly description: Prisma.FieldRef<"Outline", 'String'>
   readonly targetWords: Prisma.FieldRef<"Outline", 'Int'>
+  readonly planningMode: Prisma.FieldRef<"Outline", 'String'>
+  readonly planningRange: Prisma.FieldRef<"Outline", 'Int'>
+  readonly isFlexible: Prisma.FieldRef<"Outline", 'Boolean'>
+  readonly confidence: Prisma.FieldRef<"Outline", 'Int'>
   readonly parentId: Prisma.FieldRef<"Outline", 'String'>
   readonly chapterId: Prisma.FieldRef<"Outline", 'String'>
   readonly status: Prisma.FieldRef<"Outline", 'String'>

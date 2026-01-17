@@ -26,13 +26,13 @@ export async function GET(
     })
 
     if (!project) {
-      return apiError('项目不存在', null, 404)
+      return apiError('PROJECT_NOT_FOUND', '项目不存在', undefined, 404)
     }
 
     return apiSuccess(project)
   } catch (error) {
     console.error('获取项目详情失败:', error)
-    return apiError('获取项目详情失败')
+    return apiError('SERVER_ERROR', '获取项目详情失败')
   }
 }
 
@@ -60,7 +60,7 @@ export async function PUT(
     return apiSuccess(project)
   } catch (error) {
     console.error('更新项目失败:', error)
-    return apiError('更新项目失败')
+    return apiError('SERVER_ERROR', '更新项目失败')
   }
 }
 
@@ -81,6 +81,6 @@ export async function DELETE(
     return apiSuccess({ message: '项目已删除' })
   } catch (error) {
     console.error('删除项目失败:', error)
-    return apiError('删除项目失败')
+    return apiError('SERVER_ERROR', '删除项目失败')
   }
 }

@@ -171,20 +171,27 @@ ai-novel-writer/
 │  (小说项目)   │
 └──────┬───────┘
        │
-       ├──────────────┬──────────────┬──────────────┐
-       │              │              │              │
-       ▼              ▼              ▼              ▼
-┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-│   Outline    │ │   Chapter    │ │  Character   │ │ WorldElement │
-│   (大纲)     │ │   (章节)     │ │   (角色)     │ │  (世界观)    │
-└──────┬───────┘ └──────┬───────┘ └──────────────┘ └──────────────┘
-       │                │
-       │                │
-       ▼                ▼
-┌──────────────┐ ┌──────────────┐
-│  Outline     │ │    Scene     │
-│  (树形结构)  │ │   (场景)     │
-└──────────────┘ └──────────────┘
+       ├──────────────┬──────────────┬──────────────┬──────────────┐
+       │              │              │              │              │
+       ▼              ▼              ▼              ▼              ▼
+┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+│   Outline    │ │   Chapter    │ │  Character   │ │ WorldElement │ │Foreshadowing │
+│   (大纲)     │ │   (章节)     │ │   (角色)     │ │  (世界观)    │ │   (伏笔)     │
+└──────┬───────┘ └──────┬───────┘ └──────┬───────┘ └──────────────┘ └──────────────┘
+       │                │                │
+       │                │                │
+       ▼                ▼                ▼
+┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+│  Outline     │ │    Scene     │ │CharacterSnap │
+│  (树形结构)  │ │   (场景)     │ │ (角色快照)   │
+└──────────────┘ └──────────────┘ └──────────────┘
+                       │
+                       │ (埋设/回收)
+                       ▼
+                ┌──────────────┐
+                │Foreshadowing │
+                │   (伏笔)     │
+                └──────────────┘
 
 ┌──────────────┐
 │ Generation   │
@@ -205,6 +212,8 @@ ai-novel-writer/
 - `status`: 状态（draft/writing/completed）
 - `totalWords`: 总字数（统计字段）
 - `chapterCount`: 章节数量（统计字段）
+- `outlineMode`: 大纲模式（full=完整规划/progressive=渐进式规划）
+- `planningRange`: 渐进式规划时的章节范围（例如：每次规划未来5章）
 
 **索引**：
 - `status`: 用于按状态筛选
@@ -216,6 +225,7 @@ ai-novel-writer/
 - 1:N → Character
 - 1:N → WorldElement
 - 1:N → Generation
+- 1:N → Foreshadowing
 
 #### 2. Chapter（章节）
 
@@ -225,6 +235,8 @@ ai-novel-writer/
 - `wordCount`: 字数统计
 - `summary`: 章节摘要（用于上下文）
 - `notes`: 作者笔记
+- `isKeyChapter`: 是否为关键章节（影响上下文保留策略）
+- `plotType`: 情节类型（setup=铺垫/conflict=冲突/climax=高潮/resolution=解决）
 
 **约束**：
 - `UNIQUE(projectId, chapterNumber)`: 每个项目的章节编号唯一
@@ -233,6 +245,9 @@ ai-novel-writer/
 - N:1 → Project
 - 1:1 → Outline（可选）
 - 1:N → Scene
+- 1:N → Foreshadowing（埋设的伏笔，plantedForeshadowings）
+- 1:N → Foreshadowing（回收的伏笔，resolvedForeshadowings）
+- 1:N → CharacterSnapshot（角色快照）
 
 #### 3. Character（角色）
 
@@ -242,9 +257,12 @@ ai-novel-writer/
 - `dialogueStyle`: 对话风格
 - `relationships`: 关系图谱（JSON 字符串）
 - `characterArc`: 角色弧光规划
+- `importance`: 角色重要性（1-10，影响上下文权重和保留优先级）
+- `role`: 角色类型（protagonist=主角/antagonist=反派/supporting=配角/minor=次要角色）
 
 **关系**：
 - N:1 → Project
+- 1:N → CharacterSnapshot（角色快照）
 
 #### 4. WorldElement（世界观元素）
 
@@ -264,6 +282,10 @@ ai-novel-writer/
 - `order`: 排序序号
 - `parentId`: 父节点 ID（自关联）
 - `chapterId`: 关联章节 ID（可选）
+- `planningMode`: 规划模式（full=完整规划/progressive=渐进式规划）
+- `planningRange`: 规划范围（渐进式规划时的章节数量）
+- `isFlexible`: 是否允许灵活调整（true=可根据创作进展调整）
+- `confidence`: 规划置信度（1-10，表示大纲的可靠性）
 
 **树形结构**：
 - 支持无限层级嵌套
@@ -283,6 +305,71 @@ ai-novel-writer/
 - `model`: 模型名称（gemini-2.5-flash 等）
 - `tokensUsed`: Token 使用情况（JSON）
 - `cost`: 成本估算（美元）
+
+#### 7. Foreshadowing（伏笔管理）
+
+**字段说明**：
+- `id`: 伏笔唯一标识
+- `projectId`: 所属项目
+- `title`: 伏笔标题
+- `description`: 伏笔描述
+- `type`: 伏笔类型（plot=情节/character=角色/world=世界观/mystery=悬念）
+- `importance`: 重要性（1-10，影响提醒优先级）
+- `plantedInChapterId`: 埋设章节ID
+- `plantedContent`: 埋设内容（具体的伏笔文本）
+- `plantedAt`: 埋设时间
+- `expectedChapterNumber`: 预期回收章节号
+- `resolvedInChapterId`: 回收章节ID
+- `resolvedContent`: 回收内容（回收时的文本）
+- `resolvedAt`: 回收时间
+- `status`: 状态（planned=计划中/planted=已埋设/resolved=已回收/abandoned=已放弃）
+- `relatedCharacters`: 相关角色（JSON数组，存储角色ID）
+- `relatedElements`: 相关世界观元素（JSON数组，存储元素ID）
+- `tags`: 标签（JSON数组，用于分类和检索）
+- `reminderChapterNumber`: 提醒章节号（在此章节前提醒回收）
+
+**索引**：
+- `projectId`: 按项目查询
+- `status`: 按状态筛选
+- `plantedInChapterId`: 查询章节埋设的伏笔
+- `resolvedInChapterId`: 查询章节回收的伏笔
+
+**关系**：
+- N:1 → Project
+- N:1 → Chapter（埋设章节，plantedInChapter）
+- N:1 → Chapter（回收章节，resolvedInChapter）
+
+#### 8. CharacterSnapshot（角色快照）
+
+**字段说明**：
+- `id`: 快照唯一标识
+- `characterId`: 角色ID
+- `chapterId`: 章节ID
+- `chapterNumber`: 章节编号（冗余字段，便于查询）
+- `age`: 年龄（可能随剧情变化）
+- `appearance`: 外貌描述（可能因受伤、修炼等改变）
+- `personality`: 性格特点（可能因经历而变化）
+- `powerLevel`: 实力等级（修仙、玄幻等题材）
+- `skills`: 技能列表（JSON数组）
+- `items`: 物品清单（JSON数组）
+- `status`: 状态描述（健康/受伤/中毒等）
+- `relationships`: 关系变化（JSON对象，记录与其他角色的关系）
+- `mentalState`: 心理状态（情绪、心境等）
+- `motivation`: 当前动机（当前章节的行动目标）
+- `majorEvents`: 重大事件记录（该章节发生的重要事件）
+- `notes`: 备注（其他需要记录的信息）
+
+**约束**：
+- `UNIQUE(characterId, chapterNumber)`: 每个角色在每个章节只有一个快照
+
+**索引**：
+- `characterId`: 按角色查询
+- `chapterId`: 按章节查询
+- `chapterNumber`: 按章节号查询
+
+**关系**：
+- N:1 → Character
+- N:1 → Chapter
 
 ---
 
@@ -341,22 +428,44 @@ ai-novel-writer/
 
 **文件**：`src/lib/ai/context-manager.ts`
 
-**策略**：滑动窗口 + 智能摘要
+**策略**：滑动窗口 + 智能摘要 + 角色重要性权重
 
 **算法**：
 ```
 总上下文预算：100,000 tokens
 ├─ 40% 完整章节（最近N章）
+│   └─ 关键章节优先保留（isKeyChapter=true）
 ├─ 20% 章节摘要（更早章节）
 ├─ 20% 角色卡片（相关角色）
-└─ 20% 世界观元素（相关设定）
+│   ├─ 主角/反派优先（role=protagonist/antagonist）
+│   └─ 按重要性权重排序（importance字段）
+├─ 15% 世界观元素（相关设定）
+└─ 5% 伏笔上下文（未回收伏笔的埋设章节）
 ```
+
+**改进策略**：
+
+1. **角色重要性权重**：
+   - 根据角色的 `importance` 字段（1-10）调整上下文权重
+   - 主角（protagonist）和反派（antagonist）优先保留
+   - 次要角色根据重要性动态调整，低重要性角色可能被省略
+
+2. **关键章节保留策略**：
+   - 标记为 `isKeyChapter=true` 的章节优先保留在上下文中
+   - 关键章节包括：重要情节转折、伏笔埋设/回收、角色重大变化
+   - 即使超出滑动窗口范围，关键章节也会被保留
+
+3. **伏笔上下文**：
+   - 自动包含未回收伏笔（status=planted）的埋设章节
+   - 在接近回收章节时增加伏笔相关上下文权重
+   - 确保 AI 生成时能够合理回收伏笔
 
 **核心功能**：
 - `buildContext()`: 构建完整上下文包
 - `getRecentFullChapters()`: 滑动窗口获取完整章节
 - `getChapterSummaries()`: 获取历史摘要
-- `getRelevantCharacters()`: 相关性过滤角色
+- `getRelevantCharacters()`: 相关性过滤角色（支持重要性权重）
+- `getForeshadowingContext()`: 获取伏笔相关上下文
 - `formatContextForPrompt()`: 格式化为提示词
 
 ### 3. 提示词模板管理器
@@ -396,6 +505,99 @@ ai-novel-writer/
 **定价**（2025年）：
 - Gemini 2.5 Flash: $0.075/1M input, $0.30/1M output
 - Gemini 2.5 Pro: $1.25/1M input, $5.00/1M output
+
+### 5. 伏笔管理器（Foreshadowing Manager）
+
+**文件**：`src/lib/ai/foreshadowing-manager.ts`
+
+**职责**：
+- 伏笔的计划、埋设、追踪和回收
+- 自动提醒即将需要回收的伏笔
+- 分析伏笔的使用情况和效果
+
+**核心功能**：
+
+1. **伏笔规划**：
+   - `createForeshadowing()`: 创建伏笔计划
+   - `planForeshadowing()`: 设置预期回收章节
+   - `categorizeForeshadowing()`: 按类型分类（情节/角色/世界观/悬念）
+
+2. **智能埋设**：
+   - `plantForeshadowing()`: 在生成章节时自动埋设伏笔
+   - `suggestPlantingLocation()`: AI 建议最佳埋设位置
+   - `validatePlanting()`: 验证埋设的自然性
+
+3. **追踪提醒**：
+   - `trackForeshadowing()`: 追踪所有未回收伏笔
+   - `getReminders()`: 获取需要回收的伏笔提醒
+   - `calculateUrgency()`: 计算回收紧急度
+
+4. **回收验证**：
+   - `resolveForeshadowing()`: 标记伏笔已回收
+   - `validateResolution()`: 确保伏笔得到合理回收
+   - `analyzeEffectiveness()`: 分析伏笔效果
+
+### 6. 角色快照管理器（Character Snapshot Manager）
+
+**文件**：`src/lib/ai/character-snapshot-manager.ts`
+
+**职责**：
+- 记录角色在不同章节的状态变化
+- 提供角色历史状态查询
+- 确保角色发展的连贯性
+
+**核心功能**：
+
+1. **自动快照**：
+   - `createSnapshot()`: 在关键章节自动创建角色快照
+   - `detectKeyMoments()`: 检测需要创建快照的关键时刻
+   - `captureCharacterState()`: 捕获角色完整状态
+
+2. **状态对比**：
+   - `compareSnapshots()`: 对比不同章节的角色状态
+   - `trackCharacterGrowth()`: 追踪角色成长轨迹
+   - `visualizeChanges()`: 可视化角色变化
+
+3. **一致性检查**：
+   - `validateConsistency()`: 检测角色发展的不合理跳跃
+   - `detectContradictions()`: 发现前后矛盾
+   - `suggestCorrections()`: 建议修正方案
+
+4. **历史回溯**：
+   - `getSnapshotAtChapter()`: 查询角色在特定章节的状态
+   - `getSnapshotHistory()`: 获取角色完整历史
+   - `restoreFromSnapshot()`: 从快照恢复角色状态
+
+### 7. 渐进式大纲管理器（Progressive Outline Manager）
+
+**文件**：`src/lib/ai/progressive-outline-manager.ts`
+
+**职责**：
+- 支持渐进式大纲规划模式
+- 动态调整大纲内容
+- 管理大纲的灵活性和置信度
+
+**核心功能**：
+
+1. **分段规划**：
+   - `planNextChapters()`: 只规划未来N个章节的大纲
+   - `setPlanningRange()`: 设置规划范围（例如：每次规划5章）
+   - `generateProgressiveOutline()`: 生成渐进式大纲
+
+2. **动态调整**：
+   - `adjustOutline()`: 根据创作进展调整后续大纲
+   - `detectDeviations()`: 检测实际创作与大纲的偏差
+   - `replanFromChapter()`: 从指定章节重新规划
+
+3. **置信度评估**：
+   - `evaluateConfidence()`: 评估大纲的可靠性（1-10）
+   - `identifyUncertainties()`: 识别不确定的情节点
+   - `updateConfidenceScores()`: 更新置信度分数
+
+4. **灵活性管理**：
+   - `markFlexible()`: 标记可调整的大纲节点
+   - `lockOutline()`: 锁定已确定的大纲部分
+   - `suggestAlternatives()`: 建议替代情节方案
 
 ---
 

@@ -58,6 +58,8 @@ export const ModelName = {
   Character: 'Character',
   WorldElement: 'WorldElement',
   Generation: 'Generation',
+  Foreshadowing: 'Foreshadowing',
+  CharacterSnapshot: 'CharacterSnapshot',
   SystemSetting: 'SystemSetting'
 } as const
 
@@ -84,6 +86,8 @@ export const ProjectScalarFieldEnum = {
   coverImage: 'coverImage',
   totalWords: 'totalWords',
   chapterCount: 'chapterCount',
+  outlineMode: 'outlineMode',
+  planningRange: 'planningRange',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -99,6 +103,10 @@ export const OutlineScalarFieldEnum = {
   title: 'title',
   description: 'description',
   targetWords: 'targetWords',
+  planningMode: 'planningMode',
+  planningRange: 'planningRange',
+  isFlexible: 'isFlexible',
+  confidence: 'confidence',
   parentId: 'parentId',
   chapterId: 'chapterId',
   status: 'status',
@@ -118,6 +126,8 @@ export const ChapterScalarFieldEnum = {
   wordCount: 'wordCount',
   summary: 'summary',
   notes: 'notes',
+  isKeyChapter: 'isKeyChapter',
+  plotType: 'plotType',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -147,6 +157,8 @@ export const CharacterScalarFieldEnum = {
   nickname: 'nickname',
   age: 'age',
   gender: 'gender',
+  importance: 'importance',
+  role: 'role',
   appearance: 'appearance',
   personality: 'personality',
   backstory: 'backstory',
@@ -196,6 +208,56 @@ export const GenerationScalarFieldEnum = {
 } as const
 
 export type GenerationScalarFieldEnum = (typeof GenerationScalarFieldEnum)[keyof typeof GenerationScalarFieldEnum]
+
+
+export const ForeshadowingScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  importance: 'importance',
+  plantedInChapterId: 'plantedInChapterId',
+  plantedContent: 'plantedContent',
+  plantedAt: 'plantedAt',
+  expectedChapterNumber: 'expectedChapterNumber',
+  resolvedInChapterId: 'resolvedInChapterId',
+  resolvedContent: 'resolvedContent',
+  resolvedAt: 'resolvedAt',
+  status: 'status',
+  relatedCharacters: 'relatedCharacters',
+  relatedElements: 'relatedElements',
+  tags: 'tags',
+  reminderChapterNumber: 'reminderChapterNumber',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ForeshadowingScalarFieldEnum = (typeof ForeshadowingScalarFieldEnum)[keyof typeof ForeshadowingScalarFieldEnum]
+
+
+export const CharacterSnapshotScalarFieldEnum = {
+  id: 'id',
+  characterId: 'characterId',
+  chapterId: 'chapterId',
+  chapterNumber: 'chapterNumber',
+  age: 'age',
+  appearance: 'appearance',
+  personality: 'personality',
+  powerLevel: 'powerLevel',
+  skills: 'skills',
+  items: 'items',
+  status: 'status',
+  relationships: 'relationships',
+  mentalState: 'mentalState',
+  motivation: 'motivation',
+  majorEvents: 'majorEvents',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CharacterSnapshotScalarFieldEnum = (typeof CharacterSnapshotScalarFieldEnum)[keyof typeof CharacterSnapshotScalarFieldEnum]
 
 
 export const SystemSettingScalarFieldEnum = {

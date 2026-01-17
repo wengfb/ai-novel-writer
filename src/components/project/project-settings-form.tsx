@@ -45,8 +45,8 @@ export function ProjectSettingsForm({ project }: ProjectSettingsFormProps) {
       // 处理标签
       const tagsArray = formData.tags
         .split(',')
-        .map(t => t.trim())
-        .filter(t => t.length > 0)
+        .map((t: string) => t.trim())
+        .filter((t: string) => t.length > 0)
 
       const response = await fetch(`/api/projects/${project.id}`, {
         method: 'PUT',
@@ -142,7 +142,7 @@ export function ProjectSettingsForm({ project }: ProjectSettingsFormProps) {
         </p>
         {formData.tags && (
           <div className="flex flex-wrap gap-2 mt-2">
-            {formData.tags.split(',').map((tag, index) => {
+            {formData.tags.split(',').map((tag: string, index: number) => {
               const trimmedTag = tag.trim()
               if (!trimmedTag) return null
               return (
