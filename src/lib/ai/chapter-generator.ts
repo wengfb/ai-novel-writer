@@ -22,7 +22,7 @@ export class ChapterGenerator {
     chapterTitle: string
     chapterOutline: string
     targetWords: number
-    model: 'gemini-2.5-flash' | 'gemini-2.5-pro'
+    model: GenerationParams['model']
     onProgress?: (text: string) => void
   }): Promise<string> {
     const {
@@ -123,7 +123,7 @@ export class ChapterGenerator {
     chapterOutline: string
     context: any
     targetWords: number
-    model: 'gemini-2.5-flash' | 'gemini-2.5-pro'
+    model: GenerationParams['model']
     onProgress?: (text: string) => void
   }): Promise<string> {
     const { chapterNumber, chapterTitle, chapterOutline, context, targetWords, model, onProgress } =
@@ -176,7 +176,7 @@ export class ChapterGenerator {
   private async analyzeScenes(params: {
     chapterOutline: string
     context: any
-    model: 'gemini-2.5-flash' | 'gemini-2.5-pro'
+    model: GenerationParams['model']
   }): Promise<
     Array<{
       title: string
@@ -255,7 +255,7 @@ ${this.contextManager.formatContextForPrompt(context)}
     previousContent: string
     context: any
     targetWords: number
-    model: 'gemini-2.5-flash' | 'gemini-2.5-pro'
+    model: GenerationParams['model']
   }): Promise<string> {
     const {
       scene,
@@ -299,7 +299,7 @@ ${this.contextManager.formatContextForPrompt(context)}`,
     content: string
     chapterOutline: string
     context: any
-    model: 'gemini-2.5-flash' | 'gemini-2.5-pro'
+    model: GenerationParams['model']
   }): Promise<string> {
     const { content, chapterOutline, context, model } = params
 
@@ -397,7 +397,7 @@ ${content}
     chapterId: string
     currentContent: string
     targetWords: number
-    model: 'gemini-2.5-flash' | 'gemini-2.5-pro'
+    model: GenerationParams['model']
   }): Promise<string> {
     const { projectId, chapterId, currentContent, targetWords, model } = params
 

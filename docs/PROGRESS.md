@@ -1,11 +1,11 @@
-# 项目开发进度追踪
+# 项目开发进度追踪 (Development Progress)
 
 ## 📊 项目概览
 
 **项目名称**：AI Novel Writer
 **开始日期**：2025-01-04
-**当前版本**：v1.0.0
-**整体进度**：██████████ 95%
+**当前版本**：v1.1.0 (Studio UI Refactor)
+**整体进度**：██████████ 98%
 
 ---
 
@@ -13,616 +13,65 @@
 
 | 模块 | 进度 | 状态 |
 |-----|------|------|
-| 项目基础架构 | ██████████ 100% | ✅ 完成 |
-| 数据库设计 | ██████████ 100% | ✅ 完成 |
-| AI 核心引擎 | ██████████ 100% | ✅ 完成 |
-| API 开发 | ██████████ 100% | ✅ 完成 |
-| 前端界面 | ██████████ 100% | ✅ 完成 |
-| 测试 | ░░░░░░░░░░ 0% | ⏳ 待开始 |
-| 文档 | ██████████ 100% | ✅ 完成 |
+| **基础架构** | ██████████ 100% | ✅ 完成 |
+| **数据库** | ██████████ 100% | ✅ 完成 |
+| **AI 引擎** | ██████████ 100% | ✅ 完成 |
+| **API 开发** | ██████████ 100% | ✅ 完成 |
+| **前端界面** | ██████████ 100% | ✅ 完成 (v1.1 Studio布局) |
+| **文档** | ██████████ 100% | ✅ 完成 (重构后) |
+| **测试** | ░░░░░░░░░░ 0% | ⏳ 待开始 |
 
 ---
 
-## 📋 详细进度
+## 📋 详细完成情况
 
-### ✅ 已完成模块
+### 1. 核心架构与后端 (100%)
+*   ✅ **Next.js 16 + TypeScript** 基础环境搭建。
+*   ✅ **Prisma + SQLite** 数据库模型设计与迁移（含世界观快照、系统设置表）。
+*   ✅ **AI Engine**: 集成 Gemini SDK，实现流式输出、上下文滑动窗口、递归章节生成。
+*   ✅ **API Routes**: 完成项目、章节、角色、世界观、大纲的完整 CRUD 接口。
 
-#### 1. 项目基础架构 (100%)
+### 2. 前端界面重构 (v1.1 Completed)
+*   ✅ **Studio 布局**: 实现了 VS Code 风格的三栏式布局（侧边栏、编辑器、AI 面板）。
+    *   *注*: 为保证稳定性，布局暂时采用 Flexbox 替代了不稳定的 Resizable Panels。
+*   ✅ **UI 组件库**: 集成 Shadcn UI，实现了 Button, Input, Card, Tabs, ScrollArea 等基础组件。
+*   ✅ **编辑器集成**: 完成 TipTap 编辑器的集成与样式定制，解决了 SSR Hydration 问题。
+*   ✅ **全中文支持**: 界面文本全面汉化。
+*   ✅ **AI 副驾驶 UI**: 实现了右侧 Copilot 面板的 Chat 和 Context 选项卡界面。
 
-**完成日期**：2025-01-04
-
-**任务清单**：
-- ✅ 初始化 Next.js 15 项目
-- ✅ 配置 TypeScript
-- ✅ 配置 Tailwind CSS
-- ✅ 配置 ESLint
-- ✅ 配置 shadcn/ui 组件库（15个组件）
-- ✅ 创建项目目录结构
-- ✅ 配置环境变量
-
-**成果文件**：
-```
-✅ package.json
-✅ tsconfig.json
-✅ tailwind.config.ts
-✅ next.config.ts
-✅ .env.example
-✅ .env.local
-✅ src/components/ui/* (15个组件)
-```
+### 3. 世界观系统增强 (100%)
+*   ✅ **数据模型**: 增加了 `importance`, `scope`, `constraints` 等字段，支持层级管理。
+*   ✅ **一致性检查**: 设计了 `WorldConsistencyChecker` 逻辑。
+*   ✅ **快照系统**: 实现了 `WorldElementSnapshot` 以追踪设定演化。
 
 ---
 
-#### 2. 数据库设计 (100%)
+## 📅 下一步计划 (Roadmap)
 
-**完成日期**：2025-01-04
+### 短期目标 (v1.2)
+1.  **前后端对接**:
+    *   将前端 Studio 界面与后端 API 真实连接。
+    *   实现左侧资源树的动态加载（加载真实的项目、章节、角色数据）。
+    *   实现中间编辑器的内容保存与自动同步。
+2.  **AI 功能实装**:
+    *   让右侧 Copilot 的对话框真正调用 Gemini API。
+    *   实现编辑器内的 `/` 命令调用 AI 续写。
 
-**任务清单**：
-- ✅ 配置 Prisma + SQLite
-- ✅ 设计完整数据模型（7个表）
-- ✅ 定义表关系和索引
-- ✅ 创建 Prisma 客户端
-
-**数据模型**：
-- ✅ Project（小说项目）
-- ✅ Chapter（章节）
-- ✅ Scene（场景）
-- ✅ Character（角色）
-- ✅ WorldElement（世界观元素）
-- ✅ Outline（大纲）
-- ✅ Generation（AI生成记录）
-
-**成果文件**：
-```
-✅ prisma/schema.prisma
-✅ src/lib/db/prisma.ts
-```
+### 中期目标 (v1.3)
+1.  **高级可视化**: 实现大纲的树形图/思维导图编辑模式。
+2.  **导出功能**: 完善 Markdown/EPUB 导出。
+3.  **多模型支持**: 增加对 OpenAI/Claude 的支持配置。
 
 ---
 
-#### 3. AI 核心引擎 (100%)
-
-**完成日期**：2025-01-04
-
-**任务清单**：
-- ✅ 集成 Gemini AI SDK
-- ✅ 实现 Gemini Provider
-- ✅ 实现上下文管理器（滑动窗口+摘要）
-- ✅ 实现章节生成器（递归规划+反思机制）
-- ✅ 创建提示词模板系统（9种模板）
-- ✅ 实现成本估算功能
-
-**核心文件**：
-```
-✅ src/lib/ai/providers/gemini.ts
-✅ src/lib/ai/context-manager.ts
-✅ src/lib/ai/chapter-generator.ts
-✅ src/lib/ai/prompts/template-manager.ts
-✅ src/types/index.ts
-```
-
-**特性**：
-- ✅ 支持 Gemini 2.5 Flash / Pro
-- ✅ 1M tokens 上下文管理
-- ✅ 流式输出支持
-- ✅ 场景划分生成策略
-- ✅ 反思优化机制
-- ✅ Token/Cost 估算
-
----
-
-#### 4. 文档系统 (100%)
-
-**完成日期**：2025-01-04
-
-**任务清单**：
-- ✅ 系统设计文档
-- ✅ API 接口文档
-- ✅ 开发指南文档
-- ✅ 进度追踪文档（本文档）
-
-**成果文件**：
-```
-✅ docs/DESIGN.md
-✅ docs/API.md
-✅ docs/DEVELOPMENT.md
-✅ docs/PROGRESS.md
-```
-
----
-
-### ⏳ 进行中模块
-
-#### 5. API 开发 (100%)
-
-**完成日期**：2025-01-04
-
-**任务清单**：
-- ✅ 项目管理 API
-  - ✅ GET /api/projects（列表）
-  - ✅ POST /api/projects（创建）
-  - ✅ GET /api/projects/[id]（详情）
-  - ✅ PUT /api/projects/[id]（更新）
-  - ✅ DELETE /api/projects/[id]（删除）
-- ✅ 章节管理 API
-  - ✅ GET /api/projects/[id]/chapters
-  - ✅ POST /api/projects/[id]/chapters
-  - ✅ GET /api/projects/[id]/chapters/[chId]
-  - ✅ PUT /api/projects/[id]/chapters/[chId]
-  - ✅ DELETE /api/projects/[id]/chapters/[chId]
-- ✅ AI 生成 API
-  - ✅ POST /api/ai/generate/outline
-  - ✅ POST /api/ai/generate/chapter（流式）
-  - ✅ POST /api/ai/generate/character
-  - ✅ POST /api/ai/generate/world-element
-  - ✅ POST /api/ai/continue（流式）
-- ✅ 角色管理 API
-  - ✅ GET /api/projects/[projectId]/characters
-  - ✅ POST /api/projects/[projectId]/characters
-  - ✅ GET /api/characters/[characterId]
-  - ✅ PUT /api/characters/[characterId]
-  - ✅ DELETE /api/characters/[characterId]
-- ✅ 世界观管理 API
-  - ✅ GET /api/projects/[projectId]/world-elements
-  - ✅ POST /api/projects/[projectId]/world-elements
-  - ✅ GET /api/world-elements/[elementId]
-  - ✅ PUT /api/world-elements/[elementId]
-  - ✅ DELETE /api/world-elements/[elementId]
-- ✅ 大纲管理 API
-  - ✅ GET /api/projects/[projectId]/outlines
-  - ✅ POST /api/projects/[projectId]/outlines
-  - ✅ GET /api/outlines/[outlineId]
-  - ✅ PUT /api/outlines/[outlineId]
-  - ✅ DELETE /api/outlines/[outlineId]
-- ✅ 导出 API
-  - ✅ POST /api/projects/[projectId]/export (Markdown/TXT)
-- ✅ 统计 API
-  - ✅ GET /api/projects/[projectId]/stats
-
-**重要修复**（2025-01-05）：
-- ✅ **Prisma 7.x 配置升级**
-  - 安装 `@prisma/adapter-better-sqlite3` adapter
-  - 更新 `prisma/schema.prisma`：provider 改为 `prisma-client`，添加 `output` 字段
-  - 更新 `prisma.config.ts`：使用 `datasource: { url: env('DATABASE_URL') }` 格式
-  - 更新 `src/lib/db/prisma.ts`：使用 `PrismaBetterSqlite3` adapter
-  - 重新生成 Prisma Client 到 `./src/lib/generated/prisma`
-  - 解决了 "Using engine type 'client' requires either 'adapter' or 'accelerateUrl'" 错误
-
-**成果文件**：
-```
-✅ src/lib/api/response.ts（响应格式）
-✅ src/lib/api/schemas.ts（验证 schemas）
-✅ src/lib/api/validators.ts（验证工具）
-✅ src/app/api/projects/route.ts
-✅ src/app/api/projects/[id]/route.ts
-✅ src/app/api/projects/[projectId]/chapters/route.ts
-✅ src/app/api/projects/[projectId]/chapters/[chapterId]/route.ts
-✅ src/app/api/ai/generate/outline/route.ts
-✅ src/app/api/ai/generate/chapter/route.ts
-✅ src/app/api/ai/generate/character/route.ts
-✅ src/app/api/ai/generate/world-element/route.ts
-✅ src/app/api/ai/continue/route.ts
-✅ src/app/api/projects/[projectId]/characters/route.ts
-✅ src/app/api/characters/[characterId]/route.ts
-✅ src/app/api/projects/[projectId]/world-elements/route.ts
-✅ src/app/api/world-elements/[elementId]/route.ts
-✅ src/app/api/projects/[projectId]/outlines/route.ts
-✅ src/app/api/outlines/[outlineId]/route.ts
-✅ src/app/api/projects/[projectId]/export/route.ts
-✅ src/app/api/projects/[projectId]/stats/route.ts
-```
-
----
-
-### ✅ 已完成模块
-
-#### 6. 前端界面 (100%)
-
-**完成日期**：2025-01-06
-
-**任务清单**：
-- ✅ 首页（着陆页）
-- ✅ 项目列表页
-- ✅ 新建项目页
-- ✅ 项目详情页（含 Tabs 切换）
-- ✅ 项目编辑页（基本信息编辑、AI 配置、封面上传、删除项目）
-- ✅ 系统设置页（AI API Key、模型配置、导出配置、编辑器配置）
-- ✅ 章节管理（新建、编辑）
-- ✅ 角色管理（新建、编辑）
-- ✅ 世界观管理（新建、编辑）
-- ✅ AI 生成界面（大纲、角色、世界观、章节）
-
-**已完成页面**：
-```
-✅ src/app/page.tsx（首页）
-✅ src/app/projects/page.tsx（项目列表）
-✅ src/app/projects/new/page.tsx（新建项目）
-✅ src/app/projects/[id]/page.tsx（项目详情）
-✅ src/app/projects/[id]/edit/page.tsx（项目编辑）
-✅ src/app/settings/page.tsx（系统设置）
-✅ src/app/projects/[id]/chapters/new/page.tsx（新建章节）
-✅ src/app/projects/[id]/chapters/[chapterId]/page.tsx（编辑章节）
-✅ src/app/projects/[id]/characters/new/page.tsx（新建角色）
-✅ src/app/projects/[id]/characters/[characterId]/page.tsx（编辑角色）
-✅ src/app/projects/[id]/world-elements/new/page.tsx（新建世界观）
-✅ src/app/projects/[id]/world-elements/[elementId]/page.tsx（编辑世界观）
-✅ src/app/projects/[id]/ai/generate/outline/page.tsx（AI 生成大纲）
-✅ src/app/projects/[id]/characters/ai-generate/page.tsx（AI 生成角色）
-✅ src/app/projects/[id]/world-elements/ai-generate/page.tsx（AI 生成世界观）
-✅ src/app/projects/[id]/chapters/ai-generate/page.tsx（AI 生成章节）
-```
-
-**已完成组件**：
-```
-✅ components/project/project-delete-button.tsx（项目删除按钮）
-✅ components/project/project-settings-form.tsx（项目设置表单）
-✅ components/settings/system-settings-form.tsx（系统设置表单）
-✅ components/ui/alert-dialog.tsx（确认对话框）
-✅ components/chapter/chapter-form.tsx（章节表单）
-✅ components/character/character-form.tsx（角色表单）
-✅ components/world/world-element-form.tsx（世界观表单）
-```
-
-**数据库更新**：
-```
-✅ 添加 SystemSetting 表（系统配置）
-✅ 迁移：20260105153915_add_system_settings
-```
-
----
-
-#### 7. 状态管理 (0%)
-
-**任务清单**：
-- ⏸️ Zustand store 设计
-- ⏸️ 项目状态管理
-- ⏸️ 编辑器状态管理
-- ⏸️ AI 生成状态管理
-
----
-
-#### 8. 测试 (0%)
-
-**计划开始日期**：核心功能完成后
-
-**任务清单**：
-- ⏸️ 单元测试（工具函数）
-- ⏸️ 组件测试（React 组件）
-- ⏸️ API 测试（接口测试）
-- ⏸️ E2E 测试（完整流程）
-- ⏸️ 性能测试
-
----
-
-## 🎯 下一步计划
-
-### 短期目标（本周）
-
-1. **✅ 完成 API 开发**（已完成 ✅）
-   - ✅ 项目管理 API（CRUD）
-   - ✅ 章节管理 API（CRUD）
-   - ✅ AI 生成 API（大纲、章节）
-   - ✅ 角色管理 API（CRUD）
-   - ✅ 世界观管理 API（CRUD）
-   - ✅ 大纲管理 API（CRUD）
-   - ✅ 导出和统计 API
-
-2. **✅ 初始化数据库**（已完成 ✅）
-   - ✅ 运行 Prisma 迁移
-   - ✅ 配置 Prisma 7.x adapter
-
-3. **完成前端界面**（优先级：高）
-   - ✅ 基础页面（首页、项目列表、新建项目、项目详情）
-   - ✅ 项目配置页面（设置、删除功能）
-   - ⏳ 章节编辑器页面
-   - ⏳ AI 生成交互界面
-   - ⏳ 角色和世界观管理页面
-
-### 中期目标（本月）
-
-1. **完成前端界面**
-   - 章节编辑器（TipTap）
-   - AI 生成交互界面
-   - 角色和世界观管理
-
-2. **实现核心功能**
-   - AI 大纲生成
-   - AI 章节生成（流式输出）
-   - 导出功能（Markdown/TXT）
-
-3. **测试和优化**
-   - 功能测试
-   - 性能优化
-   - Bug 修复
-
-### 长期目标（下月）
-
-1. **高级功能**
-   - 角色关系图谱
-   - 大纲可视化
-   - PDF/EPUB 导出
-   - 统计分析
-
-2. **体验优化**
-   - 暗黑模式
-   - 快捷键支持
-   - 响应式优化
-
----
-
-## 📝 开发日志
-
-### 2025-01-04
-
-**完成**：
-- ✅ 项目初始化
-- ✅ 技术栈选型和配置
-- ✅ 数据库模型设计
-- ✅ AI 核心引擎实现
-- ✅ 完整文档编写
-- ✅ API 工具函数（响应格式、验证 schemas）
-- ✅ 项目管理 API（完整 CRUD）
-- ✅ 章节管理 API（完整 CRUD）
-- ✅ AI 生成 API（大纲、章节、角色、世界观、续写）
-- ✅ 角色管理 API（完整 CRUD）
-- ✅ 世界观管理 API（完整 CRUD）
-- ✅ 大纲管理 API（完整 CRUD）
-- ✅ 导出 API（Markdown/TXT）
-- ✅ 统计 API
-- ✅ TypeScript 类型检查通过
-- ✅ 数据库初始化（Prisma migrate）
-- ✅ 前端基础页面（首页、项目列表、新建项目、项目详情）
-
-**问题**：
-- 已解决所有 TypeScript 类型错误
-- 修复了 Prisma schema 与代码之间的类型不匹配问题
-
-**经验**：
-- Zod 验证库需要正确配置参数类型
-- Prisma 的 JsonValue 类型需要正确序列化
-- TypeScript 严格模式有助于发现潜在问题
-
-**下一步**：
-- 创建前端基础界面
-- 实现项目列表和详情页面
-- 测试 API 功能
-
----
-
-### 2025-01-06
-
-**完成**：
-- ✅ 完成所有前端界面开发（12个文件）
-- ✅ 章节管理（ChapterForm 组件、新建/编辑页面）
-- ✅ 角色管理（CharacterForm 组件、新建/编辑页面）
-- ✅ 世界观管理（WorldElementForm 组件、新建/编辑页面）
-- ✅ AI 生成大纲页面（表单 + 结果展示）
-- ✅ AI 生成角色页面（表单 + 结果展示）
-- ✅ AI 生成世界观页面（表单 + 结果展示）
-- ✅ AI 生成章节页面（流式输出 + 实时显示）
-- ✅ 所有页面编译通过，无 TypeScript 错误
-
-**技术亮点**：
-- 实现了 AI 章节生成的流式输出功能
-- 统一的表单组件设计模式
-- 完整的 CRUD 操作流程
-- 良好的用户体验（加载状态、错误提示）
-
-**下一步**：
-- 功能测试和 Bug 修复
-- 性能优化
-- 用户体验优化
-
----
-
-## 🔧 技术债务
-
-### 当前债务
-
-1. **错误处理**
-   - ⚠️ 需要统一错误处理机制
-   - ⚠️ API 错误响应标准化
-
-2. **验证**
-   - ⚠️ 输入验证（Zod schemas）待补充
-   - ⚠️ 数据完整性检查
-
-3. **性能**
-   - ⚠️ 长文本处理性能未测试
-   - ⚠️ 数据库查询未优化
-
-4. **安全**
-   - ⚠️ API 速率限制
-   - ⚠️ 输入消毒
-
-### 偿还计划
-
-- **P0（高优先级）**：错误处理、输入验证
-- **P1（中优先级）**：性能优化、速率限制
-- **P2（低优先级）**：安全加固、监控
-
----
-
-## 📊 质量指标
-
-### 代码质量
-
-- ✅ TypeScript 覆盖率：100%
-- ✅ ESLint 通过率：100%
-- ⏳ 测试覆盖率：0%（待实现）
-- ⏳ 文档覆盖率：80%
-
-### 性能指标（目标）
-
-- ⏳ 首屏加载：< 2s
-- ⏳ API 响应：< 500ms
-- ⏳ AI 生成启动：< 3s
-- ⏳ 流式输出延迟：< 100ms
-
-### 用户体验（目标）
-
-- ⏳ 界面响应速度：流畅
-- ⏳ 错误提示：友好清晰
-- ⏳ 操作反馈：及时
-
----
-
-## 🐛 Bug 追踪
-
-### 已知 Bug
-
-#### #1 数据库未初始化
-- **描述**：Prisma 迁移未运行
-- **状态**：⏳ 待修复
-- **优先级**：P0
-- **责任人**：开发者
-
-#### #2 环境变量未设置
-- **描述**：Gemini API Key 未配置
-- **状态**：⏳ 待修复
-- **优先级**：P0
-- **责任人**：用户
-
-### Bug 报告模板
-
-```markdown
-### Bug 描述
-简要描述 bug
-
-### 复现步骤
-1. 步骤1
-2. 步骤2
-3. 步骤3
-
-### 预期行为
-描述预期行为
-
-### 实际行为
-描述实际行为
-
-### 环境信息
-- OS: [e.g. Ubuntu 22.04]
-- Node.js: [e.g. 20.10.0]
-- Browser: [e.g. Chrome 120]
-
-### 附加信息
-日志、截图等
-```
-
----
-
-## 💡 功能建议
-
-### 已建议功能
-
-1. **角色关系图谱可视化**
-   - **优先级**：P1
-   - **状态**：⏸️ 计划中
-   - **描述**：使用图形库展示角色关系
-
-2. **大纲拖拽排序**
-   - **优先级**：P1
-   - **状态**：⏸️ 计划中
-   - **描述**：支持拖拽调整大纲顺序
-
-3. **版本历史**
-   - **优先级**：P2
-   - **状态**：⏸️ 计划中
-   - **描述**：保存章节历史版本
-
-### 建议模板
-
-```markdown
-### 功能描述
-简要描述功能
-
-### 使用场景
-描述使用场景
-
-### 优先级
-P0/P1/P2
-
-### 预期效果
-描述预期效果
-```
-
----
-
-## 📅 里程碑
-
-### M1：核心功能完成（预计 2025-01-15）
-
-**目标**：
-- ✅ 项目基础架构
-- ✅ AI 生成引擎
-- ⏳ 基础 API
-- ⏳ 简单 UI
-- ⏳ 可以创建项目并生成章节
-
-**状态**：⏳ 进行中（30%）
-
----
-
-### M2：MVP 发布（预计 2025-01-31）
-
-**目标**：
-- 完整的项目管理
-- 完整的章节生成
-- 基础编辑器
-- Markdown 导出
-- 功能测试通过
-
-**状态**：⏸️ 未开始
-
----
-
-### M3：v1.0 正式版（预计 2025-02-28）
-
-**目标**：
-- 所有核心功能
-- 高级编辑器功能
-- 多格式导出
-- 统计分析
-- 性能优化
-- 完整测试
-
-**状态**：⏸️ 未开始
-
----
-
-## 📈 进度图表
-
-### 甘特图
-
-```
-任务                    1月  W1  1月  W2  1月  W3  1月  W4  2月  W1
-────────────────────────────────────────────────────────────
-项目基础架构           ████████
-数据库设计             ████████
-AI 核心引擎            ████████
-API 开发               ████████░░░░░░░░░░░░░░░░
-前端界面               ░░░░░░░░░██████████████████░░░░░░░
-测试                   ░░░░░░░░░░░░░░░░░░░░░░░░████████
-文档                   ████████
-```
-
----
-
-## 🎖️ 贡献者
-
-- **主开发者**：开发者
-- **AI 顾问**：Claude (Anthropic)
-
----
-
-## 📞 联系方式
-
-- **Issues**：GitHub Issues
-- **Discussions**：GitHub Discussions
-- **Email**：待定
-
----
-
-**文档维护**：每日更新进度
-
-**最后更新**：2025-01-04 14:00
+## 📝 最近更新日志
+
+### 2026-01-18 (v1.1.0)
+*   🔥 **UI 重构**: 废弃旧版页面，全面迁移至 Studio 单页应用布局。
+*   🎨 **样式修复**: 解决了 Tailwind CSS 在 Next.js 环境下的加载问题，修复了布局跳变 Bug。
+*   📚 **文档重组**: 将设计文档整合为 Architecture、Detailed Design 和 Progress 三大件。
+*   🐛 **Bug Fix**: 修复了 TipTap 编辑器在 SSR 环境下的 Hydration Mismatch 错误。
+
+### 2025-01-05 (v1.0.0)
+*   ✨ **Prisma 升级**: 适配 Prisma 7.x 和 SQLite adapter。
+*   ✨ **API 完成**: 完成所有基础 CRUD 接口。
