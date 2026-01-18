@@ -24,8 +24,12 @@ import { WorldElementList } from "@/components/world/world-element-list"
 import { CreateCharacterDialog } from "@/components/character/create-character-dialog"
 import { CreateWorldElementDialog } from "@/components/world/create-world-element-dialog"
 import { SettingsDialog } from "@/components/settings/settings-dialog"
+import { OutlineList } from "@/components/outline/outline-list"
+import { OutlineDialog } from "@/components/outline/outline-dialog"
 import { useChapterStore } from "@/lib/store/chapter-store"
+import { useOutlineStore } from "@/lib/store/outline-store"
 import { toast } from "sonner"
+import type { Outline } from "@/lib/store/outline-store"
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -37,6 +41,11 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   const [isCharacterDialogOpen, setIsCharacterDialogOpen] = React.useState(false)
   const [isWorldDialogOpen, setIsWorldDialogOpen] = React.useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false)
+  const [isOutlineDialogOpen, setIsOutlineDialogOpen] = React.useState(false)
+  const [editingOutline, setEditingOutline] = React.useState<Outline | null>(null)
+  const [outlineParentId, setOutlineParentId] = React.useState<string | null>(null)
+  const [outlineDefaultType, setOutlineDefaultType] = React.useState<'volume' | 'chapter' | 'scene'>('chapter')
+  const { deleteOutline } = useOutlineStore()
 
   // 自动选择第一个项目
   React.useEffect(() => {
@@ -68,6 +77,30 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
       toast.success('章节创建成功')
     } catch (error) {
       toast.error('创建章节失败')
+    }
+  }
+
+  // 创建/编辑大纲
+  const handleCreateOutline = (parentId?: string | null, type?: 'volume' | 'chapter' | 'scene') => {
+    setEditingOutline(null)
+    setOutlineParentId(parentId || null)
+    setOutlineDefaultType(type || 'chapter')
+    setIsOutlineDialogOpen(true)
+  }
+
+  const handleEditOutline = (outline: Outline) => {
+    setEditingOutline(outline)
+    setOutlineParentId(null)
+    setOutlineDefaultType(outline.type)
+    setIsOutlineDialogOpen(true)
+  }
+
+  const handleDeleteOutline = async (outline: Outline) => {
+    try {
+      await deleteOutline(outline.id)
+      toast.success('大纲删除成功')
+    } catch (error) {
+      toast.error('删除大纲失败')
     }
   }
 
@@ -161,10 +194,13 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
               onCreateElement={() => setIsWorldDialogOpen(true)}
             />
           )}
-          {activeSection === 'outline' && (
-            <div className="px-4 py-2 text-sm text-muted-foreground">
-              大纲功能开发中...
-            </div>
+          {activeSection === 'outline' && currentProject && (
+            <OutlineList
+              projectId={currentProject.id}
+              onCreateOutline={handleCreateOutline}
+              onEditOutline={handleEditOutline}
+              onDeleteOutline={handleDeleteOutline}
+            />
           )}
         </div>
       </div>
@@ -193,6 +229,14 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
             projectId={currentProject.id}
             open={isWorldDialogOpen}
             onOpenChange={setIsWorldDialogOpen}
+          />
+          <OutlineDialog
+            projectId={currentProject.id}
+            open={isOutlineDialogOpen}
+            onOpenChange={setIsOutlineDialogOpen}
+            editingOutline={editingOutline}
+            parentId={outlineParentId}
+            defaultType={outlineDefaultType}
           />
         </>
       )}

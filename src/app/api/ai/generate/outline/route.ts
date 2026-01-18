@@ -13,7 +13,7 @@ import { GenerateOutlineSchema } from '@/lib/api/schemas'
 export async function POST(request: NextRequest) {
   return withErrorHandler(async () => {
     // 解析请求体
-    const body = await parseJsonBody(request)
+    const body = await parseJsonBody(request) as any
 
     // 支持两种调用方式：
     // 1. Onboarding 方式：{ projectId: "temp", prompt: "..." }

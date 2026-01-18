@@ -230,14 +230,44 @@ export function OnboardingStep3Preview({
 
       // Step 5: 创建大纲
       if (outlineData.chapters && Array.isArray(outlineData.chapters)) {
-        await fetch('/api/outlines', {
+        // 创建第一卷
+        const volumeResponse = await fetch(`/api/projects/${project.id}/outlines`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            projectId: project.id,
-            content: JSON.stringify(outlineData.chapters)
+            type: 'volume',
+            order: 1,
+            title: '第一卷',
+            description: outlineData.storySummary || '',
+            planningMode: 'full',
+            isFlexible: false,
+            confidence: 8
           })
         })
+
+        if (volumeResponse.ok) {
+          const volumeResult = await volumeResponse.json()
+          const volumeId = volumeResult.data.outline.id
+
+          // 创建章节（作为卷的子节点）
+          for (let i = 0; i < outlineData.chapters.length; i++) {
+            const chapter = outlineData.chapters[i]
+            await fetch(`/api/projects/${project.id}/outlines`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                type: 'chapter',
+                parentId: volumeId,
+                order: i + 1,
+                title: chapter.title || `第${chapter.chapterNumber}章`,
+                description: chapter.summary || '',
+                planningMode: 'full',
+                isFlexible: false,
+                confidence: 7
+              })
+            })
+          }
+        }
       }
 
       setProgress({ stage: 'done', progress: 100, message: '全部完成！' })

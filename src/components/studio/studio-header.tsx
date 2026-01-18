@@ -16,6 +16,7 @@ export function StudioHeader() {
   const { currentProject } = useCurrentProject()
   const { currentChapter, updateChapterContent, saveChapter, isSaving, lastSaved } = useChapterStore()
   const [accumulatedContent, setAccumulatedContent] = React.useState('')
+  const [baseContent, setBaseContent] = React.useState('') // 保存开始续写时的原始内容
   const [isOnboardingOpen, setIsOnboardingOpen] = React.useState(false)
 
   const handleSave = async () => {
@@ -34,20 +35,23 @@ export function StudioHeader() {
 
   const handleAIContentGenerated = (chunk: string) => {
     if (currentChapter) {
+      // 第一次收到 chunk 时，保存原始内容
+      setBaseContent(prev => prev || (currentChapter.content || ''))
       setAccumulatedContent(prev => prev + chunk)
     }
   }
 
-  // 当累积内容变化时，更新章节内容
+  // 当累积内容变化时，基于原始内容 + 累积内容来更新章节内容
   React.useEffect(() => {
-    if (currentChapter && accumulatedContent) {
-      updateChapterContent(currentChapter.id, (currentChapter.content || '') + accumulatedContent)
+    if (currentChapter && accumulatedContent && baseContent) {
+      updateChapterContent(currentChapter.id, baseContent + accumulatedContent)
     }
-  }, [accumulatedContent])
+  }, [accumulatedContent, baseContent])
 
-  // 重置累积内容
+  // 重置累积内容和原始内容
   React.useEffect(() => {
     setAccumulatedContent('')
+    setBaseContent('')
   }, [currentChapter?.id])
 
   const handleNewProject = () => {
