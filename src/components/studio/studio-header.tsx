@@ -1,11 +1,52 @@
+'use client'
+
 import * as React from "react"
-import { ArrowLeft, MoreHorizontal, Play, Save } from "lucide-react"
+import { ArrowLeft, MoreHorizontal, Save } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { Input } from "@/components/ui/input"
+import { useCurrentProject } from "@/hooks/use-projects"
+import { useChapterStore } from "@/lib/store/chapter-store"
+import { AIContinueButton } from "@/components/ai/ai-continue-button"
+import { toast } from "sonner"
 
 export function StudioHeader() {
+  const { currentProject } = useCurrentProject()
+  const { currentChapter, updateChapterContent, saveChapter, isSaving, lastSaved } = useChapterStore()
+  const [accumulatedContent, setAccumulatedContent] = React.useState('')
+
+  const handleSave = async () => {
+    if (!currentChapter) {
+      toast.error('请先选择章节')
+      return
+    }
+
+    try {
+      await saveChapter(currentChapter.id)
+      toast.success('保存成功')
+    } catch (error) {
+      toast.error('保存失败，请重试')
+    }
+  }
+
+  const handleAIContentGenerated = (chunk: string) => {
+    if (currentChapter) {
+      setAccumulatedContent(prev => prev + chunk)
+    }
+  }
+
+  // 当累积内容变化时，更新章节内容
+  React.useEffect(() => {
+    if (currentChapter && accumulatedContent) {
+      updateChapterContent(currentChapter.id, (currentChapter.content || '') + accumulatedContent)
+    }
+  }, [accumulatedContent])
+
+  // 重置累积内容
+  React.useEffect(() => {
+    setAccumulatedContent('')
+  }, [currentChapter?.id])
+
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex items-center gap-2">
@@ -14,23 +55,30 @@ export function StudioHeader() {
          </Button>
          <Separator orientation="vertical" className="h-6" />
          <div className="flex flex-col">
-             <span className="text-sm font-semibold">项目：赛博之城 2077</span>
-             <span className="text-xs text-muted-foreground">第三章：觉醒</span>
+             <span className="text-sm font-semibold">
+               {currentProject ? `项目：${currentProject.title}` : '未选择项目'}
+             </span>
+             <span className="text-xs text-muted-foreground">
+               {currentChapter ? `第 ${currentChapter.chapterNumber} 章：${currentChapter.title}` : '未选择章节'}
+             </span>
          </div>
       </div>
       
       <div className="ml-auto flex items-center gap-2">
          <div className="text-xs text-muted-foreground mr-2">
-             已保存
+             {isSaving ? '保存中...' : lastSaved ? `已保存 ${new Date(lastSaved).toLocaleTimeString()}` : '未保存'}
          </div>
-         <Button size="sm" variant="outline" className="h-8">
+         <Button
+           size="sm"
+           variant="outline"
+           className="h-8"
+           onClick={handleSave}
+           disabled={isSaving || !currentChapter}
+         >
              <Save className="mr-2 h-3.5 w-3.5" />
-             保存
+             {isSaving ? '保存中...' : '保存'}
          </Button>
-         <Button size="sm" className="h-8">
-             <Play className="mr-2 h-3.5 w-3.5" />
-             AI 续写
-         </Button>
+         <AIContinueButton onContentGenerated={handleAIContentGenerated} />
          <Button variant="ghost" size="icon" className="h-8 w-8">
              <MoreHorizontal className="h-4 w-4" />
          </Button>

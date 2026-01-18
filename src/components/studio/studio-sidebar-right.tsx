@@ -1,18 +1,21 @@
+'use client'
+
 import * as React from "react"
-import { Send, Sparkles, Database, Bot, Users } from "lucide-react"
+import { Sparkles, Database, Bot, Users } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { AIChat } from "@/components/ai/ai-chat"
+import { ContextPanel } from "@/components/ai/context-panel"
+import { useCurrentProject } from "@/hooks/use-projects"
+import { useChapterStore } from "@/lib/store/chapter-store"
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function StudioSidebarRight({ className }: SidebarProps) {
+  const { currentProject } = useCurrentProject()
+  const { currentChapter } = useChapterStore()
   return (
     <div className={cn("h-full flex flex-col border-l bg-muted/10", className)}>
       <Tabs defaultValue="chat" className="flex-1 flex flex-col h-full">
@@ -28,93 +31,21 @@ export function StudioSidebarRight({ className }: SidebarProps) {
             </TabsList>
         </div>
 
-        <TabsContent value="chat" className="flex-1 flex flex-col m-0 data-[state=active]:flex">
-          <ScrollArea className="flex-1 p-4">
-            <div className="space-y-4">
-              <div className="flex gap-3">
-                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <Bot className="h-4 w-4 text-primary" />
-                </div>
-                <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">AI 副驾驶</p>
-                  <div className="rounded-lg bg-muted p-3 text-sm">
-                    你好！我是你的创作伙伴。今天有什么我可以帮你的吗？
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex gap-3 flex-row-reverse">
-                 <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center shrink-0">
-                  <span className="text-xs font-bold">你</span>
-                </div>
-                <div className="space-y-1 text-right">
-                  <div className="rounded-lg bg-primary text-primary-foreground p-3 text-sm text-left inline-block">
-                    我想为我的科幻故事构思一个反派。
-                  </div>
-                </div>
-              </div>
-              
-               <div className="flex gap-3">
-                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <Bot className="h-4 w-4 text-primary" />
-                </div>
-                <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">AI 副驾驶</p>
-                  <div className="rounded-lg bg-muted p-3 text-sm">
-                    太棒了！一个科幻反派需要强大的动机。你更倾向于哪种：
-                    <ul className="list-disc list-inside mt-2 space-y-1">
-                        <li>一个寻求自由的觉醒 AI？</li>
-                        <li>一个执着于永生的企业 CEO？</li>
-                        <li>一个被外星技术腐蚀的陨落英雄？</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+        <TabsContent value="chat" className="flex-1 flex flex-col m-0 overflow-hidden data-[state=active]:flex">
+          {currentProject ? (
+            <AIChat
+              projectId={currentProject.id}
+              chapterId={currentChapter?.id}
+            />
+          ) : (
+            <div className="flex-1 flex items-center justify-center text-muted-foreground">
+              <p>请先选择项目</p>
             </div>
-          </ScrollArea>
-          <div className="p-4 pt-2 border-t mt-auto bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/20">
-            <form className="flex w-full items-center space-x-2" onSubmit={(e) => e.preventDefault()}>
-              <Input type="text" placeholder="向 AI 提问..." className="flex-1" />
-              <Button type="submit" size="icon">
-                <Send className="h-4 w-4" />
-                <span className="sr-only">发送</span>
-              </Button>
-            </form>
-          </div>
+          )}
         </TabsContent>
 
-        <TabsContent value="context" className="flex-1 p-4 m-0 overflow-auto">
-             <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium">当前上下文</h3>
-                    <Badge variant="outline" className="text-xs">1.2k tokens</Badge>
-                </div>
-                
-                <Card className="bg-muted/50 border-none shadow-none">
-                    <CardHeader className="p-3 pb-1">
-                        <CardTitle className="text-xs font-medium uppercase text-muted-foreground">当前章节</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-3 pt-1 text-sm">
-                        第三章：觉醒
-                    </CardContent>
-                </Card>
-                
-                 <Card className="bg-muted/50 border-none shadow-none">
-                    <CardHeader className="p-3 pb-1">
-                        <CardTitle className="text-xs font-medium uppercase text-muted-foreground">活跃角色</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-3 pt-1 text-sm space-y-2">
-                        <div className="flex items-center gap-2">
-                            <div className="h-2 w-2 rounded-full bg-green-500" />
-                            <span>莎拉 (主角)</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="h-2 w-2 rounded-full bg-yellow-500" />
-                            <span>K 博士 (反派)</span>
-                        </div>
-                    </CardContent>
-                </Card>
-             </div>
+        <TabsContent value="context" className="flex-1 m-0 overflow-hidden">
+          <ContextPanel />
         </TabsContent>
 
         <TabsContent value="generate" className="flex-1 p-4 m-0 overflow-auto">

@@ -398,8 +398,9 @@ ${content}
     currentContent: string
     targetWords: number
     model: GenerationParams['model']
+    onProgress?: (text: string) => void
   }): Promise<string> {
-    const { projectId, chapterId, currentContent, targetWords, model } = params
+    const { projectId, chapterId, currentContent, targetWords, model, onProgress } = params
 
     // 获取章节信息
     const chapter = await prisma.chapter.findUnique({
@@ -463,8 +464,9 @@ ${content}
       chapterOutline: chapter.title, // 简化处理
     })
 
-    const result = await this.gemini.generate({
-      type: 'chapter',
+    // 使用流式生成
+    let fullOutput = ''
+    const generator = this.gemini.streamGenerate({
       model,
       prompt,
       systemPrompt: `你是一位专业小说作家。正在续写第${chapter.chapterNumber}章。
@@ -474,16 +476,21 @@ ${this.contextManager.formatContextForPrompt(context)}`,
       maxTokens: targetWords * 2,
     })
 
+    for await (const chunk of generator) {
+      fullOutput += chunk
+      onProgress?.(chunk)
+    }
+
     // 记录生成
     await this.recordGeneration({
       projectId,
       type: 'chapter',
       model,
       prompt,
-      output: result.output,
+      output: fullOutput,
     })
 
-    return result.output
+    return fullOutput
   }
 }
 

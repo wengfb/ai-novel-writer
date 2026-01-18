@@ -10,7 +10,7 @@ import { ContinueChapterSchema } from '@/lib/api/schemas'
  * AI 续写章节内容（流式输出）
  */
 export async function POST(request: NextRequest) {
-  return withErrorHandler(async () => {
+  try {
     // 解析并验证请求体
     const body = await parseJsonBody(request)
     const data = validateRequest(ContinueChapterSchema, body)
@@ -47,13 +47,24 @@ export async function POST(request: NextRequest) {
             )
           )
 
-          // 续写章节
+          // 续写章节（流式输出）
           const continuation = await chapterGenerator.continueChapter({
             projectId: data.projectId,
             chapterId: data.chapterId,
             currentContent: data.currentContent,
             targetWords: data.targetWords,
             model: data.model,
+            onProgress: (chunk) => {
+              // 实时发送进度事件
+              controller.enqueue(
+                encoder.encode(
+                  `data: ${JSON.stringify({
+                    type: 'progress',
+                    content: chunk,
+                  })}\n\n`
+                )
+              )
+            },
           })
 
           // 计算新增字数
@@ -107,7 +118,22 @@ export async function POST(request: NextRequest) {
         'Connection': 'keep-alive',
       },
     })
-  })
+  } catch (error) {
+    console.error('API Error:', error)
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: {
+          code: 'SERVER_ERROR',
+          message: error instanceof Error ? error.message : '服务器错误',
+        },
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
+  }
 }
 
 /**

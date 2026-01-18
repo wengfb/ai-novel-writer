@@ -38,8 +38,10 @@ export async function GET(request: NextRequest, context: RouteContext) {
         orderBy: { [query.orderBy]: query.order },
         select: {
           id: true,
+          projectId: true,
           chapterNumber: true,
           title: true,
+          content: true,
           wordCount: true,
           summary: true,
           notes: true,
