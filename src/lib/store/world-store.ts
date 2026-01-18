@@ -52,7 +52,7 @@ export const useWorldStore = create<WorldState>()(
           throw new Error(data.error.message)
         }
 
-        set({ worldElements: data.data.worldElements, isLoading: false })
+        set({ worldElements: data.data.elements, isLoading: false })
       } catch (error) {
         set({
           error: error instanceof Error ? error.message : '获取世界观列表失败',

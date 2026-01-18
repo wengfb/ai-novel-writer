@@ -16,7 +16,7 @@
 
 开发一个面向开发者个人使用的 AI 辅助小说创作应用，实现：
 - 从大纲到人设、世界观、章节的完整自动化创作
-- 使用 Gemini 2.5 Pro/Flash 实现 AI 生成
+- 使用 Gemini 3 Pro/Flash 实现 AI 生成
 - 保证长篇小说（10万字+）的连贯性
 - 本地部署，数据完全掌控
 
@@ -47,35 +47,47 @@
 
 ```
 ai-novel-writer/
-├── docs/                      # 📚 完整文档（已创建）
+├── docs/                      # 📚 完整文档
 │   ├── DESIGN.md             # 系统设计文档
 │   ├── API.md                # API 接口文档
 │   ├── DEVELOPMENT.md        # 开发指南
 │   └── PROGRESS.md           # 进度追踪
 ├── prisma/
-│   └── schema.prisma         # ✅ 数据模型（7个表）
+│   └── schema.prisma         # ✅ 数据模型（11个表）
 ├── src/
 │   ├── app/                  # Next.js App Router
-│   │   ├── api/             # API Routes（待实现）
-│   │   └── (dashboard)/     # 主应用界面（待实现）
+│   │   ├── api/             # ✅ API Routes（22个端点）
+│   │   ├── page.tsx         # ✅ 主页面（Studio 布局）
+│   │   └── layout.tsx       # ✅ 根布局
 │   ├── components/           # React 组件
-│   │   ├── ui/              # ✅ shadcn/ui 组件（15个）
-│   │   ├── editor/          # 编辑器组件（待实现）
-│   │   ├── project/         # 项目组件（待实现）
-│   │   └── ai/              # AI 交互组件（待实现）
+│   │   ├── ui/              # ✅ shadcn/ui 组件（20个）
+│   │   ├── layout/          # ✅ 布局组件（Studio）
+│   │   ├── studio/          # ✅ Studio 组件（侧边栏、头部）
+│   │   ├── editor/          # ✅ 编辑器组件（TipTap）
+│   │   ├── project/         # ✅ 项目组件（列表、卡片、对话框）
+│   │   ├── chapter/         # ✅ 章节组件（列表、项）
+│   │   ├── character/       # ✅ 角色组件（列表、对话框）
+│   │   ├── world/           # ✅ 世界观组件（列表）
+│   │   └── ai/              # ✅ AI 交互组件（Chat、Context、Continue）
 │   ├── lib/
 │   │   ├── ai/              # ✅ AI 核心引擎
-│   │   │   ├── providers/gemini.ts        # Gemini 提供者
-│   │   │   ├── prompts/template-manager.ts  # 提示词管理
-│   │   │   ├── context-manager.ts          # 上下文管理器
-│   │   │   └── chapter-generator.ts        # 章节生成器
-│   │   └── db/
-│   │       └── prisma.ts     # Prisma 客户端
+│   │   │   ├── providers/gemini.ts           # Gemini 提供者
+│   │   │   ├── prompts/template-manager.ts   # 提示词管理
+│   │   │   ├── context-manager.ts            # 上下文管理器
+│   │   │   ├── chapter-generator.ts          # 章节生成器
+│   │   │   └── world-consistency-checker.ts  # 世界观一致性检查
+│   │   ├── api/             # ✅ API 客户端
+│   │   │   ├── client.ts    # 基础客户端
+│   │   │   └── endpoints/   # API 端点封装
+│   │   ├── store/           # ✅ Zustand 状态管理（6个 store）
+│   │   ├── db/
+│   │   │   └── prisma.ts    # Prisma 客户端
+│   │   └── utils/           # 工具函数
 │   └── types/
-│       └── index.ts          # TypeScript 类型定义
-├── .env.example              # ✅ 环境变量模板
-├── .env.local                # ✅ 环境变量配置（不提交）
-└── README.md                 # ✅ 项目主文档
+│       └── index.ts         # TypeScript 类型定义
+├── .env.example             # ✅ 环境变量模板
+├── .env.local               # ✅ 环境变量配置（不提交）
+└── README.md                # ✅ 项目主文档
 ```
 
 ---
@@ -84,13 +96,13 @@ ai-novel-writer/
 
 ### 1. 项目基础架构（100%）
 - ✅ Next.js 15 + TypeScript 配置
-- ✅ shadcn/ui 组件库（15个组件）
+- ✅ shadcn/ui 组件库（20个组件）
 - ✅ Tailwind CSS 配置
 - ✅ ESLint 配置
 
 ### 2. 数据库设计（100%）
 - ✅ Prisma + SQLite 配置
-- ✅ 完整数据模型（7个表）
+- ✅ 完整数据模型（11个表）
   - Project（小说项目）
   - Chapter（章节）
   - Scene（场景）
@@ -98,15 +110,66 @@ ai-novel-writer/
   - WorldElement（世界观元素）
   - Outline（大纲）
   - Generation（AI生成记录）
+  - Foreshadowing（伏笔管理）
+  - CharacterSnapshot（角色快照）
+  - WorldElementSnapshot（世界观快照）
+  - SystemSetting（系统设置）
 
-### 3. AI 核心引擎（100%）
+### 3. AI 核心引擎（40%）
 - ✅ Gemini Provider（支持 2.5 Flash/Pro）
-- ✅ 上下文管理器（滑动窗口+摘要策略）
-- ✅ 章节生成器（递归规划+反思机制）
+- ⚠️ 上下文管理器（代码已写，但未真正使用）
+- ⚠️ 章节生成器（代码完整，但 API 未集成）
 - ✅ 提示词模板系统（9种模板）
 - ✅ Token/Cost 估算
+- ⚠️ 世界观一致性检查器（代码已写，但未使用）
+- ❌ 智能上下文筛选（缺失）
+- ❌ 滑动窗口机制（未实际应用）
+- ❌ **AI 工具调用（完全缺失）**
+  - AI 助手无法创建角色
+  - AI 助手无法创建世界观元素
+  - AI 助手无法修改章节
+  - 只能纯文本对话
 
-### 4. 文档系统（100%）
+### 4. API 开发（85%）
+- ✅ 项目管理 API（CRUD + 统计 + 导出）
+- ✅ 章节管理 API（CRUD + 批量操作）
+- ✅ 角色管理 API（CRUD + 快照）
+- ✅ 世界观管理 API（CRUD + 快照）
+- ✅ 大纲管理 API（CRUD）
+- ⚠️ AI 生成 API（基础实现，但未深度集成上下文）
+  - ✅ AI 对话（简单上下文）
+  - ✅ AI 续写（基础功能）
+  - ⚠️ 章节生成（API 存在但未使用完整的上下文管理器）
+  - ❌ 智能上下文筛选（缺失）
+- ✅ 系统设置 API
+
+### 5. 前端界面（70%）
+- ✅ Studio 布局（VS Code 风格三栏布局）
+- ⚠️ 项目管理组件（列表、卡片、创建对话框已实现，但未集成到界面）
+- ✅ 章节管理组件（列表、编辑器）
+- ✅ 角色管理组件（列表、创建对话框）
+- ✅ 世界观管理组件（列表、创建对话框）
+- ✅ TipTap 富文本编辑器（含 SSR 适配）
+- ✅ AI 交互组件（Chat、Context、Continue 按钮）
+- ✅ Studio 侧边栏（左侧资源树、右侧 AI 面板）
+- ❌ 项目选择/切换界面（未实现）
+- ❌ 设置界面（未实现）
+- ❌ 大纲可视化界面（未实现）
+
+### 6. 状态管理（100%）
+- ✅ Project Store（项目状态）
+- ✅ Chapter Store（章节状态）
+- ✅ Character Store（角色状态）
+- ✅ World Store（世界观状态）
+- ✅ AI Store（AI 交互状态）
+- ✅ UI Store（界面状态）
+
+### 7. API 客户端（100%）
+- ✅ 完整的 API 封装（projects、chapters、characters、world-elements、ai）
+- ✅ SSE 流式解析器
+- ✅ 统一的响应处理和错误处理
+
+### 8. 文档系统（100%）
 - ✅ 系统设计文档（docs/DESIGN.md）
 - ✅ API 接口文档（docs/API.md）
 - ✅ 开发指南（docs/DEVELOPMENT.md）
@@ -117,19 +180,31 @@ ai-novel-writer/
 
 ## ⏳ 进行中模块
 
-### API 开发（20%）
-- ⏳ 项目管理 API
-- ⏳ 章节管理 API
-- ⏳ AI 生成 API
-- ⏳ 其他 API（角色、世界观、大纲、导出、统计）
+### 1. AI 功能深度集成（40%）
+- ⏳ 将完整的上下文管理器集成到 AI API
+- ⏳ 实现智能上下文筛选（根据相关性选择角色/世界观）
+- ⏳ 应用滑动窗口机制
+- ⏳ 集成世界观一致性检查
+- ⏳ 前端集成完整的章节生成功能
+
+### 2. 前端界面补充（30%）
+- ⏳ 项目选择/切换界面
+- ⏳ 新建项目入口集成
+- ⏳ 设置界面
+- ⏳ 大纲可视化界面
 
 ---
 
 ## ⏸️ 待开始模块
 
-- ⏸️ 前端界面（0%）
-- ⏸️ 状态管理（0%）
 - ⏸️ 测试（0%）
+  - 单元测试
+  - 集成测试
+  - E2E 测试
+- ⏸️ 高级功能
+  - 关系图谱
+  - 多模型支持（OpenAI/Claude）
+  - EPUB 导出优化
 
 ---
 
@@ -175,10 +250,11 @@ npm run dev
 ### 开发优先级
 
 **当前优先级（高→低）**：
-1. API 开发（项目、章节、AI 生成）
-2. 前端基础界面（项目列表、编辑器）
-3. 高级功能（大纲可视化、关系图谱）
-4. 测试和优化
+1. ✅ ~~API 开发（项目、章节、AI 生成）~~ - 已完成
+2. ✅ ~~前端基础界面（项目列表、编辑器）~~ - 已完成
+3. ⏳ 前后端对接和功能测试（当前重点）
+4. ⏸️ 高级功能（大纲可视化、关系图谱）
+5. ⏸️ 测试和优化
 
 ### 代码规范
 
@@ -209,13 +285,15 @@ npx prisma migrate dev --name migration_name
 
 ## 📊 当前进度
 
-**整体完成度**：30%
+**整体完成度**：55%
 
 - ✅ 项目基础架构（100%）
 - ✅ 数据库设计（100%）
-- ✅ AI 核心引擎（100%）
-- ⏳ API 开发（20%）
-- ⏸️ 前端界面（0%）
+- ⏳ AI 核心引擎（40%）- 代码完整但未深度集成，缺少工具调用
+- ⏳ API 开发（85%）- AI API 缺少深度上下文集成
+- ⏳ 前端界面（70%）- 缺少项目选择、设置、大纲可视化界面
+- ✅ 状态管理（100%）
+- ✅ API 客户端（100%）
 - ⏸️ 测试（0%）
 
 详见：`docs/PROGRESS.md`
@@ -243,5 +321,5 @@ npx prisma migrate dev --name migration_name
 
 ---
 
-**最后更新**：2025-01-04
+**最后更新**：2026-01-18
 **维护者**：项目开发者

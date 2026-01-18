@@ -19,6 +19,10 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { useProjects, useCurrentProject } from "@/hooks/use-projects"
 import { ChapterList } from "@/components/chapter/chapter-list"
+import { CharacterList } from "@/components/character/character-list"
+import { WorldElementList } from "@/components/world/world-element-list"
+import { CreateCharacterDialog } from "@/components/character/create-character-dialog"
+import { CreateWorldElementDialog } from "@/components/world/create-world-element-dialog"
 import { useChapterStore } from "@/lib/store/chapter-store"
 import { toast } from "sonner"
 
@@ -29,6 +33,8 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   const { currentProject, setCurrentProject } = useCurrentProject()
   const { createChapter } = useChapterStore()
   const [activeSection, setActiveSection] = React.useState<string>('chapters')
+  const [isCharacterDialogOpen, setIsCharacterDialogOpen] = React.useState(false)
+  const [isWorldDialogOpen, setIsWorldDialogOpen] = React.useState(false)
 
   // 自动选择第一个项目
   React.useEffect(() => {
@@ -136,19 +142,21 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
           {currentProject && activeSection === 'chapters' && (
             <ChapterList projectId={currentProject.id} onCreateChapter={handleCreateChapter} />
           )}
+          {currentProject && activeSection === 'characters' && (
+            <CharacterList
+              projectId={currentProject.id}
+              onCreateCharacter={() => setIsCharacterDialogOpen(true)}
+            />
+          )}
+          {currentProject && activeSection === 'world' && (
+            <WorldElementList
+              projectId={currentProject.id}
+              onCreateElement={() => setIsWorldDialogOpen(true)}
+            />
+          )}
           {activeSection === 'outline' && (
             <div className="px-4 py-2 text-sm text-muted-foreground">
               大纲功能开发中...
-            </div>
-          )}
-          {activeSection === 'characters' && (
-            <div className="px-4 py-2 text-sm text-muted-foreground">
-              角色管理功能开发中...
-            </div>
-          )}
-          {activeSection === 'world' && (
-            <div className="px-4 py-2 text-sm text-muted-foreground">
-              世界观管理功能开发中...
             </div>
           )}
         </div>
@@ -165,6 +173,22 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
               </div>
           </div>
       </div>
+
+      {/* 创建对话框 */}
+      {currentProject && (
+        <>
+          <CreateCharacterDialog
+            projectId={currentProject.id}
+            open={isCharacterDialogOpen}
+            onOpenChange={setIsCharacterDialogOpen}
+          />
+          <CreateWorldElementDialog
+            projectId={currentProject.id}
+            open={isWorldDialogOpen}
+            onOpenChange={setIsWorldDialogOpen}
+          />
+        </>
+      )}
     </div>
   )
 }
