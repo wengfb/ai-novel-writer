@@ -8,12 +8,15 @@ import { Separator } from "@/components/ui/separator"
 import { useCurrentProject } from "@/hooks/use-projects"
 import { useChapterStore } from "@/lib/store/chapter-store"
 import { AIContinueButton } from "@/components/ai/ai-continue-button"
+import { ProjectSelector } from "@/components/project/project-selector"
+import { ProjectOnboardingDialog } from "@/components/onboarding/project-onboarding-dialog"
 import { toast } from "sonner"
 
 export function StudioHeader() {
   const { currentProject } = useCurrentProject()
   const { currentChapter, updateChapterContent, saveChapter, isSaving, lastSaved } = useChapterStore()
   const [accumulatedContent, setAccumulatedContent] = React.useState('')
+  const [isOnboardingOpen, setIsOnboardingOpen] = React.useState(false)
 
   const handleSave = async () => {
     if (!currentChapter) {
@@ -47,22 +50,25 @@ export function StudioHeader() {
     setAccumulatedContent('')
   }, [currentChapter?.id])
 
+  const handleNewProject = () => {
+    setIsOnboardingOpen(true)
+  }
+
+  const handleOnboardingComplete = async (projectId: string) => {
+    // 刷新页面以加载新项目
+    window.location.reload()
+  }
+
   return (
-    <header className="flex h-14 items-center gap-4 border-b bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex items-center gap-2">
-         <Button variant="ghost" size="icon" className="h-8 w-8">
-             <ArrowLeft className="h-4 w-4" />
-         </Button>
-         <Separator orientation="vertical" className="h-6" />
-         <div className="flex flex-col">
-             <span className="text-sm font-semibold">
-               {currentProject ? `项目：${currentProject.title}` : '未选择项目'}
-             </span>
-             <span className="text-xs text-muted-foreground">
-               {currentChapter ? `第 ${currentChapter.chapterNumber} 章：${currentChapter.title}` : '未选择章节'}
-             </span>
-         </div>
-      </div>
+    <>
+      <header className="flex h-14 items-center gap-4 border-b bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="flex items-center gap-4">
+          <ProjectSelector onNewProject={handleNewProject} />
+          <Separator orientation="vertical" className="h-6" />
+          <div className="text-sm text-muted-foreground">
+            {currentChapter ? `第 ${currentChapter.chapterNumber} 章：${currentChapter.title}` : '未选择章节'}
+          </div>
+        </div>
       
       <div className="ml-auto flex items-center gap-2">
          <div className="text-xs text-muted-foreground mr-2">
@@ -84,5 +90,12 @@ export function StudioHeader() {
          </Button>
       </div>
     </header>
+
+      <ProjectOnboardingDialog
+        open={isOnboardingOpen}
+        onOpenChange={setIsOnboardingOpen}
+        onComplete={handleOnboardingComplete}
+      />
+    </>
   )
 }

@@ -467,6 +467,7 @@ ${content}
     // 使用流式生成
     let fullOutput = ''
     const generator = this.gemini.streamGenerate({
+      type: 'chapter',
       model,
       prompt,
       systemPrompt: `你是一位专业小说作家。正在续写第${chapter.chapterNumber}章。

@@ -23,6 +23,7 @@ import { CharacterList } from "@/components/character/character-list"
 import { WorldElementList } from "@/components/world/world-element-list"
 import { CreateCharacterDialog } from "@/components/character/create-character-dialog"
 import { CreateWorldElementDialog } from "@/components/world/create-world-element-dialog"
+import { SettingsDialog } from "@/components/settings/settings-dialog"
 import { useChapterStore } from "@/lib/store/chapter-store"
 import { toast } from "sonner"
 
@@ -35,6 +36,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   const [activeSection, setActiveSection] = React.useState<string>('chapters')
   const [isCharacterDialogOpen, setIsCharacterDialogOpen] = React.useState(false)
   const [isWorldDialogOpen, setIsWorldDialogOpen] = React.useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = React.useState(false)
 
   // 自动选择第一个项目
   React.useEffect(() => {
@@ -77,7 +79,12 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
             <h2 className="text-lg font-semibold tracking-tight">
               {currentProject?.title || 'AI 小说工坊'}
             </h2>
-            <Button variant="ghost" size="icon" className="h-6 w-6">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={() => setIsSettingsOpen(true)}
+            >
                <Settings className="h-4 w-4" />
             </Button>
           </div>
@@ -189,6 +196,12 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
           />
         </>
       )}
+
+      {/* 设置对话框 */}
+      <SettingsDialog
+        open={isSettingsOpen}
+        onOpenChange={setIsSettingsOpen}
+      />
     </div>
   )
 }

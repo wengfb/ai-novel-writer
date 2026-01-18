@@ -10,68 +10,75 @@ import { ApiErrors } from '@/lib/api/response'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { projectId, chapterId, message } = body
+    const { projectId, chapterId, message, messages } = body
 
-    if (!projectId || !message) {
+    // 支持两种调用方式：
+    // 1. 传统方式：{ projectId, message } - 用于项目内对话
+    // 2. Onboarding 方式：{ messages: [{ role, content }] } - 用于项目创建前的 AI 脑暴
+    const userMessage = message || (messages && messages[0]?.content)
+
+    if (!userMessage) {
       return new Response(
         JSON.stringify({ error: '缺少必要参数' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       )
     }
 
-    // 检查项目是否存在
-    const project = await prisma.project.findUnique({
-      where: { id: projectId },
-    })
-
-    if (!project) {
-      return new Response(
-        JSON.stringify({ error: '项目不存在' }),
-        { status: 404, headers: { 'Content-Type': 'application/json' } }
-      )
-    }
-
-    // 获取上下文信息
+    // 构建系统提示词
+    let systemPrompt = '你是一个专业的小说创作助手。'
     let contextInfo = ''
 
-    // 如果提供了章节 ID，获取章节信息
-    if (chapterId) {
-      const chapter = await prisma.chapter.findFirst({
-        where: { id: chapterId, projectId },
+    // 如果提供了 projectId，获取项目上下文
+    if (projectId) {
+      // 检查项目是否存在
+      const project = await prisma.project.findUnique({
+        where: { id: projectId },
       })
 
-      if (chapter) {
-        contextInfo += `\n当前章节：第 ${chapter.chapterNumber} 章 - ${chapter.title}\n`
-        if (chapter.content) {
-          contextInfo += `章节内容摘要：${chapter.content.slice(0, 500)}...\n`
+      if (!project) {
+        return new Response(
+          JSON.stringify({ error: '项目不存在' }),
+          { status: 404, headers: { 'Content-Type': 'application/json' } }
+        )
+      }
+
+      // 如果提供了章节 ID，获取章节信息
+      if (chapterId) {
+        const chapter = await prisma.chapter.findFirst({
+          where: { id: chapterId, projectId },
+        })
+
+        if (chapter) {
+          contextInfo += `\n当前章节：第 ${chapter.chapterNumber} 章 - ${chapter.title}\n`
+          if (chapter.content) {
+            contextInfo += `章节内容摘要：${chapter.content.slice(0, 500)}...\n`
+          }
         }
       }
-    }
 
-    // 获取项目信息
-    contextInfo += `\n项目信息：\n`
-    contextInfo += `- 标题：${project.title}\n`
-    contextInfo += `- 类型：${project.genre}\n`
-    if (project.description) {
-      contextInfo += `- 简介：${project.description}\n`
-    }
+      // 获取项目信息
+      contextInfo += `\n项目信息：\n`
+      contextInfo += `- 标题：${project.title}\n`
+      contextInfo += `- 类型：${project.genre}\n`
+      if (project.description) {
+        contextInfo += `- 简介：${project.description}\n`
+      }
 
-    // 获取角色信息（前 5 个）
-    const characters = await prisma.character.findMany({
-      where: { projectId },
-      orderBy: { importance: 'desc' },
-      take: 5,
-    })
-
-    if (characters.length > 0) {
-      contextInfo += `\n主要角色：\n`
-      characters.forEach((char) => {
-        contextInfo += `- ${char.name}（${char.role}）：${char.personality || '暂无描述'}\n`
+      // 获取角色信息（前 5 个）
+      const characters = await prisma.character.findMany({
+        where: { projectId },
+        orderBy: { importance: 'desc' },
+        take: 5,
       })
-    }
 
-    // 构建系统提示词
-    const systemPrompt = `你是一个专业的小说创作助手，正在帮助作者创作《${project.title}》这部${project.genre}小说。
+      if (characters.length > 0) {
+        contextInfo += `\n主要角色：\n`
+        characters.forEach((char) => {
+          contextInfo += `- ${char.name}（${char.role}）：${char.personality || '暂无描述'}\n`
+        })
+      }
+
+      systemPrompt = `你是一个专业的小说创作助手，正在帮助作者创作《${project.title}》这部${project.genre}小说。
 
 ${contextInfo}
 
@@ -80,6 +87,7 @@ ${contextInfo}
 2. 考虑已有的角色和情节
 3. 提供具体、可操作的建议
 4. 保持创意和专业性`
+    }
 
     // 使用 Gemini 生成回复（流式）
     const gemini = getGeminiProvider()
@@ -90,8 +98,9 @@ ${contextInfo}
       async start(controller) {
         try {
           const generator = gemini.streamGenerate({
+            type: 'dialogue',
             model: 'gemini-3-flash',
-            prompt: message,
+            prompt: userMessage,
             systemPrompt,
             temperature: 0.8,
           })

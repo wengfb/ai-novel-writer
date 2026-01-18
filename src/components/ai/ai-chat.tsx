@@ -97,6 +97,8 @@ export function AIChat({ projectId, chapterId }: AIChatProps) {
       <form onSubmit={handleSubmit} className="p-4 border-t">
         <div className="flex gap-2">
           <Textarea
+            id="ai-chat-input"
+            name="message"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="输入消息..."

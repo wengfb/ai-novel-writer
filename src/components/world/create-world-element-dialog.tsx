@@ -40,7 +40,7 @@ export function CreateWorldElementDialog({
   // 表单状态
   const [formData, setFormData] = React.useState({
     name: '',
-    type: 'location' as 'location' | 'history' | 'magic' | 'organization' | 'item' | 'other',
+    type: 'location' as 'location' | 'organization' | 'item' | 'other' | 'concept',
     description: '',
     importance: '5',
     scope: 'local' as 'global' | 'regional' | 'local',
@@ -82,7 +82,6 @@ export function CreateWorldElementDialog({
         description: formData.description.trim(),
         importance: parseInt(formData.importance),
         scope: formData.scope,
-        category: formData.category,
       })
 
       toast.success('世界观元素创建成功')

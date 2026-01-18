@@ -89,7 +89,6 @@ export function CreateCharacterDialog({
         appearance: formData.appearance.trim() || undefined,
         personality: formData.personality.trim() || undefined,
         backstory: formData.backstory.trim() || undefined,
-        motivation: formData.motivation.trim() || undefined,
       })
 
       toast.success('角色创建成功')

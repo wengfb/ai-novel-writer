@@ -18,12 +18,11 @@ export function useAIChat() {
  * AI 生成 Hook
  */
 export function useAIGeneration() {
-  const { isGenerating, generateChapter, continueWriting, stopGeneration } = useAIStore()
+  const { isGenerating, generateChapter, continueWriting } = useAIStore()
 
   return {
     isGenerating,
     generateChapter,
     continueWriting,
-    stopGeneration,
   }
 }

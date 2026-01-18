@@ -36,7 +36,7 @@ const projectSchema = z.object({
   title: z.string().min(1, '请输入项目名称'),
   description: z.string().optional(),
   genre: z.string().min(1, '请选择类型'),
-  status: z.enum(['draft', 'writing', 'completed', 'archived']).default('draft'),
+  status: z.enum(['draft', 'writing', 'completed', 'archived']),
 })
 
 type ProjectFormValues = z.infer<typeof projectSchema>
