@@ -20,22 +20,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useWorldStore } from '@/lib/store/world-store'
+import { useWorldStore, type WorldElement } from '@/lib/store/world-store'
 import { toast } from 'sonner'
 
 interface CreateWorldElementDialogProps {
   projectId: string
   open: boolean
   onOpenChange: (open: boolean) => void
+  editingElement?: WorldElement | null
 }
 
 export function CreateWorldElementDialog({
   projectId,
   open,
   onOpenChange,
+  editingElement,
 }: CreateWorldElementDialogProps) {
-  const { createWorldElement } = useWorldStore()
+  const { createWorldElement, updateWorldElement, deleteWorldElement } = useWorldStore()
   const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const [isDeleting, setIsDeleting] = React.useState(false)
+
+  const isEditing = !!editingElement
 
   // 表单状态
   const [formData, setFormData] = React.useState({
@@ -59,6 +64,22 @@ export function CreateWorldElementDialog({
     })
   }
 
+  // 当编辑或打开对话框时，填充表单
+  React.useEffect(() => {
+    if (editingElement) {
+      setFormData({
+        name: editingElement.name,
+        type: editingElement.type,
+        description: editingElement.description,
+        importance: String(editingElement.importance),
+        scope: editingElement.scope,
+        category: 'detail',
+      })
+    } else {
+      resetForm()
+    }
+  }, [editingElement, open])
+
   // 处理提交
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -75,22 +96,49 @@ export function CreateWorldElementDialog({
 
     setIsSubmitting(true)
     try {
-      await createWorldElement({
-        projectId,
-        name: formData.name.trim(),
-        type: formData.type,
-        description: formData.description.trim(),
-        importance: parseInt(formData.importance),
-        scope: formData.scope,
-      })
+      if (isEditing && editingElement) {
+        await updateWorldElement(editingElement.id, {
+          name: formData.name.trim(),
+          type: formData.type,
+          description: formData.description.trim(),
+          importance: parseInt(formData.importance),
+          scope: formData.scope,
+        })
+        toast.success('世界观元素更新成功')
+      } else {
+        await createWorldElement({
+          projectId,
+          name: formData.name.trim(),
+          type: formData.type,
+          description: formData.description.trim(),
+          importance: parseInt(formData.importance),
+          scope: formData.scope,
+        })
+        toast.success('世界观元素创建成功')
+      }
 
-      toast.success('世界观元素创建成功')
       resetForm()
       onOpenChange(false)
     } catch (error) {
-      toast.error('创建世界观元素失败')
+      toast.error(isEditing ? '更新世界观元素失败' : '创建世界观元素失败')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  // 处理删除
+  const handleDelete = async () => {
+    if (!editingElement) return
+
+    setIsDeleting(true)
+    try {
+      await deleteWorldElement(editingElement.id)
+      toast.success('世界观元素删除成功')
+      onOpenChange(false)
+    } catch (error) {
+      toast.error('删除世界观元素失败')
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -98,9 +146,9 @@ export function CreateWorldElementDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>创建世界观元素</DialogTitle>
+          <DialogTitle>{isEditing ? '编辑世界观元素' : '创建世界观元素'}</DialogTitle>
           <DialogDescription>
-            添加新的世界观元素到你的小说项目中
+            {isEditing ? '修改世界观元素信息' : '添加新的世界观元素到你的小说项目中'}
           </DialogDescription>
         </DialogHeader>
 
@@ -201,18 +249,32 @@ export function CreateWorldElementDialog({
             </div>
           </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={isSubmitting}
-            >
-              取消
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? '创建中...' : '创建世界观元素'}
-            </Button>
+          <DialogFooter className="flex justify-between">
+            <div>
+              {isEditing && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={handleDelete}
+                  disabled={isSubmitting || isDeleting}
+                >
+                  {isDeleting ? '删除中...' : '删除'}
+                </Button>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={isSubmitting}
+              >
+                取消
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? '保存中...' : isEditing ? '保存修改' : '创建世界观元素'}
+              </Button>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>

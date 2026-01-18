@@ -28,6 +28,8 @@ import { OutlineList } from "@/components/outline/outline-list"
 import { OutlineDialog } from "@/components/outline/outline-dialog"
 import { useChapterStore } from "@/lib/store/chapter-store"
 import { useOutlineStore } from "@/lib/store/outline-store"
+import { useCharacterStore, type Character } from "@/lib/store/character-store"
+import { useWorldStore, type WorldElement } from "@/lib/store/world-store"
 import { toast } from "sonner"
 import type { Outline } from "@/lib/store/outline-store"
 
@@ -37,15 +39,20 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   const { projects, isLoading } = useProjects()
   const { currentProject, setCurrentProject } = useCurrentProject()
   const { createChapter } = useChapterStore()
+  const { deleteOutline } = useOutlineStore()
+  const { deleteCharacter } = useCharacterStore()
+  const { deleteWorldElement } = useWorldStore()
+
   const [activeSection, setActiveSection] = React.useState<string>('chapters')
   const [isCharacterDialogOpen, setIsCharacterDialogOpen] = React.useState(false)
   const [isWorldDialogOpen, setIsWorldDialogOpen] = React.useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false)
   const [isOutlineDialogOpen, setIsOutlineDialogOpen] = React.useState(false)
   const [editingOutline, setEditingOutline] = React.useState<Outline | null>(null)
+  const [editingCharacter, setEditingCharacter] = React.useState<Character | null>(null)
+  const [editingWorldElement, setEditingWorldElement] = React.useState<WorldElement | null>(null)
   const [outlineParentId, setOutlineParentId] = React.useState<string | null>(null)
   const [outlineDefaultType, setOutlineDefaultType] = React.useState<'volume' | 'chapter' | 'scene'>('chapter')
-  const { deleteOutline } = useOutlineStore()
 
   // 自动选择第一个项目
   React.useEffect(() => {
@@ -101,6 +108,46 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
       toast.success('大纲删除成功')
     } catch (error) {
       toast.error('删除大纲失败')
+    }
+  }
+
+  // 创建/编辑角色
+  const handleCreateCharacter = () => {
+    setEditingCharacter(null)
+    setIsCharacterDialogOpen(true)
+  }
+
+  const handleEditCharacter = (character: Character) => {
+    setEditingCharacter(character)
+    setIsCharacterDialogOpen(true)
+  }
+
+  const handleDeleteCharacter = async (character: Character) => {
+    try {
+      await deleteCharacter(character.id)
+      toast.success('角色删除成功')
+    } catch (error) {
+      toast.error('删除角色失败')
+    }
+  }
+
+  // 创建/编辑世界观元素
+  const handleCreateWorldElement = () => {
+    setEditingWorldElement(null)
+    setIsWorldDialogOpen(true)
+  }
+
+  const handleEditWorldElement = (element: WorldElement) => {
+    setEditingWorldElement(element)
+    setIsWorldDialogOpen(true)
+  }
+
+  const handleDeleteWorldElement = async (element: WorldElement) => {
+    try {
+      await deleteWorldElement(element.id)
+      toast.success('世界观元素删除成功')
+    } catch (error) {
+      toast.error('删除世界观元素失败')
     }
   }
 
@@ -185,13 +232,17 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
           {currentProject && activeSection === 'characters' && (
             <CharacterList
               projectId={currentProject.id}
-              onCreateCharacter={() => setIsCharacterDialogOpen(true)}
+              onCreateCharacter={handleCreateCharacter}
+              onEditCharacter={handleEditCharacter}
+              onDeleteCharacter={handleDeleteCharacter}
             />
           )}
           {currentProject && activeSection === 'world' && (
             <WorldElementList
               projectId={currentProject.id}
-              onCreateElement={() => setIsWorldDialogOpen(true)}
+              onCreateElement={handleCreateWorldElement}
+              onEditElement={handleEditWorldElement}
+              onDeleteElement={handleDeleteWorldElement}
             />
           )}
           {activeSection === 'outline' && currentProject && (
@@ -224,11 +275,13 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
             projectId={currentProject.id}
             open={isCharacterDialogOpen}
             onOpenChange={setIsCharacterDialogOpen}
+            editingCharacter={editingCharacter}
           />
           <CreateWorldElementDialog
             projectId={currentProject.id}
             open={isWorldDialogOpen}
             onOpenChange={setIsWorldDialogOpen}
+            editingElement={editingWorldElement}
           />
           <OutlineDialog
             projectId={currentProject.id}

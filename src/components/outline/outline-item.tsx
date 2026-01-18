@@ -144,13 +144,14 @@ export function OutlineItem({
 
   return (
     <>
-      <div className="group relative">
+      <div className="group relative max-w-full overflow-hidden">
         {/* 节点内容 */}
         <div
           className={cn(
-            'flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer',
+            'flex items-center gap-1.5 px-2 py-1 rounded-md cursor-pointer',
             'hover:bg-accent transition-colors',
-            isActive && 'bg-accent'
+            isActive && 'bg-accent',
+            'w-full max-w-full'
           )}
           style={{ paddingLeft: `${level * 16 + 8}px` }}
           onClick={() => onSelect?.(outline)}
@@ -165,60 +166,60 @@ export function OutlineItem({
               className="flex-shrink-0 p-0.5 hover:bg-muted rounded"
             >
               {expanded ? (
-                <ChevronDown className="h-3.5 w-3.5" />
+                <ChevronDown className="h-3 w-3" />
               ) : (
-                <ChevronRight className="h-3.5 w-3.5" />
+                <ChevronRight className="h-3 w-3" />
               )}
             </button>
           ) : (
-            <div className="w-5" />
+            <div className="w-5 flex-shrink-0" />
           )}
 
           {/* 类型图标 */}
-          <Badge variant="outline" className={cn('text-xs', getTypeColor())}>
+          <Badge variant="outline" className={cn('text-xs shrink-0', getTypeColor())}>
             {getTypeIcon()}
           </Badge>
 
           {/* 标题 */}
-          <span className="flex-1 text-sm truncate">{outline.title}</span>
+          <span className="flex-1 text-sm truncate min-w-0 max-w-full">{outline.title}</span>
 
           {/* 状态标签 */}
           {outline.status !== 'planned' && (
-            <Badge variant={getStatusVariant()} className="text-xs flex-shrink-0">
+            <Badge variant={getStatusVariant()} className="text-xs shrink-0 text-[10px] px-1 py-0">
               {getStatusLabel()}
             </Badge>
           )}
 
           {/* 章节信息 */}
           {outline.chapter && (
-            <span className="text-xs text-muted-foreground flex-shrink-0">
+            <span className="text-[10px] text-muted-foreground shrink-0">
               {outline.chapter.wordCount} 字
             </span>
           )}
 
-          {/* 操作菜单 */}
+          {/* 操作菜单 - 显示在右侧 */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                className="h-5 w-5 -mr-1 shrink-0"
                 onClick={(e) => e.stopPropagation()}
               >
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit?.(outline) }}>
-                <Edit2 className="mr-2 h-4 w-4" />
-                编辑
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit?.(outline) }}>
+              <Edit2 className="mr-2 h-3.5 w-3.5" />
+              编辑
               </DropdownMenuItem>
               <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleCreateChild('scene') }}>
-                <Plus className="mr-2 h-4 w-4" />
+                <Plus className="mr-2 h-3.5 w-3.5" />
                 添加场景
               </DropdownMenuItem>
               <DropdownMenuItem onClick={(e) => { e.stopPropagation(); setDeleteDialogOpen(true) }}>
-                <Trash2 className="mr-2 h-4 w-4" />
+                <Trash2 className="mr-2 h-3.5 w-3.5" />
                 删除
               </DropdownMenuItem>
             </DropdownMenuContent>

@@ -119,13 +119,26 @@
   * {
     @apply border-border outline-ring/50;
   }
-  
+
   html, body {
     @apply h-full overflow-hidden; /* Full height, no scroll on body (handled by Studio) */
   }
-  
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Fix Radix UI ScrollArea display: table issue */
+  [data-radix-scroll-area-viewport] {
+    display: block !important;
+    min-width: 0 !important;
+  }
+
+  [data-radix-scroll-area-viewport] > div {
+    display: block !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   /* Custom Scrollbar for Studio feel */
@@ -133,15 +146,15 @@
     width: 10px;
     height: 10px;
   }
-  
+
   ::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   ::-webkit-scrollbar-thumb {
     @apply bg-muted-foreground/20 rounded-full border-2 border-background;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-muted-foreground/40;
   }

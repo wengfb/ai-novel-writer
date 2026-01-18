@@ -89,7 +89,7 @@ export function OutlineList({ projectId, onCreateOutline, onEditOutline, onDelet
 
       {/* 大纲列表 */}
       <ScrollArea className="flex-1">
-        <div className="space-y-1 p-2">
+        <div className="space-y-1 p-2 w-full box-border overflow-hidden">
           {outlines.map((outline) => (
             <OutlineItem
               key={outline.id}
