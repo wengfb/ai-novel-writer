@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useAIStore } from '@/lib/store/ai-store'
+import { useChat } from '@ai-sdk/react'
+import { DefaultChatTransport } from 'ai'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -14,28 +15,52 @@ interface AIChatProps {
 }
 
 export function AIChat({ projectId, chapterId }: AIChatProps) {
-  const { messages, isGenerating, error, sendMessage, clearError } = useAIStore()
   const [input, setInput] = useState('')
-  const scrollRef = useRef<HTMLDivElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // 创建 DefaultChatTransport，它会自动处理响应流解析
+  const transport = useRef(new DefaultChatTransport({
+    api: '/api/ai/chat',
+  }))
+
+  // 使用 Vercel AI SDK 的 useChat hook
+  const { messages, status, error, setMessages, sendMessage } = useChat({
+    transport: transport.current,
+  })
+
+  const isLoading = status === 'streaming' || status === 'submitted'
 
   // 自动滚动到底部
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // 自定义提交处理（支持 Enter 发送）
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim() || isGenerating) return
+    if (!input.trim() || isLoading) return
 
-    const message = input.trim()
+    const messageText = input.trim()
     setInput('')
 
     try {
-      await sendMessage(message, projectId, chapterId)
-    } catch (error) {
-      // 错误已在 store 中处理
+      await sendMessage(
+        { text: messageText },
+        {
+          body: {
+            projectId,
+            chapterId,
+          },
+        }
+      )
+    } catch (err) {
+      console.error('发送消息失败:', err)
     }
+  }
+
+  // 清空对话
+  const handleClearMessages = () => {
+    setMessages([])
   }
 
   return (
@@ -67,12 +92,18 @@ export function AIChat({ projectId, chapterId }: AIChatProps) {
                       : 'bg-muted'
                   )}
                 >
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  {/* 处理消息 parts */}
+                  <p className="text-sm whitespace-pre-wrap">
+                    {message.parts
+                      .filter((part: any) => part.type === 'text')
+                      .map((part: any, i: number) => part.text)
+                      .join('')}
+                  </p>
                 </div>
               </div>
             ))}
 
-            {isGenerating && (
+            {isLoading && (
               <div className="flex gap-3 justify-start">
                 <div className="bg-muted rounded-lg px-4 py-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -88,13 +119,21 @@ export function AIChat({ projectId, chapterId }: AIChatProps) {
 
       {/* 错误提示 */}
       {error && (
-        <div className="px-4 py-2 bg-destructive/10 text-destructive text-sm">
-          {error}
+        <div className="px-4 py-2 bg-destructive/10 text-destructive text-sm flex justify-between items-center">
+          <span>{error.message}</span>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-auto py-0 px-2"
+            onClick={() => window.location.reload()}
+          >
+            重试
+          </Button>
         </div>
       )}
 
       {/* 输入框 */}
-      <form onSubmit={handleSubmit} className="p-4 border-t">
+      <form onSubmit={onSubmit} className="p-4 border-t">
         <div className="flex gap-2">
           <Textarea
             id="ai-chat-input"
@@ -103,25 +142,38 @@ export function AIChat({ projectId, chapterId }: AIChatProps) {
             onChange={(e) => setInput(e.target.value)}
             placeholder="输入消息..."
             className="min-h-[60px] resize-none"
-            disabled={isGenerating}
+            disabled={isLoading}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault()
-                handleSubmit(e)
+                onSubmit(e)
               }
             }}
           />
-          <Button
-            type="submit"
-            size="icon"
-            disabled={!input.trim() || isGenerating}
-          >
-            {isGenerating ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Send className="h-4 w-4" />
+          <div className="flex flex-col gap-2">
+            <Button
+              type="submit"
+              size="icon"
+              disabled={!input.trim() || isLoading}
+            >
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
+            </Button>
+            {messages.length > 0 && !isLoading && (
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={handleClearMessages}
+                title="清空对话"
+              >
+                🗑️
+              </Button>
             )}
-          </Button>
+          </div>
         </div>
         <p className="text-xs text-muted-foreground mt-2">
           按 Enter 发送，Shift+Enter 换行

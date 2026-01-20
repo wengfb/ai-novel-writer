@@ -52,7 +52,10 @@ export function OnboardingStep2Brainstorm({
           messages: [
             {
               role: 'user',
-              content: `你是一个专业的小说创意顾问。用户提供了一个故事想法：
+              parts: [
+                {
+                  type: 'text',
+                  text: `你是一个专业的小说创意顾问。用户提供了一个故事想法：
 
 ${userIdea}
 
@@ -86,6 +89,8 @@ ${userIdea}
     }
   ]
 }`
+                }
+              ]
             }
           ]
         })
@@ -118,8 +123,9 @@ ${userIdea}
 
               try {
                 const parsed = JSON.parse(data)
-                if (parsed.type === 'progress' && parsed.content) {
-                  fullContent += parsed.content
+                // 使用 Vercel AI SDK 的 UIMessageChunk 格式
+                if (parsed.type === 'text-delta' && parsed.delta) {
+                  fullContent += parsed.delta
                 }
               } catch (e) {
                 // 忽略解析错误

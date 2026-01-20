@@ -1,28 +1,17 @@
 import { useAIStore } from '@/lib/store/ai-store'
 
 /**
- * AI 对话 Hook
- */
-export function useAIChat() {
-  const { messages, isGenerating, sendMessage, clearMessages } = useAIStore()
-
-  return {
-    messages,
-    isGenerating,
-    sendMessage,
-    clearMessages,
-  }
-}
-
-/**
  * AI 生成 Hook
+ * 用于章节生成和续写功能
  */
 export function useAIGeneration() {
-  const { isGenerating, generateChapter, continueWriting } = useAIStore()
+  const { isGeneratingChapter, isContinuing, generateChapter, continueWriting, cancelGeneration } = useAIStore()
 
   return {
-    isGenerating,
+    isGeneratingChapter,
+    isContinuing,
     generateChapter,
     continueWriting,
+    cancelGeneration,
   }
 }

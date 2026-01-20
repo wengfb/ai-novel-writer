@@ -2,13 +2,6 @@ import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { aiApi, type ContextInfo } from '@/lib/api/endpoints/ai'
 
-export interface Message {
-  id: string
-  role: 'user' | 'assistant'
-  content: string
-  timestamp: Date
-}
-
 export interface GenerateChapterParams {
   projectId: string
   chapterNumber: number
@@ -27,9 +20,7 @@ export interface ContinueChapterParams {
 }
 
 interface AIState {
-  // 对话相关
-  messages: Message[]
-  isGenerating: boolean
+  // 对话相关错误（仅保留错误状态）
   error: string | null
 
   // 续写相关
@@ -48,20 +39,16 @@ interface AIState {
   abortController: AbortController | null
 
   // Actions
-  sendMessage: (content: string, projectId: string, chapterId?: string) => Promise<void>
   generateChapter: (params: GenerateChapterParams, onProgress: (text: string) => void) => Promise<void>
   continueWriting: (params: ContinueChapterParams, onProgress: (text: string) => void) => Promise<void>
   cancelGeneration: () => void
   fetchContext: (projectId: string, chapterId: string) => Promise<void>
-  clearMessages: () => void
   clearError: () => void
 }
 
 export const useAIStore = create<AIState>()(
   immer((set, get) => ({
     // 初始状态
-    messages: [],
-    isGenerating: false,
     error: null,
     isContinuing: false,
     continueProgress: '',
@@ -70,63 +57,6 @@ export const useAIStore = create<AIState>()(
     context: null,
     isLoadingContext: false,
     abortController: null,
-
-    // AI 对话（流式）
-    sendMessage: async (content: string, projectId: string, chapterId?: string) => {
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        role: 'user',
-        content,
-        timestamp: new Date(),
-      }
-
-      const assistantMessageId = (Date.now() + 1).toString()
-
-      set((state) => {
-        state.messages.push(userMessage)
-        // 立即添加一个空的助手消息用于流式更新
-        state.messages.push({
-          id: assistantMessageId,
-          role: 'assistant',
-          content: '',
-          timestamp: new Date(),
-        })
-        state.isGenerating = true
-        state.error = null
-        state.abortController = new AbortController()
-      })
-
-      try {
-        const abortController = get().abortController
-
-        await aiApi.chat(
-          { projectId, chapterId, message: content },
-          (chunk) => {
-            // 实时更新助手消息内容
-            set((state) => {
-              const message = state.messages.find(m => m.id === assistantMessageId)
-              if (message) {
-                message.content += chunk
-              }
-            })
-          },
-          abortController?.signal
-        )
-
-        set({
-          isGenerating: false,
-          abortController: null,
-        })
-      } catch (error) {
-        // 如果出错，移除空的助手消息
-        set((state) => {
-          state.messages = state.messages.filter(m => m.id !== assistantMessageId)
-          state.error = error instanceof Error ? error.message : 'AI 对话失败'
-          state.isGenerating = false
-          state.abortController = null
-        })
-      }
-    },
 
     generateChapter: async (params, onProgress) => {
       set({
@@ -211,7 +141,6 @@ export const useAIStore = create<AIState>()(
         abortController.abort()
       }
       set({
-        isGenerating: false,
         isContinuing: false,
         isGeneratingChapter: false,
         continueProgress: '',
@@ -232,10 +161,6 @@ export const useAIStore = create<AIState>()(
           isLoadingContext: false,
         })
       }
-    },
-
-    clearMessages: () => {
-      set({ messages: [] })
     },
 
     clearError: () => {

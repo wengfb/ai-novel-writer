@@ -1,32 +1,56 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { getGeminiProvider } from '@/lib/ai/providers/gemini'
-import { ApiErrors } from '@/lib/api/response'
+import { streamText } from 'ai'
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
 
 /**
  * POST /api/ai/chat
- * AI 对话接口（流式输出）
+ * AI 对话接口（使用 Vercel AI SDK 标准格式）
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { projectId, chapterId, message, messages } = body
+    const { projectId, chapterId, messages } = body
 
-    // 支持两种调用方式：
-    // 1. 传统方式：{ projectId, message } - 用于项目内对话
-    // 2. Onboarding 方式：{ messages: [{ role, content }] } - 用于项目创建前的 AI 脑暴
-    const userMessage = message || (messages && messages[0]?.content)
+    console.log('Received messages:', JSON.stringify(messages, null, 2))
 
-    if (!userMessage) {
+    // 手动将 UIMessage 格式转换为 ModelMessage 格式
+    const coreMessages = messages.map((msg: any) => {
+      // 提取文本内容
+      const text = msg.parts
+        ?.filter((part: any) => part.type === 'text')
+        ?.map((part: any) => part.text)
+        ?.join('') || ''
+
+      return {
+        role: msg.role,
+        content: text,
+      }
+    })
+
+    console.log('Converted messages:', JSON.stringify(coreMessages, null, 2))
+
+    // 检查转换后的消息
+    if (!coreMessages || coreMessages.length === 0) {
+      console.error('转换后的消息为空')
       return new Response(
-        JSON.stringify({ error: '缺少必要参数' }),
+        JSON.stringify({ error: '无效的消息格式：转换失败' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // 获取最后一条用户消息
+    const lastMessage = coreMessages[coreMessages.length - 1]
+    if (!lastMessage || lastMessage.role !== 'user') {
+      console.error('最后一条消息不是用户消息:', lastMessage)
+      return new Response(
+        JSON.stringify({ error: '无效的消息格式' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       )
     }
 
     // 构建系统提示词
     let systemPrompt = '你是一个专业的小说创作助手。'
-    let contextInfo = ''
 
     // 如果提供了 projectId，获取项目上下文
     if (projectId) {
@@ -41,6 +65,8 @@ export async function POST(request: NextRequest) {
           { status: 404, headers: { 'Content-Type': 'application/json' } }
         )
       }
+
+      let contextInfo = ''
 
       // 如果提供了章节 ID，获取章节信息
       if (chapterId) {
@@ -89,41 +115,58 @@ ${contextInfo}
 4. 保持创意和专业性`
     }
 
-    // 使用 Gemini 生成回复（流式）
-    const gemini = getGeminiProvider()
+    // 创建 Google AI 实例
+    const google = createGoogleGenerativeAI({
+      apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY || '',
+      baseURL: process.env.GEMINI_BASE_URL,
+    })
 
-    // 创建流式响应
+    // 使用 Vercel AI SDK 的 streamText
+    const result = streamText({
+      model: google('gemini-2.5-flash'),
+      system: systemPrompt,
+      messages: coreMessages,
+      temperature: 0.8,
+    })
+
+    // 使用标准的 UIMessageChunk 格式构建 SSE 流
     const encoder = new TextEncoder()
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          const generator = gemini.streamGenerate({
-            type: 'dialogue',
-            model: 'gemini-3-flash',
-            prompt: userMessage,
-            systemPrompt,
-            temperature: 0.8,
-          })
+          // 生成一个唯一的消息 ID
+          const messageId = Date.now().toString()
 
-          for await (const chunk of generator) {
-            const data = JSON.stringify({
-              type: 'progress',
-              content: chunk,
+          // 发送文本开始事件
+          const startData = JSON.stringify({
+            type: 'text-start',
+            id: messageId,
+          })
+          controller.enqueue(encoder.encode(`data: ${startData}\n\n`))
+
+          // 流式发送文本内容
+          for await (const chunk of result.textStream) {
+            const deltaData = JSON.stringify({
+              type: 'text-delta',
+              delta: chunk,
+              id: messageId,
             })
-            controller.enqueue(encoder.encode(`data: ${data}\n\n`))
+            controller.enqueue(encoder.encode(`data: ${deltaData}\n\n`))
           }
 
-          // 发送完成信号
-          const doneData = JSON.stringify({
-            type: 'done',
+          // 发送文本结束事件
+          const endData = JSON.stringify({
+            type: 'text-end',
+            id: messageId,
           })
-          controller.enqueue(encoder.encode(`data: ${doneData}\n\n`))
+          controller.enqueue(encoder.encode(`data: ${endData}\n\n`))
+
           controller.close()
         } catch (error) {
-          console.error('AI chat error:', error)
+          console.error('Stream error:', error)
           const errorData = JSON.stringify({
             type: 'error',
-            error: error instanceof Error ? error.message : '生成失败',
+            errorText: error instanceof Error ? error.message : '生成失败',
           })
           controller.enqueue(encoder.encode(`data: ${errorData}\n\n`))
           controller.close()

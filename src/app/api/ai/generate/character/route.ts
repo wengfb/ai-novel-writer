@@ -81,12 +81,22 @@ export async function POST(request: NextRequest) {
     }
 
     // 6. 保存角色到数据库
+    // 提取 age 字段的数字（如果 AI 返回的是字符串）
+    const extractAge = (age: any): number | null => {
+      if (typeof age === 'number') return age
+      if (typeof age === 'string') {
+        const match = age.match(/\d+/)
+        return match ? parseInt(match[0], 10) : null
+      }
+      return null
+    }
+
     const character = await prisma.character.create({
       data: {
         projectId,
         name: characterData.name || '未命名',
         nickname: characterData.nickname || null,
-        age: characterData.age || null,
+        age: extractAge(characterData.age),
         gender: characterData.gender || null,
         appearance: characterData.appearance || null,
         personality: characterData.personality
