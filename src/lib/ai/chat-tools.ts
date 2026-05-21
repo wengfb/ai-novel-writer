@@ -1,6 +1,7 @@
 import { tool, zodSchema } from 'ai'
 import { z } from 'zod'
 import { prisma } from '@/lib/db/prisma'
+import type { Prisma } from '@/lib/generated/prisma/client'
 
 const CharacterRoleSchema = z.enum(['protagonist', 'antagonist', 'supporting', 'minor'])
 const WorldElementTypeSchema = z.enum(['location', 'history', 'magic', 'organization', 'item', 'other'])
@@ -149,6 +150,7 @@ export function buildChatTools(options: ChatToolOptions) {
     createCharacter: tool({
       description: '创建角色档案。',
       inputSchema: zodSchema(CreateCharacterInputSchema),
+      needsApproval: true,
       execute: async (input) => {
         const character = await prisma.character.create({
           data: {
@@ -184,6 +186,7 @@ export function buildChatTools(options: ChatToolOptions) {
     updateCharacter: tool({
       description: '更新角色信息（通过角色ID或角色名）。',
       inputSchema: zodSchema(UpdateCharacterInputSchema),
+      needsApproval: true,
       execute: async (input) => {
         const targetId = input.characterId
         const targetName = input.characterName
@@ -203,7 +206,7 @@ export function buildChatTools(options: ChatToolOptions) {
         }
 
         const updates = input.updates
-        const updateData: Record<string, any> = {}
+        const updateData: Prisma.CharacterUpdateInput = {}
 
         if (updates.name !== undefined) updateData.name = updates.name
         if (updates.nickname !== undefined) updateData.nickname = updates.nickname
@@ -247,6 +250,7 @@ export function buildChatTools(options: ChatToolOptions) {
     createWorldElement: tool({
       description: '创建世界观元素。',
       inputSchema: zodSchema(CreateWorldElementInputSchema),
+      needsApproval: true,
       execute: async (input) => {
         const attributes = normalizeJsonValue(input.attributes)
         const constraints = normalizeJsonValue(input.constraints)
@@ -288,6 +292,7 @@ export function buildChatTools(options: ChatToolOptions) {
     updateWorldElement: tool({
       description: '更新世界观元素（通过元素ID或名称）。',
       inputSchema: zodSchema(UpdateWorldElementInputSchema),
+      needsApproval: true,
       execute: async (input) => {
         const targetId = input.elementId
         const targetName = input.elementName
@@ -307,7 +312,7 @@ export function buildChatTools(options: ChatToolOptions) {
         }
 
         const updates = input.updates
-        const updateData: Record<string, any> = {}
+        const updateData: Prisma.WorldElementUncheckedUpdateInput = {}
 
         if (updates.name !== undefined) updateData.name = updates.name
         if (updates.type !== undefined) updateData.type = updates.type
@@ -362,6 +367,7 @@ export function buildChatTools(options: ChatToolOptions) {
     updateChapterContent: tool({
       description: '修改章节内容（替换/追加/前置）。',
       inputSchema: zodSchema(UpdateChapterContentInputSchema),
+      needsApproval: true,
       execute: async (input) => {
         const targetId = input.chapterId ?? chapterId
         const targetNumber = input.chapterNumber
@@ -385,7 +391,7 @@ export function buildChatTools(options: ChatToolOptions) {
           nextContent = `${input.content}\n\n${chapter.content}`
         }
 
-        const updateData: Record<string, any> = {
+        const updateData: Prisma.ChapterUpdateInput = {
           content: nextContent,
           wordCount: countWords(nextContent),
         }
@@ -429,7 +435,7 @@ export function buildChatTools(options: ChatToolOptions) {
           prisma.worldElement.count({ where: { projectId } }),
         ])
 
-        const result: any = {
+        const result: Record<string, unknown> = {
           ok: true,
           project: {
             id: project.id,

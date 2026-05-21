@@ -1,19 +1,32 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { streamText, convertToModelMessages } from 'ai'
+import { streamText, convertToModelMessages, stepCountIs } from 'ai'
 import { z } from 'zod'
 import { validateRequest, Validation_error } from '@/lib/api/validators'
 import { ApiErrors } from '@/lib/api/response'
 import { getContextManager } from '@/lib/ai/context-manager'
 import { buildChatTools } from '@/lib/ai/chat-tools'
 import { getLanguageModel } from '@/lib/ai/providers'
+import type { Chapter, Character, WorldElement } from '@/types'
+import type { UIMessage } from 'ai'
 
 const ChatRequestSchema = z.object({
   projectId: z.string().optional(),
   chapterId: z.string().optional(),
-  messages: z.array(z.any()),
+  messages: z.array(z.custom<UIMessage>()),
   model: z.string().optional(),
 })
+
+const CharacterRoles = ['protagonist', 'antagonist', 'supporting', 'minor'] as const
+const WorldElementTypes = ['location', 'history', 'magic', 'organization', 'item', 'other'] as const
+const WorldElementScopes = ['global', 'regional', 'local'] as const
+const WorldElementCategories = ['core_rule', 'detail', 'background'] as const
+const PlotTypes = ['setup', 'conflict', 'climax', 'resolution'] as const
+
+function oneOf<T extends readonly string[]>(value: string | null, values: T, fallback: T[number]): T[number] {
+  return values.includes(value ?? '') ? value as T[number] : fallback
+}
+
 
 /**
  * POST /api/ai/chat
@@ -60,15 +73,28 @@ export async function POST(request: NextRequest) {
       const context = contextManager.buildContext({
         currentChapter: currentChapterNumber,
         allChapters: project.chapters.map((chapter) => ({
-          ...chapter,
+          id: chapter.id,
+          projectId: chapter.projectId,
+          chapterNumber: chapter.chapterNumber,
+          title: chapter.title,
+          content: chapter.content,
+          wordCount: chapter.wordCount,
           summary: chapter.summary ?? undefined,
           notes: chapter.notes ?? undefined,
-        })) as any,
+          isKeyChapter: chapter.isKeyChapter,
+          plotType: chapter.plotType ? oneOf(chapter.plotType, PlotTypes, 'setup') : undefined,
+          createdAt: chapter.createdAt,
+          updatedAt: chapter.updatedAt,
+        })) satisfies Chapter[],
         characters: project.characters.map((character) => ({
-          ...character,
+          id: character.id,
+          projectId: character.projectId,
+          name: character.name,
           nickname: character.nickname ?? undefined,
           age: character.age ?? undefined,
           gender: character.gender ?? undefined,
+          importance: character.importance,
+          role: oneOf(character.role, CharacterRoles, 'supporting'),
           appearance: character.appearance ?? undefined,
           personality: character.personality ?? undefined,
           backstory: character.backstory ?? undefined,
@@ -77,14 +103,31 @@ export async function POST(request: NextRequest) {
           relationships: character.relationships ?? undefined,
           characterArc: character.characterArc ?? undefined,
           avatar: character.avatar ?? undefined,
-        })) as any,
+          createdAt: character.createdAt,
+          updatedAt: character.updatedAt,
+        })) satisfies Character[],
         worldElements: project.worldElements.map((element) => ({
-          ...element,
-          type: element.type as any,
+          id: element.id,
+          projectId: element.projectId,
+          type: oneOf(element.type, WorldElementTypes, 'other'),
+          name: element.name,
+          description: element.description,
           attributes: element.attributes ?? undefined,
+          importance: element.importance,
+          scope: oneOf(element.scope, WorldElementScopes, 'local'),
+          category: oneOf(element.category, WorldElementCategories, 'detail'),
+          isEvolvable: element.isEvolvable,
+          parentId: element.parentId ?? undefined,
+          constraints: element.constraints ?? undefined,
+          exceptions: element.exceptions ?? undefined,
+          evolutionSpace: element.evolutionSpace ?? undefined,
           relatedTo: element.relatedTo ?? undefined,
           references: element.references ?? undefined,
-        })) as any,
+          usageCount: element.usageCount,
+          lastUsedAt: element.lastUsedAt ?? undefined,
+          createdAt: element.createdAt,
+          updatedAt: element.updatedAt,
+        })) satisfies WorldElement[],
         genre: project.genre,
       })
 
@@ -99,12 +142,12 @@ export async function POST(request: NextRequest) {
 
 ${contextPrompt}
 
-当用户需要创建/修改角色、世界观、章节内容或查询项目信息时，请优先调用工具完成操作。工具完成后，用简洁的中文说明你做了什么，并给出下一步建议。若缺少必要信息，请先向用户提问再行动。`
+当用户需要创建/新增/保存/修改/更新角色、世界观、章节内容，或查询项目信息时，请优先考虑调用工具完成操作；如果用户意图明确且信息足够，直接使用对应工具比只给文字建议更合适。用户说“创建角色/新增设定/追加章节/查询项目”等操作类请求时，通常是在要求你操作当前项目数据，而不是只生成一段可复制的文本。写操作会先交由用户确认，不要因为需要确认而回避工具调用。工具完成后，用简洁的中文说明你做了什么，并给出下一步建议。若缺少必要信息，请先向用户提问再行动。`
     }
 
-    const uiMessages = messages.map((message: any) => {
-      if (!message || typeof message !== 'object') return message
-      const { id: _id, ...rest } = message
+    const uiMessages = messages.map((message) => {
+      const { id: _messageId, ...rest } = message
+      void _messageId
       return rest
     })
 
@@ -121,6 +164,7 @@ ${contextPrompt}
       messages: modelMessages,
       tools,
       temperature: 0.8,
+      stopWhen: stepCountIs(5),
     })
 
     return result.toUIMessageStreamResponse()
