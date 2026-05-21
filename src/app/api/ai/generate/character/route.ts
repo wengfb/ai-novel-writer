@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { getGeminiProvider } from '@/lib/ai/providers/gemini'
+import { getAIProvider } from '@/lib/ai/providers'
 import { PromptTemplateManager } from '@/lib/ai/prompts/template-manager'
 import { prisma } from '@/lib/db/prisma'
 import { apiSuccess, ApiErrors, withErrorHandler } from '@/lib/api/response'
@@ -16,7 +16,7 @@ const GenerateCharacterSchema = z.object({
   role: z.string().min(1, '角色定位不能为空'),
   storyContext: z.string().optional(),
   requirements: z.string().optional(),
-  model: z.enum(['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-3-flash', 'gemini-3-pro']).default('gemini-3-flash'),
+  model: z.string().optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
     // 3. 构建上下文
     const promptManager = new PromptTemplateManager()
-    const gemini = getGeminiProvider()
+    const ai = getAIProvider(data.model)
 
     // 构建故事上下文
     const context = storyContext || `小说类型：${project.genre}\n简介：${project.description || '暂无'}`
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     })
 
     const startTime = Date.now()
-    const result = await gemini.generate({
+    const result = await ai.generate({
       type: 'character',
       model,
       prompt,
@@ -117,8 +117,8 @@ export async function POST(request: NextRequest) {
         data: {
           projectId,
           type: 'character',
-          provider: 'google',
-          model,
+          provider: ai.name,
+          model: model || ai.model,
           prompt,
           output: result.output,
           status: 'success',

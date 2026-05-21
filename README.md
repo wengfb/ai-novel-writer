@@ -42,7 +42,8 @@
 
 - Node.js 20+
 - npm 10+
-- Gemini API Key（[获取地址](https://aistudio.google.com/app/apikey)）
+- OpenAI 格式 API Key（默认，支持 OpenAI 官方或兼容服务）
+- 可选：Gemini API Key（设置 `AI_PROVIDER=gemini` 时使用）
 
 ### 安装步骤
 
@@ -56,8 +57,16 @@ npm install
 
 # 3. 配置环境变量
 cp .env.example .env.local
-# 编辑 .env.local，添加：
-# GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
+# 编辑 .env.local，添加 OpenAI 格式 API 配置：
+# AI_PROVIDER=openai-compatible
+# AI_API_KEY=your_api_key_here
+# AI_BASE_URL=https://api.openai.com/v1
+# AI_MODEL=gpt-4o-mini
+#
+# 如需使用 Gemini：
+# AI_PROVIDER=gemini
+# GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_key_here
+# GEMINI_MODEL=gemini-2.5-flash
 
 # 4. 初始化数据库
 npx prisma generate
@@ -168,7 +177,7 @@ npm run dev
   "coreIdea": "一个修仙少年的成长故事",
   "targetWords": 100000,
   "chapterCount": 50,
-  "model": "gemini-2.5-flash"
+  "model": "gpt-4o-mini"
 }
 ```
 

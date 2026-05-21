@@ -1,4 +1,4 @@
-import { createGoogleGenerativeAI } from '@ai-sdk/google'
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
 import { streamText, generateText, type LanguageModel } from 'ai'
 import type { GenerationParams, GenerationResult } from '@/types'
 import type { AIProviderConfig } from '@/lib/ai/config'
@@ -15,28 +15,22 @@ interface TokenUsageLike {
   total?: number
 }
 
-export class GeminiProvider implements AIProvider {
-  name = 'gemini' as const
+export class OpenAICompatibleProvider implements AIProvider {
+  name = 'openai-compatible' as const
   model: string
-  private google: ReturnType<typeof createGoogleGenerativeAI>
+  private provider: ReturnType<typeof createOpenAICompatible>
 
-  constructor(config?: Partial<AIProviderConfig>) {
-    const apiKey = config?.apiKey || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
-    const baseURL = config?.baseURL || process.env.GEMINI_BASE_URL
-    this.model = config?.model || process.env.GEMINI_MODEL || 'gemini-2.5-flash'
-
-    if (!apiKey) {
-      throw new Error('Missing Gemini API key. Set GOOGLE_GENERATIVE_AI_API_KEY.')
-    }
-
-    this.google = createGoogleGenerativeAI({
-      apiKey,
-      baseURL,
+  constructor(private config: AIProviderConfig) {
+    this.model = config.model
+    this.provider = createOpenAICompatible({
+      name: config.name,
+      apiKey: config.apiKey,
+      baseURL: config.baseURL || 'https://api.openai.com/v1',
     })
   }
 
   getModel(modelOverride?: string): LanguageModel {
-    return this.google(modelOverride || this.model)
+    return this.provider(modelOverride || this.model)
   }
 
   async generate(params: GenerationParams): Promise<GenerationResult> {
@@ -64,13 +58,12 @@ export class GeminiProvider implements AIProvider {
           completionTokens,
           totalTokens,
         },
-        cost: this.estimateCost(promptTokens, completionTokens, model),
         duration,
         status: 'success',
       }
     } catch (error) {
       const duration = Date.now() - startTime
-      console.error('Gemini generation error:', error)
+      console.error('OpenAI-compatible generation error:', error)
 
       return {
         output: '',
@@ -93,27 +86,9 @@ export class GeminiProvider implements AIProvider {
         yield chunk
       }
     } catch (error) {
-      console.error('Gemini stream generation error:', error)
+      console.error('OpenAI-compatible stream generation error:', error)
       throw error
     }
-  }
-
-  private estimateCost(inputTokens: number, outputTokens: number, model: string): number {
-    let inputCostPer1M = 0
-    let outputCostPer1M = 0
-
-    if (model.includes('flash')) {
-      inputCostPer1M = 0.075
-      outputCostPer1M = 0.30
-    } else if (model.includes('pro')) {
-      inputCostPer1M = 1.25
-      outputCostPer1M = 5.00
-    }
-
-    const inputCost = (inputTokens / 1_000_000) * inputCostPer1M
-    const outputCost = (outputTokens / 1_000_000) * outputCostPer1M
-
-    return inputCost + outputCost
   }
 
   estimateTokens(text: string): number {
@@ -122,13 +97,4 @@ export class GeminiProvider implements AIProvider {
 
     return Math.ceil(chineseChars / 2 + englishWords * 0.75)
   }
-}
-
-let geminiProvider: GeminiProvider | null = null
-
-export function getGeminiProvider(config?: Partial<AIProviderConfig>): GeminiProvider {
-  if (!geminiProvider || config) {
-    geminiProvider = new GeminiProvider(config)
-  }
-  return geminiProvider
 }

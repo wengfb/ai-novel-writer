@@ -470,7 +470,7 @@ Accept: application/json
   "style": "热血升级流",
   "targetWords": 100000,
   "chapterCount": 50,
-  "model": "gemini-2.5-flash"
+  "model": "gpt-4o-mini"
 }
 ```
 
@@ -609,7 +609,7 @@ data: {"type": "done", "wordCount": 3200}
   "chapterId": "clx1111111111",
   "currentContent": "当前已写的内容...",
   "targetWords": 1000,
-  "model": "gemini-2.5-flash"
+  "model": "gpt-4o-mini"
 }
 ```
 
@@ -2055,7 +2055,7 @@ const response = await fetch('/api/projects/clx1234567890/planning-range', {
 **请求体**：
 ```json
 {
-  "model": "gemini-2.5-flash",
+  "model": "gpt-4o-mini",
   "autoAdvanceRange": true
 }
 ```
@@ -2124,7 +2124,7 @@ const response = await fetch('/api/projects/clx1234567890/outlines/generate-next
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    model: 'gemini-2.5-flash',
+    model: 'gpt-4o-mini',
     autoAdvanceRange: true
   })
 });

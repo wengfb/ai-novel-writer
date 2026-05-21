@@ -105,7 +105,7 @@ export interface Outline {
 // AI生成相关类型
 export interface GenerationParams {
   type: 'chapter' | 'outline' | 'character' | 'dialogue' | 'world'
-  model: 'gemini-2.5-flash' | 'gemini-2.5-pro' | 'gemini-3-flash' | 'gemini-3-pro'
+  model?: string
   prompt: string
   systemPrompt?: string
   temperature?: number

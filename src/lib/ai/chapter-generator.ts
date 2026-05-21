@@ -1,4 +1,4 @@
-import { getGeminiProvider } from './providers/gemini'
+import { getAIProvider } from './providers'
 import { PromptTemplateManager } from './prompts/template-manager'
 import { getContextManager } from './context-manager'
 import { prisma } from '@/lib/db/prisma'
@@ -9,7 +9,7 @@ import type { GenerationParams } from '@/types'
  * 实现递归规划+反思生成机制
  */
 export class ChapterGenerator {
-  private gemini = getGeminiProvider()
+  private ai = getAIProvider()
   private promptManager = new PromptTemplateManager()
   private contextManager = getContextManager()
 
@@ -211,7 +211,7 @@ ${this.contextManager.formatContextForPrompt(context)}
 }
 \`\`\``
 
-    const result = await this.gemini.generate({
+    const result = await this.ai.generate({
       type: 'chapter',
       model,
       prompt,
@@ -278,7 +278,7 @@ ${this.contextManager.formatContextForPrompt(context)}
       targetWords,
     })
 
-    const result = await this.gemini.generate({
+    const result = await this.ai.generate({
       type: 'chapter',
       model,
       prompt,
@@ -320,12 +320,12 @@ ${content}
 
 请直接输出优化后的完整章节，不要包含点评和说明。`
 
-    const result = await this.gemini.generate({
+    const result = await this.ai.generate({
       type: 'chapter',
       model,
       prompt,
       temperature: 0.6, // 略低的温度以保证一致性
-      maxTokens: this.gemini.estimateTokens(content) * 2,
+      maxTokens: this.ai.estimateTokens(content) * 2,
     })
 
     return result.output || content // 如果优化失败，返回原文
@@ -337,7 +337,7 @@ ${content}
   private async recordGeneration(params: {
     projectId: string
     type: string
-    model: string
+    model?: string
     prompt: string
     output: string
   }) {
@@ -345,9 +345,9 @@ ${content}
       await prisma.generation.create({
         data: {
           projectId: params.projectId,
-          type: params.type as any,
-          provider: 'google',
-          model: params.model,
+          type: params.type,
+          provider: this.ai.name,
+          model: params.model || this.ai.model,
           prompt: params.prompt,
           output: params.output,
           status: 'success',
@@ -466,7 +466,7 @@ ${content}
 
     // 使用流式生成
     let fullOutput = ''
-    const generator = this.gemini.streamGenerate({
+    const generator = this.ai.streamGenerate({
       type: 'chapter',
       model,
       prompt,

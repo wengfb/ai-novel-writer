@@ -63,7 +63,7 @@ export const GenerateOutlineSchema = z.object({
   style: z.string().optional(),
   targetWords: z.number().int().positive().default(100000),
   chapterCount: z.number().int().positive().max(200).default(50),
-  model: z.enum(['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-3-flash', 'gemini-3-pro']).default('gemini-3-flash'),
+  model: z.string().optional(),
 })
 
 export const GenerateChapterSchema = z.object({
@@ -72,7 +72,7 @@ export const GenerateChapterSchema = z.object({
   chapterTitle: z.string().min(1).max(200),
   chapterOutline: z.string().min(10, '章节大纲至少10个字符'),
   targetWords: z.number().int().positive().default(3000),
-  model: z.enum(['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-3-flash', 'gemini-3-pro']).default('gemini-3-flash'),
+  model: z.string().optional(),
 })
 
 export const ContinueChapterSchema = z.object({
@@ -80,7 +80,7 @@ export const ContinueChapterSchema = z.object({
   chapterId: z.string().cuid('无效的章节ID'),
   currentContent: z.string().min(1, '当前内容不能为空'),
   targetWords: z.number().int().positive().default(1000),
-  model: z.enum(['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-3-flash', 'gemini-3-pro']).default('gemini-3-flash'),
+  model: z.string().optional(),
 })
 
 export const GenerateCharacterSchema = z.object({

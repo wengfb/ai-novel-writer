@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.10",
+    "@ai-sdk/openai-compatible": "^2.0.47",
     "@ai-sdk/react": "^3.0.45",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/adapter-better-sqlite3": "^7.2.0",

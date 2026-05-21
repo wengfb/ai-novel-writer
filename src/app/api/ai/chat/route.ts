@@ -1,17 +1,18 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { streamText, convertToModelMessages } from 'ai'
-import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { z } from 'zod'
 import { validateRequest, Validation_error } from '@/lib/api/validators'
 import { ApiErrors } from '@/lib/api/response'
 import { getContextManager } from '@/lib/ai/context-manager'
 import { buildChatTools } from '@/lib/ai/chat-tools'
+import { getLanguageModel } from '@/lib/ai/providers'
 
 const ChatRequestSchema = z.object({
   projectId: z.string().optional(),
   chapterId: z.string().optional(),
   messages: z.array(z.any()),
+  model: z.string().optional(),
 })
 
 /**
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const data = validateRequest(ChatRequestSchema, body)
-    const { projectId, chapterId, messages } = data
+    const { projectId, chapterId, messages, model: modelOverride } = data
 
     if (messages.length === 0) {
       return ApiErrors.badRequest('消息不能为空')
@@ -112,13 +113,10 @@ ${contextPrompt}
       ignoreIncompleteToolCalls: true,
     })
 
-    const google = createGoogleGenerativeAI({
-      apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY || '',
-      baseURL: process.env.GEMINI_BASE_URL,
-    })
+    const { model } = getLanguageModel(modelOverride)
 
     const result = streamText({
-      model: google('gemini-2.5-flash'),
+      model,
       system: systemPrompt,
       messages: modelMessages,
       tools,

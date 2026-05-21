@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { getGeminiProvider } from '@/lib/ai/providers/gemini'
+import { getAIProvider } from '@/lib/ai/providers'
 import { PromptTemplateManager } from '@/lib/ai/prompts/template-manager'
 import { apiSuccess, withErrorHandler, ApiErrors } from '@/lib/api/response'
 import { parseJsonBody, validateRequest } from '@/lib/api/validators'
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       // Onboarding 模式：直接使用提供的 prompt
       data = {
         projectId: 'temp',
-        model: body.model || 'gemini-3-flash',
+        model: body.model,
       }
       prompt = body.prompt
     } else {
@@ -53,13 +53,13 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    const gemini = getGeminiProvider()
+    const ai = getAIProvider(data.model)
 
     // 生成大纲
     const startTime = Date.now()
-    const result = await gemini.generate({
+    const result = await ai.generate({
       type: 'outline',
-      model: data.model,
+      model: data.model || ai.model,
       prompt,
       temperature: 0.7,
       maxTokens: 8000,
@@ -140,8 +140,8 @@ export async function POST(request: NextRequest) {
         data: {
           projectId: data.projectId,
           type: 'outline',
-          provider: 'google',
-          model: data.model,
+          provider: ai.name,
+          model: data.model || ai.model,
           prompt,
           output: result.output,
           tokensUsed: JSON.stringify(result.tokensUsed),
