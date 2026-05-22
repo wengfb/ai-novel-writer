@@ -558,43 +558,49 @@ data: {"type": "done", "outline": {...}}
 **响应**：流式输出（Server-Sent Events）
 
 ```typescript
-// 实时流式输出
-data: {"type": "start", "chapterId": "clx1111111111"}
-data: {"type": "token", "content": "# 第一章 初入仙门\n\n"}
-data: {"type": "token", "content": "清晨，"}
-data: {"type": "token", "content": "阳光洒在..."}
-data: {"type": "progress", "scene": 1, "totalScenes": 3}
-data: {"type": "done", "wordCount": 3200}
+// 开始生成
+data: {"type":"start"}
+
+// 场景级进度更新；当前不会逐 token 输出正文
+data: {"type":"progress","content":"已完成第 1 个场景","scene":1,"totalScenes":3}
+
+// 完成后返回新章节信息
+data: {
+  "type": "done",
+  "data": {
+    "chapterId": "clx1111111111",
+    "content": "完整章节内容...",
+    "wordCount": 3200
+  }
+}
+
+// 失败时返回错误；不会创建空章节
+data: {"type":"error","error":"生成失败原因"}
 ```
 
 **响应字段**：
 - `type`: 事件类型
   - `start`: 开始生成
-  - `token`: 文本片段
-  - `progress`: 进度更新
-  - `done`: 生成完成
+  - `progress`: 场景级进度更新
+  - `done`: 生成完成，`data` 内包含章节 ID、正文和字数
   - `error`: 生成失败
 
-**完整生成后的数据**：
+**完成事件数据**：
 ```json
 {
-  "success": true,
-  "data": {
-    "chapterId": "clx1111111111",
-    "content": "# 第一章 初入仙门\n\n完整内容...",
-    "wordCount": 3200,
-    "summary": "自动生成的摘要",
-    "generationId": "clx9999999999",
-    "tokensUsed": {
-      "promptTokens": 5000,
-      "completionTokens": 3000,
-      "totalTokens": 8000
-    },
-    "cost": 0.05,
-    "duration": 30000
-  }
+  "chapterId": "clx1111111111",
+  "content": "# 第一章 初入仙门\n\n完整内容...",
+  "wordCount": 3200
 }
 ```
+
+**副作用**：
+- 创建新的 `Chapter` 记录
+- 更新项目 `totalWords` / `chapterCount`
+- 创建 `Generation` 记录，并回填 `targetId` 为新章节 ID
+- 若同项目章节号已存在，返回 `INVALID_PARAMS` 错误
+- 若 AI provider 返回失败或空输出，中止生成且不创建空章节
+
 
 ---
 

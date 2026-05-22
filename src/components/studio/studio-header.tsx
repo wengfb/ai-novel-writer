@@ -1,21 +1,25 @@
 'use client'
 
 import * as React from "react"
-import { MoreHorizontal, Save } from "lucide-react"
+import { MoreHorizontal, Save, Sparkles } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { useChapterStore } from "@/lib/store/chapter-store"
+import { AIGenerateChapterDialog } from "@/components/ai/ai-generate-chapter-dialog"
+import { useProjectStore } from "@/lib/store/project-store"
 import { AIContinueButton } from "@/components/ai/ai-continue-button"
 import { ProjectSelector } from "@/components/project/project-selector"
 import { ProjectCreateDialog } from "@/components/project/project-create-dialog"
 import { toast } from "sonner"
 
 export function StudioHeader() {
-  const { currentChapter, updateChapterContent, saveChapter, isSaving, lastSaved } = useChapterStore()
+  const { currentChapter, chapters, updateChapterContent, saveChapter, isSaving, lastSaved } = useChapterStore()
+  const { currentProject } = useProjectStore()
   const [accumulatedContent, setAccumulatedContent] = React.useState('')
   const [baseContent, setBaseContent] = React.useState('') // 保存开始续写时的原始内容
   const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false)
+  const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false)
 
   const handleSave = async () => {
     if (!currentChapter) {
@@ -56,6 +60,14 @@ export function StudioHeader() {
     setIsCreateDialogOpen(true)
   }
 
+  const handleGenerateChapter = () => {
+    if (!currentProject) {
+      toast.error('请先选择项目')
+      return
+    }
+    setIsGenerateDialogOpen(true)
+  }
+
   return (
     <>
       <header className="flex h-14 items-center gap-4 border-b bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -81,6 +93,16 @@ export function StudioHeader() {
              <Save className="mr-2 h-3.5 w-3.5" />
              {isSaving ? '保存中...' : '保存'}
          </Button>
+         <Button
+           size="sm"
+           variant="outline"
+           className="h-8"
+           onClick={handleGenerateChapter}
+           disabled={!currentProject}
+         >
+             <Sparkles className="mr-2 h-3.5 w-3.5" />
+             AI生成章节
+         </Button>
          <AIContinueButton onContentGenerated={handleAIContentGenerated} />
          <Button variant="ghost" size="icon" className="h-8 w-8">
              <MoreHorizontal className="h-4 w-4" />
@@ -88,9 +110,17 @@ export function StudioHeader() {
       </div>
     </header>
 
+
       <ProjectCreateDialog
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
+      />
+
+      <AIGenerateChapterDialog
+        open={isGenerateDialogOpen}
+        onOpenChange={setIsGenerateDialogOpen}
+        projectId={currentProject?.id ?? null}
+        chapters={chapters}
       />
     </>
   )

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
-import { aiApi, type ContextInfo } from '@/lib/api/endpoints/ai'
+import { aiApi, type ContextInfo, type GenerateChapterResult } from '@/lib/api/endpoints/ai'
 
 export interface GenerateChapterParams {
   projectId: string
@@ -39,7 +39,7 @@ interface AIState {
   abortController: AbortController | null
 
   // Actions
-  generateChapter: (params: GenerateChapterParams, onProgress: (text: string) => void) => Promise<void>
+  generateChapter: (params: GenerateChapterParams, onProgress: (text: string) => void) => Promise<GenerateChapterResult>
   continueWriting: (params: ContinueChapterParams, onProgress: (text: string) => void) => Promise<void>
   cancelGeneration: () => void
   fetchContext: (projectId: string, chapterId: string) => Promise<void>
@@ -69,7 +69,7 @@ export const useAIStore = create<AIState>()(
       try {
         const abortController = get().abortController
 
-        await aiApi.generateChapter(
+        const result = await aiApi.generateChapter(
           params,
           (chunk) => {
             set((state) => {
@@ -85,6 +85,8 @@ export const useAIStore = create<AIState>()(
           chapterProgress: '',
           abortController: null
         })
+
+        return result
       } catch (error) {
         set({
           error: error instanceof Error ? error.message : '生成章节失败',

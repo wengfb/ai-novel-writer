@@ -81,8 +81,16 @@ export async function streamSSE(
 
   if (!response.ok) {
     const error = await response.text()
-    onError(error || 'Request failed')
-    return
+    let message = error || 'Request failed'
+
+    try {
+      const parsed = JSON.parse(error)
+      message = parsed.error?.message || message
+    } catch {
+      // 保留原始错误文本
+    }
+
+    throw new Error(message)
   }
 
   if (!response.body) {

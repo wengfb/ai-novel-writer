@@ -2,6 +2,12 @@ import { apiClient } from '../client'
 import { streamSSE } from '@/lib/utils/sse-parser'
 import type { GenerateChapterParams, ContinueChapterParams } from '@/lib/store/ai-store'
 
+export interface GenerateChapterResult {
+  chapterId: string
+  content: string
+  wordCount: number
+}
+
 /**
  * AI 续写章节参数（扩展）
  */
@@ -83,8 +89,8 @@ export const aiApi = {
     params: GenerateChapterParams,
     onProgress: (content: string) => void,
     signal?: AbortSignal
-  ): Promise<{ content: string; wordCount: number }> {
-    let result: any = null
+  ): Promise<GenerateChapterResult> {
+    let result: GenerateChapterResult | null = null
 
     await streamSSE(
       '/api/ai/generate/chapter',
@@ -98,6 +104,13 @@ export const aiApi = {
       },
       signal
     )
+
+    if (!result) {
+      if (signal?.aborted) {
+        throw new DOMException('章节生成已取消', 'AbortError')
+      }
+      throw new Error('生成章节失败：未收到完成结果')
+    }
 
     return result
   },

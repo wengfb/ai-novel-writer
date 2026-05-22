@@ -24,6 +24,20 @@ export async function POST(request: NextRequest) {
       return ApiErrors.projectNotFound()
     }
 
+    // 检查章节号是否已存在
+    const existingChapter = await prisma.chapter.findUnique({
+      where: {
+        projectId_chapterNumber: {
+          projectId: data.projectId,
+          chapterNumber: data.chapterNumber,
+        },
+      },
+    })
+
+    if (existingChapter) {
+      return ApiErrors.badRequest(`第 ${data.chapterNumber} 章已存在，请更换章节号`)
+    }
+
     // 创建流式响应
     const encoder = new TextEncoder()
     const stream = new ReadableStream({
@@ -44,20 +58,21 @@ export async function POST(request: NextRequest) {
           let fullContent = ''
           let sceneCount = 0
 
-          const content = await chapterGenerator.generateChapter({
+          const result = await chapterGenerator.generateChapter({
             projectId: data.projectId,
             chapterNumber: data.chapterNumber,
             chapterTitle: data.chapterTitle,
             chapterOutline: data.chapterOutline,
             targetWords: data.targetWords,
             model: data.model,
-            onProgress: (text) => {
+            onProgress: () => {
               sceneCount++
               // 发送进度事件
               controller.enqueue(
                 encoder.encode(
                   `data: ${JSON.stringify({
                     type: 'progress',
+                    content: `已完成第 ${sceneCount} 个场景`,
                     scene: sceneCount,
                     totalScenes: 3, // 默认值
                   })}\n\n`
@@ -66,7 +81,7 @@ export async function POST(request: NextRequest) {
             },
           })
 
-          fullContent = content
+          fullContent = result.content
 
           // 计算字数
           const wordCount = countWords(fullContent)
@@ -83,6 +98,13 @@ export async function POST(request: NextRequest) {
             },
           })
 
+          if (result.generationId) {
+            await prisma.generation.update({
+              where: { id: result.generationId },
+              data: { targetId: chapter.id },
+            })
+          }
+
           // 更新项目统计
           await updateProjectStats(data.projectId)
 
@@ -91,9 +113,11 @@ export async function POST(request: NextRequest) {
             encoder.encode(
               `data: ${JSON.stringify({
                 type: 'done',
-                chapterId: chapter.id,
-                wordCount,
-                content: fullContent,
+                data: {
+                  chapterId: chapter.id,
+                  wordCount,
+                  content: fullContent,
+                },
               })}\n\n`
             )
           )

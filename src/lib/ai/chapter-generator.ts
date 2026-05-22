@@ -24,7 +24,8 @@ export class ChapterGenerator {
     targetWords: number
     model: GenerationParams['model']
     onProgress?: (text: string) => void
-  }): Promise<string> {
+  }): Promise<{ content: string; generationId?: string }> {
+    const startTime = Date.now()
     const {
       projectId,
       chapterNumber,
@@ -103,15 +104,21 @@ export class ChapterGenerator {
     })
 
     // 5. 记录生成历史
-    await this.recordGeneration({
+    const prompt = this.buildPrompt({ chapterNumber, chapterTitle, chapterOutline, context, targetWords })
+    const generation = await this.recordGeneration({
       projectId,
       type: 'chapter',
       model,
-      prompt: this.buildPrompt({ chapterNumber, chapterTitle, chapterOutline, context }),
+      prompt,
+      systemPrompt: this.contextManager.formatContextForPrompt(context),
       output: refinedContent,
+      duration: Date.now() - startTime,
     })
 
-    return refinedContent
+    return {
+      content: refinedContent,
+      generationId: generation?.id,
+    }
   }
 
   /**
@@ -219,6 +226,10 @@ ${this.contextManager.formatContextForPrompt(context)}
       maxTokens: 2000,
     })
 
+    if (result.status !== 'success' || !result.output.trim()) {
+      throw new Error('AI 场景分析失败，请检查模型配置')
+    }
+
     // 解析JSON结果
     try {
       const jsonMatch = result.output.match(/```json\n([\s\S]*?)\n```/) ||
@@ -289,6 +300,10 @@ ${this.contextManager.formatContextForPrompt(context)}`,
       maxTokens: targetWords * 2,
     })
 
+    if (result.status !== 'success' || !result.output.trim()) {
+      throw new Error('AI 场景生成失败，请检查模型配置')
+    }
+
     return result.output
   }
 
@@ -328,7 +343,11 @@ ${content}
       maxTokens: this.ai.estimateTokens(content) * 2,
     })
 
-    return result.output || content // 如果优化失败，返回原文
+    if (result.status !== 'success' || !result.output.trim()) {
+      throw new Error('AI 章节优化失败，请检查模型配置')
+    }
+
+    return result.output
   }
 
   /**
@@ -339,22 +358,29 @@ ${content}
     type: string
     model?: string
     prompt: string
+    systemPrompt?: string
     output: string
+    duration?: number
+    targetId?: string
   }) {
     try {
-      await prisma.generation.create({
+      return await prisma.generation.create({
         data: {
           projectId: params.projectId,
           type: params.type,
+          targetId: params.targetId,
           provider: this.ai.name,
           model: params.model || this.ai.model,
           prompt: params.prompt,
+          systemPrompt: params.systemPrompt,
           output: params.output,
+          duration: params.duration,
           status: 'success',
         },
       })
     } catch (error) {
       console.error('Failed to record generation:', error)
+      return null
     }
   }
 
@@ -366,8 +392,9 @@ ${content}
     chapterTitle: string
     chapterOutline: string
     context: any
+    targetWords: number
   }): string {
-    const { chapterNumber, chapterTitle, chapterOutline, context } = params
+    const { chapterNumber, chapterTitle, chapterOutline, context, targetWords } = params
 
     return this.promptManager.render('chapter-generation', {
       chapterNumber,
@@ -376,7 +403,7 @@ ${content}
       characters: JSON.stringify(context.characters),
       worldSettings: JSON.stringify(context.worldElements),
       previousSummary: context.chapterSummaries.map((s: any) => s.summary).join('\n'),
-      targetWords: 3000,
+      targetWords,
     })
   }
 
