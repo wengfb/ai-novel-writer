@@ -4,9 +4,14 @@ import { useProjects, useCurrentProject } from '@/hooks/use-projects'
 import { ProjectCard } from './project-card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
-export function ProjectList() {
+interface ProjectListProps {
+  onCreateProject?: () => void
+}
+
+export function ProjectList({ onCreateProject }: ProjectListProps) {
   const { projects, isLoading, error } = useProjects()
   const { setCurrentProject } = useCurrentProject()
 
@@ -25,8 +30,14 @@ export function ProjectList() {
 
   if (projects.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">暂无项目，点击右上角创建新项目</p>
+      <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
+        <p className="text-muted-foreground">暂无项目，创建一个项目开始写作</p>
+        {onCreateProject && (
+          <Button className="mt-4" onClick={onCreateProject}>
+            <Plus className="mr-2 h-4 w-4" />
+            新建项目
+          </Button>
+        )}
       </div>
     )
   }

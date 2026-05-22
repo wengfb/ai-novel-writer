@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
+import { useChapterStore } from './chapter-store'
 
 export interface Project {
   id: string
@@ -18,8 +19,10 @@ export interface CreateProjectParams {
   title: string
   description?: string
   genre: string
-  status?: 'draft' | 'writing' | 'completed' | 'archived'
+  status?: 'draft' | 'writing' | 'completed'
 }
+
+type ProjectInput = Project | ProjectResponse
 
 interface ProjectState {
   // 状态
@@ -30,11 +33,38 @@ interface ProjectState {
 
   // Actions
   fetchProjects: () => Promise<void>
-  setCurrentProject: (project: Project | null) => void
+  setCurrentProject: (project: ProjectInput | null) => void
   createProject: (data: CreateProjectParams) => Promise<Project>
   updateProject: (id: string, data: Partial<Project>) => Promise<void>
   deleteProject: (id: string) => Promise<void>
   clearError: () => void
+}
+
+type ProjectResponse = Omit<Partial<Project>, 'createdAt' | 'updatedAt'> & {
+  id: string
+  title: string
+  description?: string | null
+  genre: string
+  status: Project['status']
+  totalWords?: number
+  totalChapters?: number
+  chapterCount?: number
+  createdAt: string | Date
+  updatedAt: string | Date
+}
+
+function normalizeProject(project: ProjectResponse): Project {
+  return {
+    id: project.id,
+    title: project.title,
+    description: project.description ?? null,
+    genre: project.genre,
+    status: project.status,
+    totalWords: project.totalWords ?? 0,
+    totalChapters: project.totalChapters ?? project.chapterCount ?? 0,
+    createdAt: new Date(project.createdAt),
+    updatedAt: new Date(project.updatedAt),
+  }
 }
 
 export const useProjectStore = create<ProjectState>()(
@@ -57,7 +87,17 @@ export const useProjectStore = create<ProjectState>()(
             throw new Error(data.error.message)
           }
 
-          set({ projects: data.data.projects, isLoading: false })
+          const projects: Project[] = data.data.projects.map((project: ProjectResponse) => normalizeProject(project))
+          const currentProject = get().currentProject
+          const validCurrentProject = currentProject
+            ? projects.find((project) => project.id === currentProject.id) ?? null
+            : null
+
+          if (currentProject && !validCurrentProject) {
+            useChapterStore.getState().clearProjectContext()
+          }
+
+          set({ projects, currentProject: validCurrentProject, isLoading: false })
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : '获取项目列表失败',
@@ -68,7 +108,12 @@ export const useProjectStore = create<ProjectState>()(
 
       // 设置当前项目
       setCurrentProject: (project) => {
-        set({ currentProject: project })
+        const normalizedProject = project ? normalizeProject(project) : null
+        const previousProjectId = get().currentProject?.id
+        if (previousProjectId !== normalizedProject?.id) {
+          useChapterStore.getState().clearProjectContext()
+        }
+        set({ currentProject: normalizedProject })
       },
 
       // 创建项目
@@ -87,10 +132,12 @@ export const useProjectStore = create<ProjectState>()(
             throw new Error(result.error.message)
           }
 
-          const newProject = result.data
+          const newProject = normalizeProject(result.data.project ?? result.data)
+
+          useChapterStore.getState().clearProjectContext()
 
           set((state) => {
-            state.projects.push(newProject)
+            state.projects.unshift(newProject)
             state.currentProject = newProject
             state.isLoading = false
           })
@@ -121,7 +168,7 @@ export const useProjectStore = create<ProjectState>()(
             throw new Error(result.error.message)
           }
 
-          const updatedProject = result.data
+          const updatedProject = normalizeProject(result.data.project ?? result.data)
 
           set((state) => {
             const index = state.projects.findIndex((p) => p.id === id)
@@ -154,6 +201,12 @@ export const useProjectStore = create<ProjectState>()(
 
           if (!result.success) {
             throw new Error(result.error.message)
+          }
+
+          const shouldClearProject = get().currentProject?.id === id
+
+          if (shouldClearProject) {
+            useChapterStore.getState().clearProjectContext()
           }
 
           set((state) => {

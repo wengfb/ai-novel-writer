@@ -36,7 +36,7 @@ const projectSchema = z.object({
   title: z.string().min(1, '请输入项目名称'),
   description: z.string().optional(),
   genre: z.string().min(1, '请选择类型'),
-  status: z.enum(['draft', 'writing', 'completed', 'archived']),
+  status: z.enum(['draft', 'writing', 'completed']),
 })
 
 type ProjectFormValues = z.infer<typeof projectSchema>
@@ -67,7 +67,7 @@ export function ProjectCreateDialog({ open, onOpenChange }: ProjectCreateDialogP
       toast.success('项目创建成功')
       form.reset()
       onOpenChange(false)
-    } catch (error) {
+    } catch {
       toast.error('创建失败，请重试')
     } finally {
       setIsSubmitting(false)

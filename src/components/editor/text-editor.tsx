@@ -4,21 +4,19 @@ import { useEffect, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
-import { cn } from "@/lib/utils"
 import { useChapterStore } from '@/lib/store/chapter-store'
 import { useAutoSave } from '@/hooks/use-auto-save'
 
 export function TextEditor() {
   const { currentChapter, updateChapterContent, saveChapter, isSaving } = useChapterStore()
   const [content, setContent] = useState(currentChapter?.content || '')
-  const [aiGeneratedContent, setAiGeneratedContent] = useState('')
 
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
       StarterKit,
       Placeholder.configure({
-        placeholder: '开始续写你的故事...',
+        placeholder: '请选择或创建章节后开始写作...',
       }),
     ],
     content: currentChapter?.content || '<p>开始你的创作...</p>',
@@ -39,7 +37,7 @@ export function TextEditor() {
   // 自动保存
   const { isSaving: autoSaving, lastSaved } = useAutoSave(
     content,
-    async (newContent) => {
+    async () => {
       if (currentChapter) {
         await saveChapter(currentChapter.id)
       }
@@ -49,37 +47,26 @@ export function TextEditor() {
 
   // 当切换章节时更新编辑器内容
   useEffect(() => {
-    if (currentChapter && editor) {
-      editor.commands.setContent(currentChapter.content)
-      setContent(currentChapter.content)
+    if (!editor) {
+      return
     }
-  }, [currentChapter?.id, editor])
+
+    if (currentChapter) {
+      editor.commands.setContent(currentChapter.content, { emitUpdate: true })
+    } else {
+      editor.commands.clearContent(true)
+    }
+  }, [currentChapter, editor])
 
   // 当章节内容变化时更新编辑器（用于 AI 生成）
   useEffect(() => {
-    if (currentChapter && editor && currentChapter.content !== content) {
-      // 只有当内容真的不同时才更新，避免循环
+    if (currentChapter && editor) {
       const currentEditorContent = editor.getHTML()
       if (currentEditorContent !== currentChapter.content) {
-        editor.commands.setContent(currentChapter.content)
-        setContent(currentChapter.content)
+        editor.commands.setContent(currentChapter.content, { emitUpdate: true })
       }
     }
-  }, [currentChapter?.content])
-
-  // 追加 AI 生成的内容
-  useEffect(() => {
-    if (aiGeneratedContent && editor) {
-      const currentContent = editor.getHTML()
-      const newContent = currentContent + aiGeneratedContent
-      editor.commands.setContent(newContent)
-      setContent(newContent)
-      if (currentChapter) {
-        updateChapterContent(currentChapter.id, newContent)
-      }
-      setAiGeneratedContent('')
-    }
-  }, [aiGeneratedContent, editor, currentChapter, updateChapterContent])
+  }, [currentChapter, editor])
 
   if (!editor) {
     return null

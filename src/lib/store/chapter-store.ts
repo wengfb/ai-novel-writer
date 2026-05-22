@@ -20,6 +20,32 @@ export interface CreateChapterParams {
   content?: string
 }
 
+type ChapterResponse = Omit<Partial<Chapter>, 'createdAt' | 'updatedAt'> & {
+  id: string
+  projectId: string
+  chapterNumber: number
+  title: string
+  content?: string | null
+  wordCount?: number
+  status?: Chapter['status']
+  createdAt: string | Date
+  updatedAt: string | Date
+}
+
+function normalizeChapter(chapter: ChapterResponse): Chapter {
+  return {
+    id: chapter.id,
+    projectId: chapter.projectId,
+    chapterNumber: chapter.chapterNumber,
+    title: chapter.title,
+    content: chapter.content ?? '',
+    wordCount: chapter.wordCount ?? 0,
+    status: chapter.status ?? 'draft',
+    createdAt: new Date(chapter.createdAt),
+    updatedAt: new Date(chapter.updatedAt),
+  }
+}
+
 interface ChapterState {
   // 状态
   chapters: Chapter[]
@@ -36,6 +62,7 @@ interface ChapterState {
   saveChapter: (id: string) => Promise<void>
   createChapter: (data: CreateChapterParams) => Promise<Chapter>
   deleteChapter: (id: string) => Promise<void>
+  clearProjectContext: () => void
   clearError: () => void
 }
 
@@ -60,7 +87,8 @@ export const useChapterStore = create<ChapterState>()(
           throw new Error(data.error.message)
         }
 
-        set({ chapters: data.data.chapters, isLoading: false })
+        const chapters = data.data.chapters.map(normalizeChapter)
+        set({ chapters, isLoading: false })
       } catch (error) {
         set({
           error: error instanceof Error ? error.message : '获取章节列表失败',
@@ -140,7 +168,7 @@ export const useChapterStore = create<ChapterState>()(
           throw new Error(result.error.message)
         }
 
-        const newChapter = result.data.chapter
+        const newChapter = normalizeChapter(result.data.chapter)
 
         set((state) => {
           state.chapters.push(newChapter)
@@ -191,6 +219,18 @@ export const useChapterStore = create<ChapterState>()(
     // 清除错误
     clearError: () => {
       set({ error: null })
+    },
+
+    // 清空当前项目关联的章节状态
+    clearProjectContext: () => {
+      set({
+        chapters: [],
+        currentChapter: null,
+        isLoading: false,
+        isSaving: false,
+        error: null,
+        lastSaved: null,
+      })
     },
   }))
 )

@@ -1,23 +1,21 @@
 'use client'
 
 import * as React from "react"
-import { ArrowLeft, MoreHorizontal, Save } from "lucide-react"
+import { MoreHorizontal, Save } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { useCurrentProject } from "@/hooks/use-projects"
 import { useChapterStore } from "@/lib/store/chapter-store"
 import { AIContinueButton } from "@/components/ai/ai-continue-button"
 import { ProjectSelector } from "@/components/project/project-selector"
-import { ProjectOnboardingDialog } from "@/components/onboarding/project-onboarding-dialog"
+import { ProjectCreateDialog } from "@/components/project/project-create-dialog"
 import { toast } from "sonner"
 
 export function StudioHeader() {
-  const { currentProject } = useCurrentProject()
   const { currentChapter, updateChapterContent, saveChapter, isSaving, lastSaved } = useChapterStore()
   const [accumulatedContent, setAccumulatedContent] = React.useState('')
   const [baseContent, setBaseContent] = React.useState('') // 保存开始续写时的原始内容
-  const [isOnboardingOpen, setIsOnboardingOpen] = React.useState(false)
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false)
 
   const handleSave = async () => {
     if (!currentChapter) {
@@ -28,7 +26,7 @@ export function StudioHeader() {
     try {
       await saveChapter(currentChapter.id)
       toast.success('保存成功')
-    } catch (error) {
+    } catch {
       toast.error('保存失败，请重试')
     }
   }
@@ -46,7 +44,7 @@ export function StudioHeader() {
     if (currentChapter && accumulatedContent && baseContent) {
       updateChapterContent(currentChapter.id, baseContent + accumulatedContent)
     }
-  }, [accumulatedContent, baseContent])
+  }, [accumulatedContent, baseContent, currentChapter, updateChapterContent])
 
   // 重置累积内容和原始内容
   React.useEffect(() => {
@@ -55,12 +53,7 @@ export function StudioHeader() {
   }, [currentChapter?.id])
 
   const handleNewProject = () => {
-    setIsOnboardingOpen(true)
-  }
-
-  const handleOnboardingComplete = async (projectId: string) => {
-    // 刷新页面以加载新项目
-    window.location.reload()
+    setIsCreateDialogOpen(true)
   }
 
   return (
@@ -95,10 +88,9 @@ export function StudioHeader() {
       </div>
     </header>
 
-      <ProjectOnboardingDialog
-        open={isOnboardingOpen}
-        onOpenChange={setIsOnboardingOpen}
-        onComplete={handleOnboardingComplete}
+      <ProjectCreateDialog
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
       />
     </>
   )

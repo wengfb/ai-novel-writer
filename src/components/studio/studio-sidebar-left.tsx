@@ -4,20 +4,17 @@ import * as React from "react"
 import {
   Book,
   Box,
-  ChevronDown,
   FileText,
   Home,
   LayoutTemplate,
-  Library,
   Settings,
   Users,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { useProjects, useCurrentProject } from "@/hooks/use-projects"
+import { useCurrentProject } from "@/hooks/use-projects"
 import { ChapterList } from "@/components/chapter/chapter-list"
 import { CharacterList } from "@/components/character/character-list"
 import { WorldElementList } from "@/components/world/world-element-list"
@@ -33,10 +30,9 @@ import { useWorldStore, type WorldElement } from "@/lib/store/world-store"
 import { toast } from "sonner"
 import type { Outline } from "@/lib/store/outline-store"
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
 export function StudioSidebarLeft({ className }: SidebarProps) {
-  const { projects, isLoading } = useProjects()
   const { currentProject, setCurrentProject } = useCurrentProject()
   const { createChapter } = useChapterStore()
   const { deleteOutline } = useOutlineStore()
@@ -54,13 +50,6 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   const [outlineParentId, setOutlineParentId] = React.useState<string | null>(null)
   const [outlineDefaultType, setOutlineDefaultType] = React.useState<'volume' | 'chapter' | 'scene'>('chapter')
 
-  // 自动选择第一个项目
-  React.useEffect(() => {
-    if (!currentProject && projects.length > 0 && !isLoading) {
-      setCurrentProject(projects[0])
-    }
-  }, [projects, currentProject, isLoading, setCurrentProject])
-
   // 创建新章节
   const handleCreateChapter = async () => {
     if (!currentProject) {
@@ -75,14 +64,14 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
         ? Math.max(...chapters.map(c => c.chapterNumber)) + 1
         : 1
 
-      const newChapter = await createChapter({
+      await createChapter({
         projectId: currentProject.id,
         chapterNumber: nextChapterNumber,
         title: '新章节',
         content: '<p>开始你的创作...</p>',
       })
       toast.success('章节创建成功')
-    } catch (error) {
+    } catch {
       toast.error('创建章节失败')
     }
   }
@@ -106,7 +95,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
     try {
       await deleteOutline(outline.id)
       toast.success('大纲删除成功')
-    } catch (error) {
+    } catch {
       toast.error('删除大纲失败')
     }
   }
@@ -126,7 +115,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
     try {
       await deleteCharacter(character.id)
       toast.success('角色删除成功')
-    } catch (error) {
+    } catch {
       toast.error('删除角色失败')
     }
   }
@@ -146,7 +135,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
     try {
       await deleteWorldElement(element.id)
       toast.success('世界观元素删除成功')
-    } catch (error) {
+    } catch {
       toast.error('删除世界观元素失败')
     }
   }
@@ -169,7 +158,11 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
             </Button>
           </div>
           <div className="space-y-1">
-            <Button variant="secondary" className="w-full justify-start">
+            <Button
+              variant="secondary"
+              className="w-full justify-start"
+              onClick={() => setCurrentProject(null)}
+            >
               <Home className="mr-2 h-4 w-4" />
               工作台
             </Button>
