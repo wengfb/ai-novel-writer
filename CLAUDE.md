@@ -274,7 +274,14 @@ npx prisma migrate dev --name migration_name
 
 ⚠️ **API 密钥配置**
 - Gemini API Key 需要在 `.env.local` 中配置
-- 不要将 `.env.local` 提交到 Git
+- OpenAI 兼容中转默认使用 `https://pucoding.com/v1`
+- OpenAI 兼容中转配置写入 `.env.local`：
+  ```bash
+  AI_PROVIDER=openai-compatible
+  AI_BASE_URL=https://pucoding.com/v1
+  AI_API_KEY=<本地私有 token，不写入仓库文件>
+  ```
+- 不要将 `.env.local` 或真实 API token 提交到 Git
 
 ⚠️ **AI 生成成本**
 - Gemini 2.5 Flash: $0.075/1M input, $0.30/1M output

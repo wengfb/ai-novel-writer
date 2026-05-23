@@ -19,6 +19,15 @@ export interface ContinueChapterParams {
   model?: string
 }
 
+export interface RewriteParams {
+  projectId: string
+  chapterId: string
+  selectedText: string
+  style: string
+  fullChapterContent: string
+  model?: string
+}
+
 interface AIState {
   // 对话相关错误（仅保留错误状态）
   error: string | null
@@ -35,15 +44,22 @@ interface AIState {
   context: ContextInfo | null
   isLoadingContext: boolean
 
+  // 局部重绘相关
+  isRewriting: boolean
+  rewriteProgress: string
+  rewriteResult: { originalText: string; rewrittenText: string } | null
+
   // AbortController 管理
   abortController: AbortController | null
 
   // Actions
   generateChapter: (params: GenerateChapterParams, onProgress: (text: string) => void) => Promise<GenerateChapterResult>
   continueWriting: (params: ContinueChapterParams, onProgress: (text: string) => void) => Promise<void>
+  rewriteText: (params: RewriteParams, onProgress: (text: string) => void) => Promise<void>
   cancelGeneration: () => void
   fetchContext: (projectId: string, chapterId: string) => Promise<void>
   clearError: () => void
+  clearRewriteResult: () => void
 }
 
 export const useAIStore = create<AIState>()(
@@ -56,6 +72,9 @@ export const useAIStore = create<AIState>()(
     chapterProgress: '',
     context: null,
     isLoadingContext: false,
+    isRewriting: false,
+    rewriteProgress: '',
+    rewriteResult: null,
     abortController: null,
 
     generateChapter: async (params, onProgress) => {
@@ -136,6 +155,49 @@ export const useAIStore = create<AIState>()(
       }
     },
 
+    rewriteText: async (params, onProgress) => {
+      set({
+        isRewriting: true,
+        error: null,
+        rewriteProgress: '',
+        rewriteResult: null,
+        abortController: new AbortController()
+      })
+
+      try {
+        const abortController = get().abortController
+
+        const result = await aiApi.rewrite(
+          params,
+          (chunk) => {
+            set((state) => {
+              state.rewriteProgress += chunk
+            })
+            onProgress(chunk)
+          },
+          abortController?.signal
+        )
+
+        set({
+          isRewriting: false,
+          rewriteProgress: '',
+          rewriteResult: {
+            originalText: params.selectedText,
+            rewrittenText: result.rewrittenText,
+          },
+          abortController: null,
+        })
+      } catch (error) {
+        set({
+          error: error instanceof Error ? error.message : 'AI 改写失败',
+          isRewriting: false,
+          rewriteProgress: '',
+          abortController: null,
+        })
+        throw error
+      }
+    },
+
     // 取消生成
     cancelGeneration: () => {
       const { abortController } = get()
@@ -145,8 +207,10 @@ export const useAIStore = create<AIState>()(
       set({
         isContinuing: false,
         isGeneratingChapter: false,
+        isRewriting: false,
         continueProgress: '',
         chapterProgress: '',
+        rewriteProgress: '',
         abortController: null,
       })
     },
@@ -167,6 +231,10 @@ export const useAIStore = create<AIState>()(
 
     clearError: () => {
       set({ error: null })
+    },
+
+    clearRewriteResult: () => {
+      set({ rewriteResult: null })
     },
   }))
 )

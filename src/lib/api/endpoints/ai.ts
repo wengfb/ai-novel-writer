@@ -1,6 +1,6 @@
 import { apiClient } from '../client'
 import { streamSSE } from '@/lib/utils/sse-parser'
-import type { GenerateChapterParams, ContinueChapterParams } from '@/lib/store/ai-store'
+import type { GenerateChapterParams, ContinueChapterParams, RewriteParams } from '@/lib/store/ai-store'
 
 export interface GenerateChapterResult {
   chapterId: string
@@ -26,9 +26,6 @@ export interface ChatParams {
   history?: Array<{ role: string; content: string }>
 }
 
-/**
- * 上下文信息
- */
 export interface ContextInfo {
   projectId: string
   chapterId: string
@@ -137,6 +134,39 @@ export const aiApi = {
       },
       signal
     )
+
+    return result
+  },
+
+  /**
+   * 局部重绘（流式）
+   */
+  async rewrite(
+    params: RewriteParams,
+    onProgress: (content: string) => void,
+    signal?: AbortSignal
+  ): Promise<{ rewrittenText: string }> {
+    let result: any = null
+
+    await streamSSE(
+      '/api/ai/rewrite',
+      params,
+      onProgress,
+      (data) => {
+        result = data
+      },
+      (error) => {
+        throw new Error(error)
+      },
+      signal
+    )
+
+    if (!result) {
+      if (signal?.aborted) {
+        throw new DOMException('改写已取消', 'AbortError')
+      }
+      throw new Error('改写失败：未收到完成结果')
+    }
 
     return result
   },

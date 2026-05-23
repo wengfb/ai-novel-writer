@@ -90,6 +90,15 @@ export const GenerateCharacterSchema = z.object({
   requirements: z.string().optional(),
 })
 
+export const RewriteSchema = z.object({
+  projectId: z.string().cuid('无效的项目ID'),
+  chapterId: z.string().cuid('无效的章节ID'),
+  selectedText: z.string().min(1, '选中的文本不能为空').max(5000, '选中的文本过长'),
+  style: z.enum(['更黑暗', '更幽默', '更简练', '更详细', '更正式', '更口语化']),
+  fullChapterContent: z.string().min(1, '章节内容不能为空'),
+  model: z.string().optional(),
+})
+
 export const GenerateWorldElementSchema = z.object({
   projectId: z.string().cuid('无效的项目ID'),
   elementType: z.enum(['location', 'history', 'magic', 'organization', 'item', 'other']),
