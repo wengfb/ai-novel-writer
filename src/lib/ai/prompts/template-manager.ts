@@ -22,6 +22,7 @@ export class PromptTemplateManager {
       ['scene-generation', SCENE_GENERATION_TEMPLATE],
       ['consistency-check', CONSISTENCY_CHECK_TEMPLATE],
       ['local-rewrite', LOCAL_REWRITE_TEMPLATE],
+      ['chapter-summary', CHAPTER_SUMMARY_TEMPLATE],
     ])
   }
 
@@ -427,3 +428,32 @@ const LOCAL_REWRITE_TEMPLATE = `你是一位专业的小说编辑。请根据指
 6. 保持原文的段落结构和格式
 
 请直接输出改写后的文本，不要包含任何说明、评价或标签。只输出改写结果本身。`
+
+/**
+ * 章节摘要生成模板
+ */
+const CHAPTER_SUMMARY_TEMPLATE = `你是一位专业的小说编辑。请为以下章节生成简洁的摘要：
+
+**章节标题**：{chapterTitle}
+**章节正文**：
+{chapterContent}
+**出场角色**：{characters}
+
+请生成2-3句话的摘要（不超过150字），概括本章的核心情节发展、角色变化和世界观展现。
+
+要求：
+1. 只描述已发生的具体情节，不做推测
+2. 突出关键转折点和角色决策
+3. 语言精炼，信息密度高
+
+请直接输出摘要文本，不要包含任何标题或说明。`
+
+// 导出单例
+let promptTemplateManager: PromptTemplateManager | null = null
+
+export function getPromptTemplateManager(): PromptTemplateManager {
+  if (!promptTemplateManager) {
+    promptTemplateManager = new PromptTemplateManager()
+  }
+  return promptTemplateManager
+}

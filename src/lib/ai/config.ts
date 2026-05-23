@@ -11,6 +11,16 @@ export interface AIProviderConfig {
 const DEFAULT_OPENAI_MODEL = 'gpt-4o-mini'
 const DEFAULT_OPENAI_BASE_URL = 'https://api.openai.com/v1'
 const DEFAULT_GEMINI_MODEL = 'gemini-2.5-flash'
+const DEFAULT_CONTEXT_MAX_TOKENS = 100000
+
+export function getContextMaxTokens(): number {
+  const envValue = process.env.AI_CONTEXT_MAX_TOKENS
+  if (envValue) {
+    const parsed = parseInt(envValue, 10)
+    if (!isNaN(parsed) && parsed > 0) return parsed
+  }
+  return DEFAULT_CONTEXT_MAX_TOKENS
+}
 
 export function normalizeAIProvider(provider?: string): AIProviderName {
   const normalized = provider?.trim().toLowerCase()

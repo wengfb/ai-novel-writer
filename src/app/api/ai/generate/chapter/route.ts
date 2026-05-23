@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getChapterGenerator } from '@/lib/ai/chapter-generator'
+import { getContextManager } from '@/lib/ai/context-manager'
 import { withErrorHandler, ApiErrors } from '@/lib/api/response'
 import { parseJsonBody, validateRequest } from '@/lib/api/validators'
 import { GenerateChapterSchema } from '@/lib/api/schemas'
@@ -86,6 +87,13 @@ export async function POST(request: NextRequest) {
           // 计算字数
           const wordCount = countWords(fullContent)
 
+          // 使用 AI 生成章节摘要
+          const contextManager = getContextManager()
+          const summary = await contextManager.generateChapterSummary(
+            fullContent,
+            data.chapterTitle
+          )
+
           // 保存章节到数据库
           const chapter = await prisma.chapter.create({
             data: {
@@ -94,7 +102,7 @@ export async function POST(request: NextRequest) {
               title: data.chapterTitle,
               content: fullContent,
               wordCount,
-              summary: data.chapterOutline.slice(0, 500), // 简化处理
+              summary,
             },
           })
 

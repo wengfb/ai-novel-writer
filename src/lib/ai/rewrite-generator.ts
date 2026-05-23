@@ -39,6 +39,7 @@ export class RewriteGenerator {
         chapters: { orderBy: { chapterNumber: 'asc' } },
         characters: true,
         worldElements: true,
+        foreshadowings: true,
       },
     })
 
@@ -75,6 +76,7 @@ export class RewriteGenerator {
         relatedTo: we.relatedTo ?? undefined,
         references: we.references ?? undefined,
       })) as any,
+      foreshadowings: project.foreshadowings as any,
       genre: project.genre,
     })
 

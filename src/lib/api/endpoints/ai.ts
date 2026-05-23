@@ -172,6 +172,60 @@ export const aiApi = {
   },
 
   /**
+   * 批量生成章节摘要
+   */
+  async summarizeChapters(projectId: string): Promise<{ chapterCount: number; message: string }> {
+    const response = await fetch('/api/ai/summarize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ projectId }),
+    })
+    const data = await response.json()
+
+    if (!data.success) {
+      throw new Error(data.error.message)
+    }
+
+    return data.data
+  },
+
+  /**
+   * 检查世界观一致性
+   */
+  async checkConsistency(params: {
+    projectId: string
+    chapterId?: string
+  }): Promise<{
+    report: string
+    conflicts: Array<{
+      type: string
+      severity: 'high' | 'medium' | 'low'
+      elementId: string
+      elementName: string
+      chapterId: string
+      chapterNumber: number
+      description: string
+      suggestion?: string
+      conflictingContent?: string
+      originalSetting?: string
+    }>
+    summary: { high: number; medium: number; low: number }
+  }> {
+    const response = await fetch('/api/ai/consistency-check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    })
+    const data = await response.json()
+
+    if (!data.success) {
+      throw new Error(data.error.message)
+    }
+
+    return data.data
+  },
+
+  /**
    * 获取上下文信息
    */
   async getContext(projectId: string, chapterId: string): Promise<ContextInfo> {

@@ -130,6 +130,7 @@ export interface ContextPackage {
   chapterSummaries: { chapterNumber: number; summary: string }[]
   characters: Character[]
   worldElements: WorldElement[]
+  foreshadowings?: Foreshadowing[]
   metadata: {
     totalChapters: number
     currentChapter: number

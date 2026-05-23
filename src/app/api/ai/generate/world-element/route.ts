@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getAIProvider } from '@/lib/ai/providers'
 import { PromptTemplateManager } from '@/lib/ai/prompts/template-manager'
+import { getContextManager } from '@/lib/ai/context-manager'
 import { prisma } from '@/lib/db/prisma'
 import { apiSuccess, ApiErrors, withErrorHandler } from '@/lib/api/response'
 import { validateRequest } from '@/lib/api/validators'
@@ -26,10 +27,15 @@ export async function POST(request: NextRequest) {
 
     const { projectId, elementType, storyContext, requirements, model } = data
 
-    // 2. 检查项目是否存在
+    // 2. 检查项目是否存在并加载完整上下文数据
     const project = await prisma.project.findUnique({
       where: { id: projectId },
-      include: { worldElements: true },
+      include: {
+        worldElements: true,
+        characters: true,
+        foreshadowings: true,
+        chapters: { orderBy: { chapterNumber: 'asc' } },
+      },
     })
 
     if (!project) {
@@ -39,14 +45,31 @@ export async function POST(request: NextRequest) {
     // 3. 构建上下文
     const promptManager = new PromptTemplateManager()
     const ai = getAIProvider(data.model)
+    const contextManager = getContextManager()
 
-    // 构建故事上下文
-    const context = storyContext || `小说类型：${project.genre}\n简介：${project.description || '暂无'}`
+    // 使用 ContextManager 构建完整的项目上下文
+    const chapterCount = project.chapters.length
+    const contextPackage = contextManager.buildContext({
+      currentChapter: chapterCount || 1,
+      allChapters: project.chapters as any,
+      characters: project.characters as any,
+      worldElements: project.worldElements as any,
+      foreshadowings: project.foreshadowings as any,
+      genre: project.genre,
+    })
+
+    const systemPrompt = contextManager.formatContextForPrompt(contextPackage)
+
+    // 用户自定义上下文作为补充
+    const storyContextStr = storyContext
+      ? `${systemPrompt}\n\n## 用户额外要求\n${storyContext}`
+      : systemPrompt
 
     // 4. 生成世界观元素
     const prompt = promptManager.render('world-element', {
       elementType,
-      storyContext: context,
+      storyContext: storyContextStr,
+      genre: project.genre,
       requirements: requirements || '无特殊要求',
     })
 

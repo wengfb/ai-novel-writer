@@ -305,3 +305,13 @@ export class WorldConsistencyChecker {
     return report
   }
 }
+
+// 导出单例
+let checker: WorldConsistencyChecker | null = null
+
+export function getWorldConsistencyChecker(): WorldConsistencyChecker {
+  if (!checker) {
+    checker = new WorldConsistencyChecker()
+  }
+  return checker
+}

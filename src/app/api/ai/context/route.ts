@@ -1,10 +1,11 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
+import { getContextManager } from '@/lib/ai/context-manager'
 import { apiSuccess, withErrorHandler, ApiErrors } from '@/lib/api/response'
 
 /**
  * GET /api/ai/context
- * 获取章节的上下文信息
+ * 获取章节的上下文信息（使用 ContextManager 统一构建）
  */
 export async function GET(request: NextRequest) {
   return withErrorHandler(async () => {
@@ -16,11 +17,20 @@ export async function GET(request: NextRequest) {
       return ApiErrors.badRequest('缺少必要参数')
     }
 
-    // 检查项目和章节是否存在
+    // 获取项目和章节
     const [project, chapter] = await Promise.all([
-      prisma.project.findUnique({ where: { id: projectId } }),
+      prisma.project.findUnique({
+        where: { id: projectId },
+        include: {
+          characters: true,
+          worldElements: true,
+          foreshadowings: true,
+          chapters: { orderBy: { chapterNumber: 'asc' } },
+        },
+      }),
       prisma.chapter.findFirst({
         where: { id: chapterId, projectId },
+        select: { chapterNumber: true },
       }),
     ])
 
@@ -32,57 +42,41 @@ export async function GET(request: NextRequest) {
       return ApiErrors.chapterNotFound()
     }
 
-    // 获取活跃角色（前 5 个）
-    const characters = await prisma.character.findMany({
-      where: { projectId },
-      orderBy: { importance: 'desc' },
-      take: 5,
-      select: {
-        id: true,
-        name: true,
-        role: true,
-      },
+    // 使用 ContextManager 构建上下文
+    const contextManager = getContextManager()
+    const contextPackage = contextManager.buildContext({
+      currentChapter: chapter.chapterNumber,
+      allChapters: project.chapters as any,
+      characters: project.characters as any,
+      worldElements: project.worldElements as any,
+      foreshadowings: project.foreshadowings as any,
+      genre: project.genre,
     })
 
-    // 获取相关世界观元素（前 5 个）
-    const worldElements = await prisma.worldElement.findMany({
-      where: { projectId },
-      orderBy: { importance: 'desc' },
-      take: 5,
-      select: {
-        id: true,
-        name: true,
-        type: true,
-      },
-    })
-
-    // 获取前置章节（前 3 章）
-    const previousChapters = await prisma.chapter.findMany({
-      where: {
-        projectId,
-        chapterNumber: { lt: chapter.chapterNumber },
-      },
-      orderBy: { chapterNumber: 'desc' },
-      take: 3,
-      select: {
-        id: true,
-        chapterNumber: true,
-        title: true,
-        summary: true,
-      },
-    })
-
-    // 估算 Token 数量（简单估算：中文 1 字 = 2 tokens，英文 1 词 = 1 token）
-    const contentLength = chapter.content?.length || 0
-    const estimatedTokens = Math.ceil(contentLength * 1.5)
+    // 计算 token 估算
+    const formattedPrompt = contextManager.formatContextForPrompt(contextPackage)
+    const estimatedTokens = contextManager.estimateTokens(formattedPrompt)
 
     return apiSuccess({
       projectId,
-      chapterId,
+      chapterId: chapterId,
       totalTokens: estimatedTokens,
-      characters,
-      worldElements,
-      previousChapters,
+      characters: contextPackage.characters.map(c => ({
+        id: c.id,
+        name: c.name,
+        role: c.role,
+      })),
+      worldElements: contextPackage.worldElements.map(w => ({
+        id: w.id,
+        name: w.name,
+        type: w.type,
+      })),
+      previousChapters: contextPackage.chapterSummaries.map(s => ({
+        id: '',
+        chapterNumber: s.chapterNumber,
+        title: s.summary.slice(0, 30),
+        summary: s.summary,
+      })),
     })
   })
 }

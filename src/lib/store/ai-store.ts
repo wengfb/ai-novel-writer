@@ -52,12 +52,21 @@ interface AIState {
   // AbortController 管理
   abortController: AbortController | null
 
+  // 上下文定制
+  contextCustomization: {
+    excludedCharacterIds: string[]
+    excludedElementIds: string[]
+  }
+
   // Actions
   generateChapter: (params: GenerateChapterParams, onProgress: (text: string) => void) => Promise<GenerateChapterResult>
   continueWriting: (params: ContinueChapterParams, onProgress: (text: string) => void) => Promise<void>
   rewriteText: (params: RewriteParams, onProgress: (text: string) => void) => Promise<void>
   cancelGeneration: () => void
   fetchContext: (projectId: string, chapterId: string) => Promise<void>
+  toggleCharacterInclusion: (characterId: string) => void
+  toggleElementInclusion: (elementId: string) => void
+  resetContextCustomization: () => void
   clearError: () => void
   clearRewriteResult: () => void
 }
@@ -76,6 +85,10 @@ export const useAIStore = create<AIState>()(
     rewriteProgress: '',
     rewriteResult: null,
     abortController: null,
+    contextCustomization: {
+      excludedCharacterIds: [],
+      excludedElementIds: [],
+    },
 
     generateChapter: async (params, onProgress) => {
       set({
@@ -227,6 +240,37 @@ export const useAIStore = create<AIState>()(
           isLoadingContext: false,
         })
       }
+    },
+
+    toggleCharacterInclusion: (characterId: string) => {
+      set((state) => {
+        const excluded = state.contextCustomization.excludedCharacterIds
+        if (excluded.includes(characterId)) {
+          state.contextCustomization.excludedCharacterIds = excluded.filter(id => id !== characterId)
+        } else {
+          state.contextCustomization.excludedCharacterIds = [...excluded, characterId]
+        }
+      })
+    },
+
+    toggleElementInclusion: (elementId: string) => {
+      set((state) => {
+        const excluded = state.contextCustomization.excludedElementIds
+        if (excluded.includes(elementId)) {
+          state.contextCustomization.excludedElementIds = excluded.filter(id => id !== elementId)
+        } else {
+          state.contextCustomization.excludedElementIds = [...excluded, elementId]
+        }
+      })
+    },
+
+    resetContextCustomization: () => {
+      set({
+        contextCustomization: {
+          excludedCharacterIds: [],
+          excludedElementIds: [],
+        },
+      })
     },
 
     clearError: () => {

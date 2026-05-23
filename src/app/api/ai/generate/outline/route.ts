@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getAIProvider } from '@/lib/ai/providers'
 import { PromptTemplateManager } from '@/lib/ai/prompts/template-manager'
+import { getContextManager } from '@/lib/ai/context-manager'
 import { apiSuccess, withErrorHandler, ApiErrors } from '@/lib/api/response'
 import { parseJsonBody, validateRequest } from '@/lib/api/validators'
 import { GenerateOutlineSchema } from '@/lib/api/schemas'
@@ -22,6 +23,7 @@ export async function POST(request: NextRequest) {
 
     let data: any
     let prompt: string
+    let systemPrompt: string | undefined
 
     if (isOnboarding) {
       // Onboarding 模式：直接使用提供的 prompt
@@ -34,9 +36,15 @@ export async function POST(request: NextRequest) {
       // 标准模式：验证参数并构建 prompt
       data = validateRequest(GenerateOutlineSchema, body)
 
-      // 检查项目是否存在
+      // 检查项目是否存在并加载已有上下文
       const project = await prisma.project.findUnique({
         where: { id: data.projectId },
+        include: {
+          characters: true,
+          worldElements: true,
+          foreshadowings: true,
+          chapters: { orderBy: { chapterNumber: 'asc' } },
+        },
       })
 
       if (!project) {
@@ -51,6 +59,19 @@ export async function POST(request: NextRequest) {
         targetWords: data.targetWords,
         chapterCount: data.chapterCount,
       })
+
+      // 使用 ContextManager 构建已有设定上下文作为 systemPrompt
+      const contextManager = getContextManager()
+      const chapterCount = project.chapters.length
+      const contextPackage = contextManager.buildContext({
+        currentChapter: chapterCount || 1,
+        allChapters: project.chapters as any,
+        characters: project.characters as any,
+        worldElements: project.worldElements as any,
+        foreshadowings: project.foreshadowings as any,
+        genre: project.genre,
+      })
+      systemPrompt = contextManager.formatContextForPrompt(contextPackage)
     }
 
     const ai = getAIProvider(data.model)
@@ -61,6 +82,7 @@ export async function POST(request: NextRequest) {
       type: 'outline',
       model: data.model || ai.model,
       prompt,
+      systemPrompt,
       temperature: 0.7,
       maxTokens: 8000,
     })

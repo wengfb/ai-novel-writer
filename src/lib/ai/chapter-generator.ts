@@ -45,6 +45,7 @@ export class ChapterGenerator {
         },
         characters: true,
         worldElements: true,
+        foreshadowings: true,
       },
     })
 
@@ -81,6 +82,7 @@ export class ChapterGenerator {
         relatedTo: we.relatedTo ?? undefined,
         references: we.references ?? undefined,
       })) as any,
+      foreshadowings: project.foreshadowings as any,
       genre: project.genre,
     })
 
@@ -446,6 +448,7 @@ ${content}
         chapters: { orderBy: { chapterNumber: 'asc' } },
         characters: true,
         worldElements: true,
+        foreshadowings: true,
       },
     })
 
@@ -481,6 +484,7 @@ ${content}
         relatedTo: we.relatedTo ?? undefined,
         references: we.references ?? undefined,
       })) as any,
+      foreshadowings: project.foreshadowings as any,
       genre: project.genre,
     })
 

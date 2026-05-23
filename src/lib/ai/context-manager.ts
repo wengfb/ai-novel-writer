@@ -1,4 +1,11 @@
-import type { Chapter, Character, WorldElement, ContextPackage } from '@/types'
+import type { Chapter, Character, WorldElement, Foreshadowing, ContextPackage } from '@/types'
+import { getAIProvider } from '@/lib/ai/providers'
+import { getPromptTemplateManager } from '@/lib/ai/prompts/template-manager'
+import {
+  scoreCharacters,
+  scoreWorldElements,
+  scoreForeshadowings,
+} from '@/lib/ai/relevance-scorer'
 
 /**
  * 上下文权重配置
@@ -17,7 +24,17 @@ interface ContextRatios {
  * 支持根据小说类型动态调整上下文权重
  */
 export class ContextManager {
-  private readonly MAX_TOKENS = 100000 // Gemini 2.5 有1M tokens，我们预留100K
+  private readonly DEFAULT_MAX_TOKENS = 100000
+
+  private getMaxTokens(override?: number): number {
+    if (override && override > 0) return override
+    const envValue = process.env.AI_CONTEXT_MAX_TOKENS
+    if (envValue) {
+      const parsed = parseInt(envValue, 10)
+      if (!isNaN(parsed) && parsed > 0) return parsed
+    }
+    return this.DEFAULT_MAX_TOKENS
+  }
 
   /**
    * 根据小说类型获取上下文权重配置
@@ -50,10 +67,14 @@ export class ContextManager {
     allChapters: Chapter[]
     characters: Character[]
     worldElements: WorldElement[]
+    foreshadowings?: Foreshadowing[]
     genre: string
     style?: string
+    contextMaxTokens?: number
   }): ContextPackage {
-    const { currentChapter, allChapters, characters, worldElements, genre, style } = params
+    const { currentChapter, allChapters, characters, worldElements, foreshadowings, genre, style, contextMaxTokens } = params
+
+    const maxTokens = this.getMaxTokens(contextMaxTokens)
 
     // 获取该类型小说的上下文权重配置
     const ratios = this.getContextRatios(genre)
@@ -62,7 +83,7 @@ export class ContextManager {
     const fullChapters = this.getRecentFullChapters(
       allChapters,
       currentChapter,
-      Math.floor(this.MAX_TOKENS * ratios.chapter)
+      Math.floor(maxTokens * ratios.chapter)
     )
 
     // 2. 获取更早章节的摘要
@@ -75,20 +96,27 @@ export class ContextManager {
     // 3. 获取相关角色（按相关性和重要性排序）
     const relevantCharacters = this.getRelevantCharacters(
       characters,
-      allChapters[currentChapter - 1]
+      allChapters,
+      currentChapter
     )
 
     // 4. 获取相关世界观元素
     const relevantWorld = this.getRelevantWorldElements(
       worldElements,
-      allChapters[currentChapter - 1]
+      allChapters,
+      currentChapter
     )
+
+    const relevantForeshadowings = foreshadowings
+      ? this.getRelevantForeshadowings(foreshadowings, currentChapter)
+      : undefined
 
     return {
       fullChapters,
       chapterSummaries,
       characters: relevantCharacters,
       worldElements: relevantWorld,
+      foreshadowings: relevantForeshadowings,
       metadata: {
         totalChapters: allChapters.length,
         currentChapter,
@@ -156,88 +184,35 @@ export class ContextManager {
   }
 
   /**
-   * 获取相关角色（按重要性和相关性排序）
+   * 获取相关角色（使用衰减加权 + 角色倍率 + 关系密度评分）
    */
   private getRelevantCharacters(
     characters: Character[],
-    currentChapter?: Chapter
+    allChapters: Chapter[],
+    currentChapterIndex: number
   ): Character[] {
-    if (!currentChapter || !currentChapter.content) {
-      // 如果没有当前章节内容，按重要性排序返回
-      return characters.sort((a, b) => (b.importance || 5) - (a.importance || 5))
-    }
-
-    const content = currentChapter.content.toLowerCase()
-    const scored: Array<{ character: Character; score: number }> = []
-
-    for (const character of characters) {
-      let score = 0
-
-      // 1. 基础重要性分数（权重40%）
-      score += (character.importance || 5) * 4
-
-      // 2. 名称出现次数（权重60%）
-      const nameMatches = (content.match(new RegExp(character.name.toLowerCase(), 'g')) || []).length
-      score += nameMatches * 6
-
-      // 3. 主角/反派额外加分
-      if (character.role === 'protagonist') score += 20
-      if (character.role === 'antagonist') score += 15
-
-      scored.push({ character, score })
-    }
-
-    // 按分数降序排序
-    scored.sort((a, b) => b.score - a.score)
-
-    return scored.map(s => s.character)
+    return scoreCharacters(characters, allChapters, currentChapterIndex)
   }
 
   /**
-   * 获取相关世界观元素（按重要性、范围和相关性排序）
+   * 获取相关世界观元素（使用衰减加权 + 全局保底 + 核心规则加成）
    */
   private getRelevantWorldElements(
     worldElements: WorldElement[],
-    currentChapter?: Chapter
+    allChapters: Chapter[],
+    currentChapterIndex: number
   ): WorldElement[] {
-    if (!currentChapter || !currentChapter.content) {
-      // 按重要性和范围排序
-      return worldElements.sort((a, b) => {
-        const scopeWeight = { global: 3, regional: 2, local: 1 }
-        const scoreA = (a.importance || 5) * 10 + (scopeWeight[a.scope as keyof typeof scopeWeight] || 1)
-        const scoreB = (b.importance || 5) * 10 + (scopeWeight[b.scope as keyof typeof scopeWeight] || 1)
-        return scoreB - scoreA
-      })
-    }
+    return scoreWorldElements(worldElements, allChapters, currentChapterIndex)
+  }
 
-    const content = currentChapter.content.toLowerCase()
-    const scored: Array<{ element: WorldElement; score: number }> = []
-
-    for (const element of worldElements) {
-      let score = 0
-
-      // 1. 基础重要性分数（权重30%）
-      score += (element.importance || 5) * 3
-
-      // 2. 范围权重（权重20%）
-      const scopeWeight = { global: 20, regional: 10, local: 5 }
-      score += scopeWeight[element.scope as keyof typeof scopeWeight] || 5
-
-      // 3. 分类权重（权重20%）
-      const categoryWeight = { core_rule: 20, detail: 10, background: 5 }
-      score += categoryWeight[element.category as keyof typeof categoryWeight] || 10
-
-      // 4. 名称出现次数（权重30%）
-      const nameMatches = (content.match(new RegExp(element.name.toLowerCase(), 'g')) || []).length
-      score += nameMatches * 3
-
-      scored.push({ element, score })
-    }
-
-    // 按分数降序排序
-    scored.sort((a, b) => b.score - a.score)
-
-    return scored.map(s => s.element)
+  /**
+   * 获取相关伏笔（仅未回收的伏笔，按重要性和预期章节接近度排序）
+   */
+  private getRelevantForeshadowings(
+    foreshadowings: Foreshadowing[],
+    currentChapterNumber: number
+  ): Foreshadowing[] {
+    return scoreForeshadowings(foreshadowings, currentChapterNumber)
   }
 
   /**
@@ -254,22 +229,86 @@ export class ContextManager {
   }
 
   /**
-   * 生成章节摘要（用于上下文优化）
+   * 生成章节摘要（使用 AI）
+   * 失败时回退到首尾段提取
    */
-  async generateChapterSummary(chapterContent: string): Promise<string> {
-    // 这里可以调用AI生成摘要
-    // 为节省API调用，先使用简单的提取方法
-    const paragraphs = chapterContent.split('\n\n').filter(p => p.trim().length > 0)
-
-    // 取第一段和最后一段作为摘要
-    if (paragraphs.length <= 2) {
-      return chapterContent.slice(0, 500) // 最多500字
+  async generateChapterSummary(
+    chapterContent: string,
+    chapterTitle?: string,
+    characterNames?: string[]
+  ): Promise<string> {
+    if (!chapterContent || chapterContent.trim().length < 500) {
+      return chapterContent.slice(0, 500)
     }
 
-    const first = paragraphs[0]
-    const last = paragraphs[paragraphs.length - 1]
+    try {
+      const ai = getAIProvider()
+      const promptManager = getPromptTemplateManager()
 
+      const prompt = promptManager.render('chapter-summary', {
+        chapterTitle: chapterTitle || '未知章节',
+        chapterContent: chapterContent.slice(0, 12000),
+        characters: characterNames?.join('、') || '未知',
+      })
+
+      const result = await ai.generate({
+        type: 'chapter',
+        prompt,
+        temperature: 0.3,
+        maxTokens: 512,
+      })
+
+      const summary = result.output.trim()
+      if (summary && summary.length > 10) {
+        return summary
+      }
+    } catch (error) {
+      console.warn('AI chapter summary generation failed, falling back to heuristic:', error)
+    }
+
+    // 回退：首段 + 尾段
+    const paragraphs = chapterContent.split('\n\n').filter(p => p.trim().length > 0)
+    if (paragraphs.length <= 2) {
+      return chapterContent.slice(0, 500)
+    }
+    const first = paragraphs[0].slice(0, 300)
+    const last = paragraphs[paragraphs.length - 1].slice(0, 200)
     return `${first}\n...\n${last}`
+  }
+
+  /**
+   * 批量补充项目章节摘要
+   * 为缺少摘要（或摘要质量差）的章节生成 AI 摘要
+   */
+  async summarizeProjectChapters(projectId: string): Promise<number> {
+    const { prisma } = await import('@/lib/db/prisma')
+
+    const chapters = await prisma.chapter.findMany({
+      where: { projectId },
+      orderBy: { chapterNumber: 'asc' },
+      select: { id: true, title: true, content: true, chapterNumber: true },
+    })
+
+    let updatedCount = 0
+
+    for (const chapter of chapters) {
+      if (!chapter.content || chapter.content.trim().length < 500) continue
+
+      const summary = await this.generateChapterSummary(
+        chapter.content,
+        chapter.title
+      )
+
+      if (summary) {
+        await prisma.chapter.update({
+          where: { id: chapter.id },
+          data: { summary },
+        })
+        updatedCount++
+      }
+    }
+
+    return updatedCount
   }
 
   /**
@@ -330,6 +369,19 @@ export class ContextManager {
         parts.push(element.description)
         parts.push('\n')
       }
+    }
+
+    // 5. 伏笔信息（仅未回收的）
+    if (context.foreshadowings && context.foreshadowings.length > 0) {
+      parts.push(`## 待回收伏笔\n`)
+      for (const f of context.foreshadowings) {
+        const statusLabel = f.status === 'planted' ? '已埋下' : '计划中'
+        const expectInfo = f.expectedChapterNumber
+          ? `（预期第${f.expectedChapterNumber}章回收）`
+          : ''
+        parts.push(`- [${statusLabel}] ${f.title}：${f.description}${expectInfo}`)
+      }
+      parts.push('\n')
     }
 
     return parts.join('\n')

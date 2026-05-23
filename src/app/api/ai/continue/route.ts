@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getChapterGenerator } from '@/lib/ai/chapter-generator'
+import { getContextManager } from '@/lib/ai/context-manager'
 import { withErrorHandler, ApiErrors } from '@/lib/api/response'
 import { parseJsonBody, validateRequest } from '@/lib/api/validators'
 import { ContinueChapterSchema } from '@/lib/api/schemas'
@@ -69,13 +70,23 @@ export async function POST(request: NextRequest) {
 
           // 计算新增字数
           const addedWordCount = countWords(continuation)
+          const fullContent = data.currentContent + '\n\n' + continuation
+          const totalWordCount = countWords(fullContent)
+
+          // 使用 AI 重新生成章节摘要
+          const contextManager = getContextManager()
+          const summary = await contextManager.generateChapterSummary(
+            fullContent,
+            chapter.title
+          ).catch(() => chapter.summary) // 失败保留旧摘要
 
           // 更新章节内容
           const updatedChapter = await prisma.chapter.update({
             where: { id: data.chapterId },
             data: {
-              content: data.currentContent + '\n\n' + continuation,
-              wordCount: countWords(data.currentContent + '\n\n' + continuation),
+              content: fullContent,
+              wordCount: totalWordCount,
+              summary,
             },
           })
 

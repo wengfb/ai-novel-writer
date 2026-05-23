@@ -7,7 +7,7 @@ import { ApiErrors } from '@/lib/api/response'
 import { getContextManager } from '@/lib/ai/context-manager'
 import { buildChatTools } from '@/lib/ai/chat-tools'
 import { getLanguageModel } from '@/lib/ai/providers'
-import type { Chapter, Character, WorldElement } from '@/types'
+import type { Chapter, Character, WorldElement, Foreshadowing } from '@/types'
 import type { UIMessage } from 'ai'
 
 const ChatRequestSchema = z.object({
@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
           chapters: { orderBy: { chapterNumber: 'asc' } },
           characters: true,
           worldElements: true,
+          foreshadowings: true,
         },
       })
 
@@ -128,6 +129,21 @@ export async function POST(request: NextRequest) {
           createdAt: element.createdAt,
           updatedAt: element.updatedAt,
         })) satisfies WorldElement[],
+        foreshadowings: project.foreshadowings.map((f) => ({
+          ...f,
+          type: f.type as Foreshadowing['type'],
+          plantedInChapterId: f.plantedInChapterId ?? undefined,
+          plantedContent: f.plantedContent ?? undefined,
+          plantedAt: f.plantedAt ?? undefined,
+          expectedChapterNumber: f.expectedChapterNumber ?? undefined,
+          resolvedInChapterId: f.resolvedInChapterId ?? undefined,
+          resolvedContent: f.resolvedContent ?? undefined,
+          resolvedAt: f.resolvedAt ?? undefined,
+          relatedCharacters: f.relatedCharacters ?? undefined,
+          relatedElements: f.relatedElements ?? undefined,
+          tags: f.tags ?? undefined,
+          reminderChapterNumber: f.reminderChapterNumber ?? undefined,
+        })) as Foreshadowing[],
         genre: project.genre,
       })
 
