@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { apiSuccess, apiError } from '@/lib/api/response'
+import { clearConfigCache } from '@/lib/ai/config'
 
 // 获取所有系统设置
 export async function GET() {
@@ -51,6 +52,9 @@ export async function PUT(request: NextRequest) {
 
     await prisma.$transaction(updates)
 
+    // 清除 AI 配置缓存，下次请求时重新读取
+    clearConfigCache()
+
     return apiSuccess({ message: '设置已保存' })
   } catch (error) {
     console.error('保存系统设置失败:', error)
@@ -63,17 +67,27 @@ function getCategoryByKey(key: string): string {
   if (key.startsWith('ai.')) return 'ai'
   if (key.startsWith('export.')) return 'export'
   if (key.startsWith('editor.')) return 'editor'
+  if (key.startsWith('project.')) return 'project'
   return 'general'
 }
 
 // 辅助函数：根据 key 获取描述
 function getDescriptionByKey(key: string): string {
   const descriptions: Record<string, string> = {
-    'ai.apiKey': 'Google AI API 密钥',
+    'ai.provider': 'AI 服务提供商',
+    'ai.apiKey': 'AI API 密钥',
+    'ai.baseUrl': 'API 端点地址',
     'ai.model': '默认 AI 模型',
-    'ai.endpoint': 'API 端点地址',
-    'ai.temperature': '生成温度 (0.0 - 1.0)',
-    'ai.maxTokens': '最大生成 tokens',
+    'ai.temperature': '生成温度 (0.0 - 2.0)',
+    'ai.maxTokens': '单次最大生成 Token 数',
+    'ai.contextMaxTokens': '上下文窗口上限 (Token)',
+    'editor.fontSize': '编辑器字体大小',
+    'editor.width': '编辑器宽度',
+    'editor.theme': '界面主题',
+    'editor.autoSave': '是否自动保存',
+    'editor.autoSaveInterval': '自动保存间隔（秒）',
+    'project.defaultGenre': '默认小说类型',
+    'project.defaultWords': '默认章节字数目标',
   }
   return descriptions[key] || ''
 }

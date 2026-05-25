@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { getAIProvider } from '@/lib/ai/providers'
+import { getAIProvider, getAIProviderAsync } from '@/lib/ai/providers'
 import { PromptTemplateManager } from '@/lib/ai/prompts/template-manager'
 import { getContextManager } from '@/lib/ai/context-manager'
 import { apiSuccess, withErrorHandler, ApiErrors } from '@/lib/api/response'
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       systemPrompt = contextManager.formatContextForPrompt(contextPackage)
     }
 
-    const ai = getAIProvider(data.model)
+    const ai = await getAIProviderAsync(data.model)
 
     // 生成大纲
     const startTime = Date.now()

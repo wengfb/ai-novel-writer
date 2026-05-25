@@ -1,71 +1,129 @@
 'use client'
 
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
+import { Switch } from '@/components/ui/switch'
 
 interface SettingsFormUIProps {
   settings: Record<string, string>
   onUpdate: (key: string, value: string) => void
 }
 
+const FONT_SIZE_OPTIONS = [
+  { value: 'small', label: '小 (14px)' },
+  { value: 'medium', label: '中 (16px)' },
+  { value: 'large', label: '大 (18px)' },
+  { value: 'xlarge', label: '特大 (20px)' },
+]
+
+const EDITOR_WIDTH_OPTIONS = [
+  { value: 'narrow', label: '窄 (600px)' },
+  { value: 'normal', label: '标准 (800px)' },
+  { value: 'wide', label: '宽 (1000px)' },
+  { value: 'full', label: '全宽' },
+]
+
 export function SettingsFormUI({ settings, onUpdate }: SettingsFormUIProps) {
   return (
     <div className="space-y-6">
-      {/* 主题 */}
+      {/* Theme */}
       <div className="space-y-2">
-        <Label htmlFor="ui.theme">主题</Label>
+        <Label htmlFor="editor.theme">界面主题</Label>
         <Select
-          value={settings['ui.theme'] || 'system'}
-          onValueChange={(value) => onUpdate('ui.theme', value)}
+          value={settings['editor.theme'] || 'dark'}
+          onValueChange={(value) => onUpdate('editor.theme', value)}
         >
-          <SelectTrigger id="ui.theme">
+          <SelectTrigger id="editor.theme">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="light">浅色</SelectItem>
             <SelectItem value="dark">深色</SelectItem>
+            <SelectItem value="light">浅色</SelectItem>
             <SelectItem value="system">跟随系统</SelectItem>
           </SelectContent>
         </Select>
+        <p className="text-xs text-muted-foreground">
+          刷新页面后生效
+        </p>
       </div>
 
-      {/* 字体大小 */}
+      {/* Font Size */}
       <div className="space-y-2">
-        <Label htmlFor="ui.fontSize">编辑器字体大小</Label>
+        <Label htmlFor="editor.fontSize">编辑器字体大小</Label>
         <Select
-          value={settings['ui.fontSize'] || 'medium'}
-          onValueChange={(value) => onUpdate('ui.fontSize', value)}
+          value={settings['editor.fontSize'] || 'medium'}
+          onValueChange={(value) => onUpdate('editor.fontSize', value)}
         >
-          <SelectTrigger id="ui.fontSize">
+          <SelectTrigger id="editor.fontSize">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="small">小 (14px)</SelectItem>
-            <SelectItem value="medium">中 (16px)</SelectItem>
-            <SelectItem value="large">大 (18px)</SelectItem>
-            <SelectItem value="xlarge">特大 (20px)</SelectItem>
+            {FONT_SIZE_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
 
-      {/* 编辑器宽度 */}
+      {/* Editor Width */}
       <div className="space-y-2">
-        <Label htmlFor="ui.editorWidth">编辑器宽度</Label>
+        <Label htmlFor="editor.width">编辑器宽度</Label>
         <Select
-          value={settings['ui.editorWidth'] || 'normal'}
-          onValueChange={(value) => onUpdate('ui.editorWidth', value)}
+          value={settings['editor.width'] || 'normal'}
+          onValueChange={(value) => onUpdate('editor.width', value)}
         >
-          <SelectTrigger id="ui.editorWidth">
+          <SelectTrigger id="editor.width">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="narrow">窄 (600px)</SelectItem>
-            <SelectItem value="normal">正常 (800px)</SelectItem>
-            <SelectItem value="wide">宽 (1000px)</SelectItem>
-            <SelectItem value="full">全宽</SelectItem>
+            {EDITOR_WIDTH_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
+      </div>
+
+      {/* Auto Save */}
+      <div className="flex items-center justify-between">
+        <div className="space-y-0.5">
+          <Label htmlFor="editor.autoSave">自动保存</Label>
+          <p className="text-xs text-muted-foreground">
+            编辑器内容变更后自动保存
+          </p>
+        </div>
+        <Switch
+          id="editor.autoSave"
+          checked={settings['editor.autoSave'] !== 'false'}
+          onCheckedChange={(checked) =>
+            onUpdate('editor.autoSave', checked.toString())
+          }
+        />
+      </div>
+
+      {/* Auto Save Interval */}
+      <div className="space-y-2">
+        <Label htmlFor="editor.autoSaveInterval">自动保存间隔（秒）</Label>
+        <Input
+          id="editor.autoSaveInterval"
+          type="number"
+          placeholder="60"
+          value={settings['editor.autoSaveInterval'] || '60'}
+          onChange={(e) => onUpdate('editor.autoSaveInterval', e.target.value)}
+        />
+        <p className="text-xs text-muted-foreground">
+          设置为 0 禁用自动保存
+        </p>
       </div>
     </div>
   )

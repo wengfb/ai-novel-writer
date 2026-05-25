@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { getAIProvider } from '@/lib/ai/providers'
+import { getAIProvider, getAIProviderAsync } from '@/lib/ai/providers'
 import { PromptTemplateManager } from '@/lib/ai/prompts/template-manager'
 import { getContextManager } from '@/lib/ai/context-manager'
 import { prisma } from '@/lib/db/prisma'
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     // 3. 构建上下文
     const promptManager = new PromptTemplateManager()
-    const ai = getAIProvider(data.model)
+    const ai = await getAIProviderAsync(data.model)
     const contextManager = getContextManager()
 
     // 使用 ContextManager 构建完整的项目上下文

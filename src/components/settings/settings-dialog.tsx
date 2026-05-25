@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -16,6 +16,7 @@ import { SettingsFormUI } from './settings-form-ui'
 import { SettingsFormProject } from './settings-form-project'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
+import { useSettingsStore } from '@/lib/store/settings-store'
 
 interface SettingsDialogProps {
   open: boolean
@@ -23,70 +24,29 @@ interface SettingsDialogProps {
 }
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
-  const [settings, setSettings] = useState<Record<string, string>>({})
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSaving, setIsSaving] = useState(false)
+  const {
+    settings,
+    isLoading,
+    isSaving,
+    loadSettings,
+    saveSettings,
+    updateSetting,
+  } = useSettingsStore()
 
-  // 加载设置
   useEffect(() => {
     if (open) {
-      fetchSettings()
+      loadSettings()
     }
-  }, [open])
-
-  const fetchSettings = async () => {
-    setIsLoading(true)
-    try {
-      const response = await fetch('/api/settings')
-      if (!response.ok) throw new Error('加载设置失败')
-
-      const data = await response.json()
-      const settingsMap: Record<string, string> = {}
-
-      // 将数组转换为键值对
-      if (Array.isArray(data)) {
-        data.forEach((item: any) => {
-          settingsMap[item.key] = item.value
-        })
-      }
-
-      setSettings(settingsMap)
-    } catch (error) {
-      toast.error('加载失败：' + (error instanceof Error ? error.message : '请重试'))
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  }, [open, loadSettings])
 
   const handleSave = async () => {
-    setIsSaving(true)
     try {
-      // 将设置转换为数组格式
-      const settingsArray = Object.entries(settings).map(([key, value]) => ({
-        key,
-        value
-      }))
-
-      const response = await fetch('/api/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ settings: settingsArray })
-      })
-
-      if (!response.ok) throw new Error('保存失败')
-
+      await saveSettings(settings)
       toast.success('设置已保存')
-
       onOpenChange(false)
-    } catch (error) {
-      toast.error('保存失败：' + (error instanceof Error ? error.message : '请重试'))
-    } finally {
-      setIsSaving(false)
+    } catch {
+      toast.error('保存失败，请重试')
     }
-  }
-
-  const updateSetting = (key: string, value: string) => {
-    setSettings(prev => ({ ...prev, [key]: value }))
   }
 
   return (
@@ -95,7 +55,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         <DialogHeader>
           <DialogTitle>系统设置</DialogTitle>
           <DialogDescription>
-            配置 AI 模型、界面主题和项目默认值
+            配置 AI 模型、编辑器偏好和项目默认值。留空的字段将使用环境变量中的默认值。
           </DialogDescription>
         </DialogHeader>
 
@@ -107,7 +67,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           <Tabs defaultValue="ai" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="ai">AI 配置</TabsTrigger>
-              <TabsTrigger value="ui">界面配置</TabsTrigger>
+              <TabsTrigger value="editor">编辑器</TabsTrigger>
               <TabsTrigger value="project">项目默认值</TabsTrigger>
             </TabsList>
 
@@ -115,7 +75,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               <SettingsFormAI settings={settings} onUpdate={updateSetting} />
             </TabsContent>
 
-            <TabsContent value="ui" className="space-y-4 mt-4">
+            <TabsContent value="editor" className="space-y-4 mt-4">
               <SettingsFormUI settings={settings} onUpdate={updateSetting} />
             </TabsContent>
 
