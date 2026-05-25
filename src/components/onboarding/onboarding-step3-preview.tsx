@@ -178,9 +178,9 @@ export function OnboardingStep3Preview({
               projectId: project.id,
               name: char.name,
               role: mappedRole,
-              description: char.description || '',
+              backstory: char.description || '',
               personality: char.personality || '',
-              background: char.background || ''
+              motivation: char.goal || ''
             })
           })
         }
@@ -337,11 +337,11 @@ export function OnboardingStep3Preview({
             <h3 className="text-lg font-semibold">生成的内容预览</h3>
 
             {/* 大纲预览 */}
-            {generatedData.summary && (
+            {generatedData.storySummary && (
               <PreviewCard
                 icon={<BookOpen className="h-5 w-5" />}
                 title="故事简介"
-                content={generatedData.summary}
+                content={generatedData.storySummary}
               />
             )}
 
@@ -355,11 +355,11 @@ export function OnboardingStep3Preview({
             )}
 
             {/* 世界观预览 */}
-            {generatedData.worldElements && (
+            {generatedData.worldSettings && (
               <PreviewCard
                 icon={<Globe className="h-5 w-5" />}
-                title={`世界观元素 (${generatedData.worldElements.length})`}
-                content={generatedData.worldElements.map((w: any) => w.name).join('、')}
+                title={`世界观元素 (${generatedData.worldSettings.length})`}
+                content={generatedData.worldSettings.map((w: any) => w.name).join('、')}
               />
             )}
           </div>
