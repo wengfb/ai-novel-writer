@@ -105,7 +105,14 @@ export function StudioHeader() {
              <Sparkles className="mr-2 h-3.5 w-3.5" />
              AI生成章节
          </Button>
-         <AIContinueButton onContentGenerated={handleAIContentGenerated} />
+         <AIContinueButton
+           onContentGenerated={handleAIContentGenerated}
+           defaultTargetWords={
+             flatOutlines.find(
+               (o) => o.type === 'chapter' && o.order === currentChapter?.chapterNumber
+             )?.targetWords ?? undefined
+           }
+         />
          <Button variant="ghost" size="icon" className="h-8 w-8">
              <MoreHorizontal className="h-4 w-4" />
          </Button>

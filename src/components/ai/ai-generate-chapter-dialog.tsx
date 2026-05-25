@@ -77,7 +77,7 @@ export function AIGenerateChapterDialog({
     },
   })
 
-  // 根据大纲数据自动填充标题和大纲
+  // 根据大纲数据自动填充标题、大纲和建议字数
   const getOutlineData = React.useCallback(
     (chapterNum: number) => {
       const matched = flatOutlines.find(
@@ -86,6 +86,7 @@ export function AIGenerateChapterDialog({
       return {
         title: matched?.title || '',
         outline: matched?.description || '',
+        targetWords: matched?.targetWords || 3000,
       }
     },
     [flatOutlines]
@@ -94,23 +95,24 @@ export function AIGenerateChapterDialog({
   React.useEffect(() => {
     if (open) {
       setSubmitError(null)
-      const { title, outline } = getOutlineData(nextChapterNumber)
+      const { title, outline, targetWords } = getOutlineData(nextChapterNumber)
       form.reset({
         chapterNumber: nextChapterNumber,
         chapterTitle: title,
         chapterOutline: outline,
-        targetWords: 3000,
+        targetWords,
         model: '',
       })
     }
   }, [form, nextChapterNumber, open, getOutlineData])
 
-  // 监听章节号变化，同步更新标题和大纲
+  // 监听章节号变化，同步更新标题、大纲和建议字数
   const watchedChapterNumber = form.watch('chapterNumber')
   React.useEffect(() => {
-    const { title, outline } = getOutlineData(watchedChapterNumber)
+    const { title, outline, targetWords } = getOutlineData(watchedChapterNumber)
     form.setValue('chapterTitle', title)
     form.setValue('chapterOutline', outline)
+    form.setValue('targetWords', targetWords)
   }, [watchedChapterNumber, getOutlineData, form])
 
   const handleOpenChange = (nextOpen: boolean) => {

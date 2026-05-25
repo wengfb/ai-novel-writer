@@ -4,17 +4,26 @@ import { useState } from 'react'
 import { useAIStore } from '@/lib/store/ai-store'
 import { useChapterStore } from '@/lib/store/chapter-store'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Wand2, Loader2, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface AIContinueButtonProps {
   onContentGenerated?: (content: string) => void
+  defaultTargetWords?: number
 }
 
-export function AIContinueButton({ onContentGenerated }: AIContinueButtonProps) {
+export function AIContinueButton({ onContentGenerated, defaultTargetWords }: AIContinueButtonProps) {
   const { currentChapter } = useChapterStore()
   const { isContinuing, continueWriting, cancelGeneration } = useAIStore()
   const [progress, setProgress] = useState('')
+  const [targetWords, setTargetWords] = useState(defaultTargetWords || 1000)
+  const [open, setOpen] = useState(false)
 
   const handleContinue = async () => {
     if (!currentChapter) {
@@ -35,7 +44,7 @@ export function AIContinueButton({ onContentGenerated }: AIContinueButtonProps) 
           projectId: currentChapter.projectId,
           chapterId: currentChapter.id,
           currentContent: currentChapter.content,
-          targetWords: 1000,
+          targetWords,
         },
         (chunk) => {
           setProgress((prev) => prev + chunk)
@@ -43,8 +52,9 @@ export function AIContinueButton({ onContentGenerated }: AIContinueButtonProps) 
         }
       )
 
-      toast.success('AI 续写完成')
+      toast.success(`AI 续写完成（${targetWords} 字）`)
       setProgress('')
+      setOpen(false)
     } catch (error) {
       if (error instanceof Error && error.name !== 'AbortError') {
         toast.error('AI 续写失败')
@@ -59,33 +69,57 @@ export function AIContinueButton({ onContentGenerated }: AIContinueButtonProps) 
     toast.info('已取消 AI 续写')
   }
 
+  const preview = progress.slice(-30)
+
   return (
-    <div className="flex items-center gap-2">
-      {!isContinuing ? (
+    <Popover open={open} onOpenChange={(v) => { if (!isContinuing) setOpen(v) }}>
+      <PopoverTrigger asChild>
         <Button
-          onClick={handleContinue}
           size="sm"
           variant="outline"
-          disabled={!currentChapter}
+          className="h-8"
+          disabled={!currentChapter || isContinuing}
         >
-          <Wand2 className="h-4 w-4 mr-2" />
-          AI 续写
+          {isContinuing ? (
+            <>
+              <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+              {preview || '生成中...'}
+            </>
+          ) : (
+            <>
+              <Wand2 className="mr-2 h-3.5 w-3.5" />
+              AI 续写
+            </>
+          )}
         </Button>
-      ) : (
-        <>
-          <Button size="sm" variant="outline" disabled>
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-            生成中...
-          </Button>
-          <Button
-            onClick={handleCancel}
-            size="sm"
-            variant="ghost"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </>
-      )}
-    </div>
+      </PopoverTrigger>
+      <PopoverContent className="w-64" align="end">
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">续写字数</label>
+            <Input
+              type="number"
+              min={200}
+              max={10000}
+              step={100}
+              value={targetWords}
+              onChange={(e) => setTargetWords(Number(e.target.value) || 1000)}
+              disabled={isContinuing}
+            />
+          </div>
+          {isContinuing ? (
+            <Button size="sm" variant="outline" className="w-full" onClick={handleCancel}>
+              <X className="mr-2 h-3.5 w-3.5" />
+              取消续写
+            </Button>
+          ) : (
+            <Button size="sm" className="w-full" onClick={handleContinue}>
+              <Wand2 className="mr-2 h-3.5 w-3.5" />
+              开始续写
+            </Button>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
   )
 }

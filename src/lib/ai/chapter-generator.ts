@@ -210,13 +210,21 @@ export class ChapterGenerator {
   > {
     const { chapterOutline, context, model } = params
 
+    // 构建精简上下文（仅摘要 + 大纲，场景划分不需要完整章节内容和详细设定）
+    const briefContext = [
+      `类型：${context.metadata.genre}`,
+      context.chapterSummaries.length > 0
+        ? `前情摘要：${context.chapterSummaries.map((s: any) => `第${s.chapterNumber}章 ${s.summary}`).join('；')}`
+        : '',
+    ].filter(Boolean).join('\n')
+
     const prompt = `请根据以下章节大纲，将其划分为3-5个场景：
 
 **章节大纲**：
 ${chapterOutline}
 
-**上下文**：
-${this.contextManager.formatContextForPrompt(context)}
+**故事背景**：
+${briefContext}
 
 请分析并返回场景划分，以JSON格式：
 \`\`\`json
@@ -335,7 +343,9 @@ ${this.contextManager.formatContextForPrompt(context)}`,
   }): Promise<string> {
     const { content, chapterOutline, context, model } = params
 
-    const prompt = `作为一位专业编辑，请审核并优化以下章节内容：
+    const prompt = `作为一位专业编辑，请审核并优化以下章节内容。
+
+请严格对照上下文中的角色设定和世界观规则进行审核，确保角色行为不偏离设定、世界观描写无矛盾。
 
 **章节大纲**：
 ${chapterOutline}
@@ -345,17 +355,24 @@ ${content}
 
 **审核要点**：
 1. 是否符合剧情发展逻辑？
-2. 角色行为是否符合设定？
-3. 描写是否生动？是否有冗余？
-4. 对话是否自然？
-5. 是否需要补充细节？
+2. 角色行为是否符合设定？（对照上下文中的角色信息检查）
+3. 世界观描写是否有矛盾？（对照上下文中的世界观规则检查）
+4. 是否遗漏了重要的伏笔回收机会？
+5. 描写是否生动？是否有冗余？
+6. 对话是否自然？
+7. 是否需要补充细节？
 
 请直接输出优化后的完整章节，不要包含点评和说明。`
+
+    const systemPrompt = `你是一位资深小说编辑，擅长发现剧情漏洞和角色行为不一致的问题。
+
+${this.contextManager.formatContextForPrompt(context)}`
 
     const result = await ai.generate({
       type: 'chapter',
       model,
       prompt,
+      systemPrompt,
       temperature: 0.6, // 略低的温度以保证一致性
       maxTokens: ai.estimateTokens(content) * 2,
     })
@@ -515,11 +532,23 @@ ${content}
       genre: project.genre,
     })
 
+    // 从 Outline 表匹配当前章节的大纲描述
+    const matchedOutline = project.outlines.find(
+      o => o.type === 'chapter' && o.order === chapter.chapterNumber
+    )
+    const chapterOutline = matchedOutline?.description || chapter.summary || chapter.title
+
+    // 构建续写上文（末尾 8000 字 + 如有摘要则加入）
+    const recentContent = currentContent.slice(-8000)
+    const contentSnippet = chapter.summary
+      ? `[前文摘要：${chapter.summary}]\n\n${recentContent}`
+      : recentContent
+
     const prompt = this.promptManager.render('chapter-continuation', {
       chapterNumber: chapter.chapterNumber,
-      currentContent: currentContent.slice(-2000),
+      currentContent: contentSnippet,
       targetWords,
-      chapterOutline: chapter.title, // 简化处理
+      chapterOutline,
     })
 
     // 使用流式生成
@@ -528,7 +557,7 @@ ${content}
       type: 'chapter',
       model,
       prompt,
-      systemPrompt: `你是一位专业小说作家。正在续写第${chapter.chapterNumber}章。
+      systemPrompt: `你是一位专业小说作家。正在续写第${chapter.chapterNumber}章《${chapter.title}》。
 
 ${this.contextManager.formatContextForPrompt(context)}`,
       temperature: 0.8,
