@@ -24,6 +24,7 @@ import { SettingsDialog } from "@/components/settings/settings-dialog"
 import { OutlineList } from "@/components/outline/outline-list"
 import { OutlineDialog } from "@/components/outline/outline-dialog"
 import { useChapterStore } from "@/lib/store/chapter-store"
+import { useUIStore } from "@/lib/store/ui-store"
 import { useOutlineStore } from "@/lib/store/outline-store"
 import { useCharacterStore, type Character } from "@/lib/store/character-store"
 import { useWorldStore, type WorldElement } from "@/lib/store/world-store"
@@ -38,6 +39,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   const { deleteOutline } = useOutlineStore()
   const { deleteCharacter } = useCharacterStore()
   const { deleteWorldElement } = useWorldStore()
+  const { setMainView } = useUIStore()
 
   const [activeSection, setActiveSection] = React.useState<string>('chapters')
   const [isCharacterDialogOpen, setIsCharacterDialogOpen] = React.useState(false)
@@ -161,7 +163,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
             <Button
               variant="secondary"
               className="w-full justify-start"
-              onClick={() => setCurrentProject(null)}
+              onClick={() => { setCurrentProject(null); setMainView('editor') }}
             >
               <Home className="mr-2 h-4 w-4" />
               工作台
@@ -183,7 +185,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
             <Button
               variant={activeSection === 'outline' ? 'secondary' : 'ghost'}
               className="w-full justify-start"
-              onClick={() => setActiveSection('outline')}
+              onClick={() => { setActiveSection('outline'); setMainView('outline') }}
             >
               <LayoutTemplate className="mr-2 h-4 w-4" />
               剧情大纲
@@ -191,7 +193,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
             <Button
               variant={activeSection === 'chapters' ? 'secondary' : 'ghost'}
               className="w-full justify-start"
-              onClick={() => setActiveSection('chapters')}
+              onClick={() => { setActiveSection('chapters'); setMainView('editor') }}
             >
               <FileText className="mr-2 h-4 w-4" />
               章节列表
@@ -199,7 +201,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
             <Button
               variant={activeSection === 'characters' ? 'secondary' : 'ghost'}
               className="w-full justify-start"
-              onClick={() => setActiveSection('characters')}
+              onClick={() => { setActiveSection('characters'); setMainView('editor') }}
             >
               <Users className="mr-2 h-4 w-4" />
               角色设定
@@ -207,7 +209,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
             <Button
               variant={activeSection === 'world' ? 'secondary' : 'ghost'}
               className="w-full justify-start"
-              onClick={() => setActiveSection('world')}
+              onClick={() => { setActiveSection('world'); setMainView('editor') }}
             >
               <Box className="mr-2 h-4 w-4" />
               世界观

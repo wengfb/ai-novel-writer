@@ -50,7 +50,7 @@ interface OutlineState {
   error: string | null
 
   // Actions
-  fetchOutlines: (projectId: string) => Promise<void>
+  fetchOutlines: (projectId: string, force?: boolean) => Promise<void>
   setCurrentOutline: (outline: Outline | null) => void
   createOutline: (data: CreateOutlineParams) => Promise<Outline>
   updateOutline: (id: string, data: Partial<Outline>) => Promise<void>
@@ -68,7 +68,12 @@ export const useOutlineStore = create<OutlineState>()(
     error: null,
 
     // 获取大纲列表
-    fetchOutlines: async (projectId: string) => {
+    fetchOutlines: async (projectId: string, force = false) => {
+      const state = get()
+      // 防止并发重复请求（force 模式跳过缓存，用于 create/update/delete 后刷新）
+      if (!force && (state.isLoading || (state.outlines.length > 0 && state.outlines[0]?.projectId === projectId))) {
+        return
+      }
       set({ isLoading: true, error: null })
       try {
         const response = await fetch(`/api/projects/${projectId}/outlines`)
@@ -116,7 +121,7 @@ export const useOutlineStore = create<OutlineState>()(
         const newOutline = result.data.outline
 
         // 重新获取列表以更新树形结构
-        await get().fetchOutlines(projectId)
+        await get().fetchOutlines(projectId, true)
 
         return newOutline
       } catch (error) {

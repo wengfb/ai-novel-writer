@@ -9,10 +9,14 @@ interface UIState {
   // 右侧边栏激活的标签页
   activeTab: 'chat' | 'context' | 'generate'
 
+  // 主内容区视图
+  mainView: 'editor' | 'outline'
+
   // Actions
   toggleLeftSidebar: () => void
   toggleRightSidebar: () => void
   setActiveTab: (tab: 'chat' | 'context' | 'generate') => void
+  setMainView: (view: 'editor' | 'outline') => void
 }
 
 export const useUIStore = create<UIState>()(
@@ -22,6 +26,7 @@ export const useUIStore = create<UIState>()(
       leftSidebarCollapsed: false,
       rightSidebarCollapsed: false,
       activeTab: 'chat',
+      mainView: 'editor',
 
       // 切换左侧边栏
       toggleLeftSidebar: () => {
@@ -36,6 +41,11 @@ export const useUIStore = create<UIState>()(
       // 设置激活的标签页
       setActiveTab: (tab) => {
         set({ activeTab: tab })
+      },
+
+      // 设置主内容区视图
+      setMainView: (view) => {
+        set({ mainView: view })
       },
     }),
     {

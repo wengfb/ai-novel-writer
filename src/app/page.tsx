@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import { StudioLayout } from "@/components/layout/studio-layout";
 import { StudioHeader } from "@/components/studio/studio-header";
 import { TextEditor } from "@/components/editor/text-editor";
+import { OutlineVisualization } from "@/components/outline/outline-visualization";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { ProjectOnboardingDialog } from "@/components/onboarding/project-onboarding-dialog";
@@ -12,6 +13,7 @@ import { ProjectCreateDialog } from "@/components/project/project-create-dialog"
 import { ProjectList } from "@/components/project/project-list";
 import { useProjects } from "@/hooks/use-projects";
 import { useProjectStore } from "@/lib/store/project-store";
+import { useUIStore } from "@/lib/store/ui-store";
 
 export default function Home() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -24,6 +26,7 @@ export default function Home() {
   });
   const { projects, isLoading } = useProjects();
   const { currentProject, setCurrentProject } = useProjectStore();
+  const { mainView } = useUIStore();
   const isOnboardingOpen = !hasCompletedOnboarding && !isLoading && projects.length === 0;
 
   const handleOnboardingOpenChange = (open: boolean) => {
@@ -57,9 +60,13 @@ export default function Home() {
           <StudioHeader />
           <ScrollArea className="flex-1">
             {currentProject ? (
-              <div className="p-8 pb-32">
-                <TextEditor />
-              </div>
+              mainView === 'outline' ? (
+                <OutlineVisualization projectId={currentProject.id} />
+              ) : (
+                <div className="p-8 pb-32">
+                  <TextEditor />
+                </div>
+              )
             ) : (
               <ProjectWorkspace onCreateProject={() => setIsCreateDialogOpen(true)} />
             )}

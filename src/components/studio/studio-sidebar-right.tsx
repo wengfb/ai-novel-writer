@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AIChat } from "@/components/ai/ai-chat"
 import { ContextPanel } from "@/components/ai/context-panel"
+import { OutlineGenerateDialog } from "@/components/outline/outline-generate-dialog"
 import { useCurrentProject } from "@/hooks/use-projects"
 import { useChapterStore } from "@/lib/store/chapter-store"
 
@@ -16,6 +17,12 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function StudioSidebarRight({ className }: SidebarProps) {
   const { currentProject } = useCurrentProject()
   const { currentChapter } = useChapterStore()
+  const [isGenerateOutlineOpen, setIsGenerateOutlineOpen] = React.useState(false)
+
+  const handleGenerateOutlineComplete = () => {
+    setIsGenerateOutlineOpen(false)
+  }
+
   return (
     <div className={cn("h-full flex flex-col border-l bg-muted/10", className)}>
       <Tabs defaultValue="chat" className="flex-1 flex flex-col h-full">
@@ -50,7 +57,15 @@ export function StudioSidebarRight({ className }: SidebarProps) {
 
         <TabsContent value="generate" className="flex-1 p-4 m-0 overflow-auto">
              <div className="grid gap-4">
-                <Button variant="outline" className="h-auto py-4 justify-start flex-col items-start gap-1">
+                <Button
+                  variant="outline"
+                  className="h-auto py-4 justify-start flex-col items-start gap-1"
+                  onClick={() => {
+                    if (!currentProject) return
+                    setIsGenerateOutlineOpen(true)
+                  }}
+                  disabled={!currentProject}
+                >
                     <span className="font-medium flex items-center gap-2">
                         <Sparkles className="h-4 w-4 text-purple-500" />
                         生成大纲
@@ -82,6 +97,15 @@ export function StudioSidebarRight({ className }: SidebarProps) {
              </div>
         </TabsContent>
       </Tabs>
+
+      {currentProject && (
+        <OutlineGenerateDialog
+          projectId={currentProject.id}
+          open={isGenerateOutlineOpen}
+          onOpenChange={setIsGenerateOutlineOpen}
+          onComplete={handleGenerateOutlineComplete}
+        />
+      )}
     </div>
   )
 }
