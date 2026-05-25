@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { getAIProvider, getAIProviderAsync } from '@/lib/ai/providers'
+import { getAIProviderAsync } from '@/lib/ai/providers'
 import { PromptTemplateManager } from '@/lib/ai/prompts/template-manager'
 import { getContextManager } from '@/lib/ai/context-manager'
 import { prisma } from '@/lib/db/prisma'

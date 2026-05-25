@@ -26,12 +26,13 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useAIStore } from '@/lib/store/ai-store'
 import { type Chapter, useChapterStore } from '@/lib/store/chapter-store'
+import type { Outline } from '@/lib/store/outline-store'
 import { toast } from 'sonner'
 
 const generateChapterSchema = z.object({
   chapterNumber: z.number().int().positive('章节号必须是正整数'),
-  chapterTitle: z.string().min(1, '请输入章节标题').max(200, '章节标题最多200个字符'),
-  chapterOutline: z.string().min(10, '章节大纲至少10个字符'),
+  chapterTitle: z.string().max(200, '章节标题最多200个字符').optional(),
+  chapterOutline: z.string().optional(),
   targetWords: z.number().int().positive('目标字数必须是正整数'),
   model: z.string().optional(),
 })
@@ -43,6 +44,7 @@ interface AIGenerateChapterDialogProps {
   onOpenChange: (open: boolean) => void
   projectId: string | null
   chapters: Chapter[]
+  flatOutlines?: Outline[]
 }
 
 export function AIGenerateChapterDialog({
@@ -50,6 +52,7 @@ export function AIGenerateChapterDialog({
   onOpenChange,
   projectId,
   chapters,
+  flatOutlines = [],
 }: AIGenerateChapterDialogProps) {
   const { generateChapter, isGeneratingChapter, chapterProgress, cancelGeneration } = useAIStore()
   const { fetchChapters, setCurrentChapter } = useChapterStore()
@@ -74,18 +77,41 @@ export function AIGenerateChapterDialog({
     },
   })
 
+  // 根据大纲数据自动填充标题和大纲
+  const getOutlineData = React.useCallback(
+    (chapterNum: number) => {
+      const matched = flatOutlines.find(
+        (o) => o.type === 'chapter' && o.order === chapterNum
+      )
+      return {
+        title: matched?.title || '',
+        outline: matched?.description || '',
+      }
+    },
+    [flatOutlines]
+  )
+
   React.useEffect(() => {
     if (open) {
       setSubmitError(null)
+      const { title, outline } = getOutlineData(nextChapterNumber)
       form.reset({
         chapterNumber: nextChapterNumber,
-        chapterTitle: '',
-        chapterOutline: '',
+        chapterTitle: title,
+        chapterOutline: outline,
         targetWords: 3000,
         model: '',
       })
     }
-  }, [form, nextChapterNumber, open])
+  }, [form, nextChapterNumber, open, getOutlineData])
+
+  // 监听章节号变化，同步更新标题和大纲
+  const watchedChapterNumber = form.watch('chapterNumber')
+  React.useEffect(() => {
+    const { title, outline } = getOutlineData(watchedChapterNumber)
+    form.setValue('chapterTitle', title)
+    form.setValue('chapterOutline', outline)
+  }, [watchedChapterNumber, getOutlineData, form])
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen && isGeneratingChapter) {
@@ -107,8 +133,8 @@ export function AIGenerateChapterDialog({
         {
           projectId,
           chapterNumber: values.chapterNumber,
-          chapterTitle: values.chapterTitle,
-          chapterOutline: values.chapterOutline,
+          chapterTitle: values.chapterTitle || undefined,
+          chapterOutline: values.chapterOutline || undefined,
           targetWords: values.targetWords,
           model: values.model?.trim() || undefined,
         },

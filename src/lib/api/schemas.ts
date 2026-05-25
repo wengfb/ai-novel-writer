@@ -69,8 +69,8 @@ export const GenerateOutlineSchema = z.object({
 export const GenerateChapterSchema = z.object({
   projectId: z.string().cuid('无效的项目ID'),
   chapterNumber: z.number().int().positive(),
-  chapterTitle: z.string().min(1).max(200),
-  chapterOutline: z.string().min(10, '章节大纲至少10个字符'),
+  chapterTitle: z.string().max(200).optional(),
+  chapterOutline: z.string().optional(),
   targetWords: z.number().int().positive().default(3000),
   model: z.string().optional(),
 })

@@ -63,12 +63,14 @@ export class OpenAICompatibleProvider implements AIProvider {
       }
     } catch (error) {
       const duration = Date.now() - startTime
-      console.error('OpenAI-compatible generation error:', error)
+      const message = error instanceof Error ? error.message : String(error)
+      console.error('OpenAI-compatible generation error:', message)
 
       return {
         output: '',
         duration,
         status: 'error',
+        error: message,
       }
     }
   }

@@ -1,5 +1,5 @@
 import type { Chapter, Character, WorldElement, Foreshadowing, ContextPackage } from '@/types'
-import { getAIProvider } from '@/lib/ai/providers'
+import { getAIProviderAsync } from '@/lib/ai/providers'
 import { getPromptTemplateManager } from '@/lib/ai/prompts/template-manager'
 import {
   scoreCharacters,
@@ -68,11 +68,12 @@ export class ContextManager {
     characters: Character[]
     worldElements: WorldElement[]
     foreshadowings?: Foreshadowing[]
+    outlines?: { order: number; title: string; description?: string | null; status: string }[]
     genre: string
     style?: string
     contextMaxTokens?: number
   }): ContextPackage {
-    const { currentChapter, allChapters, characters, worldElements, foreshadowings, genre, style, contextMaxTokens } = params
+    const { currentChapter, allChapters, characters, worldElements, foreshadowings, outlines, genre, style, contextMaxTokens } = params
 
     const maxTokens = this.getMaxTokens(contextMaxTokens)
 
@@ -117,6 +118,7 @@ export class ContextManager {
       characters: relevantCharacters,
       worldElements: relevantWorld,
       foreshadowings: relevantForeshadowings,
+      outlines,
       metadata: {
         totalChapters: allChapters.length,
         currentChapter,
@@ -242,7 +244,7 @@ export class ContextManager {
     }
 
     try {
-      const ai = getAIProvider()
+      const ai = await getAIProviderAsync()
       const promptManager = getPromptTemplateManager()
 
       const prompt = promptManager.render('chapter-summary', {
@@ -380,6 +382,19 @@ export class ContextManager {
           ? `（预期第${f.expectedChapterNumber}章回收）`
           : ''
         parts.push(`- [${statusLabel}] ${f.title}：${f.description}${expectInfo}`)
+      }
+      parts.push('\n')
+    }
+
+    // 6. 大纲信息
+    if (context.outlines && context.outlines.length > 0) {
+      parts.push(`## 章节大纲\n`)
+      for (const o of context.outlines) {
+        const statusLabel = o.status === 'completed' ? '✓' : o.status === 'writing' ? '...' : '○'
+        parts.push(`- ${statusLabel} 第${o.order}章 ${o.title}`)
+        if (o.description) {
+          parts.push(`  ${o.description}`)
+        }
       }
       parts.push('\n')
     }

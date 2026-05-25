@@ -61,7 +61,7 @@ interface ChapterState {
   updateChapterContent: (id: string, content: string) => void
   saveChapter: (id: string) => Promise<void>
   createChapter: (data: CreateChapterParams) => Promise<Chapter>
-  deleteChapter: (id: string) => Promise<void>
+  deleteChapter: (projectId: string, id: string) => Promise<void>
   clearProjectContext: () => void
   clearError: () => void
 }
@@ -187,10 +187,10 @@ export const useChapterStore = create<ChapterState>()(
     },
 
     // 删除章节
-    deleteChapter: async (id: string) => {
+    deleteChapter: async (projectId: string, id: string) => {
       set({ isLoading: true, error: null })
       try {
-        const response = await fetch(`/api/chapters/${id}`, {
+        const response = await fetch(`/api/projects/${projectId}/chapters/${id}`, {
           method: 'DELETE',
         })
 

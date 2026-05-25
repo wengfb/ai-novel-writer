@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator"
 import { useChapterStore } from "@/lib/store/chapter-store"
 import { AIGenerateChapterDialog } from "@/components/ai/ai-generate-chapter-dialog"
 import { useProjectStore } from "@/lib/store/project-store"
+import { useOutlines } from "@/hooks/use-outlines"
 import { AIContinueButton } from "@/components/ai/ai-continue-button"
 import { ProjectSelector } from "@/components/project/project-selector"
 import { ProjectCreateDialog } from "@/components/project/project-create-dialog"
@@ -16,6 +17,7 @@ import { toast } from "sonner"
 export function StudioHeader() {
   const { currentChapter, chapters, updateChapterContent, saveChapter, isSaving, lastSaved } = useChapterStore()
   const { currentProject } = useProjectStore()
+  const { flatOutlines } = useOutlines(currentProject?.id || '')
   const [accumulatedContent, setAccumulatedContent] = React.useState('')
   const [baseContent, setBaseContent] = React.useState('') // 保存开始续写时的原始内容
   const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false)
@@ -121,6 +123,7 @@ export function StudioHeader() {
         onOpenChange={setIsGenerateDialogOpen}
         projectId={currentProject?.id ?? null}
         chapters={chapters}
+        flatOutlines={flatOutlines}
       />
     </>
   )

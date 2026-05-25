@@ -98,10 +98,12 @@ export async function POST(request: NextRequest) {
             encoder.encode(
               `data: ${JSON.stringify({
                 type: 'done',
-                chapterId: chapter.id,
-                addedContent: continuation,
-                addedWordCount,
-                totalWordCount: updatedChapter.wordCount,
+                data: {
+                  chapterId: chapter.id,
+                  addedContent: continuation,
+                  addedWordCount,
+                  totalWordCount: updatedChapter.wordCount,
+                },
               })}\n\n`
             )
           )

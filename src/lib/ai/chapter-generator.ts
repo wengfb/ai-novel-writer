@@ -1,4 +1,5 @@
-import { getAIProvider } from './providers'
+import { getAIProviderAsync } from './providers'
+import type { AIProvider } from './providers/types'
 import { PromptTemplateManager } from './prompts/template-manager'
 import { getContextManager } from './context-manager'
 import { prisma } from '@/lib/db/prisma'
@@ -9,7 +10,6 @@ import type { GenerationParams } from '@/types'
  * 实现递归规划+反思生成机制
  */
 export class ChapterGenerator {
-  private ai = getAIProvider()
   private promptManager = new PromptTemplateManager()
   private contextManager = getContextManager()
 
@@ -23,8 +23,8 @@ export class ChapterGenerator {
     chapterOutline: string
     targetWords: number
     model: GenerationParams['model']
-    onProgress?: (text: string) => void
-  }): Promise<{ content: string; generationId?: string }> {
+    onProgress?: (progress: { content: string; sceneIndex: number; totalScenes: number }) => void
+  }): Promise<{ content: string; totalScenes: number; generationId?: string }> {
     const startTime = Date.now()
     const {
       projectId,
@@ -36,6 +36,8 @@ export class ChapterGenerator {
       onProgress,
     } = params
 
+    const ai = await getAIProviderAsync(model)
+
     // 1. 获取项目数据
     const project = await prisma.project.findUnique({
       where: { id: projectId },
@@ -46,6 +48,10 @@ export class ChapterGenerator {
         characters: true,
         worldElements: true,
         foreshadowings: true,
+        outlines: {
+          where: { type: 'chapter' },
+          orderBy: { order: 'asc' },
+        },
       },
     })
 
@@ -83,11 +89,17 @@ export class ChapterGenerator {
         references: we.references ?? undefined,
       })) as any,
       foreshadowings: project.foreshadowings as any,
+      outlines: project.outlines.map(o => ({
+        order: o.order,
+        title: o.title,
+        description: o.description,
+        status: o.status,
+      })),
       genre: project.genre,
     })
 
     // 3. 生成章节内容（使用场景划分策略）
-    const generatedContent = await this.generateChapterWithScenes({
+    const { content: generatedContent, totalScenes } = await this.generateChapterWithScenes(ai, {
       chapterNumber,
       chapterTitle,
       chapterOutline,
@@ -98,7 +110,7 @@ export class ChapterGenerator {
     })
 
     // 4. 反思与优化
-    const refinedContent = await this.reflectAndRefine({
+    const refinedContent = await this.reflectAndRefine(ai, {
       content: generatedContent,
       chapterOutline,
       context,
@@ -107,7 +119,7 @@ export class ChapterGenerator {
 
     // 5. 记录生成历史
     const prompt = this.buildPrompt({ chapterNumber, chapterTitle, chapterOutline, context, targetWords })
-    const generation = await this.recordGeneration({
+    const generation = await this.recordGeneration(ai, {
       projectId,
       type: 'chapter',
       model,
@@ -119,6 +131,7 @@ export class ChapterGenerator {
 
     return {
       content: refinedContent,
+      totalScenes,
       generationId: generation?.id,
     }
   }
@@ -126,20 +139,20 @@ export class ChapterGenerator {
   /**
    * 使用场景划分策略生成章节
    */
-  private async generateChapterWithScenes(params: {
+  private async generateChapterWithScenes(ai: AIProvider, params: {
     chapterNumber: number
     chapterTitle: string
     chapterOutline: string
     context: any
     targetWords: number
     model: GenerationParams['model']
-    onProgress?: (text: string) => void
-  }): Promise<string> {
+    onProgress?: (progress: { content: string; sceneIndex: number; totalScenes: number }) => void
+  }): Promise<{ content: string; totalScenes: number }> {
     const { chapterNumber, chapterTitle, chapterOutline, context, targetWords, model, onProgress } =
       params
 
     // 1. 分析大纲，划分场景
-    const scenes = await this.analyzeScenes({
+    const scenes = await this.analyzeScenes(ai, {
       chapterOutline,
       context,
       model,
@@ -154,7 +167,7 @@ export class ChapterGenerator {
       const scene = scenes[i]
       const previousContent = generatedScenes.join('\n\n')
 
-      const sceneContent = await this.generateScene({
+      const sceneContent = await this.generateScene(ai, {
         scene,
         sceneIndex: i,
         totalScenes: scenes.length,
@@ -171,18 +184,18 @@ export class ChapterGenerator {
 
       // 报告进度
       if (onProgress) {
-        onProgress(sceneContent)
+        onProgress({ content: sceneContent, sceneIndex: i, totalScenes: scenes.length })
       }
     }
 
     // 3. 合并场景
-    return generatedScenes.join('\n\n')
+    return { content: generatedScenes.join('\n\n'), totalScenes: scenes.length }
   }
 
   /**
    * 分析大纲，划分场景
    */
-  private async analyzeScenes(params: {
+  private async analyzeScenes(ai: AIProvider, params: {
     chapterOutline: string
     context: any
     model: GenerationParams['model']
@@ -220,7 +233,7 @@ ${this.contextManager.formatContextForPrompt(context)}
 }
 \`\`\``
 
-    const result = await this.ai.generate({
+    const result = await ai.generate({
       type: 'chapter',
       model,
       prompt,
@@ -229,7 +242,8 @@ ${this.contextManager.formatContextForPrompt(context)}
     })
 
     if (result.status !== 'success' || !result.output.trim()) {
-      throw new Error('AI 场景分析失败，请检查模型配置')
+      const detail = result.error ? `: ${result.error}` : ''
+      throw new Error(`AI 场景分析失败${detail}`)
     }
 
     // 解析JSON结果
@@ -259,7 +273,7 @@ ${this.contextManager.formatContextForPrompt(context)}
   /**
    * 生成单个场景
    */
-  private async generateScene(params: {
+  private async generateScene(ai: AIProvider, params: {
     scene: any
     sceneIndex: number
     totalScenes: number
@@ -291,7 +305,7 @@ ${this.contextManager.formatContextForPrompt(context)}
       targetWords,
     })
 
-    const result = await this.ai.generate({
+    const result = await ai.generate({
       type: 'chapter',
       model,
       prompt,
@@ -303,7 +317,8 @@ ${this.contextManager.formatContextForPrompt(context)}`,
     })
 
     if (result.status !== 'success' || !result.output.trim()) {
-      throw new Error('AI 场景生成失败，请检查模型配置')
+      const detail = result.error ? `: ${result.error}` : ''
+      throw new Error(`AI 场景生成失败${detail}`)
     }
 
     return result.output
@@ -312,7 +327,7 @@ ${this.contextManager.formatContextForPrompt(context)}`,
   /**
    * 反思与优化
    */
-  private async reflectAndRefine(params: {
+  private async reflectAndRefine(ai: AIProvider, params: {
     content: string
     chapterOutline: string
     context: any
@@ -337,16 +352,17 @@ ${content}
 
 请直接输出优化后的完整章节，不要包含点评和说明。`
 
-    const result = await this.ai.generate({
+    const result = await ai.generate({
       type: 'chapter',
       model,
       prompt,
       temperature: 0.6, // 略低的温度以保证一致性
-      maxTokens: this.ai.estimateTokens(content) * 2,
+      maxTokens: ai.estimateTokens(content) * 2,
     })
 
     if (result.status !== 'success' || !result.output.trim()) {
-      throw new Error('AI 章节优化失败，请检查模型配置')
+      const detail = result.error ? `: ${result.error}` : ''
+      throw new Error(`AI 章节优化失败${detail}`)
     }
 
     return result.output
@@ -355,7 +371,7 @@ ${content}
   /**
    * 记录生成历史
    */
-  private async recordGeneration(params: {
+  private async recordGeneration(ai: { name: string; model: string }, params: {
     projectId: string
     type: string
     model?: string
@@ -371,8 +387,8 @@ ${content}
           projectId: params.projectId,
           type: params.type,
           targetId: params.targetId,
-          provider: this.ai.name,
-          model: params.model || this.ai.model,
+          provider: ai.name,
+          model: params.model || ai.model,
           prompt: params.prompt,
           systemPrompt: params.systemPrompt,
           output: params.output,
@@ -430,6 +446,7 @@ ${content}
     onProgress?: (text: string) => void
   }): Promise<string> {
     const { projectId, chapterId, currentContent, targetWords, model, onProgress } = params
+    const ai = await getAIProviderAsync(model)
 
     // 获取章节信息
     const chapter = await prisma.chapter.findUnique({
@@ -449,6 +466,10 @@ ${content}
         characters: true,
         worldElements: true,
         foreshadowings: true,
+        outlines: {
+          where: { type: 'chapter' },
+          orderBy: { order: 'asc' },
+        },
       },
     })
 
@@ -485,6 +506,12 @@ ${content}
         references: we.references ?? undefined,
       })) as any,
       foreshadowings: project.foreshadowings as any,
+      outlines: project.outlines.map(o => ({
+        order: o.order,
+        title: o.title,
+        description: o.description,
+        status: o.status,
+      })),
       genre: project.genre,
     })
 
@@ -497,7 +524,7 @@ ${content}
 
     // 使用流式生成
     let fullOutput = ''
-    const generator = this.ai.streamGenerate({
+    const generator = ai.streamGenerate({
       type: 'chapter',
       model,
       prompt,
@@ -514,7 +541,7 @@ ${this.contextManager.formatContextForPrompt(context)}`,
     }
 
     // 记录生成
-    await this.recordGeneration({
+    await this.recordGeneration(ai, {
       projectId,
       type: 'chapter',
       model,

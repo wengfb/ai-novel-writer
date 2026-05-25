@@ -112,7 +112,8 @@ export async function streamSSE(
         if (event.type === 'progress' && event.content) {
           onProgress(event.content)
         } else if (event.type === 'done') {
-          onDone(event.data)
+          const { type, ...data } = event
+          onDone(event.data ?? data)
           return
         } else if (event.type === 'error') {
           onError(event.error || 'Unknown error')

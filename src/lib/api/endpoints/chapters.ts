@@ -31,5 +31,6 @@ export const chaptersApi = {
   /**
    * 删除章节
    */
-  delete: (id: string) => apiClient.delete(`/chapters/${id}`),
+  delete: (projectId: string, id: string) =>
+    apiClient.delete(`/projects/${projectId}/chapters/${id}`),
 }

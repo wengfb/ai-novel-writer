@@ -39,6 +39,29 @@ export async function POST(request: NextRequest) {
       return ApiErrors.badRequest(`第 ${data.chapterNumber} 章已存在，请更换章节号`)
     }
 
+    // 如果未提供标题或大纲，从 Outline 表自动获取
+    let chapterTitle = data.chapterTitle
+    let chapterOutline = data.chapterOutline
+
+    if (!chapterTitle || !chapterOutline) {
+      const matchedOutline = await prisma.outline.findFirst({
+        where: {
+          projectId: data.projectId,
+          type: 'chapter',
+          order: data.chapterNumber,
+        },
+      })
+
+      if (matchedOutline) {
+        chapterTitle = chapterTitle || matchedOutline.title
+        chapterOutline = chapterOutline || matchedOutline.description || ''
+      }
+
+      // 如果还是没有，使用兜底值
+      chapterTitle = chapterTitle || `第${data.chapterNumber}章`
+      chapterOutline = chapterOutline || ''
+    }
+
     // 创建流式响应
     const encoder = new TextEncoder()
     const stream = new ReadableStream({
@@ -57,25 +80,23 @@ export async function POST(request: NextRequest) {
 
           // 生成章节内容（收集进度）
           let fullContent = ''
-          let sceneCount = 0
 
           const result = await chapterGenerator.generateChapter({
             projectId: data.projectId,
             chapterNumber: data.chapterNumber,
-            chapterTitle: data.chapterTitle,
-            chapterOutline: data.chapterOutline,
+            chapterTitle,
+            chapterOutline,
             targetWords: data.targetWords,
             model: data.model,
-            onProgress: () => {
-              sceneCount++
-              // 发送进度事件
+            onProgress: (progress) => {
+              // 发送进度事件（包含实际场景内容和总数）
               controller.enqueue(
                 encoder.encode(
                   `data: ${JSON.stringify({
                     type: 'progress',
-                    content: `已完成第 ${sceneCount} 个场景`,
-                    scene: sceneCount,
-                    totalScenes: 3, // 默认值
+                    content: progress.content,
+                    scene: progress.sceneIndex + 1,
+                    totalScenes: progress.totalScenes,
                   })}\n\n`
                 )
               )
@@ -91,7 +112,7 @@ export async function POST(request: NextRequest) {
           const contextManager = getContextManager()
           const summary = await contextManager.generateChapterSummary(
             fullContent,
-            data.chapterTitle
+            chapterTitle
           )
 
           // 保存章节到数据库
@@ -99,7 +120,7 @@ export async function POST(request: NextRequest) {
             data: {
               projectId: data.projectId,
               chapterNumber: data.chapterNumber,
-              title: data.chapterTitle,
+              title: chapterTitle,
               content: fullContent,
               wordCount,
               summary,

@@ -122,6 +122,7 @@ export interface GenerationResult {
   cost?: number
   duration: number
   status: 'success' | 'error' | 'partial'
+  error?: string
 }
 
 // 上下文包类型
@@ -131,6 +132,7 @@ export interface ContextPackage {
   characters: Character[]
   worldElements: WorldElement[]
   foreshadowings?: Foreshadowing[]
+  outlines?: { order: number; title: string; description?: string | null; status: string }[]
   metadata: {
     totalChapters: number
     currentChapter: number

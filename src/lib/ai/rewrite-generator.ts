@@ -1,11 +1,10 @@
-import { getAIProvider } from './providers'
+import { getAIProviderAsync } from './providers'
 import { PromptTemplateManager } from './prompts/template-manager'
 import { getContextManager } from './context-manager'
 import { prisma } from '@/lib/db/prisma'
 import type { GenerationParams } from '@/types'
 
 export class RewriteGenerator {
-  private ai = getAIProvider()
   private promptManager = new PromptTemplateManager()
   private contextManager = getContextManager()
 
@@ -21,6 +20,7 @@ export class RewriteGenerator {
     const startTime = Date.now()
     const { projectId, chapterId, selectedText, style, fullChapterContent, model, onProgress } =
       params
+    const ai = await getAIProviderAsync(model)
 
     // 获取章节信息
     const chapter = await prisma.chapter.findUnique({
@@ -93,13 +93,13 @@ ${this.contextManager.formatContextForPrompt(context)}`
 
     // 流式生成
     let fullOutput = ''
-    const generator = this.ai.streamGenerate({
+    const generator = ai.streamGenerate({
       type: 'chapter' as GenerationParams['type'],
       model,
       prompt,
       systemPrompt,
       temperature: 0.7,
-      maxTokens: Math.max(2048, this.ai.estimateTokens(selectedText) * 3),
+      maxTokens: Math.max(2048, ai.estimateTokens(selectedText) * 3),
     })
 
     for await (const chunk of generator) {
@@ -112,7 +112,7 @@ ${this.contextManager.formatContextForPrompt(context)}`
     }
 
     // 记录生成历史
-    await this.recordGeneration({
+    await this.recordGeneration(ai, {
       projectId,
       type: 'rewrite',
       model,
@@ -126,7 +126,7 @@ ${this.contextManager.formatContextForPrompt(context)}`
     return fullOutput
   }
 
-  private async recordGeneration(params: {
+  private async recordGeneration(ai: { name: string; model: string }, params: {
     projectId: string
     type: string
     model?: string
@@ -142,8 +142,8 @@ ${this.contextManager.formatContextForPrompt(context)}`
           projectId: params.projectId,
           type: params.type,
           targetId: params.targetId,
-          provider: this.ai.name,
-          model: params.model || this.ai.model,
+          provider: ai.name,
+          model: params.model || ai.model,
           prompt: params.prompt,
           systemPrompt: params.systemPrompt,
           output: params.output,

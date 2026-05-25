@@ -5,8 +5,8 @@ import { aiApi, type ContextInfo, type GenerateChapterResult } from '@/lib/api/e
 export interface GenerateChapterParams {
   projectId: string
   chapterNumber: number
-  chapterTitle: string
-  chapterOutline: string
+  chapterTitle?: string
+  chapterOutline?: string
   targetWords?: number
   model?: string
 }

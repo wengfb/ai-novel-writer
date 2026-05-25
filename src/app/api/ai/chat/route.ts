@@ -6,7 +6,7 @@ import { validateRequest, Validation_error } from '@/lib/api/validators'
 import { ApiErrors } from '@/lib/api/response'
 import { getContextManager } from '@/lib/ai/context-manager'
 import { buildChatTools } from '@/lib/ai/chat-tools'
-import { getLanguageModel, getLanguageModelAsync } from '@/lib/ai/providers'
+import { getLanguageModelAsync } from '@/lib/ai/providers'
 import type { Chapter, Character, WorldElement, Foreshadowing } from '@/types'
 import type { UIMessage } from 'ai'
 
