@@ -11,15 +11,17 @@ import { useProjectStore } from "@/lib/store/project-store"
 import { useOutlines } from "@/hooks/use-outlines"
 import { AIContinueButton } from "@/components/ai/ai-continue-button"
 import { ProjectSelector } from "@/components/project/project-selector"
+import { ProjectOnboardingDialog } from "@/components/onboarding/project-onboarding-dialog"
 import { ProjectCreateDialog } from "@/components/project/project-create-dialog"
 import { toast } from "sonner"
 
 export function StudioHeader() {
   const { currentChapter, chapters, updateChapterContent, saveChapter, isSaving, lastSaved } = useChapterStore()
-  const { currentProject } = useProjectStore()
+  const { currentProject, setCurrentProject } = useProjectStore()
   const { flatOutlines } = useOutlines(currentProject?.id || '')
   const [accumulatedContent, setAccumulatedContent] = React.useState('')
   const [baseContent, setBaseContent] = React.useState('') // 保存开始续写时的原始内容
+  const [isOnboardingOpen, setIsOnboardingOpen] = React.useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false)
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false)
 
@@ -59,7 +61,27 @@ export function StudioHeader() {
   }, [currentChapter?.id])
 
   const handleNewProject = () => {
-    setIsCreateDialogOpen(true)
+    setIsOnboardingOpen(true)
+  }
+
+  const handleSwitchToManual = () => {
+    setIsOnboardingOpen(false)
+    setTimeout(() => setIsCreateDialogOpen(true), 100)
+  }
+
+  const handleOnboardingComplete = async (projectId: string) => {
+    setIsOnboardingOpen(false)
+    try {
+      const response = await fetch(`/api/projects/${projectId}`)
+      if (response.ok) {
+        const result = await response.json()
+        if (result.success && result.data) {
+          setCurrentProject(result.data.project ?? result.data)
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load project:', error)
+    }
   }
 
   const handleGenerateChapter = () => {
@@ -119,6 +141,13 @@ export function StudioHeader() {
       </div>
     </header>
 
+
+      <ProjectOnboardingDialog
+        open={isOnboardingOpen}
+        onOpenChange={setIsOnboardingOpen}
+        onComplete={handleOnboardingComplete}
+        onSwitchToManual={handleSwitchToManual}
+      />
 
       <ProjectCreateDialog
         open={isCreateDialogOpen}

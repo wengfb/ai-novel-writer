@@ -17,6 +17,7 @@ import { useUIStore } from "@/lib/store/ui-store";
 
 export default function Home() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isManualOnboardingOpen, setIsManualOnboardingOpen] = useState(false);
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(() => {
     if (typeof window === 'undefined') {
       return true;
@@ -27,18 +28,25 @@ export default function Home() {
   const { projects, isLoading } = useProjects();
   const { currentProject, setCurrentProject } = useProjectStore();
   const { mainView } = useUIStore();
-  const isOnboardingOpen = !hasCompletedOnboarding && !isLoading && projects.length === 0;
+  const isAutoOnboardingOpen = !hasCompletedOnboarding && !isLoading && projects.length === 0;
 
-  const handleOnboardingOpenChange = (open: boolean) => {
+  const handleAutoOnboardingOpenChange = (open: boolean) => {
     if (!open) {
       localStorage.setItem('hasCompletedOnboarding', 'true');
       setHasCompletedOnboarding(true);
     }
   };
 
+  const handleManualOnboardingOpenChange = (open: boolean) => {
+    if (!open) {
+      setIsManualOnboardingOpen(false);
+    }
+  };
+
   const handleOnboardingComplete = async (projectId: string) => {
     localStorage.setItem('hasCompletedOnboarding', 'true');
     setHasCompletedOnboarding(true);
+    setIsManualOnboardingOpen(false);
 
     try {
       const response = await fetch(`/api/projects/${projectId}`);
@@ -51,6 +59,16 @@ export default function Home() {
     } catch (error) {
       console.error('Failed to load project:', error);
     }
+  };
+
+  const handleSwitchToManual = () => {
+    setIsManualOnboardingOpen(false);
+    // 延迟打开手动创建对话框，避免两个对话框同时关闭/打开造成的焦点问题
+    setTimeout(() => setIsCreateDialogOpen(true), 100);
+  };
+
+  const handleNewProject = () => {
+    setIsManualOnboardingOpen(true);
   };
 
   return (
@@ -68,7 +86,7 @@ export default function Home() {
                 </div>
               )
             ) : (
-              <ProjectWorkspace onCreateProject={() => setIsCreateDialogOpen(true)} />
+              <ProjectWorkspace onCreateProject={handleNewProject} />
             )}
           </ScrollArea>
         </div>
@@ -79,10 +97,19 @@ export default function Home() {
         onOpenChange={setIsCreateDialogOpen}
       />
 
+      {/* 自动引导：首次使用且无项目时自动弹出 */}
       <ProjectOnboardingDialog
-        open={isOnboardingOpen}
-        onOpenChange={handleOnboardingOpenChange}
+        open={isAutoOnboardingOpen}
+        onOpenChange={handleAutoOnboardingOpenChange}
         onComplete={handleOnboardingComplete}
+      />
+
+      {/* 手动触发：点击"新建项目"按钮时弹出（可切换为手动创建） */}
+      <ProjectOnboardingDialog
+        open={isManualOnboardingOpen}
+        onOpenChange={handleManualOnboardingOpenChange}
+        onComplete={handleOnboardingComplete}
+        onSwitchToManual={handleSwitchToManual}
       />
     </>
   );

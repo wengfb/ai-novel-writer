@@ -24,12 +24,14 @@ interface ProjectOnboardingDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onComplete: (projectId: string) => void
+  onSwitchToManual?: () => void
 }
 
 export function ProjectOnboardingDialog({
   open,
   onOpenChange,
-  onComplete
+  onComplete,
+  onSwitchToManual,
 }: ProjectOnboardingDialogProps) {
   const [step, setStep] = useState<1 | 2 | 3>(1)
   const [userIdea, setUserIdea] = useState('')
@@ -73,7 +75,7 @@ export function ProjectOnboardingDialog({
             {step === 3 && '确认项目信息并开始创作'}
           </DialogDescription>
         </VisuallyHidden>
-        {step === 1 && <OnboardingStep1Welcome onNext={handleStep1Next} />}
+        {step === 1 && <OnboardingStep1Welcome onNext={handleStep1Next} onSwitchToManual={onSwitchToManual} />}
         {step === 2 && (
           <OnboardingStep2Brainstorm
             userIdea={userIdea}

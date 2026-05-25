@@ -44,18 +44,7 @@ export function OnboardingStep2Brainstorm({
     setDirections([])
     setSelectedId(null)
 
-    try {
-      const response = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [
-            {
-              role: 'user',
-              parts: [
-                {
-                  type: 'text',
-                  text: `你是一个专业的小说创意顾问。用户提供了一个故事想法：
+    const promptText = `你是一个专业的小说创意顾问。用户提供了一个故事想法：
 
 ${userIdea}
 
@@ -89,11 +78,24 @@ ${userIdea}
     }
   ]
 }`
-                }
-              ]
-            }
-          ]
-        })
+
+    try {
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: 'user',
+              parts: [
+                {
+                  type: 'text',
+                  text: promptText,
+                },
+              ],
+            },
+          ],
+        }),
       })
 
       if (!response.ok) {
