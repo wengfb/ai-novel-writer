@@ -16,6 +16,9 @@ export interface Outline {
   planningRange?: number | null
   isFlexible: boolean
   confidence: number
+  emotionalGoal?: string | null
+  plotFunction: '推进' | '转折' | '铺垫' | '高潮' | '过渡'
+  tensionLevel: number
   chapter?: {
     id: string
     chapterNumber: number
@@ -39,6 +42,9 @@ export interface CreateOutlineParams {
   planningRange?: number
   isFlexible?: boolean
   confidence?: number
+  emotionalGoal?: string
+  plotFunction?: '推进' | '转折' | '铺垫' | '高潮' | '过渡'
+  tensionLevel?: number
 }
 
 interface OutlineState {
@@ -48,6 +54,7 @@ interface OutlineState {
   currentOutline: Outline | null
   isLoading: boolean
   error: string | null
+  lastFetchedProjectId: string | null
 
   // Actions
   fetchOutlines: (projectId: string, force?: boolean) => Promise<void>
@@ -66,14 +73,18 @@ export const useOutlineStore = create<OutlineState>()(
     currentOutline: null,
     isLoading: false,
     error: null,
+    lastFetchedProjectId: null,
 
     // 获取大纲列表
     fetchOutlines: async (projectId: string, force = false) => {
       const state = get()
-      // 防止并发重复请求（force 模式跳过缓存，用于 create/update/delete 后刷新）
-      if (!force && (state.isLoading || (state.outlines.length > 0 && state.outlines[0]?.projectId === projectId))) {
-        return
-      }
+
+      // 正在请求中，直接拦截
+      if (state.isLoading) return
+
+      // 非强制刷新且已缓存同一项目数据，跳过
+      if (!force && state.lastFetchedProjectId === projectId) return
+
       set({ isLoading: true, error: null })
       try {
         const response = await fetch(`/api/projects/${projectId}/outlines`)
@@ -87,6 +98,7 @@ export const useOutlineStore = create<OutlineState>()(
           outlines: data.data.outlines,
           flatOutlines: data.data.flat,
           isLoading: false,
+          lastFetchedProjectId: projectId,
         })
       } catch (error) {
         set({

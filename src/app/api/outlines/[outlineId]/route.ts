@@ -25,6 +25,9 @@ const UpdateOutlineSchema = z.object({
   status: z.enum(['planned', 'writing', 'completed']).optional(),
   keyEvents: z.array(z.string()).optional(),
   notes: z.string().optional().nullable(),
+  emotionalGoal: z.string().optional().nullable(),
+  plotFunction: z.enum(['推进', '转折', '铺垫', '高潮', '过渡']).optional(),
+  tensionLevel: z.number().int().min(1).max(10).optional(),
 })
 
 /**

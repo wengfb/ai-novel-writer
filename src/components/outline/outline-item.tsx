@@ -197,6 +197,27 @@ export function OutlineItem({
             </span>
           )}
 
+          {/* 创作意图指示器 */}
+          {outline.type === 'chapter' && outline.plotFunction && (
+            <span
+              className={cn(
+                'text-[10px] px-1 py-0 rounded border shrink-0',
+                outline.plotFunction === '推进' && 'border-blue-300 text-blue-600 bg-blue-50',
+                outline.plotFunction === '转折' && 'border-purple-300 text-purple-600 bg-purple-50',
+                outline.plotFunction === '铺垫' && 'border-slate-300 text-slate-600 bg-slate-50',
+                outline.plotFunction === '高潮' && 'border-red-300 text-red-600 bg-red-50',
+                outline.plotFunction === '过渡' && 'border-green-300 text-green-600 bg-green-50'
+              )}
+            >
+              {outline.plotFunction}
+            </span>
+          )}
+          {outline.type === 'chapter' && outline.tensionLevel != null && outline.tensionLevel > 0 && (
+            <span className="text-[10px] text-muted-foreground shrink-0">
+              T{outline.tensionLevel}
+            </span>
+          )}
+
           {/* 操作菜单 - 显示在右侧 */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

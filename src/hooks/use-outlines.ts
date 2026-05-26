@@ -9,12 +9,15 @@ export function useOutlines(projectId: string) {
   const flatOutlines = useOutlineStore((s) => s.flatOutlines)
   const isLoading = useOutlineStore((s) => s.isLoading)
   const error = useOutlineStore((s) => s.error)
+  const lastFetchedProjectId = useOutlineStore((s) => s.lastFetchedProjectId)
 
   useEffect(() => {
-    if (projectId) {
-      useOutlineStore.getState().fetchOutlines(projectId)
-    }
-  }, [projectId])
+    if (!projectId) return
+    const state = useOutlineStore.getState()
+    // 已有缓存数据且非 loading 中，不发起请求
+    if (state.lastFetchedProjectId === projectId) return
+    state.fetchOutlines(projectId)
+  }, [projectId, lastFetchedProjectId])
 
   return {
     outlines,

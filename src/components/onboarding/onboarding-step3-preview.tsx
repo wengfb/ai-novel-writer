@@ -97,6 +97,9 @@ export function OnboardingStep3Preview({
       "chapterNumber": 1,
       "title": "章节标题",
       "summary": "章节摘要（50-100字）",
+      "emotionalGoal": "情感目标（如：让读者感到紧张、温暖、悲伤等）",
+      "plotFunction": "情节功能（推进/转折/铺垫/高潮/过渡）",
+      "tensionLevel": 张力等级1-10,
       "keyEvents": ["关键事件1", "关键事件2"],
       "characters": ["涉及角色"],
       "estimatedWords": 3000
@@ -136,6 +139,11 @@ export function OnboardingStep3Preview({
       let primaryGenre = direction.genre.split('|')[0].trim()
       // 映射到支持的类型
       primaryGenre = genreMap[primaryGenre] || primaryGenre
+      // 兜底：不在 Zod enum 支持范围内的类型统一归为其他
+      const supportedGenres = ['玄幻', '科幻', '都市', '言情', '武侠', '历史', '其他']
+      if (!supportedGenres.includes(primaryGenre)) {
+        primaryGenre = '其他'
+      }
 
       const projectResponse = await fetch('/api/projects', {
         method: 'POST',
@@ -250,6 +258,7 @@ export function OnboardingStep3Preview({
           const volumeId = volumeResult.data.outline.id
 
           // 创建章节（作为卷的子节点）
+          const validFunctions = ['推进', '转折', '铺垫', '高潮', '过渡']
           for (let i = 0; i < outlineData.chapters.length; i++) {
             const chapter = outlineData.chapters[i]
             await fetch(`/api/projects/${project.id}/outlines`, {
@@ -263,7 +272,10 @@ export function OnboardingStep3Preview({
                 description: chapter.summary || '',
                 planningMode: 'full',
                 isFlexible: false,
-                confidence: 7
+                confidence: 7,
+                emotionalGoal: chapter.emotionalGoal || '',
+                plotFunction: validFunctions.includes(chapter.plotFunction) ? chapter.plotFunction : '推进',
+                tensionLevel: typeof chapter.tensionLevel === 'number' ? chapter.tensionLevel : 5,
               })
             })
           }

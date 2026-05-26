@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -36,9 +36,12 @@ export function OnboardingStep2Brainstorm({
   const [directions, setDirections] = useState<CreativeDirection[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const generatingRef = useRef(false)
 
   // 生成创意方向
   const generateDirections = useCallback(async () => {
+    if (generatingRef.current) return
+    generatingRef.current = true
     setIsGenerating(true)
     setError(null)
     setDirections([])
@@ -163,6 +166,7 @@ ${userIdea}
     } catch (err) {
       setError(err instanceof Error ? err.message : '生成失败，请重试')
     } finally {
+      generatingRef.current = false
       setIsGenerating(false)
     }
   }, [userIdea])

@@ -35,6 +35,9 @@ const generateChapterSchema = z.object({
   chapterOutline: z.string().optional(),
   targetWords: z.number().int().positive('目标字数必须是正整数'),
   model: z.string().optional(),
+  emotionalGoal: z.string().optional(),
+  plotFunction: z.enum(['推进', '转折', '铺垫', '高潮', '过渡']).optional(),
+  tensionLevel: z.number().int().min(1).max(10).optional(),
 })
 
 type GenerateChapterFormValues = z.infer<typeof generateChapterSchema>
@@ -74,6 +77,9 @@ export function AIGenerateChapterDialog({
       chapterOutline: '',
       targetWords: 3000,
       model: '',
+      emotionalGoal: '',
+      plotFunction: undefined,
+      tensionLevel: 5,
     },
   })
 
@@ -87,6 +93,9 @@ export function AIGenerateChapterDialog({
         title: matched?.title || '',
         outline: matched?.description || '',
         targetWords: matched?.targetWords || 3000,
+        emotionalGoal: matched?.emotionalGoal || '',
+        plotFunction: matched?.plotFunction || undefined,
+        tensionLevel: matched?.tensionLevel ?? 5,
       }
     },
     [flatOutlines]
@@ -95,13 +104,16 @@ export function AIGenerateChapterDialog({
   React.useEffect(() => {
     if (open) {
       setSubmitError(null)
-      const { title, outline, targetWords } = getOutlineData(nextChapterNumber)
+      const { title, outline, targetWords, emotionalGoal, plotFunction, tensionLevel } = getOutlineData(nextChapterNumber)
       form.reset({
         chapterNumber: nextChapterNumber,
         chapterTitle: title,
         chapterOutline: outline,
         targetWords,
         model: '',
+        emotionalGoal,
+        plotFunction,
+        tensionLevel,
       })
     }
   }, [form, nextChapterNumber, open, getOutlineData])
@@ -109,10 +121,13 @@ export function AIGenerateChapterDialog({
   // 监听章节号变化，同步更新标题、大纲和建议字数
   const watchedChapterNumber = form.watch('chapterNumber')
   React.useEffect(() => {
-    const { title, outline, targetWords } = getOutlineData(watchedChapterNumber)
+    const { title, outline, targetWords, emotionalGoal, plotFunction, tensionLevel } = getOutlineData(watchedChapterNumber)
     form.setValue('chapterTitle', title)
     form.setValue('chapterOutline', outline)
     form.setValue('targetWords', targetWords)
+    form.setValue('emotionalGoal', emotionalGoal)
+    form.setValue('plotFunction', plotFunction)
+    form.setValue('tensionLevel', tensionLevel)
   }, [watchedChapterNumber, getOutlineData, form])
 
   const handleOpenChange = (nextOpen: boolean) => {
@@ -139,6 +154,9 @@ export function AIGenerateChapterDialog({
           chapterOutline: values.chapterOutline || undefined,
           targetWords: values.targetWords,
           model: values.model?.trim() || undefined,
+          emotionalGoal: values.emotionalGoal || undefined,
+          plotFunction: values.plotFunction,
+          tensionLevel: values.tensionLevel,
         },
         () => {}
       )
@@ -257,6 +275,85 @@ export function AIGenerateChapterDialog({
                 </FormItem>
               )}
             />
+
+            {/* 创作意图（从大纲自动填充） */}
+            <div className="rounded-md border bg-muted/30 p-3 space-y-3">
+              <p className="text-xs font-medium text-muted-foreground">创作意图（从大纲自动填充，可手动修改）</p>
+
+              <div className="grid grid-cols-2 gap-3">
+                <FormField
+                  control={form.control}
+                  name="plotFunction"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs">情节功能</FormLabel>
+                      <FormControl>
+                        <select
+                          className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                          disabled={isGeneratingChapter}
+                          value={field.value || ''}
+                          onChange={(e) => field.onChange(e.target.value || undefined)}
+                        >
+                          <option value="">不限</option>
+                          <option value="推进">推进 — 推动主线剧情发展</option>
+                          <option value="转折">转折 — 改变故事发展方向</option>
+                          <option value="铺垫">铺垫 — 为后续情节埋下伏笔</option>
+                          <option value="高潮">高潮 — 矛盾冲突的爆发点</option>
+                          <option value="过渡">过渡 — 连接不同剧情段落</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="tensionLevel"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs">张力等级 (1-10)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min={1}
+                          max={10}
+                          disabled={isGeneratingChapter}
+                          value={field.value ?? ''}
+                          onChange={(e) => {
+                            const v = e.target.valueAsNumber
+                            field.onChange(isNaN(v) ? undefined : Math.min(10, Math.max(1, v)))
+                          }}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="emotionalGoal"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs">情感目标</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="如：让读者感到紧张、温暖、悲伤..."
+                        disabled={isGeneratingChapter}
+                        {...field}
+                        value={field.value || ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}

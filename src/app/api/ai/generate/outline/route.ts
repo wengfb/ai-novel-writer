@@ -142,6 +142,11 @@ export async function POST(request: NextRequest) {
 
       // 保存大纲节点（简化处理，只保存章节级大纲）
       const outlinePromises = (outlineData.chapters || []).map((chapter: any) => {
+        const validFunctions = ['推进', '转折', '铺垫', '高潮', '过渡']
+        const plotFunc = validFunctions.includes(chapter.plotFunction) ? chapter.plotFunction : '推进'
+        const tension = typeof chapter.tensionLevel === 'number' && chapter.tensionLevel >= 1 && chapter.tensionLevel <= 10
+          ? chapter.tensionLevel : 5
+
         return prisma.outline.create({
           data: {
             projectId: data.projectId,
@@ -151,6 +156,9 @@ export async function POST(request: NextRequest) {
             description: chapter.summary,
             targetWords: chapter.estimatedWords,
             status: 'planned',
+            emotionalGoal: chapter.emotionalGoal || null,
+            plotFunction: plotFunc,
+            tensionLevel: tension,
           },
         })
       })

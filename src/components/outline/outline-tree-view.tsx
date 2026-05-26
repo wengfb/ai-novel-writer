@@ -265,10 +265,19 @@ function TreeChapterRow({
             </div>
           </TooltipTrigger>
           <TooltipContent side="right">
-            <div className="space-y-1 text-sm">
+            <div className="space-y-1 text-sm max-w-[240px]">
               <p className="font-medium">{chapter.title}</p>
               {chapter.description && <p className="text-muted-foreground">{chapter.description}</p>}
               {chapter.chapter && <p>字数：{chapter.chapter.wordCount.toLocaleString()}</p>}
+              {chapter.plotFunction && (
+                <p>情节功能：{chapter.plotFunction}</p>
+              )}
+              {chapter.tensionLevel != null && chapter.tensionLevel > 0 && (
+                <p>张力等级：{chapter.tensionLevel}/10</p>
+              )}
+              {chapter.emotionalGoal && (
+                <p className="text-muted-foreground">情感目标：{chapter.emotionalGoal}</p>
+              )}
             </div>
           </TooltipContent>
         </Tooltip>

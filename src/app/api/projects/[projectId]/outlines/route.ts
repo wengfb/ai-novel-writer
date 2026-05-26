@@ -32,6 +32,9 @@ const CreateOutlineSchema = z.object({
   chapterId: z.string().optional().nullable(),
   status: z.enum(['planned', 'writing', 'completed']).optional().default('planned'),
   notes: z.string().optional().nullable(),
+  emotionalGoal: z.string().optional().nullable(),
+  plotFunction: z.enum(['推进', '转折', '铺垫', '高潮', '过渡']).optional().default('推进'),
+  tensionLevel: z.number().int().min(1).max(10).optional().default(5),
 })
 
 /**

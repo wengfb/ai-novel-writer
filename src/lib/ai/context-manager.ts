@@ -68,7 +68,7 @@ export class ContextManager {
     characters: Character[]
     worldElements: WorldElement[]
     foreshadowings?: Foreshadowing[]
-    outlines?: { order: number; title: string; description?: string | null; status: string }[]
+    outlines?: { order: number; title: string; description?: string | null; status: string; emotionalGoal?: string | null; plotFunction: string; tensionLevel: number }[]
     genre: string
     style?: string
     contextMaxTokens?: number
@@ -404,14 +404,30 @@ export class ContextManager {
       parts.push('\n')
     }
 
-    // 6. 大纲信息
+    // 6. 大纲信息（含结构化创作意图）
     if (context.outlines && context.outlines.length > 0) {
       parts.push(`## 章节大纲\n`)
       for (const o of context.outlines) {
         const statusLabel = o.status === 'completed' ? '✓' : o.status === 'writing' ? '...' : '○'
         parts.push(`- ${statusLabel} 第${o.order}章 ${o.title}`)
         if (o.description) {
-          parts.push(`  ${o.description}`)
+          parts.push(`  内容：${o.description}`)
+        }
+        if (o.emotionalGoal) {
+          parts.push(`  情感目标：${o.emotionalGoal}`)
+        }
+        if (o.plotFunction) {
+          const plotLabel: Record<string, string> = {
+            '推进': '推进剧情',
+            '转折': '剧情转折',
+            '铺垫': '为后续铺垫',
+            '高潮': '高潮段落',
+            '过渡': '过渡衔接',
+          }
+          parts.push(`  情节功能：${plotLabel[o.plotFunction] || o.plotFunction}`)
+        }
+        if (o.tensionLevel) {
+          parts.push(`  张力等级：${o.tensionLevel}/10`)
         }
       }
       parts.push('\n')

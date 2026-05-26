@@ -23,6 +23,9 @@ export class ChapterGenerator {
     chapterOutline: string
     targetWords: number
     model: GenerationParams['model']
+    emotionalGoal?: string
+    plotFunction?: string
+    tensionLevel?: number
     onProgress?: (progress: { content: string; sceneIndex: number; totalScenes: number }) => void
   }): Promise<{ content: string; totalScenes: number; generationId?: string }> {
     const startTime = Date.now()
@@ -94,11 +97,24 @@ export class ChapterGenerator {
         title: o.title,
         description: o.description,
         status: o.status,
+        emotionalGoal: o.emotionalGoal,
+        plotFunction: o.plotFunction,
+        tensionLevel: o.tensionLevel,
       })),
       genre: project.genre,
     })
 
-    // 3. 生成章节内容（使用场景划分策略）
+    // 3. 获取当前章节的大纲结构化意图（表单值优先）
+    const matchedOutline = project.outlines.find(
+      o => o.type === 'chapter' && o.order === chapterNumber
+    )
+    const outlineIntent = {
+      emotionalGoal: params.emotionalGoal ?? (matchedOutline?.emotionalGoal || undefined),
+      plotFunction: (params.plotFunction || matchedOutline?.plotFunction || '推进') as string,
+      tensionLevel: params.tensionLevel ?? matchedOutline?.tensionLevel ?? 5,
+    }
+
+    // 4. 生成章节内容（使用场景划分策略）
     const { content: generatedContent, totalScenes } = await this.generateChapterWithScenes(ai, {
       chapterNumber,
       chapterTitle,
@@ -106,18 +122,20 @@ export class ChapterGenerator {
       context,
       targetWords,
       model,
+      outlineIntent,
       onProgress,
     })
 
-    // 4. 反思与优化
+    // 5. 反思与优化
     const refinedContent = await this.reflectAndRefine(ai, {
       content: generatedContent,
       chapterOutline,
       context,
       model,
+      outlineIntent,
     })
 
-    // 5. 记录生成历史
+    // 6. 记录生成历史
     const prompt = this.buildPrompt({ chapterNumber, chapterTitle, chapterOutline, context, targetWords })
     const generation = await this.recordGeneration(ai, {
       projectId,
@@ -146,9 +164,10 @@ export class ChapterGenerator {
     context: any
     targetWords: number
     model: GenerationParams['model']
+    outlineIntent: { emotionalGoal?: string; plotFunction: string; tensionLevel: number }
     onProgress?: (progress: { content: string; sceneIndex: number; totalScenes: number }) => void
   }): Promise<{ content: string; totalScenes: number }> {
-    const { chapterNumber, chapterTitle, chapterOutline, context, targetWords, model, onProgress } =
+    const { chapterNumber, chapterTitle, chapterOutline, context, targetWords, model, outlineIntent, onProgress } =
       params
 
     // 1. 分析大纲，划分场景
@@ -156,6 +175,7 @@ export class ChapterGenerator {
       chapterOutline,
       context,
       model,
+      outlineIntent,
     })
 
     // 2. 逐场景生成
@@ -177,6 +197,7 @@ export class ChapterGenerator {
         context,
         targetWords: targetWordsPerScene,
         model,
+        outlineIntent,
       })
 
       generatedScenes.push(sceneContent)
@@ -199,6 +220,7 @@ export class ChapterGenerator {
     chapterOutline: string
     context: any
     model: GenerationParams['model']
+    outlineIntent: { emotionalGoal?: string; plotFunction: string; tensionLevel: number }
   }): Promise<
     Array<{
       title: string
@@ -208,7 +230,7 @@ export class ChapterGenerator {
       estimatedWords: number
     }>
   > {
-    const { chapterOutline, context, model } = params
+    const { chapterOutline, context, model, outlineIntent } = params
 
     // 构建精简上下文（仅摘要 + 大纲，场景划分不需要完整章节内容和详细设定）
     const briefContext = [
@@ -218,10 +240,19 @@ export class ChapterGenerator {
         : '',
     ].filter(Boolean).join('\n')
 
+    const plotLabel: Record<string, string> = {
+      '推进': '推进剧情发展', '转折': '形成剧情转折', '铺垫': '为后续剧情做铺垫',
+      '高潮': '营造剧情高潮', '过渡': '过渡衔接上下文',
+    }
+
     const prompt = `请根据以下章节大纲，将其划分为3-5个场景：
 
 **章节大纲**：
 ${chapterOutline}
+
+**创作意图约束**：
+- 情节功能：${plotLabel[outlineIntent.plotFunction] || outlineIntent.plotFunction}
+- 张力等级：${outlineIntent.tensionLevel}/10${outlineIntent.emotionalGoal ? `\n- 情感目标：${outlineIntent.emotionalGoal}` : ''}
 
 **故事背景**：
 ${briefContext}
@@ -291,6 +322,7 @@ ${briefContext}
     context: any
     targetWords: number
     model: GenerationParams['model']
+    outlineIntent: { emotionalGoal?: string; plotFunction: string; tensionLevel: number }
   }): Promise<string> {
     const {
       scene,
@@ -302,6 +334,7 @@ ${briefContext}
       context,
       targetWords,
       model,
+      outlineIntent,
     } = params
 
     // 构建场景提示词
@@ -313,11 +346,25 @@ ${briefContext}
       targetWords,
     })
 
+    const plotLabel: Record<string, string> = {
+      '推进': '推进剧情发展', '转折': '形成剧情转折', '铺垫': '为后续剧情做铺垫',
+      '高潮': '营造剧情高潮', '过渡': '过渡衔接上下文',
+    }
+
+    const intentConstraints = [
+      `情节功能要求：${plotLabel[outlineIntent.plotFunction] || outlineIntent.plotFunction}`,
+      `整体张力等级：${outlineIntent.tensionLevel}/10（请根据此调整描写的紧张程度和节奏）`,
+      outlineIntent.emotionalGoal ? `情感目标：${outlineIntent.emotionalGoal}（请通过细节描写传达此情感）` : '',
+    ].filter(Boolean).join('\n')
+
     const result = await ai.generate({
       type: 'chapter',
       model,
       prompt,
       systemPrompt: `你是一位专业小说作家。正在撰写第${chapterNumber}章《${chapterTitle}》的第${sceneIndex + 1}个场景（共${totalScenes}个场景）。
+
+## 创作约束
+${intentConstraints}
 
 ${this.contextManager.formatContextForPrompt(context)}`,
       temperature: 0.8,
@@ -340,12 +387,24 @@ ${this.contextManager.formatContextForPrompt(context)}`,
     chapterOutline: string
     context: any
     model: GenerationParams['model']
+    outlineIntent: { emotionalGoal?: string; plotFunction: string; tensionLevel: number }
   }): Promise<string> {
-    const { content, chapterOutline, context, model } = params
+    const { content, chapterOutline, context, model, outlineIntent } = params
+
+    const plotLabel: Record<string, string> = {
+      '推进': '推进剧情发展', '转折': '形成剧情转折', '铺垫': '为后续剧情做铺垫',
+      '高潮': '营造剧情高潮', '过渡': '过渡衔接上下文',
+    }
+
+    const intentCheckItems = [
+      `是否达成了情节功能目标「${plotLabel[outlineIntent.plotFunction] || outlineIntent.plotFunction}」？`,
+      outlineIntent.emotionalGoal ? `是否通过描写传达了情感目标「${outlineIntent.emotionalGoal}」？` : '',
+      `整体张力是否接近 ${outlineIntent.tensionLevel}/10？节奏和紧张程度是否匹配？`,
+    ].filter(Boolean).map((item, i) => `8${i ? '' : ''}. ${item}`).join('\n')
 
     const prompt = `作为一位专业编辑，请审核并优化以下章节内容。
 
-请严格对照上下文中的角色设定和世界观规则进行审核，确保角色行为不偏离设定、世界观描写无矛盾。
+请严格对照上下文中的角色设定和世界观规则进行审核，确保角色行为不偏离设定、世界观描写无矛盾。同时请确保章节内容达到结构化创作意图的目标。
 
 **章节大纲**：
 ${chapterOutline}
@@ -361,6 +420,7 @@ ${content}
 5. 描写是否生动？是否有冗余？
 6. 对话是否自然？
 7. 是否需要补充细节？
+${intentCheckItems}
 
 请直接输出优化后的完整章节，不要包含点评和说明。`
 
@@ -528,15 +588,35 @@ ${this.contextManager.formatContextForPrompt(context)}`
         title: o.title,
         description: o.description,
         status: o.status,
+        emotionalGoal: o.emotionalGoal,
+        plotFunction: o.plotFunction,
+        tensionLevel: o.tensionLevel,
       })),
       genre: project.genre,
     })
 
-    // 从 Outline 表匹配当前章节的大纲描述
+    // 从 Outline 表匹配当前章节的大纲描述和结构化意图
     const matchedOutline = project.outlines.find(
       o => o.type === 'chapter' && o.order === chapter.chapterNumber
     )
     const chapterOutline = matchedOutline?.description || chapter.summary || chapter.title
+
+    const outlineIntent = {
+      emotionalGoal: matchedOutline?.emotionalGoal || undefined,
+      plotFunction: (matchedOutline?.plotFunction || '推进') as string,
+      tensionLevel: matchedOutline?.tensionLevel || 5,
+    }
+
+    const plotLabel: Record<string, string> = {
+      '推进': '推进剧情发展', '转折': '形成剧情转折', '铺垫': '为后续剧情做铺垫',
+      '高潮': '营造剧情高潮', '过渡': '过渡衔接上下文',
+    }
+
+    const intentConstraints = [
+      `情节功能要求：${plotLabel[outlineIntent.plotFunction] || outlineIntent.plotFunction}`,
+      `整体张力等级：${outlineIntent.tensionLevel}/10`,
+      outlineIntent.emotionalGoal ? `情感目标：${outlineIntent.emotionalGoal}` : '',
+    ].filter(Boolean).join('\n')
 
     // 构建续写上文（末尾 8000 字 + 如有摘要则加入）
     const recentContent = currentContent.slice(-8000)
@@ -558,6 +638,9 @@ ${this.contextManager.formatContextForPrompt(context)}`
       model,
       prompt,
       systemPrompt: `你是一位专业小说作家。正在续写第${chapter.chapterNumber}章《${chapter.title}》。
+
+## 创作约束
+${intentConstraints}
 
 ${this.contextManager.formatContextForPrompt(context)}`,
       temperature: 0.8,

@@ -73,6 +73,9 @@ export const GenerateChapterSchema = z.object({
   chapterOutline: z.string().optional(),
   targetWords: z.number().int().positive().default(3000),
   model: z.string().optional(),
+  emotionalGoal: z.string().optional(),
+  plotFunction: z.enum(['推进', '转折', '铺垫', '高潮', '过渡']).optional(),
+  tensionLevel: z.number().int().min(1).max(10).optional(),
 })
 
 export const ContinueChapterSchema = z.object({
@@ -147,4 +150,7 @@ export const CreateOutlineSchema = z.object({
   parentId: z.string().cuid().optional(),
   chapterId: z.string().cuid().optional(),
   status: z.enum(['planned', 'writing', 'completed']).optional(),
+  emotionalGoal: z.string().optional(),
+  plotFunction: z.enum(['推进', '转折', '铺垫', '高潮', '过渡']).optional(),
+  tensionLevel: z.number().int().min(1).max(10).optional(),
 })

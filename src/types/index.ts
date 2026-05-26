@@ -98,6 +98,9 @@ export interface Outline {
   planningRange?: number
   isFlexible: boolean
   confidence: number
+  emotionalGoal?: string
+  plotFunction: '推进' | '转折' | '铺垫' | '高潮' | '过渡'
+  tensionLevel: number
   createdAt: Date
   updatedAt: Date
 }
@@ -132,7 +135,7 @@ export interface ContextPackage {
   characters: Character[]
   worldElements: WorldElement[]
   foreshadowings?: Foreshadowing[]
-  outlines?: { order: number; title: string; description?: string | null; status: string }[]
+  outlines?: { order: number; title: string; description?: string | null; status: string; emotionalGoal?: string | null; plotFunction: string; tensionLevel: number }[]
   metadata: {
     totalChapters: number
     currentChapter: number

@@ -9,6 +9,9 @@ export interface GenerateChapterParams {
   chapterOutline?: string
   targetWords?: number
   model?: string
+  emotionalGoal?: string
+  plotFunction?: string
+  tensionLevel?: number
 }
 
 export interface ContinueChapterParams {

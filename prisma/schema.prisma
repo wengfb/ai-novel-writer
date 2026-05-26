@@ -61,6 +61,11 @@ model Outline {
   isFlexible   Boolean  @default(false)  // 是否允许灵活调整
   confidence   Int      @default(5)      // 规划置信度(1-10)
 
+  // 结构化创作意图
+  emotionalGoal String?                  // 情感目标：此章节想传达的情感
+  plotFunction  String   @default("推进") // 情节功能：推进/转折/铺垫/高潮/过渡
+  tensionLevel  Int      @default(5)      // 张力等级 1-10
+
   // 树形结构
   parentId  String?
   parent    Outline?  @relation("OutlineHierarchy", fields: [parentId], references: [id])

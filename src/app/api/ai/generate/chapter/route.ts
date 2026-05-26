@@ -88,6 +88,9 @@ export async function POST(request: NextRequest) {
             chapterOutline,
             targetWords: data.targetWords,
             model: data.model,
+            emotionalGoal: data.emotionalGoal,
+            plotFunction: data.plotFunction,
+            tensionLevel: data.tensionLevel,
             onProgress: (progress) => {
               // 发送进度事件（包含实际场景内容和总数）
               controller.enqueue(
