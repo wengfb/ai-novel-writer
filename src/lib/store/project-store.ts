@@ -8,9 +8,13 @@ export interface Project {
   title: string
   description: string | null
   genre: string
+  tags: string | null
   status: 'draft' | 'writing' | 'completed' | 'archived'
+  coverImage: string | null
   totalWords: number
   totalChapters: number
+  outlineMode: 'full' | 'progressive'
+  planningRange: number | null
   createdAt: Date
   updatedAt: Date
 }
@@ -45,10 +49,14 @@ type ProjectResponse = Omit<Partial<Project>, 'createdAt' | 'updatedAt'> & {
   title: string
   description?: string | null
   genre: string
+  tags?: string | null
   status: Project['status']
+  coverImage?: string | null
   totalWords?: number
   totalChapters?: number
   chapterCount?: number
+  outlineMode?: string
+  planningRange?: number | null
   createdAt: string | Date
   updatedAt: string | Date
 }
@@ -59,9 +67,13 @@ function normalizeProject(project: ProjectResponse): Project {
     title: project.title,
     description: project.description ?? null,
     genre: project.genre,
+    tags: project.tags ?? null,
     status: project.status,
+    coverImage: project.coverImage ?? null,
     totalWords: project.totalWords ?? 0,
     totalChapters: project.totalChapters ?? project.chapterCount ?? 0,
+    outlineMode: (project.outlineMode as 'full' | 'progressive') || 'full',
+    planningRange: project.planningRange ?? 10,
     createdAt: new Date(project.createdAt),
     updatedAt: new Date(project.updatedAt),
   }

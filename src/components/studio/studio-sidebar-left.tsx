@@ -7,6 +7,7 @@ import {
   FileText,
   Home,
   LayoutTemplate,
+  Pencil,
   Settings,
   Users,
 } from "lucide-react"
@@ -21,6 +22,7 @@ import { WorldElementList } from "@/components/world/world-element-list"
 import { CreateCharacterDialog } from "@/components/character/create-character-dialog"
 import { CreateWorldElementDialog } from "@/components/world/create-world-element-dialog"
 import { SettingsDialog } from "@/components/settings/settings-dialog"
+import { ProjectEditDialog } from "@/components/project/project-edit-dialog"
 import { OutlineList } from "@/components/outline/outline-list"
 import { OutlineDialog } from "@/components/outline/outline-dialog"
 import { useChapterStore } from "@/lib/store/chapter-store"
@@ -45,6 +47,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   const [isCharacterDialogOpen, setIsCharacterDialogOpen] = React.useState(false)
   const [isWorldDialogOpen, setIsWorldDialogOpen] = React.useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false)
+  const [isEditProjectOpen, setIsEditProjectOpen] = React.useState(false)
   const [isOutlineDialogOpen, setIsOutlineDialogOpen] = React.useState(false)
   const [editingOutline, setEditingOutline] = React.useState<Outline | null>(null)
   const [editingCharacter, setEditingCharacter] = React.useState<Character | null>(null)
@@ -147,13 +150,23 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
       <div className="space-y-4 py-4 flex-1 flex flex-col">
         <div className="px-3 py-2">
           <div className="mb-2 px-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold tracking-tight">
+            <h2 className="text-lg font-semibold tracking-tight truncate flex-1">
               {currentProject?.title || 'AI 小说工坊'}
             </h2>
+            {currentProject && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 shrink-0"
+                onClick={() => setIsEditProjectOpen(true)}
+              >
+                 <Pencil className="h-3.5 w-3.5" />
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6"
+              className="h-6 w-6 shrink-0"
               onClick={() => setIsSettingsOpen(true)}
             >
                <Settings className="h-4 w-4" />
@@ -294,6 +307,15 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
         open={isSettingsOpen}
         onOpenChange={setIsSettingsOpen}
       />
+
+      {/* 项目编辑对话框 */}
+      {currentProject && (
+        <ProjectEditDialog
+          project={currentProject}
+          open={isEditProjectOpen}
+          onOpenChange={setIsEditProjectOpen}
+        />
+      )}
     </div>
   )
 }

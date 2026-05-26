@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { apiSuccess, apiError } from '@/lib/api/response'
+import { UpdateProjectSchema } from '@/lib/api/schemas'
+import { validateRequest, Validation_error } from '@/lib/api/validators'
 
 // 获取项目详情
 export async function GET(
@@ -45,21 +47,28 @@ export async function PUT(
     const { projectId } = await params
     const body = await request.json()
 
+    const validated = validateRequest(UpdateProjectSchema, body)
+
     const project = await prisma.project.update({
       where: { id: projectId },
       data: {
-        title: body.title,
-        description: body.description,
-        genre: body.genre,
-        tags: body.tags,
-        status: body.status,
-        coverImage: body.coverImage,
+        ...(validated.title !== undefined && { title: validated.title }),
+        ...(validated.description !== undefined && { description: validated.description }),
+        ...(validated.genre !== undefined && { genre: validated.genre }),
+        ...(validated.tags !== undefined && { tags: JSON.stringify(validated.tags) }),
+        ...(validated.status !== undefined && { status: validated.status }),
+        ...(validated.coverImage !== undefined && { coverImage: validated.coverImage }),
+        ...(validated.outlineMode !== undefined && { outlineMode: validated.outlineMode }),
+        ...(validated.planningRange !== undefined && { planningRange: validated.planningRange }),
       },
     })
 
     return apiSuccess(project)
   } catch (error) {
     console.error('更新项目失败:', error)
+    if (error instanceof Validation_error) {
+      return apiError('INVALID_PARAMS', '参数验证失败', error.errors, 400)
+    }
     return apiError('SERVER_ERROR', '更新项目失败')
   }
 }

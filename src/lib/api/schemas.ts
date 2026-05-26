@@ -19,6 +19,9 @@ export const UpdateProjectSchema = z.object({
   genre: z.enum(['玄幻', '科幻', '都市', '言情', '武侠', '历史', '其他']).optional(),
   tags: z.array(z.string()).optional(),
   status: z.enum(['draft', 'writing', 'completed']).optional(),
+  coverImage: z.string().optional(),
+  outlineMode: z.enum(['full', 'progressive']).optional(),
+  planningRange: z.number().int().positive().optional(),
 })
 
 export const ProjectQuerySchema = z.object({
