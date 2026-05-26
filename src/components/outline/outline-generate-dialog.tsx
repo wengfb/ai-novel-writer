@@ -102,7 +102,15 @@ export function OutlineGenerateDialog({
         throw new Error(result.error?.message || '生成失败')
       }
 
-      setGeneratedOutline(result.data.outline)
+      const outline = result.data.outline
+      // 如果 AI 未返回 suggestedTotalWords，使用 API 计算的兜底值
+      if (!outline.suggestedTotalWords && result.data.suggestedTotalWords) {
+        outline.suggestedTotalWords = result.data.suggestedTotalWords
+      }
+      if (!outline.wordCountRationale && result.data.wordCountRationale) {
+        outline.wordCountRationale = result.data.wordCountRationale
+      }
+      setGeneratedOutline(outline)
       setGenerationStats({
         cost: result.data.cost || 0,
         duration: result.data.duration || 0,
@@ -215,6 +223,25 @@ export function OutlineGenerateDialog({
                 </div>
               )}
 
+              {/* 建议篇幅汇总 */}
+              {generatedOutline?.suggestedTotalWords && (
+                <div className="p-4 rounded-lg border-2 border-purple-200 bg-purple-50 dark:bg-purple-950/20 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-purple-700 dark:text-purple-300">
+                      建议总篇幅
+                    </span>
+                    <span className="text-lg font-bold text-purple-600 dark:text-purple-400">
+                      {generatedOutline.suggestedTotalWords.toLocaleString()} 字
+                    </span>
+                  </div>
+                  {generatedOutline.wordCountRationale && (
+                    <p className="text-xs text-purple-600/80 dark:text-purple-400/80 leading-relaxed">
+                      {generatedOutline.wordCountRationale}
+                    </p>
+                  )}
+                </div>
+              )}
+
               {/* Chapter list */}
               {generatedOutline?.chapters?.map((chapter: any, i: number) => (
                 <div
@@ -225,13 +252,25 @@ export function OutlineGenerateDialog({
                     第{chapter.chapterNumber || i + 1}章
                   </Badge>
                   <div className="min-w-0 flex-1">
-                    <h4 className="font-medium text-sm">{chapter.title}</h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-medium text-sm">{chapter.title}</h4>
+                      {chapter.plotFunction && (
+                        <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                          {chapter.plotFunction}
+                        </Badge>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                       {chapter.summary}
                     </p>
-                    {chapter.estimatedWords && (
-                      <span className="text-xs text-muted-foreground mt-1 block">
-                        预计 {chapter.estimatedWords.toLocaleString()} 字
+                    {chapter.estimatedWords ? (
+                      <span className="text-xs text-purple-600 dark:text-purple-400 font-medium mt-1 inline-flex items-center gap-1">
+                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-purple-400" />
+                        建议 {chapter.estimatedWords.toLocaleString()} 字
+                      </span>
+                    ) : (
+                      <span className="text-xs text-orange-500 mt-1 block">
+                        未生成建议篇幅
                       </span>
                     )}
                   </div>

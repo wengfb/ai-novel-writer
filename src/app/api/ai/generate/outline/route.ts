@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
     let data: any
     let prompt: string
     let systemPrompt: string | undefined
+    let totalWords = 0
 
     if (isOnboarding) {
       // Onboarding 模式：直接使用提供的 prompt
@@ -52,12 +53,14 @@ export async function POST(request: NextRequest) {
       }
 
       const promptManager = new PromptTemplateManager()
+      totalWords = data.targetWords * data.chapterCount
       prompt = promptManager.render('outline-generation', {
         genre: data.genre,
         coreIdea: data.coreIdea,
         style: data.style || '标准叙事',
         targetWords: data.targetWords,
         chapterCount: data.chapterCount,
+        totalWords,
       })
 
       // 使用 ContextManager 构建已有设定上下文作为 systemPrompt
@@ -184,6 +187,8 @@ export async function POST(request: NextRequest) {
 
     return apiSuccess({
       outline: outlineData,
+      suggestedTotalWords: outlineData.suggestedTotalWords || totalWords || undefined,
+      wordCountRationale: outlineData.wordCountRationale || '',
       generationId: result.tokensUsed ? 'generated' : undefined,
       tokensUsed: result.tokensUsed,
       cost: result.cost,
