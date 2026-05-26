@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
       worldElements: project.worldElements as any,
       foreshadowings: project.foreshadowings as any,
       genre: project.genre,
+      projectId,
     })
 
     const systemPrompt = contextManager.formatContextForPrompt(contextPackage)

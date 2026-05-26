@@ -68,6 +68,7 @@ function getCategoryByKey(key: string): string {
   if (key.startsWith('export.')) return 'export'
   if (key.startsWith('editor.')) return 'editor'
   if (key.startsWith('project.')) return 'project'
+  if (key.startsWith('styleAnchor.')) return 'project'
   return 'general'
 }
 
@@ -88,6 +89,7 @@ function getDescriptionByKey(key: string): string {
     'editor.autoSaveInterval': '自动保存间隔（秒）',
     'project.defaultGenre': '默认小说类型',
     'project.defaultWords': '默认章节字数目标',
+    'styleAnchor.default': '全局默认写作风格锚点（样章，500-2000字）',
   }
   return descriptions[key] || ''
 }

@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { useProjectStore, type Project } from '@/lib/store/project-store'
+import { settingsApi } from '@/lib/api/endpoints/settings'
 import { toast } from 'sonner'
 
 const editProjectSchema = z.object({
@@ -49,6 +50,9 @@ interface ProjectEditDialogProps {
 
 export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [styleAnchor, setStyleAnchor] = useState('')
+  const [stylePrompt, setStylePrompt] = useState('')
+  const [isGeneratingStyle, setIsGeneratingStyle] = useState(false)
   const { updateProject } = useProjectStore()
 
   const form = useForm<EditProjectFormValues>({
@@ -69,13 +73,55 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
         genre: project.genre,
         status: project.status === 'archived' ? 'draft' : project.status,
       })
+
+      // 加载项目级风格锚点
+      settingsApi.list().then(res => {
+        if (res.success && res.data) {
+          setStyleAnchor(res.data.settings[`project.${project.id}.styleAnchor`] || '')
+        }
+      }).catch(() => {})
     }
   }, [open, project, form])
+
+  const handleGenerateStyleAnchor = async () => {
+    const description = form.getValues('description')
+    const genre = form.getValues('genre')
+    if (!description) {
+      toast.error('请先填写创意方向 / 故事简介')
+      return
+    }
+
+    setIsGeneratingStyle(true)
+    try {
+      const res = await fetch('/api/ai/generate/style-anchor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description, genre, hint: stylePrompt || undefined }),
+      })
+      const resData = await res.json()
+      if (resData.success) {
+        setStyleAnchor(resData.data.content)
+        toast.success('样章已生成')
+      } else {
+        toast.error(resData.error?.message || '生成失败')
+      }
+    } catch {
+      toast.error('样章生成失败，请重试')
+    } finally {
+      setIsGeneratingStyle(false)
+    }
+  }
 
   const onSubmit = async (data: EditProjectFormValues) => {
     setIsSubmitting(true)
     try {
       await updateProject(project.id, data)
+
+      // 同时保存项目级风格锚点
+      await settingsApi.update({
+        [`project.${project.id}.styleAnchor`]: styleAnchor,
+      })
+
       toast.success('项目信息已更新')
       onOpenChange(false)
     } catch {
@@ -87,7 +133,7 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>编辑项目信息</DialogTitle>
           <DialogDescription>修改项目的基本信息和创意方向</DialogDescription>
@@ -117,7 +163,7 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
                   <FormControl>
                     <Textarea
                       placeholder="描述你的故事创意、核心冲突、主角设定等..."
-                      className="resize-none"
+                      className="resize-none max-h-40 overflow-y-auto"
                       rows={5}
                       {...field}
                     />
@@ -177,6 +223,39 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
                 </FormItem>
               )}
             />
+
+            {/* 风格锚点 */}
+            <div className="space-y-3 pt-4 border-t">
+              <FormLabel>风格锚点（样章）</FormLabel>
+              <div className="flex items-center gap-2">
+                <Input
+                  placeholder="指定风格方向，如：冷峻克制、多用短句、第一人称..."
+                  className="flex-1 h-9"
+                  value={stylePrompt}
+                  onChange={(e) => setStylePrompt(e.target.value)}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0 h-9"
+                  disabled={isGeneratingStyle || !form.watch('description')}
+                  onClick={handleGenerateStyleAnchor}
+                >
+                  {isGeneratingStyle ? '生成中...' : 'AI 生成样章'}
+                </Button>
+              </div>
+              <Textarea
+                placeholder="粘贴或输入一段样章（500-2000字），AI 将以此为风格参考进行创作..."
+                className="resize-none max-h-52 overflow-y-auto"
+                rows={6}
+                value={styleAnchor}
+                onChange={(e) => setStyleAnchor(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">
+                覆盖全局默认值，仅对本项目生效。建议 500-2000 字。
+              </p>
+            </div>
 
             <div className="flex justify-end gap-3 pt-4">
               <Button

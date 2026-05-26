@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 
 interface SettingsFormProjectProps {
   settings: Record<string, string>
@@ -58,6 +59,22 @@ export function SettingsFormProject({ settings, onUpdate }: SettingsFormProjectP
         />
         <p className="text-xs text-muted-foreground">
           AI 生成章节时的默认字数目标
+        </p>
+      </div>
+
+      {/* Global Style Anchor */}
+      <div className="space-y-2">
+        <Label htmlFor="styleAnchor.default">全局默认风格锚点（样章）</Label>
+        <Textarea
+          id="styleAnchor.default"
+          placeholder="粘贴一段样章（500-2000字），AI 将以此为风格参考进行创作。项目级设置会覆盖此默认值。"
+          className="resize-none min-h-[120px] max-h-52 overflow-y-auto"
+          rows={6}
+          value={settings['styleAnchor.default'] || ''}
+          onChange={(e) => onUpdate('styleAnchor.default', e.target.value)}
+        />
+        <p className="text-xs text-muted-foreground">
+          设置全局默认的写作风格参考。建议 500-2000 字，项目级设置可覆盖。
         </p>
       </div>
     </div>

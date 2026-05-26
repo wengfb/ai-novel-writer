@@ -1,6 +1,7 @@
 import { getAIProviderAsync } from './providers'
 import { PromptTemplateManager } from './prompts/template-manager'
 import { getContextManager } from './context-manager'
+import { getStyleAnchorPrompt } from './style-anchor'
 import { prisma } from '@/lib/db/prisma'
 import type { GenerationParams } from '@/types'
 
@@ -78,6 +79,7 @@ export class RewriteGenerator {
       })) as any,
       foreshadowings: project.foreshadowings as any,
       genre: project.genre,
+      projectId,
     })
 
     const prompt = this.promptManager.render('local-rewrite', {
@@ -91,13 +93,17 @@ export class RewriteGenerator {
 
 ${this.contextManager.formatContextForPrompt(context)}`
 
+    const rewriteStyleAnchor = await getStyleAnchorPrompt(projectId)
+
     // 流式生成
     let fullOutput = ''
     const generator = ai.streamGenerate({
       type: 'chapter' as GenerationParams['type'],
       model,
       prompt,
-      systemPrompt,
+      systemPrompt: rewriteStyleAnchor
+        ? `${rewriteStyleAnchor}\n\n${systemPrompt}`
+        : systemPrompt,
       temperature: 0.7,
       maxTokens: Math.max(2048, ai.estimateTokens(selectedText) * 3),
     })

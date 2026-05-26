@@ -141,6 +141,7 @@ export interface ContextPackage {
     currentChapter: number
     genre: string
     style?: string
+    projectId?: string
   }
 }
 

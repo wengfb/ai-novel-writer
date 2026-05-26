@@ -274,7 +274,7 @@ export function AIChat({ projectId, chapterId }: AIChatProps) {
                     )}
                   >
                     {parsedMessage.textContent && (
-                      <p className="text-sm whitespace-pre-wrap">{parsedMessage.textContent}</p>
+                      <div className="text-sm whitespace-pre-wrap max-h-80 overflow-y-auto">{parsedMessage.textContent}</div>
                     )}
 
                     {parsedMessage.toolParts.map((toolPart) => {

@@ -2,6 +2,7 @@ import { getAIProviderAsync } from './providers'
 import type { AIProvider } from './providers/types'
 import { PromptTemplateManager } from './prompts/template-manager'
 import { getContextManager } from './context-manager'
+import { getStyleAnchorPrompt } from './style-anchor'
 import { prisma } from '@/lib/db/prisma'
 import type { GenerationParams } from '@/types'
 
@@ -102,6 +103,7 @@ export class ChapterGenerator {
         tensionLevel: o.tensionLevel,
       })),
       genre: project.genre,
+      projectId,
     })
 
     // 3. 获取当前章节的大纲结构化意图（表单值优先）
@@ -357,13 +359,16 @@ ${briefContext}
       outlineIntent.emotionalGoal ? `情感目标：${outlineIntent.emotionalGoal}（请通过细节描写传达此情感）` : '',
     ].filter(Boolean).join('\n')
 
+    const sceneProjectId = context.metadata?.projectId
+    const styleAnchor = sceneProjectId ? await getStyleAnchorPrompt(sceneProjectId) : ''
+
     const result = await ai.generate({
       type: 'chapter',
       model,
       prompt,
       systemPrompt: `你是一位专业小说作家。正在撰写第${chapterNumber}章《${chapterTitle}》的第${sceneIndex + 1}个场景（共${totalScenes}个场景）。
 
-## 创作约束
+${styleAnchor ? styleAnchor + '\n\n' : ''}## 创作约束
 ${intentConstraints}
 
 ${this.contextManager.formatContextForPrompt(context)}`,
@@ -428,11 +433,16 @@ ${intentCheckItems}
 
 ${this.contextManager.formatContextForPrompt(context)}`
 
+    const refineProjectId = context.metadata?.projectId
+    const refineStyleAnchor = refineProjectId ? await getStyleAnchorPrompt(refineProjectId) : ''
+
     const result = await ai.generate({
       type: 'chapter',
       model,
       prompt,
-      systemPrompt,
+      systemPrompt: refineStyleAnchor
+        ? `${refineStyleAnchor}\n\n${systemPrompt}`
+        : systemPrompt,
       temperature: 0.6, // 略低的温度以保证一致性
       maxTokens: ai.estimateTokens(content) * 2,
     })
@@ -593,6 +603,7 @@ ${this.contextManager.formatContextForPrompt(context)}`
         tensionLevel: o.tensionLevel,
       })),
       genre: project.genre,
+      projectId,
     })
 
     // 从 Outline 表匹配当前章节的大纲描述和结构化意图
@@ -633,13 +644,14 @@ ${this.contextManager.formatContextForPrompt(context)}`
 
     // 使用流式生成
     let fullOutput = ''
+    const continueStyleAnchor = await getStyleAnchorPrompt(projectId)
     const generator = ai.streamGenerate({
       type: 'chapter',
       model,
       prompt,
       systemPrompt: `你是一位专业小说作家。正在续写第${chapter.chapterNumber}章《${chapter.title}》。
 
-## 创作约束
+${continueStyleAnchor ? continueStyleAnchor + '\n\n' : ''}## 创作约束
 ${intentConstraints}
 
 ${this.contextManager.formatContextForPrompt(context)}`,

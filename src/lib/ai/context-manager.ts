@@ -72,8 +72,9 @@ export class ContextManager {
     genre: string
     style?: string
     contextMaxTokens?: number
+    projectId?: string
   }): ContextPackage {
-    const { currentChapter, allChapters, characters, worldElements, foreshadowings, outlines, genre, style, contextMaxTokens } = params
+    const { currentChapter, allChapters, characters, worldElements, foreshadowings, outlines, genre, style, contextMaxTokens, projectId } = params
 
     const maxTokens = this.getMaxTokens(contextMaxTokens)
 
@@ -124,6 +125,7 @@ export class ContextManager {
         currentChapter,
         genre,
         style,
+        projectId,
       },
     }
   }

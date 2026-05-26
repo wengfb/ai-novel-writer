@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { validateRequest, Validation_error } from '@/lib/api/validators'
 import { ApiErrors } from '@/lib/api/response'
 import { getContextManager } from '@/lib/ai/context-manager'
+import { getStyleAnchorPrompt } from '@/lib/ai/style-anchor'
 import { buildChatTools } from '@/lib/ai/chat-tools'
 import { getLanguageModelAsync } from '@/lib/ai/providers'
 import type { Chapter, Character, WorldElement, Foreshadowing } from '@/types'
@@ -145,9 +146,11 @@ export async function POST(request: NextRequest) {
           reminderChapterNumber: f.reminderChapterNumber ?? undefined,
         })) as Foreshadowing[],
         genre: project.genre,
+        projectId,
       })
 
       const contextPrompt = contextManager.formatContextForPrompt(context)
+      const chatStyleAnchor = await getStyleAnchorPrompt(projectId)
 
       tools = buildChatTools({
         projectId,
@@ -156,9 +159,9 @@ export async function POST(request: NextRequest) {
 
       systemPrompt = `你是一个专业的小说创作助手，正在帮助作者创作《${project.title}》这部${project.genre}小说。
 
-${contextPrompt}
+${chatStyleAnchor ? chatStyleAnchor + '\n\n' : ''}${contextPrompt}
 
-当用户需要创建/新增/保存/修改/更新角色、世界观、章节内容，或查询项目信息时，请优先考虑调用工具完成操作；如果用户意图明确且信息足够，直接使用对应工具比只给文字建议更合适。用户说“创建角色/新增设定/追加章节/查询项目”等操作类请求时，通常是在要求你操作当前项目数据，而不是只生成一段可复制的文本。写操作会先交由用户确认，不要因为需要确认而回避工具调用。工具完成后，用简洁的中文说明你做了什么，并给出下一步建议。若缺少必要信息，请先向用户提问再行动。`
+当用户需要创建/新增/保存/修改/更新角色、世界观、章节内容，或查询项目信息时，请优先考虑调用工具完成操作；如果用户意图明确且信息足够，直接使用对应工具比只给文字建议更合适。用户说”创建角色/新增设定/追加章节/查询项目”等操作类请求时，通常是在要求你操作当前项目数据，而不是只生成一段可复制的文本。写操作会先交由用户确认，不要因为需要确认而回避工具调用。工具完成后，用简洁的中文说明你做了什么，并给出下一步建议。若缺少必要信息，请先向用户提问再行动。`
     }
 
     const uiMessages = messages.map((message) => {
