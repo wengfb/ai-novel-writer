@@ -5,6 +5,7 @@ import { getContextManager } from '@/lib/ai/context-manager'
 import { withErrorHandler, ApiErrors } from '@/lib/api/response'
 import { parseJsonBody, validateRequest } from '@/lib/api/validators'
 import { GenerateChapterSchema } from '@/lib/api/schemas'
+import { plainTextToHtml } from '@/lib/utils/text-format'
 
 /**
  * POST /api/ai/generate/chapter
@@ -106,9 +107,9 @@ export async function POST(request: NextRequest) {
             },
           })
 
-          fullContent = result.content
+          fullContent = plainTextToHtml(result.content)
 
-          // 计算字数
+          // 计算字数（去除 HTML 标签后统计）
           const wordCount = countWords(fullContent)
 
           // 使用 AI 生成章节摘要
@@ -184,8 +185,10 @@ export async function POST(request: NextRequest) {
  * 统计字数
  */
 function countWords(text: string): number {
-  const chineseChars = (text.match(/[\u4e00-\u9fa5]/g) || []).length
-  const englishWords = (text.match(/[a-zA-Z]+/g) || []).length
+  // \u53bb\u9664 HTML \u6807\u7b7e\u540e\u7edf\u8ba1
+  const plainText = text.replace(/<[^>]*>/g, '')
+  const chineseChars = (plainText.match(/[\u4e00-\u9fa5]/g) || []).length
+  const englishWords = (plainText.match(/[a-zA-Z]+/g) || []).length
   return chineseChars + englishWords
 }
 

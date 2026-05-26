@@ -5,6 +5,7 @@ import { getContextManager } from '@/lib/ai/context-manager'
 import { withErrorHandler, ApiErrors } from '@/lib/api/response'
 import { parseJsonBody, validateRequest } from '@/lib/api/validators'
 import { ContinueChapterSchema } from '@/lib/api/schemas'
+import { plainTextToHtml } from '@/lib/utils/text-format'
 
 /**
  * POST /api/ai/continue
@@ -70,7 +71,8 @@ export async function POST(request: NextRequest) {
 
           // 计算新增字数
           const addedWordCount = countWords(continuation)
-          const fullContent = data.currentContent + '\n\n' + continuation
+          // continuation 是纯文本，转换为 HTML 后追加到已有内容
+          const fullContent = data.currentContent + plainTextToHtml(continuation)
           const totalWordCount = countWords(fullContent)
 
           // 使用 AI 重新生成章节摘要
@@ -153,8 +155,10 @@ export async function POST(request: NextRequest) {
  * 统计字数
  */
 function countWords(text: string): number {
-  const chineseChars = (text.match(/[\u4e00-\u9fa5]/g) || []).length
-  const englishWords = (text.match(/[a-zA-Z]+/g) || []).length
+  // \u53bb\u9664 HTML \u6807\u7b7e\u540e\u7edf\u8ba1
+  const plainText = text.replace(/<[^>]*>/g, '')
+  const chineseChars = (plainText.match(/[\u4e00-\u9fa5]/g) || []).length
+  const englishWords = (plainText.match(/[a-zA-Z]+/g) || []).length
   return chineseChars + englishWords
 }
 
