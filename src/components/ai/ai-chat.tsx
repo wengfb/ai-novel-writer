@@ -16,6 +16,7 @@ import { ChatSettingsPanel } from './chat-settings-panel'
 import { useCharacterStore } from '@/lib/store/character-store'
 import { useWorldStore } from '@/lib/store/world-store'
 import { useChapterStore } from '@/lib/store/chapter-store'
+import { useOutlineStore } from '@/lib/store/outline-store'
 
 interface AIChatProps {
   projectId: string
@@ -44,6 +45,24 @@ function formatToolOutput(output: unknown): string {
 
   const project = asRecord(result.project)
   if (typeof project.title === 'string') return `已查询项目「${project.title}」的信息`
+
+  const outline = asRecord(result.outline)
+  if (typeof outline.title === 'string') return `大纲「${outline.title}」已更新`
+
+  const foreshadowing = asRecord(result.foreshadowing)
+  if (typeof foreshadowing.title === 'string') {
+    return foreshadowing.status === 'resolved'
+      ? `伏笔「${foreshadowing.title}」已回收`
+      : `伏笔「${foreshadowing.title}」已记录`
+  }
+
+  if (Array.isArray(result.foreshadowings)) return `共 ${result.foreshadowings.length} 个伏笔`
+
+  if (Array.isArray(result.issues)) {
+    return result.issues.length > 0
+      ? `发现 ${result.issues.length} 个不一致`
+      : '未发现世界观不一致'
+  }
 
   return '工具已执行完成'
 }
@@ -119,7 +138,8 @@ async function refreshToolState(
   fallbackChapterId: string | undefined,
   fetchCharacters: (projectId: string) => Promise<void>,
   fetchWorldElements: (projectId: string) => Promise<void>,
-  fetchChapters: (projectId: string) => Promise<void>
+  fetchChapters: (projectId: string) => Promise<void>,
+  fetchOutlines: (projectId: string) => Promise<void>
 ) {
   if (toolPart.toolName === 'createCharacter' || toolPart.toolName === 'updateCharacter') {
     await fetchCharacters(projectId)
@@ -139,6 +159,17 @@ async function refreshToolState(
     const { chapters, setCurrentChapter } = useChapterStore.getState()
     const updatedChapter = chapters.find((chapter) => chapter.id === updatedChapterId)
     if (updatedChapter) setCurrentChapter(updatedChapter)
+    return
+  }
+
+  if (toolPart.toolName === 'createChapter') {
+    await fetchChapters(projectId)
+    return
+  }
+
+  if (toolPart.toolName === 'createOutline' || toolPart.toolName === 'updateOutline') {
+    await fetchOutlines(projectId)
+    return
   }
 }
 
@@ -150,6 +181,7 @@ export function AIChat({ projectId, chapterId }: AIChatProps) {
   const fetchCharacters = useCharacterStore((state) => state.fetchCharacters)
   const fetchWorldElements = useWorldStore((state) => state.fetchWorldElements)
   const fetchChapters = useChapterStore((state) => state.fetchChapters)
+  const fetchOutlines = useOutlineStore((state) => state.fetchOutlines)
 
   const transport = useMemo(() => new DefaultChatTransport({
     api: '/api/ai/chat',
@@ -202,7 +234,8 @@ export function AIChat({ projectId, chapterId }: AIChatProps) {
           chapterId,
           fetchCharacters,
           fetchWorldElements,
-          fetchChapters
+          fetchChapters,
+          fetchOutlines
         ).catch((err) => {
           console.error('刷新工具调用结果失败:', err)
           refreshedToolCallsRef.current.delete(refreshKey)
