@@ -24,14 +24,14 @@ export function StudioSidebarRight({ className }: SidebarProps) {
   }
 
   return (
-    <div className={cn("h-full flex flex-col border-l bg-muted/10", className)}>
-      <Tabs defaultValue="chat" className="flex-1 flex flex-col h-full">
-        <div className="px-4 py-2 border-b flex items-center justify-between">
-            <span className="font-semibold text-sm flex items-center gap-2">
-                <Bot className="h-4 w-4 text-primary" />
+    <div className={cn("h-full flex flex-col border-l bg-muted/10 min-w-0", className)}>
+      <Tabs defaultValue="chat" className="flex-1 flex flex-col h-full min-w-0">
+        <div className="px-4 py-2 border-b flex items-center justify-between gap-2 min-w-0">
+            <span className="font-semibold text-sm flex items-center gap-2 truncate min-w-0">
+                <Bot className="h-4 w-4 text-primary shrink-0" />
                 AI 副驾驶
             </span>
-            <TabsList className="h-8">
+            <TabsList className="h-8 shrink-0">
               <TabsTrigger value="chat" className="text-xs h-6 px-2">对话</TabsTrigger>
               <TabsTrigger value="context" className="text-xs h-6 px-2">上下文</TabsTrigger>
               <TabsTrigger value="generate" className="text-xs h-6 px-2">工具箱</TabsTrigger>

@@ -146,7 +146,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   }
 
   return (
-    <div className={cn("pb-12 h-full flex flex-col", className)}>
+    <div className={cn("pb-12 h-full flex flex-col min-w-0", className)}>
       <div className="space-y-4 py-4 flex-1 flex flex-col">
         <div className="px-3 py-2">
           <div className="mb-2 px-4 flex items-center justify-between">
