@@ -90,6 +90,11 @@ export const useProjectStore = create<ProjectState>()(
 
       // 获取项目列表
       fetchProjects: async () => {
+        // 正在请求中或已有数据，跳过重复请求
+        const state = get()
+        if (state.isLoading) return
+        if (state.projects.length > 0) return
+
         set({ isLoading: true, error: null })
         try {
           const response = await fetch('/api/projects')

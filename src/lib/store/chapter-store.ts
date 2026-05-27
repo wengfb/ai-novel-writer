@@ -54,6 +54,7 @@ interface ChapterState {
   isSaving: boolean
   error: string | null
   lastSaved: Date | null
+  lastFetchedProjectId: string | null
 
   // Actions
   fetchChapters: (projectId: string) => Promise<void>
@@ -75,9 +76,16 @@ export const useChapterStore = create<ChapterState>()(
     isSaving: false,
     error: null,
     lastSaved: null,
+    lastFetchedProjectId: null,
 
     // 获取章节列表
     fetchChapters: async (projectId: string) => {
+      const state = get()
+      // 正在请求中，跳过并发重复
+      if (state.isLoading) return
+      // 同一项目已缓存，跳过（切换项目或强制刷新时不会命中）
+      if (state.lastFetchedProjectId === projectId) return
+
       set({ isLoading: true, error: null })
       try {
         const response = await fetch(`/api/projects/${projectId}/chapters`)
@@ -88,7 +96,7 @@ export const useChapterStore = create<ChapterState>()(
         }
 
         const chapters = data.data.chapters.map(normalizeChapter)
-        set({ chapters, isLoading: false })
+        set({ chapters, isLoading: false, lastFetchedProjectId: projectId })
       } catch (error) {
         set({
           error: error instanceof Error ? error.message : '获取章节列表失败',
@@ -230,6 +238,7 @@ export const useChapterStore = create<ChapterState>()(
         isSaving: false,
         error: null,
         lastSaved: null,
+        lastFetchedProjectId: null,
       })
     },
   }))
