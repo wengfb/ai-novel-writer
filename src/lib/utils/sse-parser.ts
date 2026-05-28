@@ -4,7 +4,8 @@
  */
 
 export interface SSEEvent {
-  type: 'progress' | 'done' | 'error'
+  type: 'start' | 'progress' | 'done' | 'error'
+  chapterId?: string
   content?: string
   data?: any
   error?: string
@@ -67,6 +68,7 @@ export class SSEParser {
 export async function streamSSE(
   url: string,
   body: any,
+  onStart: (data: any) => void,
   onProgress: (content: string) => void,
   onDone: (data: any) => void,
   onError: (error: string) => void,
@@ -109,7 +111,9 @@ export async function streamSSE(
       const events = parser.parse(value)
 
       for (const event of events) {
-        if (event.type === 'progress' && event.content) {
+        if (event.type === 'start') {
+          onStart(event)
+        } else if (event.type === 'progress' && event.content) {
           onProgress(event.content)
         } else if (event.type === 'done') {
           const { type, ...data } = event

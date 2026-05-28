@@ -65,6 +65,7 @@ export const aiApi = {
     await streamSSE(
       '/api/ai/chat',
       params,
+      () => {},
       (content) => {
         fullResponse += content
         onProgress(content)
@@ -84,6 +85,7 @@ export const aiApi = {
    */
   async generateChapter(
     params: GenerateChapterParams,
+    onStart: (chapterId: string) => void,
     onProgress: (content: string) => void,
     signal?: AbortSignal
   ): Promise<GenerateChapterResult> {
@@ -92,6 +94,11 @@ export const aiApi = {
     await streamSSE(
       '/api/ai/generate/chapter',
       params,
+      (data) => {
+        if (data.chapterId) {
+          onStart(data.chapterId)
+        }
+      },
       onProgress,
       (data) => {
         result = data
@@ -125,6 +132,7 @@ export const aiApi = {
     await streamSSE(
       '/api/ai/continue',
       params,
+      () => {},
       onProgress,
       (data) => {
         result = data
@@ -151,6 +159,7 @@ export const aiApi = {
     await streamSSE(
       '/api/ai/rewrite',
       params,
+      () => {},
       onProgress,
       (data) => {
         result = data

@@ -5,11 +5,13 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import { BubbleMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
+import { Loader2, X } from 'lucide-react'
 import { useChapterStore } from '@/lib/store/chapter-store'
 import { useProjectStore } from '@/lib/store/project-store'
 import { useAIStore } from '@/lib/store/ai-store'
 import { useAutoSave } from '@/hooks/use-auto-save'
 import { RewriteBubbleMenu } from './rewrite-bubble-menu'
+import { Button } from '@/components/ui/button'
 
 interface SelectionState {
   text: string
@@ -22,8 +24,14 @@ export function TextEditor() {
   const currentProject = useProjectStore(s => s.currentProject)
   const isRewriting = useAIStore(s => s.isRewriting)
   const rewriteResult = useAIStore(s => s.rewriteResult)
+  const isGeneratingChapter = useAIStore(s => s.isGeneratingChapter)
+  const generatingChapterId = useAIStore(s => s.generatingChapterId)
+  const cancelGeneration = useAIStore(s => s.cancelGeneration)
   const [content, setContent] = useState(currentChapter?.content || '')
   const [selection, setSelection] = useState<SelectionState | null>(null)
+
+  // 当前章节是否正在 AI 生成中
+  const isCurrentChapterGenerating = isGeneratingChapter && generatingChapterId === currentChapter?.id
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -116,13 +124,32 @@ export function TextEditor() {
 
   return (
     <div className="relative w-full max-w-screen-lg mx-auto min-h-[500px]">
+      {/* AI 生成状态指示器 */}
+      {isCurrentChapterGenerating && (
+        <div className="absolute top-2 left-2 right-2 z-10 flex items-center justify-between rounded-md border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300">
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            <span>AI 正在生成章节内容...</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 px-2 text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400"
+            onClick={cancelGeneration}
+          >
+            <X className="mr-1 h-3 w-3" />
+            取消
+          </Button>
+        </div>
+      )}
+
       {/* 保存状态指示器 */}
-      {(isSaving || autoSaving) && (
+      {!isCurrentChapterGenerating && (isSaving || autoSaving) && (
         <div className="absolute top-2 right-2 text-xs text-muted-foreground">
           保存中...
         </div>
       )}
-      {lastSaved && !isSaving && !autoSaving && (
+      {!isCurrentChapterGenerating && lastSaved && !isSaving && !autoSaving && (
         <div className="absolute top-2 right-2 text-xs text-muted-foreground">
           已保存 {lastSaved.toLocaleTimeString()}
         </div>

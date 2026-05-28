@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { aiApi, type ContextInfo, type GenerateChapterResult } from '@/lib/api/endpoints/ai'
+import { useChapterStore } from './chapter-store'
 
 export interface GenerateChapterParams {
   projectId: string
@@ -41,6 +42,7 @@ interface AIState {
 
   // 生成章节相关
   isGeneratingChapter: boolean
+  generatingChapterId: string | null
   chapterProgress: string
 
   // 上下文相关
@@ -62,7 +64,7 @@ interface AIState {
   }
 
   // Actions
-  generateChapter: (params: GenerateChapterParams, onProgress: (text: string) => void) => Promise<GenerateChapterResult>
+  generateChapter: (params: GenerateChapterParams) => Promise<GenerateChapterResult>
   continueWriting: (params: ContinueChapterParams, onProgress: (text: string) => void) => Promise<void>
   rewriteText: (params: RewriteParams, onProgress: (text: string) => void) => Promise<void>
   cancelGeneration: () => void
@@ -81,6 +83,7 @@ export const useAIStore = create<AIState>()(
     isContinuing: false,
     continueProgress: '',
     isGeneratingChapter: false,
+    generatingChapterId: null,
     chapterProgress: '',
     context: null,
     isLoadingContext: false,
@@ -93,39 +96,77 @@ export const useAIStore = create<AIState>()(
       excludedElementIds: [],
     },
 
-    generateChapter: async (params, onProgress) => {
+    generateChapter: async (params) => {
       set({
         isGeneratingChapter: true,
+        generatingChapterId: null,
         error: null,
         chapterProgress: '',
         abortController: new AbortController()
       })
+
+      let generatedChapterId = ''
+      let accumulatedContent = ''
 
       try {
         const abortController = get().abortController
 
         const result = await aiApi.generateChapter(
           params,
+          (chapterId) => {
+            // 收到 chapterId 后立即创建本地章节并设为当前
+            generatedChapterId = chapterId
+            set({ generatingChapterId: chapterId })
+            const chapterStore = useChapterStore.getState()
+
+            // 将章节添加到本地列表
+            chapterStore.addChapterLocally({
+              id: chapterId,
+              projectId: params.projectId,
+              chapterNumber: params.chapterNumber,
+              title: params.chapterTitle || `第${params.chapterNumber}章`,
+              content: '',
+              wordCount: 0,
+              status: 'draft' as const,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            })
+          },
           (chunk) => {
+            // 流式更新：累积内容并实时写入章节 store
             set((state) => {
               state.chapterProgress += chunk
             })
-            onProgress(chunk)
+            if (generatedChapterId) {
+              accumulatedContent += chunk
+              useChapterStore.getState().updateChapterContent(generatedChapterId, accumulatedContent)
+            }
           },
           abortController?.signal
         )
 
+        // 生成完成，用服务端返回的最终内容更新
+        if (generatedChapterId) {
+          useChapterStore.getState().updateChapterContent(generatedChapterId, result.content)
+        }
+
         set({
           isGeneratingChapter: false,
+          generatingChapterId: null,
           chapterProgress: '',
           abortController: null
         })
 
         return result
       } catch (error) {
+        // 生成失败时从本地列表中移除占位章节
+        if (generatedChapterId) {
+          useChapterStore.getState().removeChapterLocally(generatedChapterId)
+        }
         set({
           error: error instanceof Error ? error.message : '生成章节失败',
           isGeneratingChapter: false,
+          generatingChapterId: null,
           chapterProgress: '',
           abortController: null,
         })
@@ -223,6 +264,7 @@ export const useAIStore = create<AIState>()(
       set({
         isContinuing: false,
         isGeneratingChapter: false,
+        generatingChapterId: null,
         isRewriting: false,
         continueProgress: '',
         chapterProgress: '',

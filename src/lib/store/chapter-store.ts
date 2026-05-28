@@ -57,8 +57,10 @@ interface ChapterState {
   lastFetchedProjectId: string | null
 
   // Actions
-  fetchChapters: (projectId: string) => Promise<void>
+  fetchChapters: (projectId: string, force?: boolean) => Promise<void>
   setCurrentChapter: (chapter: Chapter | null) => void
+  addChapterLocally: (chapter: Chapter) => void
+  removeChapterLocally: (id: string) => void
   updateChapterContent: (id: string, content: string) => void
   saveChapter: (id: string) => Promise<void>
   createChapter: (data: CreateChapterParams) => Promise<Chapter>
@@ -79,12 +81,12 @@ export const useChapterStore = create<ChapterState>()(
     lastFetchedProjectId: null,
 
     // 获取章节列表
-    fetchChapters: async (projectId: string) => {
+    fetchChapters: async (projectId: string, force = false) => {
       const state = get()
       // 正在请求中，跳过并发重复
       if (state.isLoading) return
       // 同一项目已缓存，跳过（切换项目或强制刷新时不会命中）
-      if (state.lastFetchedProjectId === projectId) return
+      if (!force && state.lastFetchedProjectId === projectId) return
 
       set({ isLoading: true, error: null })
       try {
@@ -96,7 +98,12 @@ export const useChapterStore = create<ChapterState>()(
         }
 
         const chapters = data.data.chapters.map(normalizeChapter)
-        set({ chapters, isLoading: false, lastFetchedProjectId: projectId })
+        // 强制刷新时同步更新 currentChapter 引用，避免与 chapters 数组中的对象不同步
+        const currentChapter = get().currentChapter
+        const syncedCurrent = currentChapter
+          ? chapters.find((c: Chapter) => c.id === currentChapter.id) || currentChapter
+          : null
+        set({ chapters, currentChapter: syncedCurrent, isLoading: false, lastFetchedProjectId: projectId })
       } catch (error) {
         set({
           error: error instanceof Error ? error.message : '获取章节列表失败',
@@ -108,6 +115,27 @@ export const useChapterStore = create<ChapterState>()(
     // 设置当前章节
     setCurrentChapter: (chapter) => {
       set({ currentChapter: chapter })
+    },
+
+    // 将章节添加到本地列表并设为当前（用于 AI 生成时立即显示）
+    addChapterLocally: (chapter) => {
+      set((state) => {
+        const exists = state.chapters.some((c) => c.id === chapter.id)
+        if (!exists) {
+          state.chapters.push(chapter)
+        }
+        state.currentChapter = chapter
+      })
+    },
+
+    // 从本地列表移除章节（AI 生成失败时清理）
+    removeChapterLocally: (id) => {
+      set((state) => {
+        state.chapters = state.chapters.filter((c) => c.id !== id)
+        if (state.currentChapter?.id === id) {
+          state.currentChapter = null
+        }
+      })
     },
 
     // 更新章节内容（仅更新本地状态）

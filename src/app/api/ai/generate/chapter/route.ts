@@ -63,6 +63,18 @@ export async function POST(request: NextRequest) {
       chapterOutline = chapterOutline || ''
     }
 
+    // 先创建空章节，让前端可以立即打开编辑器
+    const chapter = await prisma.chapter.create({
+      data: {
+        projectId: data.projectId,
+        chapterNumber: data.chapterNumber,
+        title: chapterTitle,
+        content: '',
+        wordCount: 0,
+        summary: '',
+      },
+    })
+
     // 创建流式响应
     const encoder = new TextEncoder()
     const stream = new ReadableStream({
@@ -70,11 +82,12 @@ export async function POST(request: NextRequest) {
         try {
           const chapterGenerator = getChapterGenerator()
 
-          // 发送开始事件
+          // 发送开始事件（携带已创建的 chapterId）
           controller.enqueue(
             encoder.encode(
               `data: ${JSON.stringify({
                 type: 'start',
+                chapterId: chapter.id,
               })}\n\n`
             )
           )
@@ -119,12 +132,10 @@ export async function POST(request: NextRequest) {
             chapterTitle
           )
 
-          // 保存章节到数据库
-          const chapter = await prisma.chapter.create({
+          // 更新章节内容
+          await prisma.chapter.update({
+            where: { id: chapter.id },
             data: {
-              projectId: data.projectId,
-              chapterNumber: data.chapterNumber,
-              title: chapterTitle,
               content: fullContent,
               wordCount,
               summary,
@@ -158,6 +169,12 @@ export async function POST(request: NextRequest) {
           controller.close()
         } catch (error) {
           console.error('Chapter generation error:', error)
+          // 生成失败时删除空章节
+          try {
+            await prisma.chapter.delete({ where: { id: chapter.id } })
+          } catch {
+            // 忽略删除失败
+          }
           controller.enqueue(
             encoder.encode(
               `data: ${JSON.stringify({

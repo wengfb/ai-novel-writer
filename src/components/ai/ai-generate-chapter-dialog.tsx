@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AlertCircle, Loader2, X } from 'lucide-react'
+import { AlertCircle, Loader2 } from 'lucide-react'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -57,17 +57,12 @@ export function AIGenerateChapterDialog({
   chapters,
   flatOutlines = [],
 }: AIGenerateChapterDialogProps) {
-  const { generateChapter, isGeneratingChapter, chapterProgress, cancelGeneration } = useAIStore()
-  const { fetchChapters, setCurrentChapter } = useChapterStore()
+  const { generateChapter, isGeneratingChapter } = useAIStore()
   const [submitError, setSubmitError] = React.useState<string | null>(null)
   const nextChapterNumber = React.useMemo(
     () => Math.max(0, ...chapters.map((chapter) => chapter.chapterNumber)) + 1,
     [chapters]
   )
-  const latestProgress = React.useMemo(() => {
-    const progressItems = chapterProgress.split('\n').filter(Boolean)
-    return progressItems.at(-1) || '正在生成章节...'
-  }, [chapterProgress])
 
   const form = useForm<GenerateChapterFormValues>({
     resolver: zodResolver(generateChapterSchema),
@@ -130,13 +125,6 @@ export function AIGenerateChapterDialog({
     form.setValue('tensionLevel', tensionLevel)
   }, [watchedChapterNumber, getOutlineData, form])
 
-  const handleOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen && isGeneratingChapter) {
-      cancelGeneration()
-    }
-    onOpenChange(nextOpen)
-  }
-
   const onSubmit = async (values: GenerateChapterFormValues) => {
     if (!projectId) {
       toast.error('请先选择项目')
@@ -145,33 +133,26 @@ export function AIGenerateChapterDialog({
 
     setSubmitError(null)
 
+    // 立即关闭对话框
+    onOpenChange(false)
+
     try {
-      const result = await generateChapter(
-        {
-          projectId,
-          chapterNumber: values.chapterNumber,
-          chapterTitle: values.chapterTitle || undefined,
-          chapterOutline: values.chapterOutline || undefined,
-          targetWords: values.targetWords,
-          model: values.model?.trim() || undefined,
-          emotionalGoal: values.emotionalGoal || undefined,
-          plotFunction: values.plotFunction,
-          tensionLevel: values.tensionLevel,
-        },
-        () => {}
-      )
+      await generateChapter({
+        projectId,
+        chapterNumber: values.chapterNumber,
+        chapterTitle: values.chapterTitle || undefined,
+        chapterOutline: values.chapterOutline || undefined,
+        targetWords: values.targetWords,
+        model: values.model?.trim() || undefined,
+        emotionalGoal: values.emotionalGoal || undefined,
+        plotFunction: values.plotFunction,
+        tensionLevel: values.tensionLevel,
+      })
 
-      await fetchChapters(projectId)
-      const createdChapter = useChapterStore
-        .getState()
-        .chapters.find((chapter) => chapter.id === result.chapterId)
-
-      if (createdChapter) {
-        setCurrentChapter(createdChapter)
-      }
-
+      // 生成完成后强制刷新章节列表以获取服务端最终数据
+      const chapterStore = useChapterStore.getState()
+      await chapterStore.fetchChapters(projectId, true)
       toast.success('章节生成成功')
-      onOpenChange(false)
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         toast.info('已取消章节生成')
@@ -184,7 +165,7 @@ export function AIGenerateChapterDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[560px]">
         <DialogHeader>
           <DialogTitle>AI 生成章节</DialogTitle>
@@ -373,15 +354,6 @@ export function AIGenerateChapterDialog({
               )}
             />
 
-            {isGeneratingChapter && (
-              <div className="rounded-md border bg-muted/40 p-3 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>{latestProgress}</span>
-                </div>
-              </div>
-            )}
-
             {submitError && (
               <div className="flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -390,16 +362,9 @@ export function AIGenerateChapterDialog({
             )}
 
             <div className="flex justify-end gap-3 pt-2">
-              {isGeneratingChapter ? (
-                <Button type="button" variant="outline" onClick={cancelGeneration}>
-                  <X className="mr-2 h-4 w-4" />
-                  取消生成
-                </Button>
-              ) : (
-                <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-                  取消
-                </Button>
-              )}
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                取消
+              </Button>
               <Button type="submit" disabled={isGeneratingChapter || !projectId}>
                 {isGeneratingChapter && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isGeneratingChapter ? '生成中...' : '开始生成'}
