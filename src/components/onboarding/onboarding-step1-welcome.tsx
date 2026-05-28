@@ -4,8 +4,40 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { Sparkles, Shuffle } from 'lucide-react'
+import { Sparkles, Shuffle, ChevronDown } from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+
+const AUDIENCE_OPTIONS = [
+  { value: '', label: '不限' },
+  { value: '男频', label: '男频' },
+  { value: '女频', label: '女频' },
+]
+
+const GENRE_OPTIONS = [
+  { value: '', label: '不限' },
+  { value: '玄幻修仙', label: '玄幻修仙' },
+  { value: '都市', label: '都市' },
+  { value: '科幻', label: '科幻' },
+  { value: '悬疑灵异', label: '悬疑灵异' },
+  { value: '历史', label: '历史' },
+  { value: '游戏异界', label: '游戏异界' },
+  { value: '末世', label: '末世' },
+]
+
+const TONE_OPTIONS = [
+  { value: '', label: '不限' },
+  { value: '热血爽文', label: '热血爽文' },
+  { value: '轻松搞笑', label: '轻松搞笑' },
+  { value: '正剧严肃', label: '正剧严肃' },
+  { value: '悬疑惊悚', label: '悬疑惊悚' },
+  { value: '温馨治愈', label: '温馨治愈' },
+]
 
 interface OnboardingStep1WelcomeProps {
   onNext: (idea: string) => void
@@ -15,6 +47,10 @@ interface OnboardingStep1WelcomeProps {
 export function OnboardingStep1Welcome({ onNext, onSwitchToManual }: OnboardingStep1WelcomeProps) {
   const [idea, setIdea] = useState('')
   const [isRandomLoading, setIsRandomLoading] = useState(false)
+  const [audience, setAudience] = useState('')
+  const [genre, setGenre] = useState('')
+  const [tone, setTone] = useState('')
+  const activeFilterCount = [audience, genre, tone].filter(Boolean).length
   const minLength = 10
 
   const handleNext = () => {
@@ -26,7 +62,11 @@ export function OnboardingStep1Welcome({ onNext, onSwitchToManual }: OnboardingS
   const handleRandomIdea = async () => {
     setIsRandomLoading(true)
     try {
-      const response = await fetch('/api/ai/random-story-idea', { method: 'POST' })
+      const response = await fetch('/api/ai/random-story-idea', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ audience, genre, tone }),
+      })
       const result = await response.json()
       if (result.success && result.data?.idea) {
         setIdea(result.data.idea)
@@ -67,16 +107,62 @@ export function OnboardingStep1Welcome({ onNext, onSwitchToManual }: OnboardingS
               <Label htmlFor="idea" className="text-base">
                 故事想法 <span className="text-muted-foreground text-sm">（至少 {minLength} 字）</span>
               </Label>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleRandomIdea}
-                disabled={isRandomLoading}
-              >
-                <Shuffle className="mr-1.5 h-3.5 w-3.5" />
-                {isRandomLoading ? '生成中...' : '随机生成'}
-              </Button>
+              <div className="flex items-center">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRandomIdea}
+                  disabled={isRandomLoading}
+                  className="rounded-r-none border-r-0"
+                >
+                  <Shuffle className="mr-1.5 h-3.5 w-3.5" />
+                  {isRandomLoading ? '生成中...' : '随机生成'}
+                  {activeFilterCount > 0 && (
+                    <span className="ml-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
+                      {activeFilterCount}
+                    </span>
+                  )}
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="rounded-l-none px-1.5"
+                      disabled={isRandomLoading}
+                    >
+                      <ChevronDown className="h-3.5 w-3.5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    sideOffset={6}
+                    className="w-72 p-3 space-y-3"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <FilterRow
+                      label="目标受众"
+                      options={AUDIENCE_OPTIONS}
+                      value={audience}
+                      onChange={setAudience}
+                    />
+                    <FilterRow
+                      label="题材类型"
+                      options={GENRE_OPTIONS}
+                      value={genre}
+                      onChange={setGenre}
+                    />
+                    <FilterRow
+                      label="故事基调"
+                      options={TONE_OPTIONS}
+                      value={tone}
+                      onChange={setTone}
+                    />
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
             <Textarea
               id="idea"
@@ -130,6 +216,39 @@ export function OnboardingStep1Welcome({ onNext, onSwitchToManual }: OnboardingS
           )}
         </div>
       </div>
+    </div>
+  )
+}
+
+function FilterRow({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string
+  options: { value: string; label: string }[]
+  value: string
+  onChange: (v: string) => void
+}) {
+  return (
+    <div className="flex items-center gap-1.5 flex-wrap">
+      <span className="text-xs text-muted-foreground shrink-0 mr-1">{label}</span>
+      {options.map((opt) => (
+        <button
+          key={opt.value}
+          type="button"
+          onClick={() => onChange(opt.value)}
+          className={cn(
+            'px-2.5 py-0.5 rounded-full text-xs border transition-colors',
+            value === opt.value
+              ? 'bg-primary text-primary-foreground border-primary'
+              : 'bg-transparent hover:bg-muted border-border'
+          )}
+        >
+          {opt.label}
+        </button>
+      ))}
     </div>
   )
 }

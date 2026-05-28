@@ -18,13 +18,25 @@ const SYSTEM_PROMPT = `你是一个创意小说灵感生成器。用户需要随
 - 直接输出故事构想，不需要任何前缀（如"好的"、"这是一个"等）
 - 不要使用markdown格式`
 
-export async function POST(_request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
+    const body = await request.json().catch(() => ({}))
+    const { audience, genre, tone } = body || {}
+
+    const constraints: string[] = []
+    if (audience) constraints.push(`目标受众：${audience}`)
+    if (genre) constraints.push(`题材类型：${genre}`)
+    if (tone) constraints.push(`故事基调：${tone}`)
+
+    const constraintPrompt = constraints.length > 0
+      ? `\n\n【用户偏好，必须严格遵循】\n${constraints.join('\n')}\n请确保生成的故事构想完全符合以上偏好。`
+      : ''
+
     const { model } = await getLanguageModelAsync()
 
     const result = await generateText({
       model,
-      system: SYSTEM_PROMPT,
+      system: SYSTEM_PROMPT + constraintPrompt,
       prompt: '请给我一个随机的小说创作灵感',
       temperature: 1.2,
       maxOutputTokens: 300,
