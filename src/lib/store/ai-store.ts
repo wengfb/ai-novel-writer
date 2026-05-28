@@ -119,13 +119,13 @@ export const useAIStore = create<AIState>()(
             set({ generatingChapterId: chapterId })
             const chapterStore = useChapterStore.getState()
 
-            // 将章节添加到本地列表
+            // 将章节添加到本地列表（初始空内容，CSS 伪元素负责显示尾部光标）
             chapterStore.addChapterLocally({
               id: chapterId,
               projectId: params.projectId,
               chapterNumber: params.chapterNumber,
               title: params.chapterTitle || `第${params.chapterNumber}章`,
-              content: '',
+              content: '<p></p>',
               wordCount: 0,
               status: 'draft' as const,
               createdAt: new Date(),
@@ -133,13 +133,18 @@ export const useAIStore = create<AIState>()(
             })
           },
           (chunk) => {
-            // 流式更新：累积内容并实时写入章节 store
+            // 流式更新：累积内容，简单 <p> + <br> 包裹，不拆段落
             set((state) => {
               state.chapterProgress += chunk
             })
             if (generatedChapterId) {
-              accumulatedContent += chunk
-              useChapterStore.getState().updateChapterContent(generatedChapterId, accumulatedContent)
+              accumulatedContent += (accumulatedContent ? '\n\n' : '') + chunk
+              const simpleHtml = '<p>' + accumulatedContent
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\n/g, '<br>') + '</p>'
+              useChapterStore.getState().updateChapterContent(generatedChapterId, simpleHtml)
             }
           },
           abortController?.signal

@@ -159,3 +159,17 @@
     @apply bg-muted-foreground/40;
   }
 }
+
+/* AI 生成中的编辑器尾部光标 — 平滑呼吸动效 */
+@keyframes cursor-pulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 1; }
+}
+
+.editor-generating .ProseMirror > *:last-child::after {
+  content: '|';
+  margin-left: 1px;
+  font-weight: 500;
+  color: hsl(var(--primary));
+  animation: cursor-pulse 1.4s ease-in-out infinite;
+}

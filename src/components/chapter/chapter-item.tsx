@@ -13,8 +13,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { FileText, Trash2 } from 'lucide-react'
+import { FileText, Loader2, Trash2 } from 'lucide-react'
 import type { Chapter } from '@/lib/store/chapter-store'
+import { useAIStore } from '@/lib/store/ai-store'
 
 interface ChapterItemProps {
   chapter: Chapter
@@ -25,6 +26,9 @@ interface ChapterItemProps {
 
 export function ChapterItem({ chapter, isActive, onClick, onDelete }: ChapterItemProps) {
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
+  const isGeneratingChapter = useAIStore(s => s.isGeneratingChapter)
+  const generatingChapterId = useAIStore(s => s.generatingChapterId)
+  const isCurrentGenerating = isGeneratingChapter && generatingChapterId === chapter.id
 
   return (
     <>
@@ -36,16 +40,27 @@ export function ChapterItem({ chapter, isActive, onClick, onDelete }: ChapterIte
           className="flex-1 justify-start h-auto py-2 pr-1"
           onClick={onClick}
         >
-          <FileText className="mr-2 h-4 w-4 flex-shrink-0" />
+          {isCurrentGenerating ? (
+            <Loader2 className="mr-2 h-4 w-4 flex-shrink-0 animate-spin text-primary" />
+          ) : (
+            <FileText className="mr-2 h-4 w-4 flex-shrink-0" />
+          )}
           <div className="flex-1 text-left min-w-0">
             <div className="font-medium text-sm">第 {chapter.chapterNumber} 章</div>
             <div className="text-xs text-muted-foreground truncate">
               {chapter.title}
             </div>
           </div>
-          <Badge variant="outline" className="ml-2 flex-shrink-0">
-            {chapter.wordCount}
-          </Badge>
+          {isCurrentGenerating ? (
+            <Badge variant="secondary" className="ml-2 flex-shrink-0 text-xs">
+              <Loader2 className="mr-1 h-3 w-3 animate-spin inline" />
+              生成中
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="ml-2 flex-shrink-0">
+              {chapter.wordCount}
+            </Badge>
+          )}
         </Button>
         <Button
           variant="ghost"

@@ -1,17 +1,16 @@
 "use client"
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import { BubbleMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
-import { Loader2, X } from 'lucide-react'
 import { useChapterStore } from '@/lib/store/chapter-store'
 import { useProjectStore } from '@/lib/store/project-store'
 import { useAIStore } from '@/lib/store/ai-store'
 import { useAutoSave } from '@/hooks/use-auto-save'
+import { cn } from '@/lib/utils'
 import { RewriteBubbleMenu } from './rewrite-bubble-menu'
-import { Button } from '@/components/ui/button'
 
 interface SelectionState {
   text: string
@@ -26,12 +25,11 @@ export function TextEditor() {
   const rewriteResult = useAIStore(s => s.rewriteResult)
   const isGeneratingChapter = useAIStore(s => s.isGeneratingChapter)
   const generatingChapterId = useAIStore(s => s.generatingChapterId)
-  const cancelGeneration = useAIStore(s => s.cancelGeneration)
   const [content, setContent] = useState(currentChapter?.content || '')
   const [selection, setSelection] = useState<SelectionState | null>(null)
 
-  // 当前章节是否正在 AI 生成中
-  const isCurrentChapterGenerating = isGeneratingChapter && generatingChapterId === currentChapter?.id
+  // 标记是否为外部触发的 setContent（切换章节 / AI 流式），跳过 onUpdate 避免竞态
+  const isExternalUpdate = useRef(false)
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -48,6 +46,7 @@ export function TextEditor() {
       },
     },
     onUpdate: ({ editor }) => {
+      if (isExternalUpdate.current) return
       const newContent = editor.getHTML()
       setContent(newContent)
       if (currentChapter) {
@@ -76,26 +75,13 @@ export function TextEditor() {
     2000
   )
 
-  // 当切换章节时更新编辑器内容
+  // 合并：切换章节 + AI 流式更新，统一通过此 effect 同步到编辑器
   useEffect(() => {
-    if (!editor) {
-      return
-    }
-
-    if (currentChapter) {
-      editor.commands.setContent(currentChapter.content, { emitUpdate: true })
-    } else {
-      editor.commands.clearContent(true)
-    }
-  }, [currentChapter, editor])
-
-  // 当章节内容变化时更新编辑器（用于 AI 生成）
-  useEffect(() => {
-    if (currentChapter && editor) {
-      const currentEditorContent = editor.getHTML()
-      if (currentEditorContent !== currentChapter.content) {
-        editor.commands.setContent(currentChapter.content, { emitUpdate: true })
-      }
+    if (!editor || !currentChapter) return
+    if (editor.getHTML() !== currentChapter.content) {
+      isExternalUpdate.current = true
+      editor.commands.setContent(currentChapter.content, { emitUpdate: false })
+      isExternalUpdate.current = false
     }
   }, [currentChapter, editor])
 
@@ -106,9 +92,7 @@ export function TextEditor() {
   // 控制 BubbleMenu 的显示
   const shouldShowBubbleMenu = useCallback(
     ({ editor: _editor }: { editor: any; state: any }) => {
-      // 选中文本时显示
       if (!_editor.state.selection.empty) return true
-      // 正在改写或预览时保持显示
       if (isRewriting || rewriteResult) return true
       return false
     },
@@ -119,43 +103,26 @@ export function TextEditor() {
     return null
   }
 
-  // 判断是否可以显示改写菜单
   const canShowRewrite = selection && currentChapter && currentProject
+  const isCurrentChapterGenerating = isGeneratingChapter && generatingChapterId === currentChapter?.id
 
   return (
-    <div className="relative w-full max-w-screen-lg mx-auto min-h-[500px]">
-      {/* AI 生成状态指示器 */}
-      {isCurrentChapterGenerating && (
-        <div className="absolute top-2 left-2 right-2 z-10 flex items-center justify-between rounded-md border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300">
-          <div className="flex items-center gap-2">
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            <span>AI 正在生成章节内容...</span>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-6 px-2 text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400"
-            onClick={cancelGeneration}
-          >
-            <X className="mr-1 h-3 w-3" />
-            取消
-          </Button>
-        </div>
-      )}
-
+    <div className={cn(
+      "relative w-full max-w-screen-lg mx-auto min-h-[500px]",
+      isCurrentChapterGenerating && "editor-generating"
+    )}>
       {/* 保存状态指示器 */}
-      {!isCurrentChapterGenerating && (isSaving || autoSaving) && (
+      {(isSaving || autoSaving) && (
         <div className="absolute top-2 right-2 text-xs text-muted-foreground">
           保存中...
         </div>
       )}
-      {!isCurrentChapterGenerating && lastSaved && !isSaving && !autoSaving && (
+      {lastSaved && !isSaving && !autoSaving && (
         <div className="absolute top-2 right-2 text-xs text-muted-foreground">
           已保存 {lastSaved.toLocaleTimeString()}
         </div>
       )}
 
-      {/* BubbleMenu：文本选中时显示改写菜单 */}
       {editor && (
         <BubbleMenu editor={editor} shouldShow={shouldShowBubbleMenu}>
           {canShowRewrite ? (
