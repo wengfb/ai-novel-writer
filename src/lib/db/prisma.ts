@@ -6,8 +6,10 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 const createPrismaClient = () => {
+  // 优先使用 SQLITE_DB_PATH 避免与系统环境变量 DATABASE_URL 冲突
+  const dbUrl = process.env.SQLITE_DB_PATH || process.env.DATABASE_URL || 'file:./dev.db'
   const adapter = new PrismaBetterSqlite3({
-    url: process.env.DATABASE_URL || 'file:./dev.db',
+    url: dbUrl,
   })
 
   return new PrismaClient({
