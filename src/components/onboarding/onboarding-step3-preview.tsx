@@ -1,33 +1,60 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Loader2, ChevronDown, CheckCircle2, BookOpen, Users, Globe } from 'lucide-react'
 import { toast } from 'sonner'
-
-interface CreativeDirection {
-  id: string
-  title: string
-  genre: string
-  mainConflict: string
-  protagonist: {
-    name: string
-    description: string
-  }
-  ending: 'open' | 'tragedy' | 'comedy'
-  highlights: string[]
-}
+import type { StoryIdeaCard } from '@/types'
 
 interface OnboardingStep3PreviewProps {
-  direction: CreativeDirection
+  idea: StoryIdeaCard
   onComplete: (projectId: string) => void
   onBack: () => void
 }
+
+interface GeneratedCharacterPreview {
+  name: string
+}
+
+interface GeneratedWorldSettingPreview {
+  name: string
+}
+
+interface GeneratedOutlineChapterDraft {
+  chapterNumber?: number
+  title?: string
+  summary?: string
+  emotionalGoal?: string
+  plotFunction?: string
+  tensionLevel?: number
+}
+
+interface GeneratedOutlinePreview {
+  storySummary?: string
+  characters?: GeneratedCharacterPreview[]
+  worldSettings?: GeneratedWorldSettingPreview[]
+  chapters?: GeneratedOutlineChapterDraft[]
+}
+
+interface GeneratedCharacterDraft {
+  name?: string
+  role?: string
+  description?: string
+  personality?: string
+  goal?: string
+}
+
+interface GeneratedWorldElementDraft {
+  type?: string
+  name?: string
+  description?: string
+}
+
 
 interface GenerationProgress {
   stage: 'outline' | 'characters' | 'world' | 'project' | 'done'
@@ -36,18 +63,30 @@ interface GenerationProgress {
 }
 
 export function OnboardingStep3Preview({
-  direction,
+  idea,
   onComplete,
   onBack
 }: OnboardingStep3PreviewProps) {
-  const [projectTitle, setProjectTitle] = useState(direction.title)
+  const defaultProjectTitle = idea.title || `${idea.genre || '新'}小说`
+  const [projectTitle, setProjectTitle] = useState(defaultProjectTitle)
   const [isGenerating, setIsGenerating] = useState(false)
   const [progress, setProgress] = useState<GenerationProgress>({
     stage: 'outline',
     progress: 0,
     message: '准备生成...'
   })
-  const [generatedData, setGeneratedData] = useState<any>(null)
+  const [generatedData, setGeneratedData] = useState<GeneratedOutlinePreview | null>(null)
+
+  useEffect(() => {
+    setProjectTitle(defaultProjectTitle)
+    setGeneratedData(null)
+    setIsGenerating(false)
+    setProgress({
+      stage: 'outline',
+      progress: 0,
+      message: '准备生成...'
+    })
+  }, [defaultProjectTitle])
 
   const startGeneration = async () => {
     setIsGenerating(true)
@@ -63,12 +102,14 @@ export function OnboardingStep3Preview({
           projectId: 'temp',
           prompt: `基于以下创意方向生成详细的小说大纲：
 
-标题：${direction.title}
-类型：${direction.genre}
-核心冲突：${direction.mainConflict}
-主角：${direction.protagonist.name} - ${direction.protagonist.description}
-结局走向：${direction.ending}
-故事亮点：${direction.highlights.join('、')}
+题材：${idea.genre}
+世界观：${idea.worldBuilding}
+主角：${idea.protagonist}
+核心冲突：${idea.coreConflict}
+主线目标：${idea.mainGoal}
+高概念梗概：${idea.highConcept}
+内容升华：${idea.sublimation}
+开篇切入点：${idea.openingHook}
 
 请按以下 JSON 格式生成完整大纲：
 
@@ -136,7 +177,7 @@ export function OnboardingStep3Preview({
       }
 
       // 从组合类型中提取第一个类型（如 "科幻|热血" -> "科幻"）
-      let primaryGenre = direction.genre.split('|')[0].trim()
+      let primaryGenre = idea.genre.split('|')[0].trim()
       // 映射到支持的类型
       primaryGenre = genreMap[primaryGenre] || primaryGenre
       // 兜底：不在 Zod enum 支持范围内的类型统一归为其他
@@ -151,7 +192,7 @@ export function OnboardingStep3Preview({
         body: JSON.stringify({
           title: projectTitle,
           genre: primaryGenre,
-          description: outlineData.storySummary || direction.mainConflict,
+          description: outlineData.storySummary || idea.highConcept || idea.coreConflict,
           targetWords: 100000
         })
       })
@@ -175,7 +216,8 @@ export function OnboardingStep3Preview({
       }
 
       if (outlineData.characters && Array.isArray(outlineData.characters)) {
-        for (const char of outlineData.characters.slice(0, 5)) {
+        for (const char of outlineData.characters as GeneratedCharacterDraft[]) {
+          if (!char.name) continue
           const rawRole = char.role || 'supporting'
           const mappedRole = roleMap[rawRole] || rawRole
 
@@ -213,7 +255,8 @@ export function OnboardingStep3Preview({
       }
 
       if (outlineData.worldSettings && Array.isArray(outlineData.worldSettings)) {
-        for (const element of outlineData.worldSettings.slice(0, 5)) {
+        for (const element of outlineData.worldSettings.slice(0, 5) as GeneratedWorldElementDraft[]) {
+          if (!element.name) continue
           // 处理组合类型（如 "地理/组织" -> "地理" -> "location"）
           let rawType = element.type || '其他'
           if (rawType.includes('/')) {
@@ -260,7 +303,7 @@ export function OnboardingStep3Preview({
           // 创建章节（作为卷的子节点）
           const validFunctions = ['推进', '转折', '铺垫', '高潮', '过渡']
           for (let i = 0; i < outlineData.chapters.length; i++) {
-            const chapter = outlineData.chapters[i]
+            const chapter = outlineData.chapters[i] as GeneratedOutlineChapterDraft
             await fetch(`/api/projects/${project.id}/outlines`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -362,7 +405,7 @@ export function OnboardingStep3Preview({
               <PreviewCard
                 icon={<Users className="h-5 w-5" />}
                 title={`角色 (${generatedData.characters.length})`}
-                content={generatedData.characters.map((c: any) => c.name).join('、')}
+                content={generatedData.characters.map((c) => c.name).join('、')}
               />
             )}
 
@@ -371,7 +414,7 @@ export function OnboardingStep3Preview({
               <PreviewCard
                 icon={<Globe className="h-5 w-5" />}
                 title={`世界观元素 (${generatedData.worldSettings.length})`}
-                content={generatedData.worldSettings.map((w: any) => w.name).join('、')}
+                content={generatedData.worldSettings.map((w) => w.name).join('、')}
               />
             )}
           </div>

@@ -1,3 +1,17 @@
+// 故事创意卡片（随机生成）
+export interface StoryIdeaCard {
+  id: string           // "1", "2", "3"
+  title: string        // 小说名称
+  genre: string        // 题材
+  worldBuilding: string // 世界观
+  protagonist: string  // 主角
+  coreConflict: string // 核心冲突
+  mainGoal: string     // 主线目标
+  highConcept: string  // 高概念梗概
+  sublimation: string  // 内容升华
+  openingHook: string  // 开篇切入点
+}
+
 // 项目类型
 export interface Project {
   id: string
