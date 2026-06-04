@@ -1,11 +1,13 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { getAIProviderAsync } from '@/lib/ai/providers'
 import { PromptTemplateManager } from '@/lib/ai/prompts/template-manager'
 import { getContextManager } from '@/lib/ai/context-manager'
 import { apiSuccess, withErrorHandler, ApiErrors } from '@/lib/api/response'
 import { parseJsonBody, validateRequest } from '@/lib/api/validators'
 import { GenerateOutlineSchema } from '@/lib/api/schemas'
+import type { Chapter, Character, Foreshadowing, WorldElement } from '@/types'
+import { generateOutlineFromPrompt } from '@/lib/ai/shared/outline-generator'
+import { normalizePlotFunction, normalizeTensionLevel } from '@/lib/ai/onboarding-bootstrap'
 
 /**
  * POST /api/ai/generate/outline
@@ -13,187 +15,128 @@ import { GenerateOutlineSchema } from '@/lib/api/schemas'
  */
 export async function POST(request: NextRequest) {
   return withErrorHandler(async () => {
-    // 解析请求体
-    const body = await parseJsonBody(request) as any
+    const body = await parseJsonBody<unknown>(request)
+    const data = validateRequest(GenerateOutlineSchema, body)
 
-    // 支持两种调用方式：
-    // 1. Onboarding 方式：{ projectId: "temp", prompt: "..." }
-    // 2. 标准方式：{ projectId, genre, coreIdea, ... }
-    const isOnboarding = body.projectId === 'temp' && body.prompt
-
-    let data: any
-    let prompt: string
-    let systemPrompt: string | undefined
-    let totalWords = 0
-
-    if (isOnboarding) {
-      // Onboarding 模式：直接使用提供的 prompt
-      data = {
-        projectId: 'temp',
-        model: body.model,
-      }
-      prompt = body.prompt
-    } else {
-      // 标准模式：验证参数并构建 prompt
-      data = validateRequest(GenerateOutlineSchema, body)
-
-      // 检查项目是否存在并加载已有上下文
-      const project = await prisma.project.findUnique({
-        where: { id: data.projectId },
-        include: {
-          characters: true,
-          worldElements: true,
-          foreshadowings: true,
-          chapters: { orderBy: { chapterNumber: 'asc' } },
-        },
-      })
-
-      if (!project) {
-        return ApiErrors.projectNotFound()
-      }
-
-      const promptManager = new PromptTemplateManager()
-      totalWords = data.targetWords * data.chapterCount
-      prompt = promptManager.render('outline-generation', {
-        genre: data.genre,
-        coreIdea: data.coreIdea,
-        style: data.style || '标准叙事',
-        targetWords: data.targetWords,
-        chapterCount: data.chapterCount,
-        totalWords,
-      })
-
-      // 使用 ContextManager 构建已有设定上下文作为 systemPrompt
-      const contextManager = getContextManager()
-      const chapterCount = project.chapters.length
-      const contextPackage = contextManager.buildContext({
-        currentChapter: chapterCount || 1,
-        allChapters: project.chapters as any,
-        characters: project.characters as any,
-        worldElements: project.worldElements as any,
-        foreshadowings: project.foreshadowings as any,
-        genre: project.genre,
-        projectId: data.projectId,
-      })
-      systemPrompt = contextManager.formatContextForPrompt(contextPackage)
-    }
-
-    const ai = await getAIProviderAsync(data.model)
-
-    // 生成大纲
-    const startTime = Date.now()
-    const result = await ai.generate({
-      type: 'outline',
-      model: data.model || ai.model,
-      prompt,
-      systemPrompt,
-      temperature: 0.7,
-      maxTokens: 8000,
+    const project = await prisma.project.findUnique({
+      where: { id: data.projectId },
+      include: {
+        characters: true,
+        worldElements: true,
+        foreshadowings: true,
+        chapters: { orderBy: { chapterNumber: 'asc' } },
+      },
     })
 
-    const duration = Date.now() - startTime
+    if (!project) {
+      return ApiErrors.projectNotFound()
+    }
 
-    // 解析JSON结果
-    let outlineData: any
+    const promptManager = new PromptTemplateManager()
+    const totalWords = data.targetWords * data.chapterCount
+    const prompt = promptManager.render('outline-generation', {
+      genre: data.genre,
+      coreIdea: data.coreIdea,
+      style: data.style || '标准叙事',
+      targetWords: data.targetWords,
+      chapterCount: data.chapterCount,
+      totalWords,
+    })
+
+    const contextManager = getContextManager()
+    const chapterCount = project.chapters.length
+    const contextPackage = contextManager.buildContext({
+      currentChapter: chapterCount || 1,
+      allChapters: project.chapters as unknown as Chapter[],
+      characters: project.characters as unknown as Character[],
+      worldElements: project.worldElements as unknown as WorldElement[],
+      foreshadowings: project.foreshadowings as unknown as Foreshadowing[],
+      genre: project.genre,
+      projectId: data.projectId,
+    })
+    const systemPrompt = contextManager.formatContextForPrompt(contextPackage)
+
+    let generated
     try {
-      console.log('AI 返回的原始内容（前 500 字符）:', result.output.slice(0, 500))
-
-      const jsonMatch = result.output.match(/```json\n([\s\S]*?)\n```/) ||
-        result.output.match(/\{[\s\S]*\}/)
-
-      if (jsonMatch) {
-        const jsonStr = jsonMatch[1] || jsonMatch[0]
-        console.log('提取的 JSON 字符串（前 500 字符）:', jsonStr.slice(0, 500))
-        outlineData = JSON.parse(jsonStr)
-      } else {
-        console.error('未找到 JSON 匹配')
-        throw new Error('无法解析AI返回的大纲JSON')
-      }
+      generated = await generateOutlineFromPrompt({
+        prompt,
+        model: data.model,
+        systemPrompt,
+      })
     } catch (error) {
-      console.error('Failed to parse outline JSON:', error)
-      console.error('完整的 AI 输出:', result.output)
+      console.error('Failed to generate outline:', error)
       return ApiErrors.aiGenerationFailed('大纲生成失败，无法解析AI返回结果')
     }
 
-    // 只在非 Onboarding 模式下保存到数据库
-    if (!isOnboarding) {
-      // 保存角色到数据库
-      const characterPromises = (outlineData.characters || []).map((char: any) => {
-        return prisma.character.create({
-          data: {
-            projectId: data.projectId,
-            name: char.name,
-            personality: char.personality,
-            backstory: char.description,
-            motivation: char.goal,
-          },
-        })
-      })
+    const outlineData = generated.outline
 
-      // 保存世界观元素到数据库
-      const worldElementPromises = (outlineData.worldSettings || []).map((element: any) => {
-        return prisma.worldElement.create({
-          data: {
-            projectId: data.projectId,
-            type: element.type === '地理' ? 'location' : 'other',
-            name: element.name,
-            description: element.description,
-          },
-        })
-      })
-
-      await Promise.all([...characterPromises, ...worldElementPromises])
-
-      // 保存大纲节点（简化处理，只保存章节级大纲）
-      const outlinePromises = (outlineData.chapters || []).map((chapter: any) => {
-        const validFunctions = ['推进', '转折', '铺垫', '高潮', '过渡']
-        const plotFunc = validFunctions.includes(chapter.plotFunction) ? chapter.plotFunction : '推进'
-        const tension = typeof chapter.tensionLevel === 'number' && chapter.tensionLevel >= 1 && chapter.tensionLevel <= 10
-          ? chapter.tensionLevel : 5
-
-        return prisma.outline.create({
-          data: {
-            projectId: data.projectId,
-            type: 'chapter',
-            order: chapter.chapterNumber,
-            title: chapter.title,
-            description: chapter.summary,
-            targetWords: chapter.estimatedWords,
-            status: 'planned',
-            emotionalGoal: chapter.emotionalGoal || null,
-            plotFunction: plotFunc,
-            tensionLevel: tension,
-          },
-        })
-      })
-
-      await Promise.all(outlinePromises)
-
-      // 记录生成历史
-      await prisma.generation.create({
+    const characterPromises = outlineData.characters.map((char) => {
+      return prisma.character.create({
         data: {
           projectId: data.projectId,
-          type: 'outline',
-          provider: ai.name,
-          model: data.model || ai.model,
-          prompt,
-          output: result.output,
-          tokensUsed: JSON.stringify(result.tokensUsed),
-          cost: result.cost,
-          duration,
-          status: result.status,
+          name: char.name,
+          personality: Array.isArray(char.personality) ? char.personality.join('、') : char.personality,
+          backstory: char.description,
+          motivation: char.goal,
         },
       })
-    }
+    })
+
+    const worldElementPromises = outlineData.worldSettings.map((element) => {
+      return prisma.worldElement.create({
+        data: {
+          projectId: data.projectId,
+          type: element.type === '地理' ? 'location' : 'other',
+          name: element.name,
+          description: element.description || '待补充设定描述',
+        },
+      })
+    })
+
+    await Promise.all([...characterPromises, ...worldElementPromises])
+
+    const outlinePromises = outlineData.chapters.map((chapter, index) => {
+      return prisma.outline.create({
+        data: {
+          projectId: data.projectId,
+          type: 'chapter',
+          order: chapter.chapterNumber || index + 1,
+          title: chapter.title || `第${chapter.chapterNumber || index + 1}章`,
+          description: chapter.summary,
+          targetWords: chapter.estimatedWords,
+          status: 'planned',
+          emotionalGoal: chapter.emotionalGoal || null,
+          plotFunction: normalizePlotFunction(chapter.plotFunction),
+          tensionLevel: normalizeTensionLevel(chapter.tensionLevel),
+        },
+      })
+    })
+
+    await Promise.all(outlinePromises)
+
+    await prisma.generation.create({
+      data: {
+        projectId: data.projectId,
+        type: 'outline',
+        provider: generated.provider,
+        model: generated.model,
+        prompt,
+        output: generated.rawOutput,
+        tokensUsed: generated.tokensUsed ? JSON.stringify(generated.tokensUsed) : null,
+        cost: generated.cost,
+        duration: generated.duration,
+        status: 'success',
+      },
+    })
 
     return apiSuccess({
       outline: outlineData,
       suggestedTotalWords: outlineData.suggestedTotalWords || totalWords || undefined,
       wordCountRationale: outlineData.wordCountRationale || '',
-      generationId: result.tokensUsed ? 'generated' : undefined,
-      tokensUsed: result.tokensUsed,
-      cost: result.cost,
-      duration,
+      generationId: generated.tokensUsed ? 'generated' : undefined,
+      tokensUsed: generated.tokensUsed,
+      cost: generated.cost,
+      duration: generated.duration,
     })
   })
 }

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import type { Layout } from "react-resizable-panels"
-import { Plus } from "lucide-react"
+import { Plus, AlertTriangle, X } from "lucide-react"
 import { StudioLayoutClient } from "@/components/layout/studio-layout"
 import { StudioHeader } from "@/components/studio/studio-header"
 import { TextEditor } from "@/components/editor/text-editor"
@@ -23,6 +23,9 @@ interface HomeClientProps {
 export function HomeClient({ defaultLayout }: HomeClientProps) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isManualOnboardingOpen, setIsManualOnboardingOpen] = useState(false)
+  const [resumeOnboardingProject, setResumeOnboardingProject] = useState<{
+    id: string; title: string; genre: string; description: string
+  } | null>(null)
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(() => {
     if (typeof window === "undefined") return true
     return localStorage.getItem("hasCompletedOnboarding") === "true"
@@ -77,13 +80,25 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
           <StudioHeader />
           <ScrollArea className="flex-1">
             {currentProject ? (
-              mainView === "outline" ? (
-                <OutlineVisualization projectId={currentProject.id} />
-              ) : (
-                <div className="p-8 pb-32">
-                  <TextEditor />
-                </div>
-              )
+              <>
+                <IncompleteInitBanner
+                  projectId={currentProject.id}
+                  chapterCount={(currentProject as any).chapterCount as number}
+                  onContinueInit={() => setResumeOnboardingProject({
+                    id: currentProject.id,
+                    title: currentProject.title,
+                    genre: currentProject.genre,
+                    description: (currentProject as any).description || '',
+                  })}
+                />
+                {mainView === "outline" ? (
+                  <OutlineVisualization projectId={currentProject.id} />
+                ) : (
+                  <div className="p-8 pb-32">
+                    <TextEditor />
+                  </div>
+                )}
+              </>
             ) : (
               <ProjectWorkspace onCreateProject={handleNewProject} />
             )}
@@ -108,6 +123,18 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
         onComplete={handleOnboardingComplete}
         onSwitchToManual={handleSwitchToManual}
       />
+
+      {resumeOnboardingProject && (
+        <ProjectOnboardingDialog
+          open={true}
+          onOpenChange={(open) => { if (!open) setResumeOnboardingProject(null) }}
+          onComplete={(projectId) => {
+            setResumeOnboardingProject(null)
+            handleOnboardingComplete(projectId)
+          }}
+          resumeProject={resumeOnboardingProject}
+        />
+      )}
     </>
   )
 }
@@ -130,6 +157,58 @@ function ProjectWorkspace({ onCreateProject }: { onCreateProject: () => void }) 
       </div>
 
       <ProjectList onCreateProject={onCreateProject} />
+    </div>
+  )
+}
+
+// ============ 初始化未完成提醒 Banner ============
+
+function IncompleteInitBanner({
+  projectId,
+  chapterCount,
+  onContinueInit,
+}: {
+  projectId: string
+  chapterCount: number | undefined
+  onContinueInit: () => void
+}) {
+  const [dismissed, setDismissed] = useState(() => {
+    if (typeof window === "undefined") return false
+    return localStorage.getItem(`init-banner-dismissed-${projectId}`) === "true"
+  })
+
+  // chapterCount 为 0 或 undefined 表示项目刚创建未初始化
+  if (dismissed || (chapterCount && chapterCount > 0)) return null
+
+  return (
+    <div className="mx-8 mt-4 p-3 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <AlertTriangle className="h-4 w-4 text-amber-600" />
+        <div>
+          <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+            项目初始化未完成
+          </p>
+          <p className="text-xs text-amber-600 dark:text-amber-400">
+            部分模块（角色、世界观、分卷大纲等）尚未生成，建议完成初始化后再开始写作
+          </p>
+        </div>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <Button variant="outline" size="sm" onClick={onContinueInit}>
+          继续初始化
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7"
+          onClick={() => {
+            localStorage.setItem(`init-banner-dismissed-${projectId}`, "true")
+            setDismissed(true)
+          }}
+        >
+          <X className="h-3.5 w-3.5" />
+        </Button>
+      </div>
     </div>
   )
 }

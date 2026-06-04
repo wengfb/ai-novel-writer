@@ -66,6 +66,11 @@ model Outline {
   plotFunction  String   @default("推进") // 情节功能：推进/转折/铺垫/高潮/过渡
   tensionLevel  Int      @default(5)      // 张力等级 1-10
 
+  // 戏剧结构与因果链（bootstrap v2）
+  act        Int?     // 所属幕 (1/2/3)
+  causalFrom String?  // 因果链：前一节点
+  causalTo   String?  // 因果链：后一节点
+
   // 树形结构
   parentId  String?
   parent    Outline?  @relation("OutlineHierarchy", fields: [parentId], references: [id])

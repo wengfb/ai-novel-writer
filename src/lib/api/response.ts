@@ -1,15 +1,16 @@
 import { NextResponse } from 'next/server'
+import { Validation_error } from '@/lib/api/validators'
 
 /**
  * 统一 API 响应格式
  */
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   error?: {
     code: string
     message: string
-    details?: any
+    details?: unknown
   } | null
 }
 
@@ -33,7 +34,7 @@ export function apiSuccess<T>(data: T, status: number = 200): NextResponse<ApiRe
 export function apiError(
   code: string,
   message: string,
-  details?: any,
+  details?: unknown,
   status: number = 400
 ): NextResponse<ApiResponse> {
   return NextResponse.json(
@@ -54,7 +55,7 @@ export function apiError(
  * 常见错误响应
  */
 export const ApiErrors = {
-  badRequest: (message: string = '请求参数错误', details?: any) =>
+  badRequest: (message: string = '请求参数错误', details?: unknown) =>
     apiError('INVALID_PARAMS', message, details, 400),
 
   unauthorized: (message: string = '未授权') =>
@@ -63,7 +64,7 @@ export const ApiErrors = {
   notFound: (resource: string = '资源') =>
     apiError('NOT_FOUND', `${resource}不存在`, undefined, 404),
 
-  serverError: (message: string = '服务器错误', details?: any) =>
+  serverError: (message: string = '服务器错误', details?: unknown) =>
     apiError('SERVER_ERROR', message, details, 500),
 
   projectNotFound: () => apiError('PROJECT_NOT_FOUND', '项目不存在', undefined, 404),
@@ -88,6 +89,10 @@ export function withErrorHandler<T>(
 ): Promise<T | NextResponse<ApiResponse>> {
   return handler().catch((error) => {
     console.error('API Error:', error)
+
+    if (error instanceof Validation_error) {
+      return ApiErrors.badRequest('参数验证失败', error.errors)
+    }
 
     // Prisma 错误处理
     if (error.code === 'P2025') {

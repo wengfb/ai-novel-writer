@@ -32,6 +32,7 @@ export type OutlineAvgAggregateOutputType = {
   planningRange: number | null
   confidence: number | null
   tensionLevel: number | null
+  act: number | null
 }
 
 export type OutlineSumAggregateOutputType = {
@@ -40,6 +41,7 @@ export type OutlineSumAggregateOutputType = {
   planningRange: number | null
   confidence: number | null
   tensionLevel: number | null
+  act: number | null
 }
 
 export type OutlineMinAggregateOutputType = {
@@ -57,6 +59,9 @@ export type OutlineMinAggregateOutputType = {
   emotionalGoal: string | null
   plotFunction: string | null
   tensionLevel: number | null
+  act: number | null
+  causalFrom: string | null
+  causalTo: string | null
   parentId: string | null
   chapterId: string | null
   status: string | null
@@ -79,6 +84,9 @@ export type OutlineMaxAggregateOutputType = {
   emotionalGoal: string | null
   plotFunction: string | null
   tensionLevel: number | null
+  act: number | null
+  causalFrom: string | null
+  causalTo: string | null
   parentId: string | null
   chapterId: string | null
   status: string | null
@@ -101,6 +109,9 @@ export type OutlineCountAggregateOutputType = {
   emotionalGoal: number
   plotFunction: number
   tensionLevel: number
+  act: number
+  causalFrom: number
+  causalTo: number
   parentId: number
   chapterId: number
   status: number
@@ -116,6 +127,7 @@ export type OutlineAvgAggregateInputType = {
   planningRange?: true
   confidence?: true
   tensionLevel?: true
+  act?: true
 }
 
 export type OutlineSumAggregateInputType = {
@@ -124,6 +136,7 @@ export type OutlineSumAggregateInputType = {
   planningRange?: true
   confidence?: true
   tensionLevel?: true
+  act?: true
 }
 
 export type OutlineMinAggregateInputType = {
@@ -141,6 +154,9 @@ export type OutlineMinAggregateInputType = {
   emotionalGoal?: true
   plotFunction?: true
   tensionLevel?: true
+  act?: true
+  causalFrom?: true
+  causalTo?: true
   parentId?: true
   chapterId?: true
   status?: true
@@ -163,6 +179,9 @@ export type OutlineMaxAggregateInputType = {
   emotionalGoal?: true
   plotFunction?: true
   tensionLevel?: true
+  act?: true
+  causalFrom?: true
+  causalTo?: true
   parentId?: true
   chapterId?: true
   status?: true
@@ -185,6 +204,9 @@ export type OutlineCountAggregateInputType = {
   emotionalGoal?: true
   plotFunction?: true
   tensionLevel?: true
+  act?: true
+  causalFrom?: true
+  causalTo?: true
   parentId?: true
   chapterId?: true
   status?: true
@@ -294,6 +316,9 @@ export type OutlineGroupByOutputType = {
   emotionalGoal: string | null
   plotFunction: string
   tensionLevel: number
+  act: number | null
+  causalFrom: string | null
+  causalTo: string | null
   parentId: string | null
   chapterId: string | null
   status: string
@@ -339,6 +364,9 @@ export type OutlineWhereInput = {
   emotionalGoal?: Prisma.StringNullableFilter<"Outline"> | string | null
   plotFunction?: Prisma.StringFilter<"Outline"> | string
   tensionLevel?: Prisma.IntFilter<"Outline"> | number
+  act?: Prisma.IntNullableFilter<"Outline"> | number | null
+  causalFrom?: Prisma.StringNullableFilter<"Outline"> | string | null
+  causalTo?: Prisma.StringNullableFilter<"Outline"> | string | null
   parentId?: Prisma.StringNullableFilter<"Outline"> | string | null
   chapterId?: Prisma.StringNullableFilter<"Outline"> | string | null
   status?: Prisma.StringFilter<"Outline"> | string
@@ -365,6 +393,9 @@ export type OutlineOrderByWithRelationInput = {
   emotionalGoal?: Prisma.SortOrderInput | Prisma.SortOrder
   plotFunction?: Prisma.SortOrder
   tensionLevel?: Prisma.SortOrder
+  act?: Prisma.SortOrderInput | Prisma.SortOrder
+  causalFrom?: Prisma.SortOrderInput | Prisma.SortOrder
+  causalTo?: Prisma.SortOrderInput | Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   chapterId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -395,6 +426,9 @@ export type OutlineWhereUniqueInput = Prisma.AtLeast<{
   emotionalGoal?: Prisma.StringNullableFilter<"Outline"> | string | null
   plotFunction?: Prisma.StringFilter<"Outline"> | string
   tensionLevel?: Prisma.IntFilter<"Outline"> | number
+  act?: Prisma.IntNullableFilter<"Outline"> | number | null
+  causalFrom?: Prisma.StringNullableFilter<"Outline"> | string | null
+  causalTo?: Prisma.StringNullableFilter<"Outline"> | string | null
   parentId?: Prisma.StringNullableFilter<"Outline"> | string | null
   status?: Prisma.StringFilter<"Outline"> | string
   createdAt?: Prisma.DateTimeFilter<"Outline"> | Date | string
@@ -420,6 +454,9 @@ export type OutlineOrderByWithAggregationInput = {
   emotionalGoal?: Prisma.SortOrderInput | Prisma.SortOrder
   plotFunction?: Prisma.SortOrder
   tensionLevel?: Prisma.SortOrder
+  act?: Prisma.SortOrderInput | Prisma.SortOrder
+  causalFrom?: Prisma.SortOrderInput | Prisma.SortOrder
+  causalTo?: Prisma.SortOrderInput | Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   chapterId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -450,6 +487,9 @@ export type OutlineScalarWhereWithAggregatesInput = {
   emotionalGoal?: Prisma.StringNullableWithAggregatesFilter<"Outline"> | string | null
   plotFunction?: Prisma.StringWithAggregatesFilter<"Outline"> | string
   tensionLevel?: Prisma.IntWithAggregatesFilter<"Outline"> | number
+  act?: Prisma.IntNullableWithAggregatesFilter<"Outline"> | number | null
+  causalFrom?: Prisma.StringNullableWithAggregatesFilter<"Outline"> | string | null
+  causalTo?: Prisma.StringNullableWithAggregatesFilter<"Outline"> | string | null
   parentId?: Prisma.StringNullableWithAggregatesFilter<"Outline"> | string | null
   chapterId?: Prisma.StringNullableWithAggregatesFilter<"Outline"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"Outline"> | string
@@ -471,6 +511,9 @@ export type OutlineCreateInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -495,6 +538,9 @@ export type OutlineUncheckedCreateInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   parentId?: string | null
   chapterId?: string | null
   status?: string
@@ -517,6 +563,9 @@ export type OutlineUpdateInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -541,6 +590,9 @@ export type OutlineUncheckedUpdateInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -564,6 +616,9 @@ export type OutlineCreateManyInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   parentId?: string | null
   chapterId?: string | null
   status?: string
@@ -585,6 +640,9 @@ export type OutlineUpdateManyMutationInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -605,6 +663,9 @@ export type OutlineUncheckedUpdateManyInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -642,6 +703,9 @@ export type OutlineCountOrderByAggregateInput = {
   emotionalGoal?: Prisma.SortOrder
   plotFunction?: Prisma.SortOrder
   tensionLevel?: Prisma.SortOrder
+  act?: Prisma.SortOrder
+  causalFrom?: Prisma.SortOrder
+  causalTo?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -655,6 +719,7 @@ export type OutlineAvgOrderByAggregateInput = {
   planningRange?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
   tensionLevel?: Prisma.SortOrder
+  act?: Prisma.SortOrder
 }
 
 export type OutlineMaxOrderByAggregateInput = {
@@ -672,6 +737,9 @@ export type OutlineMaxOrderByAggregateInput = {
   emotionalGoal?: Prisma.SortOrder
   plotFunction?: Prisma.SortOrder
   tensionLevel?: Prisma.SortOrder
+  act?: Prisma.SortOrder
+  causalFrom?: Prisma.SortOrder
+  causalTo?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -694,6 +762,9 @@ export type OutlineMinOrderByAggregateInput = {
   emotionalGoal?: Prisma.SortOrder
   plotFunction?: Prisma.SortOrder
   tensionLevel?: Prisma.SortOrder
+  act?: Prisma.SortOrder
+  causalFrom?: Prisma.SortOrder
+  causalTo?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -707,6 +778,7 @@ export type OutlineSumOrderByAggregateInput = {
   planningRange?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
   tensionLevel?: Prisma.SortOrder
+  act?: Prisma.SortOrder
 }
 
 export type OutlineCreateNestedManyWithoutProjectInput = {
@@ -859,6 +931,9 @@ export type OutlineCreateWithoutProjectInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -881,6 +956,9 @@ export type OutlineUncheckedCreateWithoutProjectInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   parentId?: string | null
   chapterId?: string | null
   status?: string
@@ -932,6 +1010,9 @@ export type OutlineScalarWhereInput = {
   emotionalGoal?: Prisma.StringNullableFilter<"Outline"> | string | null
   plotFunction?: Prisma.StringFilter<"Outline"> | string
   tensionLevel?: Prisma.IntFilter<"Outline"> | number
+  act?: Prisma.IntNullableFilter<"Outline"> | number | null
+  causalFrom?: Prisma.StringNullableFilter<"Outline"> | string | null
+  causalTo?: Prisma.StringNullableFilter<"Outline"> | string | null
   parentId?: Prisma.StringNullableFilter<"Outline"> | string | null
   chapterId?: Prisma.StringNullableFilter<"Outline"> | string | null
   status?: Prisma.StringFilter<"Outline"> | string
@@ -953,6 +1034,9 @@ export type OutlineCreateWithoutChildrenInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -976,6 +1060,9 @@ export type OutlineUncheckedCreateWithoutChildrenInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   parentId?: string | null
   chapterId?: string | null
   status?: string
@@ -1002,6 +1089,9 @@ export type OutlineCreateWithoutParentInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1025,6 +1115,9 @@ export type OutlineUncheckedCreateWithoutParentInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   chapterId?: string | null
   status?: string
   createdAt?: Date | string
@@ -1066,6 +1159,9 @@ export type OutlineUpdateWithoutChildrenInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1089,6 +1185,9 @@ export type OutlineUncheckedUpdateWithoutChildrenInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1126,6 +1225,9 @@ export type OutlineCreateWithoutChapterInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1149,6 +1251,9 @@ export type OutlineUncheckedCreateWithoutChapterInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   parentId?: string | null
   status?: string
   createdAt?: Date | string
@@ -1186,6 +1291,9 @@ export type OutlineUpdateWithoutChapterInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1209,6 +1317,9 @@ export type OutlineUncheckedUpdateWithoutChapterInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1230,6 +1341,9 @@ export type OutlineCreateManyProjectInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   parentId?: string | null
   chapterId?: string | null
   status?: string
@@ -1251,6 +1365,9 @@ export type OutlineUpdateWithoutProjectInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1273,6 +1390,9 @@ export type OutlineUncheckedUpdateWithoutProjectInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1295,6 +1415,9 @@ export type OutlineUncheckedUpdateManyWithoutProjectInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1317,6 +1440,9 @@ export type OutlineCreateManyParentInput = {
   emotionalGoal?: string | null
   plotFunction?: string
   tensionLevel?: number
+  act?: number | null
+  causalFrom?: string | null
+  causalTo?: string | null
   chapterId?: string | null
   status?: string
   createdAt?: Date | string
@@ -1337,6 +1463,9 @@ export type OutlineUpdateWithoutParentInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1360,6 +1489,9 @@ export type OutlineUncheckedUpdateWithoutParentInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1382,6 +1514,9 @@ export type OutlineUncheckedUpdateManyWithoutParentInput = {
   emotionalGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plotFunction?: Prisma.StringFieldUpdateOperationsInput | string
   tensionLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  act?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  causalFrom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  causalTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1434,6 +1569,9 @@ export type OutlineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   emotionalGoal?: boolean
   plotFunction?: boolean
   tensionLevel?: boolean
+  act?: boolean
+  causalFrom?: boolean
+  causalTo?: boolean
   parentId?: boolean
   chapterId?: boolean
   status?: boolean
@@ -1461,6 +1599,9 @@ export type OutlineSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   emotionalGoal?: boolean
   plotFunction?: boolean
   tensionLevel?: boolean
+  act?: boolean
+  causalFrom?: boolean
+  causalTo?: boolean
   parentId?: boolean
   chapterId?: boolean
   status?: boolean
@@ -1486,6 +1627,9 @@ export type OutlineSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   emotionalGoal?: boolean
   plotFunction?: boolean
   tensionLevel?: boolean
+  act?: boolean
+  causalFrom?: boolean
+  causalTo?: boolean
   parentId?: boolean
   chapterId?: boolean
   status?: boolean
@@ -1511,6 +1655,9 @@ export type OutlineSelectScalar = {
   emotionalGoal?: boolean
   plotFunction?: boolean
   tensionLevel?: boolean
+  act?: boolean
+  causalFrom?: boolean
+  causalTo?: boolean
   parentId?: boolean
   chapterId?: boolean
   status?: boolean
@@ -1518,7 +1665,7 @@ export type OutlineSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OutlineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "type" | "order" | "title" | "description" | "targetWords" | "planningMode" | "planningRange" | "isFlexible" | "confidence" | "emotionalGoal" | "plotFunction" | "tensionLevel" | "parentId" | "chapterId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["outline"]>
+export type OutlineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "type" | "order" | "title" | "description" | "targetWords" | "planningMode" | "planningRange" | "isFlexible" | "confidence" | "emotionalGoal" | "plotFunction" | "tensionLevel" | "act" | "causalFrom" | "causalTo" | "parentId" | "chapterId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["outline"]>
 export type OutlineInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.Outline$parentArgs<ExtArgs>
@@ -1560,6 +1707,9 @@ export type $OutlinePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     emotionalGoal: string | null
     plotFunction: string
     tensionLevel: number
+    act: number | null
+    causalFrom: string | null
+    causalTo: string | null
     parentId: string | null
     chapterId: string | null
     status: string
@@ -2006,6 +2156,9 @@ export interface OutlineFieldRefs {
   readonly emotionalGoal: Prisma.FieldRef<"Outline", 'String'>
   readonly plotFunction: Prisma.FieldRef<"Outline", 'String'>
   readonly tensionLevel: Prisma.FieldRef<"Outline", 'Int'>
+  readonly act: Prisma.FieldRef<"Outline", 'Int'>
+  readonly causalFrom: Prisma.FieldRef<"Outline", 'String'>
+  readonly causalTo: Prisma.FieldRef<"Outline", 'String'>
   readonly parentId: Prisma.FieldRef<"Outline", 'String'>
   readonly chapterId: Prisma.FieldRef<"Outline", 'String'>
   readonly status: Prisma.FieldRef<"Outline", 'String'>

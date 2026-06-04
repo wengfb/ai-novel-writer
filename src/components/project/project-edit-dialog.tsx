@@ -132,7 +132,7 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={(next) => { if (!next && isGeneratingStyle) return; onOpenChange(next) }}>
       <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>编辑项目信息</DialogTitle>

@@ -81,7 +81,7 @@ function BookOpenIcon({ className }: { className?: string }) {
 }
 
 interface OnboardingStep1WelcomeProps {
-  onNext: (idea: StoryIdeaCard) => void
+  onNext: (idea: StoryIdeaCard, preferences?: { audience?: string; genre?: string; tone?: string }) => void
   onSwitchToManual?: () => void
 }
 
@@ -132,27 +132,33 @@ export function OnboardingStep1Welcome({ onNext, onSwitchToManual }: OnboardingS
   const handleNext = () => {
     const selected = cards.find(c => c.id === selectedId)
     if (selected) {
-      onNext(selected)
+      onNext(selected, {
+        audience: audience || undefined,
+        genre: genre || undefined,
+        tone: tone || undefined,
+      })
     }
   }
 
   return (
     <div className="flex flex-col min-h-[600px] px-8 py-6">
       <div className="w-full max-w-7xl mx-auto space-y-6">
-        {/* 标题区域 */}
-        <div className="text-center space-y-2">
-          <div className="flex justify-center">
-            <div className="p-4 bg-primary/10 rounded-full">
-              <Sparkles className="h-12 w-12 text-primary" />
+        {/* 标题区域 —— 仅生成前显示 */}
+        {!hasGenerated && (
+          <div className="text-center space-y-2">
+            <div className="flex justify-center">
+              <div className="p-4 bg-primary/10 rounded-full">
+                <Sparkles className="h-12 w-12 text-primary" />
+              </div>
             </div>
+            <h1 className="text-3xl font-bold tracking-tight">
+              你想写个什么故事？
+            </h1>
+            <p className="text-muted-foreground">
+              设置筛选条件，让 AI 随机生成 3 个创意方向供你选择
+            </p>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            你想写个什么故事？
-          </h1>
-          <p className="text-muted-foreground">
-            设置筛选条件，让 AI 随机生成 3 个创意方向供你选择
-          </p>
-        </div>
+        )}
 
         {/* 筛选 + 自定义要求 —— 仅生成前显示 */}
         {!hasGenerated && (
@@ -214,24 +220,29 @@ export function OnboardingStep1Welcome({ onNext, onSwitchToManual }: OnboardingS
 
         {/* 生成后顶部工具栏 */}
         {hasGenerated && !isRandomLoading && (
-          <div className="flex items-center justify-between">
-            <button
-              type="button"
-              onClick={() => setHasGenerated(false)}
-              className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"
-            >
-              ← 返回修改
-            </button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleRandomIdea}
-              disabled={isRandomLoading}
-              title="重新生成"
-            >
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          </div>
+          <>
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => setHasGenerated(false)}
+                className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"
+              >
+                ← 返回修改
+              </button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleRandomIdea}
+                disabled={isRandomLoading}
+                title="重新生成"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </div>
+            <p className="text-center text-sm text-muted-foreground">
+              已为你生成 {cards.length} 个创意方向，请选择一个
+            </p>
+          </>
         )}
 
         {/* 加载状态 */}
