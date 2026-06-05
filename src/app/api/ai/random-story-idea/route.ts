@@ -53,7 +53,6 @@ export async function POST(request: NextRequest) {
       system: SYSTEM_PROMPT + constraintPrompt,
       prompt: '请给我3个随机的小说创作灵感',
       temperature: 0.9,
-      maxOutputTokens: 1500,
     })
 
     const rawText = result.text.trim()
