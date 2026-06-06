@@ -6,9 +6,7 @@ import { cn } from '@/lib/utils'
 
 interface IdeaRatingProps {
   ideaId: string
-  currentRating: number
-  avgRating: number
-  ratingCount: number
+  rating?: number | null
   onRate: (id: string, score: number) => Promise<void>
 }
 
@@ -16,7 +14,7 @@ interface IdeaRatingProps {
  * 星级评分组件 — 1-5 星
  */
 export function IdeaRating({
-  ideaId, currentRating, avgRating, ratingCount, onRate,
+  ideaId, rating, onRate,
 }: IdeaRatingProps) {
   const [hoverRating, setHoverRating] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -31,11 +29,12 @@ export function IdeaRating({
     }
   }
 
+  const displayRating = hoverRating || rating || 0
+
   return (
     <div className="flex items-center gap-1">
       {[1, 2, 3, 4, 5].map((star) => {
-        const isFilled = (hoverRating || currentRating) >= star
-        const isAvgFilled = avgRating >= star - 0.25 // 用于显示平均分四舍五入
+        const isFilled = displayRating >= star
 
         return (
           <button
@@ -56,16 +55,14 @@ export function IdeaRating({
                 'h-6 w-6 transition-colors',
                 isFilled
                   ? 'fill-yellow-500 text-yellow-500'
-                  : isAvgFilled && !hoverRating
-                    ? 'fill-yellow-500/30 text-yellow-500/60'
-                    : 'text-muted-foreground/30'
+                  : 'text-muted-foreground/30'
               )}
             />
           </button>
         )
       })}
       <span className="text-xs text-muted-foreground ml-1 min-w-[3em]">
-        {ratingCount > 0 ? `${avgRating.toFixed(1)}` : '暂无'}
+        {rating ? `${rating}星` : '暂无'}
       </span>
     </div>
   )

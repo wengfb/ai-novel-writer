@@ -96,11 +96,7 @@ export function IdeaDetail({
       {/* 评分 */}
       <Card className="py-2">
         <CardContent className="p-3">
-          <div className="flex items-center gap-4">
-            <span className="text-2xl font-bold tabular-nums">{idea.avgRating.toFixed(1)}</span>
-            <IdeaRating ideaId={idea.id} currentRating={0} avgRating={idea.avgRating}
-              ratingCount={idea.ratingCount} onRate={onRate} />
-          </div>
+          <IdeaRating ideaId={idea.id} rating={idea.rating} onRate={onRate} />
         </CardContent>
       </Card>
 

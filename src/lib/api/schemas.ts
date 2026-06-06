@@ -226,7 +226,7 @@ export const IdeaQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(50).default(20),
   status: z.enum(IdeaStatusValues).optional(),
   genre: z.string().optional(),
-  sortBy: z.enum(['createdAt', 'avgRating', 'ratingCount']).default('createdAt'),
+  sortBy: z.enum(['createdAt', 'rating']).default('createdAt'),
   sortOrder: z.enum(['asc', 'desc']).default('desc'),
   aiGenerated: z.coerce.boolean().optional(),
 })
@@ -240,10 +240,6 @@ export const CreateIdeaSchema = StoryIdeaCardSchema.omit({ id: true }).extend({
 export const UpdateIdeaSchema = z.object({
   status: z.enum(IdeaStatusValues).optional(),
   title: z.string().min(1).max(200).optional(),
-})
-
-export const CreateIdeaRatingSchema = z.object({
-  score: z.number().int().min(1, '评分最低1星').max(5, '评分最高5星'),
 })
 
 export const CreateIdeaCommentSchema = z.object({

@@ -97,15 +97,15 @@ async function fetchExamples(
   if (positiveIdeas.length === 0 && negativeIdeas.length === 0) {
     const [highRated, lowRated] = await Promise.all([
       prisma.idea.findMany({
-        where: { avgRating: { gte: 4 }, ratingCount: { gte: 1 } },
+        where: { rating: { gte: 4 } },
         select: { title: true, highConcept: true, protagonist: true, coreConflict: true },
-        orderBy: { avgRating: 'desc' },
+        orderBy: { rating: 'desc' },
         take: 3,
       }),
       prisma.idea.findMany({
-        where: { avgRating: { lte: 2 }, ratingCount: { gte: 1 } },
+        where: { rating: { lte: 2 } },
         select: { title: true, highConcept: true },
-        orderBy: { avgRating: 'asc' },
+        orderBy: { rating: 'asc' },
         take: 3,
       }),
     ])

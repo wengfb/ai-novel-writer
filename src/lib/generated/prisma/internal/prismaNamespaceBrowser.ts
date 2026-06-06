@@ -61,7 +61,9 @@ export const ModelName = {
   Foreshadowing: 'Foreshadowing',
   CharacterSnapshot: 'CharacterSnapshot',
   WorldElementSnapshot: 'WorldElementSnapshot',
-  SystemSetting: 'SystemSetting'
+  SystemSetting: 'SystemSetting',
+  Idea: 'Idea',
+  IdeaComment: 'IdeaComment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -87,6 +89,7 @@ export const ProjectScalarFieldEnum = {
   coverImage: 'coverImage',
   totalWords: 'totalWords',
   chapterCount: 'chapterCount',
+  pov: 'pov',
   outlineMode: 'outlineMode',
   planningRange: 'planningRange',
   createdAt: 'createdAt',
@@ -307,6 +310,40 @@ export const SystemSettingScalarFieldEnum = {
 } as const
 
 export type SystemSettingScalarFieldEnum = (typeof SystemSettingScalarFieldEnum)[keyof typeof SystemSettingScalarFieldEnum]
+
+
+export const IdeaScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  genre: 'genre',
+  worldBuilding: 'worldBuilding',
+  protagonist: 'protagonist',
+  coreConflict: 'coreConflict',
+  mainGoal: 'mainGoal',
+  highConcept: 'highConcept',
+  sublimation: 'sublimation',
+  openingHook: 'openingHook',
+  source: 'source',
+  status: 'status',
+  convertedToProjectId: 'convertedToProjectId',
+  rating: 'rating',
+  commentCount: 'commentCount',
+  aiGenerated: 'aiGenerated',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type IdeaScalarFieldEnum = (typeof IdeaScalarFieldEnum)[keyof typeof IdeaScalarFieldEnum]
+
+
+export const IdeaCommentScalarFieldEnum = {
+  id: 'id',
+  ideaId: 'ideaId',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type IdeaCommentScalarFieldEnum = (typeof IdeaCommentScalarFieldEnum)[keyof typeof IdeaCommentScalarFieldEnum]
 
 
 export const SortOrder = {

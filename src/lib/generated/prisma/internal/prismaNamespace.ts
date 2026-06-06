@@ -394,7 +394,9 @@ export const ModelName = {
   Foreshadowing: 'Foreshadowing',
   CharacterSnapshot: 'CharacterSnapshot',
   WorldElementSnapshot: 'WorldElementSnapshot',
-  SystemSetting: 'SystemSetting'
+  SystemSetting: 'SystemSetting',
+  Idea: 'Idea',
+  IdeaComment: 'IdeaComment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -410,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "project" | "outline" | "chapter" | "scene" | "character" | "worldElement" | "generation" | "foreshadowing" | "characterSnapshot" | "worldElementSnapshot" | "systemSetting"
+    modelProps: "project" | "outline" | "chapter" | "scene" | "character" | "worldElement" | "generation" | "foreshadowing" | "characterSnapshot" | "worldElementSnapshot" | "systemSetting" | "idea" | "ideaComment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1228,6 +1230,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Idea: {
+      payload: Prisma.$IdeaPayload<ExtArgs>
+      fields: Prisma.IdeaFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.IdeaFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.IdeaFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaPayload>
+        }
+        findFirst: {
+          args: Prisma.IdeaFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.IdeaFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaPayload>
+        }
+        findMany: {
+          args: Prisma.IdeaFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaPayload>[]
+        }
+        create: {
+          args: Prisma.IdeaCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaPayload>
+        }
+        createMany: {
+          args: Prisma.IdeaCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.IdeaCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaPayload>[]
+        }
+        delete: {
+          args: Prisma.IdeaDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaPayload>
+        }
+        update: {
+          args: Prisma.IdeaUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaPayload>
+        }
+        deleteMany: {
+          args: Prisma.IdeaDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.IdeaUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.IdeaUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaPayload>[]
+        }
+        upsert: {
+          args: Prisma.IdeaUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaPayload>
+        }
+        aggregate: {
+          args: Prisma.IdeaAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateIdea>
+        }
+        groupBy: {
+          args: Prisma.IdeaGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IdeaGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.IdeaCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IdeaCountAggregateOutputType> | number
+        }
+      }
+    }
+    IdeaComment: {
+      payload: Prisma.$IdeaCommentPayload<ExtArgs>
+      fields: Prisma.IdeaCommentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.IdeaCommentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaCommentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.IdeaCommentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaCommentPayload>
+        }
+        findFirst: {
+          args: Prisma.IdeaCommentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaCommentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.IdeaCommentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaCommentPayload>
+        }
+        findMany: {
+          args: Prisma.IdeaCommentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaCommentPayload>[]
+        }
+        create: {
+          args: Prisma.IdeaCommentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaCommentPayload>
+        }
+        createMany: {
+          args: Prisma.IdeaCommentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.IdeaCommentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaCommentPayload>[]
+        }
+        delete: {
+          args: Prisma.IdeaCommentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaCommentPayload>
+        }
+        update: {
+          args: Prisma.IdeaCommentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaCommentPayload>
+        }
+        deleteMany: {
+          args: Prisma.IdeaCommentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.IdeaCommentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.IdeaCommentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaCommentPayload>[]
+        }
+        upsert: {
+          args: Prisma.IdeaCommentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdeaCommentPayload>
+        }
+        aggregate: {
+          args: Prisma.IdeaCommentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateIdeaComment>
+        }
+        groupBy: {
+          args: Prisma.IdeaCommentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IdeaCommentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.IdeaCommentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IdeaCommentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1274,6 +1424,7 @@ export const ProjectScalarFieldEnum = {
   coverImage: 'coverImage',
   totalWords: 'totalWords',
   chapterCount: 'chapterCount',
+  pov: 'pov',
   outlineMode: 'outlineMode',
   planningRange: 'planningRange',
   createdAt: 'createdAt',
@@ -1496,6 +1647,40 @@ export const SystemSettingScalarFieldEnum = {
 export type SystemSettingScalarFieldEnum = (typeof SystemSettingScalarFieldEnum)[keyof typeof SystemSettingScalarFieldEnum]
 
 
+export const IdeaScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  genre: 'genre',
+  worldBuilding: 'worldBuilding',
+  protagonist: 'protagonist',
+  coreConflict: 'coreConflict',
+  mainGoal: 'mainGoal',
+  highConcept: 'highConcept',
+  sublimation: 'sublimation',
+  openingHook: 'openingHook',
+  source: 'source',
+  status: 'status',
+  convertedToProjectId: 'convertedToProjectId',
+  rating: 'rating',
+  commentCount: 'commentCount',
+  aiGenerated: 'aiGenerated',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type IdeaScalarFieldEnum = (typeof IdeaScalarFieldEnum)[keyof typeof IdeaScalarFieldEnum]
+
+
+export const IdeaCommentScalarFieldEnum = {
+  id: 'id',
+  ideaId: 'ideaId',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type IdeaCommentScalarFieldEnum = (typeof IdeaCommentScalarFieldEnum)[keyof typeof IdeaCommentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1658,6 +1843,8 @@ export type GlobalOmitConfig = {
   characterSnapshot?: Prisma.CharacterSnapshotOmit
   worldElementSnapshot?: Prisma.WorldElementSnapshotOmit
   systemSetting?: Prisma.SystemSettingOmit
+  idea?: Prisma.IdeaOmit
+  ideaComment?: Prisma.IdeaCommentOmit
 }
 
 /* Types for Logging */

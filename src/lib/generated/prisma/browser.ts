@@ -72,3 +72,13 @@ export type WorldElementSnapshot = Prisma.WorldElementSnapshotModel
  * 
  */
 export type SystemSetting = Prisma.SystemSettingModel
+/**
+ * Model Idea
+ * 
+ */
+export type Idea = Prisma.IdeaModel
+/**
+ * Model IdeaComment
+ * 
+ */
+export type IdeaComment = Prisma.IdeaCommentModel

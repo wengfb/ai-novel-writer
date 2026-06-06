@@ -14,11 +14,7 @@ export async function GET(
     const idea = await prisma.idea.findUnique({
       where: { id },
       include: {
-        ratings: {
-          orderBy: { createdAt: 'desc' },
-          take: 50,
-        },
-        _count: { select: { ratings: true, comments: true } },
+        _count: { select: { comments: true } },
       },
     })
 

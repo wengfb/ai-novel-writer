@@ -50,10 +50,10 @@ export function IdeaCard({ idea, isSelected, onSelect }: IdeaCardProps) {
           <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-5">
             {idea.genre}
           </Badge>
-          {idea.ratingCount > 0 ? (
+          {idea.rating ? (
             <span className="flex items-center gap-0.5 text-xs text-muted-foreground">
               <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
-              {idea.avgRating.toFixed(1)}
+              {idea.rating}星
             </span>
           ) : (
             <span className="text-[10px] text-muted-foreground/50">未评分</span>

@@ -69,8 +69,7 @@ function normalizeIdea(raw: any): IdeaItem {
     status: raw.status || 'draft',
     source: typeof raw.source === 'string' ? JSON.parse(raw.source) : raw.source || undefined,
     convertedToProjectId: raw.convertedToProjectId || undefined,
-    avgRating: raw.avgRating || 0,
-    ratingCount: raw.ratingCount || 0,
+    rating: raw.rating ?? null,
     commentCount: raw.commentCount || 0,
     aiGenerated: raw.aiGenerated ?? true,
     createdAt: raw.createdAt || new Date().toISOString(),
@@ -242,12 +241,10 @@ export const useIdeaStore = create<IdeaState>()(
         set((state) => {
           const idx = state.ideas.findIndex((i) => i.id === id)
           if (idx !== -1) {
-            state.ideas[idx].avgRating = result.data.avgRating
-            state.ideas[idx].ratingCount = result.data.ratingCount
+            state.ideas[idx].rating = result.data.rating
           }
           if (state.currentIdea?.id === id) {
-            state.currentIdea.avgRating = result.data.avgRating
-            state.currentIdea.ratingCount = result.data.ratingCount
+            state.currentIdea.rating = result.data.rating
           }
         })
       } catch (error) {
@@ -331,8 +328,7 @@ export const useIdeaStore = create<IdeaState>()(
           sublimation: card.sublimation,
           openingHook: card.openingHook,
           status: 'draft' as const,
-          avgRating: 0,
-          ratingCount: 0,
+          rating: null,
           commentCount: 0,
           aiGenerated: true,
           createdAt: new Date().toISOString(),

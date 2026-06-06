@@ -24,20 +24,11 @@ export interface IdeaItem extends StoryIdeaCard {
     negativeExampleIds?: string[]
   }
   convertedToProjectId?: string
-  avgRating: number
-  ratingCount: number
+  rating: number | null
   commentCount: number
   aiGenerated: boolean
   createdAt: string
   updatedAt: string
-}
-
-// 创意中心 — 评分
-export interface IdeaRating {
-  id: string
-  ideaId: string
-  score: number // 1-5
-  createdAt: string
 }
 
 // 创意中心 — 评论
