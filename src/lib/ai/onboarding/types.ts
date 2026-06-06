@@ -10,6 +10,7 @@ export interface BootstrapParams {
   pace: 'fast' | 'medium' | 'slow'
   audience?: string
   tone?: string
+  pov?: 'first_person' | 'third_person' | 'multiple_pov'
   model?: string
 }
 

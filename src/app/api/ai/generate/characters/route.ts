@@ -16,6 +16,7 @@ const RequestSchema = z.object({
   }),
   audience: z.string().optional(),
   tone: z.string().optional(),
+  pov: z.string().optional(),
   model: z.string().optional(),
   previousOutput: z.any().optional(),
   feedback: z.string().optional(),
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
     let prompt = buildCharactersPrompt(
       data.idea,
       data.architecture,
-      { projectTitle: '', idea: data.idea, targetWords: 0, pace: 'medium' as const, audience: data.audience, tone: data.tone }
+      { projectTitle: '', idea: data.idea, targetWords: 0, pace: 'medium' as const, audience: data.audience, tone: data.tone, pov: data.pov as any }
     )
 
     if (data.previousOutput && data.feedback) {

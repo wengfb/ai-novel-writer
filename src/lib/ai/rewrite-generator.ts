@@ -79,6 +79,8 @@ export class RewriteGenerator {
       })) as any,
       foreshadowings: project.foreshadowings as any,
       genre: project.genre,
+      style: await getStyleAnchorPrompt(projectId),
+      pov: project.pov,
       projectId,
     })
 

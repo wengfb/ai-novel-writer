@@ -52,6 +52,7 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [styleAnchor, setStyleAnchor] = useState('')
   const [stylePrompt, setStylePrompt] = useState('')
+  const [pov, setPov] = useState('third_person')
   const [isGeneratingStyle, setIsGeneratingStyle] = useState(false)
   const { updateProject } = useProjectStore()
 
@@ -80,6 +81,7 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
           setStyleAnchor(res.data.settings[`project.${project.id}.styleAnchor`] || '')
         }
       }).catch(() => {})
+      setPov(project.pov)
     }
   }, [open, project, form])
 
@@ -121,6 +123,11 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
       await settingsApi.update({
         [`project.${project.id}.styleAnchor`]: styleAnchor,
       })
+
+      // 保存叙事人称
+      if (pov && pov !== project.pov) {
+        await updateProject(project.id, { pov: pov as any } as any)
+      }
 
       toast.success('项目信息已更新')
       onOpenChange(false)
@@ -223,6 +230,21 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
                 </FormItem>
               )}
             />
+
+            {/* 叙事人称 */}
+            <div className="space-y-2">
+              <FormLabel>叙事人称</FormLabel>
+              <Select value={pov} onValueChange={setPov}>
+                <SelectTrigger>
+                  <SelectValue placeholder="选择叙事人称" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="third_person">第三人称</SelectItem>
+                  <SelectItem value="first_person">第一人称</SelectItem>
+                  <SelectItem value="multiple_pov">多视角</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
             {/* 风格锚点 */}
             <div className="space-y-3 pt-4 border-t">

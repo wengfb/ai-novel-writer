@@ -10,7 +10,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import {
   Loader2, CheckCircle2, BookOpen, Users, Globe, Eye, Sparkles,
   ChevronDown, Gauge, Target, ChevronRight, SkipForward, AlertTriangle,
-  FileText, XCircle
+  FileText, XCircle, PenLine
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { StoryIdeaCard } from '@/types'
@@ -21,6 +21,7 @@ interface UserPreferences {
   audience?: string
   genre?: string
   tone?: string
+  pov?: string
 }
 
 interface OnboardingStep3PreviewProps {
@@ -83,6 +84,9 @@ export function OnboardingStep3Preview({
   const [projectTitle, setProjectTitle] = useState(defaultTitle)
   const [targetWords, setTargetWords] = useState(1000000)
   const [pace, setPace] = useState<'fast' | 'medium' | 'slow'>('medium')
+  const [pov, setPov] = useState<'first_person' | 'third_person' | 'multiple_pov'>(
+    (userPreferences?.pov as any) || 'third_person'
+  )
 
   // 续建模式：恢复进度，直接进入审核流程
   const doneSteps = resumeProgress?.doneSteps || []
@@ -138,6 +142,7 @@ export function OnboardingStep3Preview({
       idea,
       targetWords,
       pace,
+      pov,
       audience: userPreferences?.audience,
       tone: userPreferences?.tone,
     }
@@ -315,7 +320,7 @@ export function OnboardingStep3Preview({
         : '/api/onboarding/finalize'
       const body = existingProjectId
         ? { results }
-        : { projectTitle, idea, results }
+        : { projectTitle, idea, results, pov }
 
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -353,11 +358,12 @@ export function OnboardingStep3Preview({
             <Input id="title" value={projectTitle} onChange={e => setProjectTitle(e.target.value)} className="text-lg" />
           </div>
 
-          {(userPreferences?.audience || userPreferences?.genre || userPreferences?.tone) && (
+          {(userPreferences?.audience || userPreferences?.genre || userPreferences?.tone || userPreferences?.pov) && (
             <div className="flex gap-2 flex-wrap">
               {userPreferences.audience && <Badge variant="secondary">{userPreferences.audience}</Badge>}
               {userPreferences.genre && <Badge variant="secondary">{userPreferences.genre}</Badge>}
               {userPreferences.tone && <Badge variant="secondary">{userPreferences.tone}</Badge>}
+              {userPreferences.pov && <Badge variant="secondary">{userPreferences.pov === 'first_person' ? '第一人称' : userPreferences.pov === 'third_person' ? '第三人称' : '多视角'}</Badge>}
             </div>
           )}
 
@@ -386,6 +392,23 @@ export function OnboardingStep3Preview({
                   <p className="text-xs text-muted-foreground">{opt.desc}</p>
                 </button>
               ))}
+            </div>
+            <div className="flex flex-col gap-1">
+              <Label className="flex items-center gap-2"><PenLine className="h-4 w-4" />叙事人称</Label>
+              <div className="flex gap-2 flex-wrap">
+                {[
+                  { value: 'third_person' as const, label: '第三人称', desc: '他/她视角，叙述灵活' },
+                  { value: 'first_person' as const, label: '第一人称', desc: '我视角，代入感强' },
+                  { value: 'multiple_pov' as const, label: '多视角', desc: '切换多人物视角' },
+                ].map(opt => (
+                  <button key={opt.value} type="button" onClick={() => setPov(opt.value)}
+                    className={cn('p-3 rounded-lg border-2 text-left transition-colors flex-1 min-w-[120px]',
+                      pov === opt.value ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/30')}>
+                    <span className="text-sm font-semibold">{opt.label}</span>
+                    <p className="text-xs text-muted-foreground">{opt.desc}</p>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 

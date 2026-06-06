@@ -71,10 +71,11 @@ export class ContextManager {
     outlines?: { order: number; title: string; description?: string | null; status: string; emotionalGoal?: string | null; plotFunction: string; tensionLevel: number }[]
     genre: string
     style?: string
+    pov?: string
     contextMaxTokens?: number
     projectId?: string
   }): ContextPackage {
-    const { currentChapter, allChapters, characters, worldElements, foreshadowings, outlines, genre, style, contextMaxTokens, projectId } = params
+    const { currentChapter, allChapters, characters, worldElements, foreshadowings, outlines, genre, style, pov, contextMaxTokens, projectId } = params
 
     const maxTokens = this.getMaxTokens(contextMaxTokens)
 
@@ -125,6 +126,7 @@ export class ContextManager {
         currentChapter,
         genre,
         style,
+        pov,
         projectId,
       },
     }
@@ -326,6 +328,10 @@ export class ContextManager {
     parts.push(`- 类型：${context.metadata.genre}`)
     if (context.metadata.style) {
       parts.push(`- 风格：${context.metadata.style}`)
+    }
+    if (context.metadata.pov) {
+      const povLabel = context.metadata.pov === 'first_person' ? '第一人称' : context.metadata.pov === 'third_person' ? '第三人称' : '多视角切换'
+      parts.push(`- 叙事人称：${povLabel}`)
     }
     parts.push(`- 总章节数：${context.metadata.totalChapters}`)
     parts.push(`- 当前章节：第${context.metadata.currentChapter}章\n`)

@@ -14,6 +14,7 @@ const RequestSchema = z.object({
   pace: z.enum(['fast', 'medium', 'slow']).default('medium'),
   audience: z.string().optional(),
   tone: z.string().optional(),
+  pov: z.string().optional(),
   model: z.string().optional(),
   previousOutput: z.any().optional(),
   feedback: z.string().optional(),
@@ -33,6 +34,7 @@ export async function POST(request: NextRequest) {
       pace: data.pace,
       audience: data.audience,
       tone: data.tone,
+      pov: data.pov as any,
       model: data.model,
     }, calc)
 

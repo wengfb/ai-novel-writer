@@ -24,6 +24,9 @@ model Project {
   totalWords    Int            @default(0)
   chapterCount  Int            @default(0)
 
+  // 叙事人称
+  pov           String         @default("third_person")
+
   // 大纲模式
   outlineMode   String         @default("full") // full, progressive
   planningRange Int?           @default(10)     // 渐进式规划时的章节范围
@@ -387,4 +390,60 @@ model SystemSetting {
   updatedAt   DateTime @updatedAt
 
   @@index([category])
+}
+
+// 创意中心 — 创意主表
+model Idea {
+  id              String    @id @default(cuid())
+  title           String
+  genre           String
+  worldBuilding   String
+  protagonist     String
+  coreConflict    String
+  mainGoal        String
+  highConcept     String
+  sublimation     String
+  openingHook     String
+  source          String?   // JSON: 生成条件 {audience, genre, tone, customRequirements, positiveExampleIds, negativeExampleIds}
+  status          String    @default("draft") // draft, favorited, converted, archived
+  convertedToProjectId String? // 可选，关联已创建的项目
+  avgRating       Float     @default(0)
+  ratingCount     Int       @default(0)
+  commentCount    Int       @default(0)
+  aiGenerated     Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  ratings         IdeaRating[]
+  comments        IdeaComment[]
+
+  @@index([status])
+  @@index([genre])
+  @@index([avgRating])
+  @@index([createdAt])
+  @@index([aiGenerated])
+}
+
+// 创意中心 — 评分
+model IdeaRating {
+  id        String   @id @default(cuid())
+  ideaId    String
+  score     Int      // 1-5
+  createdAt DateTime @default(now())
+
+  idea      Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+
+  @@index([ideaId])
+}
+
+// 创意中心 — 评论
+model IdeaComment {
+  id        String   @id @default(cuid())
+  ideaId    String
+  content   String
+  createdAt DateTime @default(now())
+
+  idea      Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+
+  @@index([ideaId])
 }

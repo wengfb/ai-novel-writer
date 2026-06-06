@@ -18,6 +18,7 @@ const RequestSchema = z.object({
     description: z.string(),
   })),
   audience: z.string().optional(),
+  pov: z.string().optional(),
   model: z.string().optional(),
   previousOutput: z.any().optional(),
   feedback: z.string().optional(),
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
       data.idea,
       data.architecture,
       data.characters,
-      { projectTitle: '', idea: data.idea, targetWords: 0, pace: 'medium' as const, audience: data.audience }
+      { projectTitle: '', idea: data.idea, targetWords: 0, pace: 'medium' as const, audience: data.audience, pov: data.pov as any }
     )
 
     if (data.previousOutput && data.feedback) {

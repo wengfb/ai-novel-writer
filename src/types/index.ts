@@ -12,6 +12,51 @@ export interface StoryIdeaCard {
   openingHook: string  // 开篇切入点
 }
 
+// 创意中心 — 创意条目（扩展自 StoryIdeaCard）
+export interface IdeaItem extends StoryIdeaCard {
+  status: 'draft' | 'favorited' | 'converted' | 'archived'
+  source?: {
+    audience?: string
+    genre?: string
+    tone?: string
+    customRequirements?: string
+    positiveExampleIds?: string[]
+    negativeExampleIds?: string[]
+  }
+  convertedToProjectId?: string
+  avgRating: number
+  ratingCount: number
+  commentCount: number
+  aiGenerated: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+// 创意中心 — 评分
+export interface IdeaRating {
+  id: string
+  ideaId: string
+  score: number // 1-5
+  createdAt: string
+}
+
+// 创意中心 — 评论
+export interface IdeaComment {
+  id: string
+  ideaId: string
+  content: string
+  createdAt: string
+}
+
+// 叙事人称类型
+export type PovType = 'first_person' | 'third_person' | 'multiple_pov'
+
+export const POV_OPTIONS: { value: PovType; label: string; description: string }[] = [
+  { value: 'first_person', label: '第一人称', description: '以"我"的视角叙述，代入感强' },
+  { value: 'third_person', label: '第三人称', description: '以"他/她"的视角叙述，视角灵活' },
+  { value: 'multiple_pov', label: '多视角', description: '切换多个人物的视角叙述' },
+]
+
 // 项目类型
 export interface Project {
   id: string
@@ -23,6 +68,7 @@ export interface Project {
   coverImage?: string
   totalWords: number
   chapterCount: number
+  pov: PovType
   outlineMode: 'full' | 'progressive'
   planningRange?: number
   createdAt: Date
@@ -155,6 +201,7 @@ export interface ContextPackage {
     currentChapter: number
     genre: string
     style?: string
+    pov?: string
     projectId?: string
   }
 }

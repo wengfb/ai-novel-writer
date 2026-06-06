@@ -24,6 +24,7 @@ const FinalizeSchema = z.object({
     foreshadowings: z.any().optional(),
     styleAnchor: z.any().optional(),
   }),
+  pov: z.string().optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -45,6 +46,7 @@ export async function POST(request: NextRequest) {
             || '',
           genre: projectGenre,
           status: 'draft',
+          pov: data.pov || 'third_person',
           totalWords: 0,
           chapterCount: 0,
         },

@@ -13,6 +13,7 @@ const RequestSchema = z.object({
   characters: z.array(z.object({ name: z.string() })),
   worldSettings: z.array(z.object({ name: z.string() })),
   audience: z.string().optional(),
+  pov: z.string().optional(),
   model: z.string().optional(),
   previousOutput: z.any().optional(),
   feedback: z.string().optional(),
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
       data.chapters,
       data.characters,
       data.worldSettings,
-      { projectTitle: '', idea: {} as any, targetWords: 0, pace: 'medium' as const, audience: data.audience }
+      { projectTitle: '', idea: {} as any, targetWords: 0, pace: 'medium' as const, audience: data.audience, pov: data.pov as any }
     )
 
     if (data.previousOutput && data.feedback) {

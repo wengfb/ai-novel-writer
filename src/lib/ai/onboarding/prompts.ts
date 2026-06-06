@@ -18,6 +18,13 @@ function audienceContext(audience?: string): string {
     : '\n目标受众：女频读者，偏好细腻情感描写、人物关系发展、氛围营造丰富的叙事风格。'
 }
 
+/** 叙事人称注入 */
+function povContext(pov?: string): string {
+  if (!pov || pov === 'third_person') return ''
+  if (pov === 'first_person') return '\n叙事人称：第一人称。全文以"我"的视角叙述，所有描写、心理活动、对话都必须从主角的视角出发，不描写主角不在场的场景。'
+  return '\n叙事人称：多视角切换。在不同章节或场景中切换多个人物的视角进行叙述，切换时需清晰标记视角人物。'
+}
+
 /** 格式要求——每次 prompt 末尾复用 */
 const JSON_FORMAT_REQUIREMENT = `
 【输出格式】
@@ -49,7 +56,7 @@ export function buildArchitecturePrompt(
 - 目标总字数：${params.targetWords.toLocaleString()} 字
 - 叙事节奏：${PACE_LABELS[params.pace]}
 - 计划章节数：${calc.chapterCount} 章
-- 分卷数：${calc.volumeCount} 卷，每卷约 ${calc.chaptersPerVolume} 章${audienceContext(params.audience)}${params.tone ? `\n- 故事基调：${params.tone}` : ''}
+- 分卷数：${calc.volumeCount} 卷，每卷约 ${calc.chaptersPerVolume} 章${audienceContext(params.audience)}${params.tone ? `\n- 故事基调：${params.tone}` : ''}${povContext(params.pov)}
 
 【任务要求】
 
@@ -105,7 +112,7 @@ ${architecture.mainConflict}
 ${architecture.thematicThread}
 
 【角色基础设定】
-- 主角：${idea.protagonist}${audienceContext(params.audience)}${params.tone ? `\n- 故事基调：${params.tone}` : ''}
+- 主角：${idea.protagonist}${audienceContext(params.audience)}${params.tone ? `\n- 故事基调：${params.tone}` : ''}${povContext(params.pov)}
 
 【任务要求】
 
@@ -176,7 +183,7 @@ ${charNames}
 
 【原始世界观概念】
 ${idea.worldBuilding}
-${idea.genre ? `题材类型：${idea.genre}` : ''}${audienceContext(params.audience)}
+${idea.genre ? `题材类型：${idea.genre}` : ''}${audienceContext(params.audience)}${povContext(params.pov)}
 
 【任务要求】
 
@@ -283,7 +290,7 @@ ${worldNames}
 - 目标总字数：${params.targetWords.toLocaleString()} 字
 - 计划章节数：${calc.chapterCount} 章
 - 每章平均字数：${calc.avgChapterWords} 字
-- 叙事节奏：${PACE_LABELS[params.pace]}${audienceContext(params.audience)}
+- 叙事节奏：${PACE_LABELS[params.pace]}${audienceContext(params.audience)}${povContext(params.pov)}
 
 【任务要求】
 

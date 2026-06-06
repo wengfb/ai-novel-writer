@@ -103,6 +103,8 @@ export class ChapterGenerator {
         tensionLevel: o.tensionLevel,
       })),
       genre: project.genre,
+      style: await getStyleAnchorPrompt(projectId),
+      pov: project.pov,
       projectId,
     })
 
@@ -346,6 +348,7 @@ ${briefContext}
       location: scene.location || '待定',
       previousText: previousContent.slice(-1000), // 最近1000字
       targetWords,
+      pov: context.metadata?.pov || '第三人称',
     })
 
     const plotLabel: Record<string, string> = {
@@ -509,6 +512,7 @@ ${this.contextManager.formatContextForPrompt(context)}`
       worldSettings: JSON.stringify(context.worldElements),
       previousSummary: context.chapterSummaries.map((s: any) => s.summary).join('\n'),
       targetWords,
+      pov: context.metadata?.pov || '第三人称',
     })
   }
 
@@ -603,6 +607,8 @@ ${this.contextManager.formatContextForPrompt(context)}`
         tensionLevel: o.tensionLevel,
       })),
       genre: project.genre,
+      style: await getStyleAnchorPrompt(projectId),
+      pov: project.pov,
       projectId,
     })
 
@@ -640,6 +646,7 @@ ${this.contextManager.formatContextForPrompt(context)}`
       currentContent: contentSnippet,
       targetWords,
       chapterOutline,
+      pov: context.metadata?.pov || '第三人称',
     })
 
     // 使用流式生成

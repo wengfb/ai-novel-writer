@@ -99,6 +99,7 @@ const OUTLINE_GENERATION_TEMPLATE = `你是一位专业的小说大纲设计师�
 **小说类型**：{genre}
 **核心创意**：{coreIdea}
 **故事风格**：{style}
+**叙事人称**：{pov}
 **每章目标字数**：{targetWords}字
 **章节数量**：{chapterCount}章
 **总目标字数**：约{totalWords}字
@@ -204,6 +205,7 @@ const CHAPTER_GENERATION_TEMPLATE = `你是一位专业的小说作家。请根�
 **章节标题**：{chapterTitle}
 **章节大纲**：{chapterOutline}
 **预估字数**：{targetWords}字
+**叙事人称**：{pov}
 
 **相关角色**：
 {characters}
@@ -233,6 +235,8 @@ const CHAPTER_CONTINUATION_TEMPLATE = `你是一位专业的小说作家。请�
 **已有内容**：
 {currentContent}
 
+**叙事人称**：{pov}
+
 **续写要求**：
 1. 保持与已有内容的连贯性
 2. 保持文风一致性
@@ -248,6 +252,7 @@ const CHARACTER_GENERATION_TEMPLATE = `请根据以下信息创建一个小说�
 
 **角色定位**：{role}
 **故事背景**：{storyContext}
+**叙事人称**：{pov}
 **特殊要求**：{requirements}
 
 请生成详细的角色卡片，包含：
@@ -379,6 +384,7 @@ const SCENE_GENERATION_TEMPLATE = `请撰写小说中的一个场景：
 **出场角色**：{characters}
 **场景地点**：{location}
 **场景时间**：{time}
+**叙事人称**：{pov}
 **前文**：
 {previousText}
 

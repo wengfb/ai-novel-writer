@@ -15,6 +15,8 @@ interface ProjectOnboardingDialogProps {
   onSwitchToManual?: () => void
   /** 续建模式：从已有项目续建，直接跳到审核流程 */
   resumeProject?: { id: string; title: string; genre: string; description: string }
+  /** 预填创意（从创意中心跳转）：跳过 step1，直接进入 step2 */
+  prefillIdea?: StoryIdeaCard
 }
 
 export function ProjectOnboardingDialog({
@@ -23,16 +25,19 @@ export function ProjectOnboardingDialog({
   onComplete,
   onSwitchToManual,
   resumeProject,
+  prefillIdea,
 }: ProjectOnboardingDialogProps) {
   // 续建模式：从项目数据重构 idea 卡 + 加载已保存进度
   const resumeIdea = resumeProject ? buildIdeaFromProject(resumeProject) : null
   const resumeProgress = resumeProject ? loadResumeProgress(resumeProject.id) : undefined
 
-  const [step, setStep] = useState<1 | 2>(resumeProject ? 2 : 1)
+  const effectiveIdea = prefillIdea || resumeIdea
+
+  const [step, setStep] = useState<1 | 2>(effectiveIdea ? 2 : 1)
   const [step2Phase, setStep2Phase] = useState<'config' | 'review' | 'complete'>(
     resumeProject ? 'review' : 'config'
   )
-  const [selectedIdea, setSelectedIdea] = useState<StoryIdeaCard | null>(resumeIdea)
+  const [selectedIdea, setSelectedIdea] = useState<StoryIdeaCard | null>(effectiveIdea)
   const [isGenerating, setIsGenerating] = useState(false)
   const [userPreferences, setUserPreferences] = useState<{
     audience?: string

@@ -58,6 +58,7 @@ export async function PUT(
         ...(validated.tags !== undefined && { tags: JSON.stringify(validated.tags) }),
         ...(validated.status !== undefined && { status: validated.status }),
         ...(validated.coverImage !== undefined && { coverImage: validated.coverImage }),
+        ...(validated.pov !== undefined && { pov: validated.pov }),
         ...(validated.outlineMode !== undefined && { outlineMode: validated.outlineMode }),
         ...(validated.planningRange !== undefined && { planningRange: validated.planningRange }),
       },

@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
       genre: data.genre,
       coreIdea: data.coreIdea,
       style: data.style || '标准叙事',
+      pov: project.pov === 'first_person' ? '第一人称' : project.pov === 'third_person' ? '第三人称' : '多视角切换',
       targetWords: data.targetWords,
       chapterCount: data.chapterCount,
       totalWords,

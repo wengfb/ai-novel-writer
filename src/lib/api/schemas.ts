@@ -2,6 +2,9 @@ import { z } from 'zod'
 
 export const OutlinePlotFunctionValues = ['推进', '转折', '铺垫', '高潮', '过渡'] as const
 
+// 叙事人称
+export const PovTypeValues = ['first_person', 'third_person', 'multiple_pov'] as const
+
 /**
  * 项目相关验证 Schema
  */
@@ -11,6 +14,7 @@ export const CreateProjectSchema = z.object({
   genre: z.enum(['玄幻', '科幻', '都市', '言情', '武侠', '历史', '其他']),
   tags: z.array(z.string()).optional(),
   status: z.enum(['draft', 'writing', 'completed']).optional(),
+  pov: z.enum(PovTypeValues).optional(),
 })
 
 export const UpdateProjectSchema = z.object({
@@ -20,6 +24,7 @@ export const UpdateProjectSchema = z.object({
   tags: z.array(z.string()).optional(),
   status: z.enum(['draft', 'writing', 'completed']).optional(),
   coverImage: z.string().optional(),
+  pov: z.enum(PovTypeValues).optional(),
   outlineMode: z.enum(['full', 'progressive']).optional(),
   planningRange: z.number().int().positive().optional(),
 })
@@ -138,6 +143,7 @@ export const BootstrapOnboardingSchema = z.object({
   pace: z.enum(['fast', 'medium', 'slow']).default('medium'),
   audience: z.string().optional(),
   tone: z.string().optional(),
+  pov: z.enum(PovTypeValues).optional(),
   model: z.string().optional(),
 })
 
@@ -208,6 +214,45 @@ export const CreateWorldElementSchema = z.object({
   attributes: z.string().optional(),
   relatedTo: z.string().optional(),
   references: z.string().optional(),
+})
+
+/**
+ * 创意中心相关验证 Schema
+ */
+export const IdeaStatusValues = ['draft', 'favorited', 'converted', 'archived'] as const
+
+export const IdeaQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(50).default(20),
+  status: z.enum(IdeaStatusValues).optional(),
+  genre: z.string().optional(),
+  sortBy: z.enum(['createdAt', 'avgRating', 'ratingCount']).default('createdAt'),
+  sortOrder: z.enum(['asc', 'desc']).default('desc'),
+  aiGenerated: z.coerce.boolean().optional(),
+})
+
+export const CreateIdeaSchema = StoryIdeaCardSchema.omit({ id: true }).extend({
+  status: z.enum(IdeaStatusValues).optional(),
+  source: z.string().optional(),  // JSON string
+  aiGenerated: z.boolean().optional(),
+})
+
+export const UpdateIdeaSchema = z.object({
+  status: z.enum(IdeaStatusValues).optional(),
+  title: z.string().min(1).max(200).optional(),
+})
+
+export const CreateIdeaRatingSchema = z.object({
+  score: z.number().int().min(1, '评分最低1星').max(5, '评分最高5星'),
+})
+
+export const CreateIdeaCommentSchema = z.object({
+  content: z.string().min(1, '评论内容不能为空').max(500, '评论最多500字'),
+})
+
+export const IdeaCommentQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(50).default(20),
 })
 
 /**

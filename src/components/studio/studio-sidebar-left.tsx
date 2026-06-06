@@ -7,6 +7,7 @@ import {
   FileText,
   Home,
   LayoutTemplate,
+  Lightbulb,
   Pencil,
   Settings,
   Users,
@@ -33,6 +34,8 @@ import { useWorldStore, type WorldElement } from "@/lib/store/world-store"
 import { toast } from "sonner"
 import type { Outline } from "@/lib/store/outline-store"
 
+import { IdeaCenterDialog } from '@/components/ideas/idea-center-dialog'
+
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
 export function StudioSidebarLeft({ className }: SidebarProps) {
@@ -48,6 +51,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   const [isWorldDialogOpen, setIsWorldDialogOpen] = React.useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false)
   const [isEditProjectOpen, setIsEditProjectOpen] = React.useState(false)
+  const [isIdeaCenterOpen, setIsIdeaCenterOpen] = React.useState(false)
   const [isOutlineDialogOpen, setIsOutlineDialogOpen] = React.useState(false)
   const [editingOutline, setEditingOutline] = React.useState<Outline | null>(null)
   const [editingCharacter, setEditingCharacter] = React.useState<Character | null>(null)
@@ -196,6 +200,14 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
           </h3>
           <div className="space-y-1">
             <Button
+              variant="ghost"
+              className="w-full justify-start"
+              onClick={() => setIsIdeaCenterOpen(true)}
+            >
+              <Lightbulb className="mr-2 h-4 w-4" />
+              创意中心
+            </Button>
+            <Button
               variant={activeSection === 'outline' ? 'secondary' : 'ghost'}
               className="w-full justify-start"
               onClick={() => { setActiveSection('outline'); setMainView('outline') }}
@@ -316,6 +328,12 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
           onOpenChange={setIsEditProjectOpen}
         />
       )}
+
+      {/* 创意中心弹窗 */}
+      <IdeaCenterDialog
+        open={isIdeaCenterOpen}
+        onOpenChange={setIsIdeaCenterOpen}
+      />
     </div>
   )
 }

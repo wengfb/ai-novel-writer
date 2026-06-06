@@ -13,6 +13,7 @@ export interface Project {
   coverImage: string | null
   totalWords: number
   totalChapters: number
+  pov: string
   outlineMode: 'full' | 'progressive'
   planningRange: number | null
   createdAt: Date
@@ -72,6 +73,7 @@ function normalizeProject(project: ProjectResponse): Project {
     coverImage: project.coverImage ?? null,
     totalWords: project.totalWords ?? 0,
     totalChapters: project.totalChapters ?? project.chapterCount ?? 0,
+    pov: project.pov || 'third_person',
     outlineMode: (project.outlineMode as 'full' | 'progressive') || 'full',
     planningRange: project.planningRange ?? 10,
     createdAt: new Date(project.createdAt),

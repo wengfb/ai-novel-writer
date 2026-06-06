@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import type { Layout } from "react-resizable-panels"
-import { Plus, AlertTriangle, X } from "lucide-react"
+import { Plus, AlertTriangle, X, Lightbulb } from "lucide-react"
 import { StudioLayoutClient } from "@/components/layout/studio-layout"
 import { StudioHeader } from "@/components/studio/studio-header"
 import { TextEditor } from "@/components/editor/text-editor"
@@ -15,6 +15,7 @@ import { ProjectList } from "@/components/project/project-list"
 import { useProjects } from "@/hooks/use-projects"
 import { useProjectStore } from "@/lib/store/project-store"
 import { useUIStore } from "@/lib/store/ui-store"
+import { IdeaCenterDialog } from "@/components/ideas/idea-center-dialog"
 
 interface HomeClientProps {
   defaultLayout?: Layout
@@ -23,6 +24,7 @@ interface HomeClientProps {
 export function HomeClient({ defaultLayout }: HomeClientProps) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isManualOnboardingOpen, setIsManualOnboardingOpen] = useState(false)
+  const [isIdeaCenterOpen, setIsIdeaCenterOpen] = useState(false)
   const [resumeOnboardingProject, setResumeOnboardingProject] = useState<{
     id: string; title: string; genre: string; description: string
   } | null>(null)
@@ -30,10 +32,36 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
     if (typeof window === "undefined") return true
     return localStorage.getItem("hasCompletedOnboarding") === "true"
   })
+
+  // 检测从创意中心跳转回来的场景
+  const [ideaCenterPrefill, setIdeaCenterPrefill] = useState<{
+    idea: import('@/types').StoryIdeaCard
+    ideaId: string
+  } | null>(() => {
+    if (typeof window === "undefined") return null
+    const fromIdeaCenter = sessionStorage.getItem('onboardingFromIdeaCenter')
+    const ideaJson = sessionStorage.getItem('onboardingSelectedIdea')
+    const ideaId = sessionStorage.getItem('onboardingIdeaId')
+    if (fromIdeaCenter === 'true' && ideaJson) {
+      // 立即清除，避免重复触发
+      sessionStorage.removeItem('onboardingFromIdeaCenter')
+      sessionStorage.removeItem('onboardingSelectedIdea')
+      sessionStorage.removeItem('onboardingIdeaId')
+      try {
+        return { idea: JSON.parse(ideaJson), ideaId: ideaId || '' }
+      } catch { return null }
+    }
+    return null
+  })
   const { projects, isLoading } = useProjects()
   const { currentProject, setCurrentProject } = useProjectStore()
   const { mainView } = useUIStore()
-  const isAutoOnboardingOpen = !hasCompletedOnboarding && !isLoading && projects.length === 0
+
+  // 从创意中心来的：跳过首次自动 onboarding，改用预填创意的 onboarding
+  const isAutoOnboardingOpen = ideaCenterPrefill
+    ? false
+    : !hasCompletedOnboarding && !isLoading && projects.length === 0
+  const [ideaCenterOnboardingOpen, setIdeaCenterOnboardingOpen] = useState(!!ideaCenterPrefill)
 
   const handleAutoOnboardingOpenChange = (open: boolean) => {
     if (!open) {
@@ -100,7 +128,7 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
                 )}
               </>
             ) : (
-              <ProjectWorkspace onCreateProject={handleNewProject} />
+              <ProjectWorkspace onCreateProject={handleNewProject} onOpenIdeaCenter={() => setIsIdeaCenterOpen(true)} />
             )}
           </ScrollArea>
         </div>
@@ -135,11 +163,43 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
           resumeProject={resumeOnboardingProject}
         />
       )}
+
+      {/* 从创意中心跳转来的 onboarding */}
+      {ideaCenterPrefill && (
+        <ProjectOnboardingDialog
+          open={ideaCenterOnboardingOpen}
+          onOpenChange={(open) => {
+            setIdeaCenterOnboardingOpen(open)
+            if (!open) setIdeaCenterPrefill(null)
+          }}
+          onComplete={async (projectId) => {
+            setIdeaCenterOnboardingOpen(false)
+            // 标记该创意已使用
+            if (ideaCenterPrefill.ideaId) {
+              try {
+                await fetch(`/api/ideas/${ideaCenterPrefill.ideaId}`, {
+                  method: 'PATCH',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ status: 'converted' }),
+                })
+              } catch {}
+            }
+            handleOnboardingComplete(projectId)
+          }}
+          prefillIdea={ideaCenterPrefill.idea}
+        />
+      )}
+
+      {/* 创意中心弹窗 */}
+      <IdeaCenterDialog
+        open={isIdeaCenterOpen}
+        onOpenChange={setIsIdeaCenterOpen}
+      />
     </>
   )
 }
 
-function ProjectWorkspace({ onCreateProject }: { onCreateProject: () => void }) {
+function ProjectWorkspace({ onCreateProject, onOpenIdeaCenter }: { onCreateProject: () => void; onOpenIdeaCenter: () => void }) {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 p-8 pb-32">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -150,10 +210,16 @@ function ProjectWorkspace({ onCreateProject }: { onCreateProject: () => void }) 
             进入项目后可以继续编辑章节、管理角色与世界观，或从这里创建一个全新的故事。
           </p>
         </div>
-        <Button onClick={onCreateProject}>
-          <Plus className="mr-2 h-4 w-4" />
-          新建项目
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={onOpenIdeaCenter}>
+            <Lightbulb className="mr-2 h-4 w-4" />
+            创意中心
+          </Button>
+          <Button onClick={onCreateProject}>
+            <Plus className="mr-2 h-4 w-4" />
+            新建项目
+          </Button>
+        </div>
       </div>
 
       <ProjectList onCreateProject={onCreateProject} />
