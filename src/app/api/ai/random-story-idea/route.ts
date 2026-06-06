@@ -22,7 +22,7 @@ const SYSTEM_PROMPT = `你是一名网络小说编辑。
     "title": "小说名称",
     "genre": "题材",
     "worldBuilding": "世界观",
-    "protagonist": "主角",
+    "protagonist": "主角（描述人物设定、身份、性格特征，不要给具体姓名）",
     "coreConflict": "核心冲突",
     "mainGoal": "主线目标",
     "highConcept": "高概念梗概",
