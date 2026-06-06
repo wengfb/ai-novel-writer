@@ -110,6 +110,7 @@ export function IdeaCenterDialog({ open, onOpenChange, onCreateProject }: IdeaCe
                   onRate={rateIdea} onComment={addComment} onFetchComments={fetchComments}
                   onCreateProject={handleCreateProject}
                   onToggleFavorite={(id, isFav) => updateIdea(id, { status: isFav ? 'draft' : 'favorited' })}
+                  onUpdateIdea={updateIdea as any}
                 />
               </ScrollArea>
             </div>

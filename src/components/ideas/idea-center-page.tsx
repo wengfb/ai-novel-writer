@@ -213,6 +213,7 @@ export function IdeaCenterPage() {
             onFetchComments={fetchComments}
             onCreateProject={handleCreateProject}
             onToggleFavorite={(id, isFav) => updateIdea(id, { status: isFav ? 'draft' : 'favorited' })}
+            onUpdateIdea={updateIdea as any}
           />
         </DialogContent>
       </Dialog>
@@ -338,8 +339,10 @@ function IdeaGridCard({
               {idea.commentCount}
             </span>
           )}
-          {idea.aiGenerated && (
+          {idea.aiGenerated ? (
             <span className="text-[10px] text-muted-foreground/50 ml-auto">AI 生成</span>
+          ) : (
+            <span className="text-[10px] text-amber-600/70 ml-auto">已编辑</span>
           )}
         </div>
       </div>

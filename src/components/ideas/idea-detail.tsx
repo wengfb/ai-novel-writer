@@ -1,13 +1,15 @@
 'use client'
 
+import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Globe, User, Target, Flag, Lightbulb, TrendingUp, Play } from 'lucide-react'
+import { Globe, User, Target, Flag, Lightbulb, TrendingUp, Play, Pencil, Check, X } from 'lucide-react'
 import { IdeaRating } from '@/components/ideas/idea-rating'
 import { IdeaComments } from '@/components/ideas/idea-comments'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Sparkles, Star } from 'lucide-react'
+import { Textarea } from '@/components/ui/textarea'
 import type { IdeaItem, IdeaComment } from '@/types'
 
 interface IdeaDetailProps {
@@ -18,6 +20,11 @@ interface IdeaDetailProps {
   onFetchComments: (id: string, page?: number) => Promise<void>
   onCreateProject: (idea: IdeaItem) => void
   onToggleFavorite: (id: string, isFavorited: boolean) => void
+  onUpdateIdea: (id: string, data: Partial<{
+    title: string; genre: string; worldBuilding: string; protagonist: string;
+    coreConflict: string; mainGoal: string; highConcept: string;
+    sublimation: string; openingHook: string; aiGenerated: boolean;
+  }>) => Promise<void>
 }
 
 function BookOpenIcon({ className }: { className?: string }) {
@@ -46,8 +53,12 @@ const FIELDS: FieldDef[] = [
 export function IdeaDetail({
   idea, comments,
   onRate, onComment, onFetchComments,
-  onCreateProject, onToggleFavorite,
+  onCreateProject, onToggleFavorite, onUpdateIdea,
 }: IdeaDetailProps) {
+  const [editingField, setEditingField] = useState<string | null>(null)
+  const [editValue, setEditValue] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
+
   if (!idea) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
@@ -60,6 +71,26 @@ export function IdeaDetail({
 
   const isFavorited = idea.status === 'favorited'
   const isConverted = idea.status === 'converted'
+  const isEdited = !idea.aiGenerated
+
+  const handleStartEdit = (key: string, value: string) => {
+    setEditingField(key)
+    setEditValue(value)
+  }
+
+  const handleCancelEdit = () => {
+    setEditingField(null)
+    setEditValue('')
+  }
+
+  const handleSaveEdit = async (id: string, key: string) => {
+    setIsSaving(true)
+    // Pass aiGenerated: false to mark as edited
+    await onUpdateIdea(id, { [key]: editValue, aiGenerated: false })
+    setIsSaving(false)
+    setEditingField(null)
+    setEditValue('')
+  }
 
   return (
     <div className="p-5 space-y-4">
@@ -68,7 +99,11 @@ export function IdeaDetail({
         <div className="min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap mb-1">
             <Badge variant="secondary" className="text-xs">{idea.genre}</Badge>
-            {idea.aiGenerated && <Badge variant="outline" className="text-[10px] px-1">AI</Badge>}
+            {isEdited ? (
+              <Badge variant="outline" className="text-[10px] px-1 border-amber-500/30 text-amber-600">已编辑</Badge>
+            ) : idea.aiGenerated && (
+              <Badge variant="outline" className="text-[10px] px-1">AI</Badge>
+            )}
             {isFavorited && (
               <Badge className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20 text-[10px] px-1">
                 <Star className="h-2.5 w-2.5 mr-0.5" />已收藏
@@ -106,15 +141,43 @@ export function IdeaDetail({
           <div className="grid grid-cols-2 gap-x-5 gap-y-2.5">
             {FIELDS.filter(f => f.key !== 'genre').map((f) => {
               const value = (idea as any)[f.key] as string | undefined
-              if (!value) return null
+              if (!value && editingField !== f.key) return null
               return (
-                <div key={f.key} className="flex items-start gap-1.5 min-w-0">
-                  <div className="min-w-0">
+                <div key={f.key} className="flex items-start gap-1.5 min-w-0 group">
+                  <div className="min-w-0 flex-1">
                     <span className="text-[11px] text-muted-foreground font-medium inline-flex items-center gap-1">
                       <span className="inline-flex -mt-px">{f.icon}</span>
                       {f.label}
                     </span>
-                    <p className="text-xs leading-relaxed">{value}</p>
+                    {editingField === f.key ? (
+                      <div className="mt-1 space-y-1.5">
+                        <Textarea
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          className="min-h-[60px] text-xs resize-none"
+                          autoFocus
+                        />
+                        <div className="flex items-center gap-1">
+                          <Button size="sm" className="h-6 text-xs px-2" onClick={() => handleSaveEdit(idea.id, f.key)} disabled={isSaving}>
+                            <Check className="h-3 w-3 mr-0.5" />保存
+                          </Button>
+                          <Button size="sm" variant="ghost" className="h-6 text-xs px-2" onClick={handleCancelEdit} disabled={isSaving}>
+                            <X className="h-3 w-3 mr-0.5" />取消
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-start gap-1">
+                        <p className="text-xs leading-relaxed">{value}</p>
+                        <button
+                          type="button"
+                          onClick={() => handleStartEdit(f.key, value || '')}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 mt-0.5 p-0.5 hover:bg-muted rounded"
+                        >
+                          <Pencil className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               )

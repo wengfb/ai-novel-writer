@@ -240,6 +240,15 @@ export const CreateIdeaSchema = StoryIdeaCardSchema.omit({ id: true }).extend({
 export const UpdateIdeaSchema = z.object({
   status: z.enum(IdeaStatusValues).optional(),
   title: z.string().min(1).max(200).optional(),
+  genre: z.string().optional(),
+  worldBuilding: z.string().optional(),
+  protagonist: z.string().optional(),
+  coreConflict: z.string().optional(),
+  mainGoal: z.string().optional(),
+  highConcept: z.string().optional(),
+  sublimation: z.string().optional(),
+  openingHook: z.string().optional(),
+  aiGenerated: z.boolean().optional(),
 })
 
 export const CreateIdeaCommentSchema = z.object({

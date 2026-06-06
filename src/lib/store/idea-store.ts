@@ -32,7 +32,13 @@ interface IdeaState {
     coreConflict: string; mainGoal: string; highConcept: string; sublimation: string
     openingHook: string; status?: string; source?: string; aiGenerated?: boolean
   }) => Promise<IdeaItem | null>
-  updateIdea: (id: string, data: { status?: string; title?: string }) => Promise<void>
+  updateIdea: (id: string, data: Partial<{
+    status: string; title: string; genre: string;
+    worldBuilding: string; protagonist: string;
+    coreConflict: string; mainGoal: string;
+    highConcept: string; sublimation: string; openingHook: string;
+    aiGenerated: boolean;
+  }>) => Promise<void>
   deleteIdea: (id: string) => Promise<void>
 
   // Actions — 评分和评论
