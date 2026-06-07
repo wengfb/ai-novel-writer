@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Sparkles, Shuffle, RefreshCw, Loader2, Check, ChevronLeft, ChevronRight, Globe, User, Target, Flag, Lightbulb, TrendingUp, Play, PenLine } from 'lucide-react'
+import { Sparkles, Shuffle, RefreshCw, Loader2, Check, ChevronLeft, ChevronRight, Globe, User, Target, Flag, Lightbulb, TrendingUp, Play } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { StoryIdeaCard } from '@/types'
 
@@ -33,13 +33,6 @@ const TONE_OPTIONS = [
   { value: '正剧严肃', label: '正剧严肃' },
   { value: '悬疑惊悚', label: '悬疑惊悚' },
   { value: '温馨治愈', label: '温馨治愈' },
-]
-
-const POV_OPTIONS = [
-  { value: '' as const, label: '不限' },
-  { value: 'first_person' as const, label: '第一人称' },
-  { value: 'third_person' as const, label: '第三人称' },
-  { value: 'multiple_pov' as const, label: '多视角' },
 ]
 
 type StoryIdeaFieldKey = Exclude<keyof StoryIdeaCard, 'id' | 'title'>
@@ -88,7 +81,7 @@ function BookOpenIcon({ className }: { className?: string }) {
 }
 
 interface OnboardingStep1WelcomeProps {
-  onNext: (idea: StoryIdeaCard, preferences?: { audience?: string; genre?: string; tone?: string; pov?: string }) => void
+  onNext: (idea: StoryIdeaCard, preferences?: { audience?: string; genre?: string; tone?: string }) => void
   onSwitchToManual?: () => void
 }
 
@@ -98,13 +91,12 @@ export function OnboardingStep1Welcome({ onNext, onSwitchToManual }: OnboardingS
   const [audience, setAudience] = useState('')
   const [genre, setGenre] = useState('')
   const [tone, setTone] = useState('')
-  const [pov, setPov] = useState('')
   const [cards, setCards] = useState<StoryIdeaCard[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [hasGenerated, setHasGenerated] = useState(false)
 
-  const activeFilterCount = [audience, genre, tone, pov].filter(Boolean).length
+  const activeFilterCount = [audience, genre, tone].filter(Boolean).length
 
   const handleRandomIdea = async () => {
     setIsRandomLoading(true)
@@ -120,7 +112,6 @@ export function OnboardingStep1Welcome({ onNext, onSwitchToManual }: OnboardingS
           audience,
           genre,
           tone,
-          pov,
           customRequirements: customRequirements.trim() || undefined,
         }),
       })
@@ -145,7 +136,6 @@ export function OnboardingStep1Welcome({ onNext, onSwitchToManual }: OnboardingS
         audience: audience || undefined,
         genre: genre || undefined,
         tone: tone || undefined,
-        pov: pov || undefined,
       })
     }
   }
@@ -192,12 +182,6 @@ export function OnboardingStep1Welcome({ onNext, onSwitchToManual }: OnboardingS
                 options={TONE_OPTIONS}
                 value={tone}
                 onChange={setTone}
-              />
-              <FilterRow
-                label="叙事人称"
-                options={POV_OPTIONS}
-                value={pov}
-                onChange={setPov}
               />
             </div>
 

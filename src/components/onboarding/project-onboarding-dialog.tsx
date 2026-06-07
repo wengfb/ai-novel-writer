@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { cn } from '@/lib/utils'
@@ -27,9 +27,37 @@ export function ProjectOnboardingDialog({
   resumeProject,
   prefillIdea,
 }: ProjectOnboardingDialogProps) {
-  // 续建模式：从项目数据重构 idea 卡 + 加载已保存进度
+  // 续建模式：从项目数据重构 idea 卡 + 从 DB 加载进度
   const resumeIdea = resumeProject ? buildIdeaFromProject(resumeProject) : null
-  const resumeProgress = resumeProject ? loadResumeProgress(resumeProject.id) : undefined
+  const [resumeProgress, setResumeProgress] = useState<{
+    projectId: string; doneSteps: StepKey[]
+  } | undefined>(undefined)
+  // 进度加载标记：为 true 时暂不渲染 Step 2，避免闪烁
+  const [progressLoaded, setProgressLoaded] = useState(!resumeProject)
+
+  // 续建模式：异步从服务端加载进度
+  useEffect(() => {
+    if (!resumeProject) return
+    let cancelled = false
+    fetch(`/api/projects/${resumeProject.id}/init-progress`)
+      .then(async (res) => {
+        if (!res.ok) return { doneSteps: [] }
+        return res.json()
+      })
+      .then((json) => {
+        if (cancelled) return
+        const doneSteps: StepKey[] = json.data?.doneSteps || json.doneSteps || []
+        setResumeProgress({ projectId: resumeProject.id, doneSteps })
+        setProgressLoaded(true)
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setResumeProgress({ projectId: resumeProject.id, doneSteps: [] })
+          setProgressLoaded(true)
+        }
+      })
+    return () => { cancelled = true }
+  }, [resumeProject?.id])
 
   const effectiveIdea = prefillIdea || resumeIdea
 
@@ -90,7 +118,7 @@ export function ProjectOnboardingDialog({
           <OnboardingStep1Welcome onNext={handleStep1Next} onSwitchToManual={onSwitchToManual} />
         </div>
 
-        {selectedIdea && (
+        {selectedIdea && progressLoaded && (
           <div className={step === 2 ? 'block' : 'hidden'}>
             <OnboardingStep3Preview
               idea={selectedIdea}
@@ -99,7 +127,7 @@ export function ProjectOnboardingDialog({
               onBack={resumeProject ? undefined : handleStep2Back}
               onGeneratingChange={setIsGenerating}
               onPhaseChange={setStep2Phase}
-              resumeProgress={resumeProgress ? { projectId: resumeProject!.id, doneSteps: resumeProgress } : undefined}
+              resumeProgress={resumeProgress}
             />
           </div>
         )}
@@ -127,12 +155,3 @@ function buildIdeaFromProject(project: { title: string; genre: string; descripti
 }
 
 type StepKey = 'architecture' | 'characters' | 'world' | 'volume' | 'foreshadowings' | 'styleAnchor'
-
-/** 从 localStorage 加载已完成的步骤 */
-function loadResumeProgress(projectId: string): StepKey[] {
-  try {
-    const raw = localStorage.getItem(`init-progress-${projectId}`)
-    if (raw) return JSON.parse(raw) as StepKey[]
-  } catch {}
-  return []
-}

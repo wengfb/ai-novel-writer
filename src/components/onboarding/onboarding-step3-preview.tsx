@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { StoryIdeaCard } from '@/types'
+import type { ArchitectureChapterCalculation } from '@/lib/ai/onboarding/types'
 
 // ============ 类型 ============
 
@@ -206,8 +207,10 @@ export function OnboardingStep3Preview({
       const def = STEP_DEFS.find(d => d.key === stepKey)!
       const context = getRequestContext(stepKey)
 
-      // style-anchor 用已有端点
+      // style-anchor 用已有端点，传入已生成的上下文
       if (stepKey === 'styleAnchor') {
+        const chars = getStep('characters')
+        const world = getStep('world')
         const res = await fetch('/api/ai/generate/style-anchor', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -215,11 +218,22 @@ export function OnboardingStep3Preview({
             description: `${idea.genre}小说《${projectTitle}》，${idea.highConcept}`,
             genre: idea.genre,
             hint: userPreferences?.tone,
+            characters: (chars.data as any)?.characters?.map((c: any) => ({
+              name: c.name,
+              role: c.role,
+              description: c.description?.slice(0, 100),
+            })) || [],
+            worldSettings: (world.data as any)?.worldSettings?.map((w: any) => ({
+              name: w.name,
+              type: w.type,
+              description: w.description?.slice(0, 100),
+            })) || [],
           }),
         })
         const json = await res.json()
         if (json.success) {
           updateStep(stepKey, { status: 'done', data: { content: json.data.content, wordCount: json.data.wordCount } })
+          saveCurrentProgress(stepKey)
         } else throw new Error(json.error?.message)
         return
       }
@@ -239,6 +253,8 @@ export function OnboardingStep3Preview({
       const json = await res.json()
       if (json.success) {
         updateStep(stepKey, { status: 'done', data: json.data })
+        // 每完成一步就保存进度到 localStorage + 服务端（跨会话持久化）
+        saveCurrentProgress(stepKey)
       } else {
         throw new Error(json.error?.message || '生成失败')
       }
@@ -246,6 +262,26 @@ export function OnboardingStep3Preview({
       updateStep(stepKey, { status: 'pending', error: (e as Error).message })
     } finally {
       onGeneratingChange?.(false)
+    }
+  }
+
+  // 每步完成时保存进度
+  const saveCurrentProgress = (completedKey: StepKey) => {
+    // 收集当前所有已完成步骤
+    const done = steps
+      .filter(s => s.status === 'done' || s.key === completedKey)
+      .map(s => s.key)
+    // 去重后写入 localStorage
+    const unique = [...new Set([...done, completedKey])]
+    const pid = resumeProgress?.projectId
+    if (pid) {
+      localStorage.setItem(`init-progress-${pid}`, JSON.stringify(unique))
+      // 异步写入服务端（不阻塞流程）
+      fetch(`/api/projects/${pid}/init-progress`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ doneSteps: unique }),
+      }).catch(() => { /* 非关键路径 */ })
     }
   }
 
@@ -330,8 +366,14 @@ export function OnboardingStep3Preview({
       const json = await res.json()
       if (json.success) {
         const pid = existingProjectId || json.data.projectId
-        // 保存进度到 localStorage
+        // 保存进度到 localStorage（即时回显） + 服务端（跨会话持久化）
         localStorage.setItem(`init-progress-${pid}`, JSON.stringify(completedSteps))
+        // 服务端保存不阻塞流程，失败也不影响已完成结果
+        fetch(`/api/projects/${pid}/init-progress`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ doneSteps: completedSteps }),
+        }).catch(() => { /* 非关键路径 */ })
         setProjectId(pid)
         setPhase('complete')
         setTimeout(() => onComplete(pid), 1200)
@@ -621,11 +663,7 @@ function StepResultPreview({ stepKey, data, idea }: { stepKey: StepKey; data: Re
             </CollapsibleSection>
           )}
           {data.chapterCalculation && (
-            <div className="flex gap-4 text-xs text-muted-foreground">
-              <span>计划章节：{(data.chapterCalculation as any).chapterCount}章</span>
-              <span>分卷数：{(data.chapterCalculation as any).volumeCount}卷</span>
-              <span>每章均字：{(data.chapterCalculation as any).avgChapterWords}字</span>
-            </div>
+            <DiffWarningBanner calc={data.chapterCalculation as ArchitectureChapterCalculation} />
           )}
         </div>
       )
@@ -732,6 +770,41 @@ function StepResultPreview({ stepKey, data, idea }: { stepKey: StepKey; data: Re
     default:
       return null
   }
+}
+
+const WORD_COUNT_DEVIATION_WARNING_THRESHOLD = 20
+
+// ============ 字数偏差警告 ============
+
+function DiffWarningBanner({ calc }: { calc: ArchitectureChapterCalculation }) {
+  if (calc.deviationPercent == null || Math.abs(calc.deviationPercent) <= WORD_COUNT_DEVIATION_WARNING_THRESHOLD) {
+    return (
+      <div className="flex gap-4 text-xs text-muted-foreground">
+        <span>计划章节：{calc.chapterCount}章</span>
+        <span>分卷数：{calc.volumeCount}卷</span>
+        <span>每章均字：{calc.avgChapterWords}字</span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-4 text-xs text-muted-foreground">
+        <span>计划章节：{calc.chapterCount}章</span>
+        <span>分卷数：{calc.volumeCount}卷</span>
+        <span>每章均字：{calc.avgChapterWords}字</span>
+      </div>
+      <div className="flex items-center gap-2 p-2 rounded bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-300 text-xs">
+        <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+        <span>
+          AI 建议总字数为 {calc.suggestedTotalWords?.toLocaleString() || '?'} 字，
+          与你设定的 {calc.targetWords?.toLocaleString() || '?'} 字
+          偏差 {calc.deviationPercent > 0 ? '+' : ''}{calc.deviationPercent}%。
+          后续章节规划将以 AI 建议为准，如需调整请在下方输入反馈。
+        </span>
+      </div>
+    </div>
+  )
 }
 
 // ============ 可折叠区域 ============
