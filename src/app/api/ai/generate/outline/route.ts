@@ -7,7 +7,7 @@ import { parseJsonBody, validateRequest } from '@/lib/api/validators'
 import { GenerateOutlineSchema } from '@/lib/api/schemas'
 import type { Chapter, Character, Foreshadowing, WorldElement } from '@/types'
 import { generateOutlineFromPrompt } from '@/lib/ai/shared/outline-generator'
-import { normalizePlotFunction, normalizeTensionLevel } from '@/lib/ai/onboarding-bootstrap'
+import { normalizePlotFunction, normalizeTensionLevel } from '@/lib/ai/onboarding/normalize'
 
 /**
  * POST /api/ai/generate/outline

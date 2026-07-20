@@ -14,19 +14,19 @@ export const charactersApi = {
   /**
    * 获取单个角色
    */
-  get: (id: string) => apiClient.get<Character>(`/characters/${id}`),
+  get: (id: string) => apiClient.get<{ character: Character }>(`/characters/${id}`),
 
   /**
    * 创建角色
    */
   create: (data: CreateCharacterParams) =>
-    apiClient.post<Character>('/characters', data),
+    apiClient.post<{ character: Character }>('/characters', data),
 
   /**
    * 更新角色
    */
   update: (id: string, data: Partial<Character>) =>
-    apiClient.put<Character>(`/characters/${id}`, data),
+    apiClient.put<{ character: Character }>(`/characters/${id}`, data),
 
   /**
    * 删除角色

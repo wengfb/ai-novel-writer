@@ -111,12 +111,12 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
               <>
                 <IncompleteInitBanner
                   projectId={currentProject.id}
-                  chapterCount={(currentProject as any).chapterCount as number}
+                  chapterCount={currentProject.chapterCount}
                   onContinueInit={() => setResumeOnboardingProject({
                     id: currentProject.id,
                     title: currentProject.title,
                     genre: currentProject.genre,
-                    description: (currentProject as any).description || '',
+                    description: currentProject.description || '',
                   })}
                 />
                 {mainView === "outline" ? (

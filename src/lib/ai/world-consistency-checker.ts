@@ -282,7 +282,7 @@ export class WorldConsistencyChecker {
 
     report += `⚠️ 发现 ${conflictsMap.size} 个章节存在潜在问题\n\n`
 
-    for (const [chapterId, conflicts] of conflictsMap) {
+    for (const [, conflicts] of conflictsMap) {
       const highSeverity = conflicts.filter(c => c.severity === 'high').length
       const mediumSeverity = conflicts.filter(c => c.severity === 'medium').length
       const lowSeverity = conflicts.filter(c => c.severity === 'low').length

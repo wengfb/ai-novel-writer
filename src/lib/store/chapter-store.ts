@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
+import { chaptersApi } from '@/lib/api/endpoints/chapters'
 
 export interface Chapter {
   id: string
@@ -47,7 +48,6 @@ function normalizeChapter(chapter: ChapterResponse): Chapter {
 }
 
 interface ChapterState {
-  // 状态
   chapters: Chapter[]
   currentChapter: Chapter | null
   isLoading: boolean
@@ -56,7 +56,6 @@ interface ChapterState {
   lastSaved: Date | null
   lastFetchedProjectId: string | null
 
-  // Actions
   fetchChapters: (projectId: string, force?: boolean) => Promise<void>
   setCurrentChapter: (chapter: Chapter | null) => void
   addChapterLocally: (chapter: Chapter) => void
@@ -71,7 +70,6 @@ interface ChapterState {
 
 export const useChapterStore = create<ChapterState>()(
   immer((set, get) => ({
-    // 初始状态
     chapters: [],
     currentChapter: null,
     isLoading: false,
@@ -80,30 +78,27 @@ export const useChapterStore = create<ChapterState>()(
     lastSaved: null,
     lastFetchedProjectId: null,
 
-    // 获取章节列表
     fetchChapters: async (projectId: string, force = false) => {
       const state = get()
-      // 正在请求中，跳过并发重复
       if (state.isLoading) return
-      // 同一项目已缓存，跳过（切换项目或强制刷新时不会命中）
       if (!force && state.lastFetchedProjectId === projectId) return
 
       set({ isLoading: true, error: null })
       try {
-        const response = await fetch(`/api/projects/${projectId}/chapters`)
-        const data = await response.json()
-
-        if (!data.success) {
-          throw new Error(data.error.message)
-        }
-
-        const chapters = data.data.chapters.map(normalizeChapter)
-        // 强制刷新时同步更新 currentChapter 引用，避免与 chapters 数组中的对象不同步
+        const res = await chaptersApi.list(projectId)
+        const chapters = (res.data?.chapters ?? []).map((c) =>
+          normalizeChapter(c as ChapterResponse)
+        )
         const currentChapter = get().currentChapter
         const syncedCurrent = currentChapter
-          ? chapters.find((c: Chapter) => c.id === currentChapter.id) || currentChapter
+          ? chapters.find((c) => c.id === currentChapter.id) || currentChapter
           : null
-        set({ chapters, currentChapter: syncedCurrent, isLoading: false, lastFetchedProjectId: projectId })
+        set({
+          chapters,
+          currentChapter: syncedCurrent,
+          isLoading: false,
+          lastFetchedProjectId: projectId,
+        })
       } catch (error) {
         set({
           error: error instanceof Error ? error.message : '获取章节列表失败',
@@ -112,12 +107,10 @@ export const useChapterStore = create<ChapterState>()(
       }
     },
 
-    // 设置当前章节
     setCurrentChapter: (chapter) => {
       set({ currentChapter: chapter })
     },
 
-    // 将章节添加到本地列表并设为当前（用于 AI 生成时立即显示）
     addChapterLocally: (chapter) => {
       set((state) => {
         const exists = state.chapters.some((c) => c.id === chapter.id)
@@ -128,7 +121,6 @@ export const useChapterStore = create<ChapterState>()(
       })
     },
 
-    // 从本地列表移除章节（AI 生成失败时清理）
     removeChapterLocally: (id) => {
       set((state) => {
         state.chapters = state.chapters.filter((c) => c.id !== id)
@@ -138,7 +130,6 @@ export const useChapterStore = create<ChapterState>()(
       })
     },
 
-    // 更新章节内容（仅更新本地状态）
     updateChapterContent: (id, content) => {
       set((state) => {
         const chapter = state.chapters.find((c) => c.id === id)
@@ -153,7 +144,6 @@ export const useChapterStore = create<ChapterState>()(
       })
     },
 
-    // 保存章节
     saveChapter: async (id: string) => {
       set({ isSaving: true, error: null })
       try {
@@ -162,20 +152,10 @@ export const useChapterStore = create<ChapterState>()(
           throw new Error('章节不存在')
         }
 
-        const response = await fetch(`/api/projects/${chapter.projectId}/chapters/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            content: chapter.content,
-            wordCount: chapter.wordCount,
-          }),
+        await chaptersApi.update(chapter.projectId, id, {
+          content: chapter.content,
+          wordCount: chapter.wordCount,
         })
-
-        const result = await response.json()
-
-        if (!result.success) {
-          throw new Error(result.error.message)
-        }
 
         set({ isSaving: false, lastSaved: new Date() })
       } catch (error) {
@@ -187,24 +167,14 @@ export const useChapterStore = create<ChapterState>()(
       }
     },
 
-    // 创建章节
     createChapter: async (data) => {
       set({ isLoading: true, error: null })
       try {
         const { projectId, ...chapterData } = data
-        const response = await fetch(`/api/projects/${projectId}/chapters`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(chapterData),
-        })
-
-        const result = await response.json()
-
-        if (!result.success) {
-          throw new Error(result.error.message)
-        }
-
-        const newChapter = normalizeChapter(result.data.chapter)
+        const res = await chaptersApi.create(projectId, chapterData)
+        const newChapter = normalizeChapter(
+          (res.data?.chapter ?? res.data) as ChapterResponse
+        )
 
         set((state) => {
           state.chapters.push(newChapter)
@@ -222,19 +192,10 @@ export const useChapterStore = create<ChapterState>()(
       }
     },
 
-    // 删除章节
     deleteChapter: async (projectId: string, id: string) => {
       set({ isLoading: true, error: null })
       try {
-        const response = await fetch(`/api/projects/${projectId}/chapters/${id}`, {
-          method: 'DELETE',
-        })
-
-        const result = await response.json()
-
-        if (!result.success) {
-          throw new Error(result.error.message)
-        }
+        await chaptersApi.delete(projectId, id)
 
         set((state) => {
           state.chapters = state.chapters.filter((c) => c.id !== id)
@@ -252,12 +213,10 @@ export const useChapterStore = create<ChapterState>()(
       }
     },
 
-    // 清除错误
     clearError: () => {
       set({ error: null })
     },
 
-    // 清空当前项目关联的章节状态
     clearProjectContext: () => {
       set({
         chapters: [],

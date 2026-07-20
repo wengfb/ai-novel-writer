@@ -34,9 +34,9 @@ export async function GET(
       totalCharacters,
       totalWorldElements,
       totalOutlines,
-      chaptersByStatus,
+      _chaptersByStatus,
       recentGenerations,
-      totalTokensUsed,
+      _totalTokensUsed,
       totalCost,
     ] = await Promise.all([
       // 章节总数

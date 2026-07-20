@@ -122,7 +122,6 @@ export function scoreWorldElements(
     })
   }
 
-  const content = currentChapter.content.toLowerCase()
   const scored = elements.map((element) => {
     const importance = element.importance || 5
     const scopeWeight = { global: 20, regional: 10, local: 5 }

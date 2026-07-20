@@ -1,11 +1,18 @@
 import { apiClient } from '../client'
-import type { Project, CreateProjectParams } from '@/lib/store/project-store'
+import type { Project, CreateProjectParams } from '@/types'
 
 export interface ProjectStats {
   totalWords: number
   totalChapters: number
   totalCharacters: number
   totalWorldElements: number
+}
+
+export interface ProjectListResult {
+  projects: Project[]
+  total: number
+  page?: number
+  limit?: number
 }
 
 /**
@@ -15,25 +22,31 @@ export const projectsApi = {
   /**
    * 获取项目列表
    */
-  list: (params?: { page?: number; limit?: number; status?: string }) =>
-    apiClient.get<{ projects: Project[]; total: number }>('/projects'),
+  list: (params?: { page?: number; limit?: number; status?: string }) => {
+    const search = new URLSearchParams()
+    if (params?.page) search.set('page', String(params.page))
+    if (params?.limit) search.set('limit', String(params.limit))
+    if (params?.status) search.set('status', params.status)
+    const qs = search.toString()
+    return apiClient.get<ProjectListResult>(`/projects${qs ? `?${qs}` : ''}`)
+  },
 
   /**
    * 获取单个项目
    */
-  get: (id: string) => apiClient.get<Project>(`/projects/${id}`),
+  get: (id: string) => apiClient.get<{ project: Project }>(`/projects/${id}`),
 
   /**
    * 创建项目
    */
   create: (data: CreateProjectParams) =>
-    apiClient.post<Project>('/projects', data),
+    apiClient.post<{ project: Project }>('/projects', data),
 
   /**
    * 更新项目
    */
   update: (id: string, data: Partial<Project>) =>
-    apiClient.put<Project>(`/projects/${id}`, data),
+    apiClient.put<{ project: Project }>(`/projects/${id}`, data),
 
   /**
    * 删除项目

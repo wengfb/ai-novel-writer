@@ -49,44 +49,48 @@
 ```
 src/
 ├── app/
-│   ├── api/                    # API Routes（26个端点）
-│   ├── page.tsx                # 主页面（Studio 布局）
-│   └── layout.tsx              # 根布局
+│   ├── api/                    # API Routes（projects/chapters/characters/ideas/ai/...）
+│   ├── home-client.tsx         # 主页面客户端（Studio）
+│   ├── page.tsx
+│   └── layout.tsx
 ├── components/
-│   ├── ui/                     # shadcn/ui 组件（26个）
-│   ├── layout/                 # 布局组件（Studio）
-│   ├── studio/                 # Studio 组件（侧边栏、头部）
-│   ├── editor/                 # TipTap 富文本编辑器
-│   ├── project/                # 项目组件
-│   ├── chapter/                # 章节组件
-│   ├── character/              # 角色组件
-│   ├── world/                  # 世界观组件
-│   └── ai/                     # AI 交互组件（Chat、Context、Continue）
+│   ├── ui/                     # shadcn/ui 组件
+│   ├── layout/ studio/ editor/ # 布局 / Studio / TipTap
+│   ├── project/ chapter/ character/ world/ outline/
+│   ├── ideas/                  # 创意中心
+│   ├── onboarding/             # 项目启动引导
+│   └── ai/                     # Chat / Context / Continue / 生成章节
+├── hooks/                      # 领域 hooks（对 store 的薄封装）
 ├── lib/
-│   ├── ai/                     # AI 核心引擎（14个文件）
-│   │   ├── providers/          # Gemini / OpenAI 兼容提供者
-│   │   ├── prompts/            # 提示词模板管理
-│   │   ├── context-manager.ts  # 上下文管理器
-│   │   ├── chapter-generator.ts
-│   │   ├── rewrite-generator.ts
-│   │   ├── chat-tools.ts       # AI 工具调用（Function Calling）
-│   │   └── world-consistency-checker.ts
-│   ├── api/                    # API 客户端 + 端点封装
-│   ├── store/                  # Zustand 状态管理（8个 store）
+│   ├── ai/                     # AI 核心引擎
+│   │   ├── providers/          # Gemini / OpenAI 兼容
+│   │   ├── onboarding/         # 引导管线（normalize/prompts/generators/pipeline）
+│   │   ├── prompts/            # 提示词模板
+│   │   ├── context-manager.ts / chapter-generator.ts / rewrite-generator.ts
+│   │   ├── chat-tools.ts / world-consistency-checker.ts
+│   │   └── ...
+│   ├── api/
+│   │   ├── client.ts           # 统一 fetch 客户端
+│   │   ├── endpoints/          # projects/chapters/ideas/ai/... 端点封装
+│   │   ├── schemas.ts / validators.ts / response.ts
+│   ├── store/                  # Zustand（project/chapter/character/world/outline/idea/ai/settings/ui）
 │   ├── db/prisma.ts
-│   └── utils/
+│   └── utils/                  # sse-parser / text-format
 └── types/
-    └── index.ts
+    └── index.ts                # 共享领域类型（Project / Idea / PovType 等）
 ```
 
 ---
 
 ## 关键文件
 
-- `prisma/schema.prisma` — 数据模型定义（11 个表）
+- `prisma/schema.prisma` — 数据模型定义
+- `src/types/index.ts` — 前端统一类型（Project 等以这里为准）
 - `src/lib/ai/providers/` — AI Provider 实现，切换模型/中转在这里改
 - `src/lib/ai/config.ts` — AI 配置获取，DB 设置优先于环境变量
 - `src/lib/ai/context-manager.ts` — 上下文管理器，控制给 AI 传什么内容
+- `src/lib/ai/onboarding/` — 项目引导生成管线
+- `src/lib/api/endpoints/` — 前端 API 封装（store 应优先走这里，避免裸 fetch）
 - `src/lib/store/` — Zustand store，全局状态管理
 - `src/lib/utils/sse-parser.ts` — SSE 流式响应解析器
 

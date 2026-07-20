@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
+import { charactersApi } from '@/lib/api/endpoints/characters'
 
 export interface Character {
   id: string
@@ -13,7 +14,7 @@ export interface Character {
   appearance: string | null
   personality: string | null
   backstory: string | null
-  relationships: any
+  relationships: Record<string, unknown> | string | null
   createdAt: Date
   updatedAt: Date
 }
@@ -52,14 +53,8 @@ export const useCharacterStore = create<CharacterState>()(
     fetchCharacters: async (projectId: string) => {
       set({ isLoading: true, error: null })
       try {
-        const response = await fetch(`/api/projects/${projectId}/characters`)
-        const data = await response.json()
-
-        if (!data.success) {
-          throw new Error(data.error.message)
-        }
-
-        set({ characters: data.data.characters, isLoading: false })
+        const res = await charactersApi.list(projectId)
+        set({ characters: res.data?.characters ?? [], isLoading: false })
       } catch (error) {
         set({
           error: error instanceof Error ? error.message : '获取角色列表失败',
@@ -71,19 +66,8 @@ export const useCharacterStore = create<CharacterState>()(
     createCharacter: async (data) => {
       set({ isLoading: true, error: null })
       try {
-        const response = await fetch('/api/characters', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        })
-
-        const result = await response.json()
-
-        if (!result.success) {
-          throw new Error(result.error.message)
-        }
-
-        const newCharacter = result.data
+        const res = await charactersApi.create(data)
+        const newCharacter = (res.data?.character ?? res.data) as Character
 
         set((state) => {
           state.characters.push(newCharacter)
@@ -103,19 +87,8 @@ export const useCharacterStore = create<CharacterState>()(
     updateCharacter: async (id, data) => {
       set({ isLoading: true, error: null })
       try {
-        const response = await fetch(`/api/characters/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        })
-
-        const result = await response.json()
-
-        if (!result.success) {
-          throw new Error(result.error.message)
-        }
-
-        const updatedCharacter = result.data
+        const res = await charactersApi.update(id, data)
+        const updatedCharacter = (res.data?.character ?? res.data) as Character
 
         set((state) => {
           const index = state.characters.findIndex((c) => c.id === id)
@@ -136,15 +109,7 @@ export const useCharacterStore = create<CharacterState>()(
     deleteCharacter: async (id) => {
       set({ isLoading: true, error: null })
       try {
-        const response = await fetch(`/api/characters/${id}`, {
-          method: 'DELETE',
-        })
-
-        const result = await response.json()
-
-        if (!result.success) {
-          throw new Error(result.error.message)
-        }
+        await charactersApi.delete(id)
 
         set((state) => {
           state.characters = state.characters.filter((c) => c.id !== id)

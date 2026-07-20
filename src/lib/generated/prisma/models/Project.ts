@@ -48,6 +48,7 @@ export type ProjectMinAggregateOutputType = {
   coverImage: string | null
   totalWords: number | null
   chapterCount: number | null
+  pov: string | null
   outlineMode: string | null
   planningRange: number | null
   createdAt: Date | null
@@ -64,6 +65,7 @@ export type ProjectMaxAggregateOutputType = {
   coverImage: string | null
   totalWords: number | null
   chapterCount: number | null
+  pov: string | null
   outlineMode: string | null
   planningRange: number | null
   createdAt: Date | null
@@ -80,6 +82,7 @@ export type ProjectCountAggregateOutputType = {
   coverImage: number
   totalWords: number
   chapterCount: number
+  pov: number
   outlineMode: number
   planningRange: number
   createdAt: number
@@ -110,6 +113,7 @@ export type ProjectMinAggregateInputType = {
   coverImage?: true
   totalWords?: true
   chapterCount?: true
+  pov?: true
   outlineMode?: true
   planningRange?: true
   createdAt?: true
@@ -126,6 +130,7 @@ export type ProjectMaxAggregateInputType = {
   coverImage?: true
   totalWords?: true
   chapterCount?: true
+  pov?: true
   outlineMode?: true
   planningRange?: true
   createdAt?: true
@@ -142,6 +147,7 @@ export type ProjectCountAggregateInputType = {
   coverImage?: true
   totalWords?: true
   chapterCount?: true
+  pov?: true
   outlineMode?: true
   planningRange?: true
   createdAt?: true
@@ -245,6 +251,7 @@ export type ProjectGroupByOutputType = {
   coverImage: string | null
   totalWords: number
   chapterCount: number
+  pov: string
   outlineMode: string
   planningRange: number | null
   createdAt: Date
@@ -284,6 +291,7 @@ export type ProjectWhereInput = {
   coverImage?: Prisma.StringNullableFilter<"Project"> | string | null
   totalWords?: Prisma.IntFilter<"Project"> | number
   chapterCount?: Prisma.IntFilter<"Project"> | number
+  pov?: Prisma.StringFilter<"Project"> | string
   outlineMode?: Prisma.StringFilter<"Project"> | string
   planningRange?: Prisma.IntNullableFilter<"Project"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
@@ -306,6 +314,7 @@ export type ProjectOrderByWithRelationInput = {
   coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
   totalWords?: Prisma.SortOrder
   chapterCount?: Prisma.SortOrder
+  pov?: Prisma.SortOrder
   outlineMode?: Prisma.SortOrder
   planningRange?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -331,6 +340,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   coverImage?: Prisma.StringNullableFilter<"Project"> | string | null
   totalWords?: Prisma.IntFilter<"Project"> | number
   chapterCount?: Prisma.IntFilter<"Project"> | number
+  pov?: Prisma.StringFilter<"Project"> | string
   outlineMode?: Prisma.StringFilter<"Project"> | string
   planningRange?: Prisma.IntNullableFilter<"Project"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
@@ -353,6 +363,7 @@ export type ProjectOrderByWithAggregationInput = {
   coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
   totalWords?: Prisma.SortOrder
   chapterCount?: Prisma.SortOrder
+  pov?: Prisma.SortOrder
   outlineMode?: Prisma.SortOrder
   planningRange?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -377,6 +388,7 @@ export type ProjectScalarWhereWithAggregatesInput = {
   coverImage?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
   totalWords?: Prisma.IntWithAggregatesFilter<"Project"> | number
   chapterCount?: Prisma.IntWithAggregatesFilter<"Project"> | number
+  pov?: Prisma.StringWithAggregatesFilter<"Project"> | string
   outlineMode?: Prisma.StringWithAggregatesFilter<"Project"> | string
   planningRange?: Prisma.IntNullableWithAggregatesFilter<"Project"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
@@ -393,6 +405,7 @@ export type ProjectCreateInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -415,6 +428,7 @@ export type ProjectUncheckedCreateInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -437,6 +451,7 @@ export type ProjectUpdateInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -459,6 +474,7 @@ export type ProjectUncheckedUpdateInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -481,6 +497,7 @@ export type ProjectCreateManyInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -497,6 +514,7 @@ export type ProjectUpdateManyMutationInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -513,6 +531,7 @@ export type ProjectUncheckedUpdateManyInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -529,6 +548,7 @@ export type ProjectCountOrderByAggregateInput = {
   coverImage?: Prisma.SortOrder
   totalWords?: Prisma.SortOrder
   chapterCount?: Prisma.SortOrder
+  pov?: Prisma.SortOrder
   outlineMode?: Prisma.SortOrder
   planningRange?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -551,6 +571,7 @@ export type ProjectMaxOrderByAggregateInput = {
   coverImage?: Prisma.SortOrder
   totalWords?: Prisma.SortOrder
   chapterCount?: Prisma.SortOrder
+  pov?: Prisma.SortOrder
   outlineMode?: Prisma.SortOrder
   planningRange?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -567,6 +588,7 @@ export type ProjectMinOrderByAggregateInput = {
   coverImage?: Prisma.SortOrder
   totalWords?: Prisma.SortOrder
   chapterCount?: Prisma.SortOrder
+  pov?: Prisma.SortOrder
   outlineMode?: Prisma.SortOrder
   planningRange?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -706,6 +728,7 @@ export type ProjectCreateWithoutOutlinesInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -727,6 +750,7 @@ export type ProjectUncheckedCreateWithoutOutlinesInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -764,6 +788,7 @@ export type ProjectUpdateWithoutOutlinesInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -785,6 +810,7 @@ export type ProjectUncheckedUpdateWithoutOutlinesInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -806,6 +832,7 @@ export type ProjectCreateWithoutChaptersInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -827,6 +854,7 @@ export type ProjectUncheckedCreateWithoutChaptersInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -864,6 +892,7 @@ export type ProjectUpdateWithoutChaptersInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -885,6 +914,7 @@ export type ProjectUncheckedUpdateWithoutChaptersInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -906,6 +936,7 @@ export type ProjectCreateWithoutCharactersInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -927,6 +958,7 @@ export type ProjectUncheckedCreateWithoutCharactersInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -964,6 +996,7 @@ export type ProjectUpdateWithoutCharactersInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -985,6 +1018,7 @@ export type ProjectUncheckedUpdateWithoutCharactersInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1006,6 +1040,7 @@ export type ProjectCreateWithoutWorldElementsInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -1027,6 +1062,7 @@ export type ProjectUncheckedCreateWithoutWorldElementsInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -1064,6 +1100,7 @@ export type ProjectUpdateWithoutWorldElementsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1085,6 +1122,7 @@ export type ProjectUncheckedUpdateWithoutWorldElementsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1106,6 +1144,7 @@ export type ProjectCreateWithoutGenerationsInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -1127,6 +1166,7 @@ export type ProjectUncheckedCreateWithoutGenerationsInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -1164,6 +1204,7 @@ export type ProjectUpdateWithoutGenerationsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1185,6 +1226,7 @@ export type ProjectUncheckedUpdateWithoutGenerationsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1206,6 +1248,7 @@ export type ProjectCreateWithoutForeshadowingsInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -1227,6 +1270,7 @@ export type ProjectUncheckedCreateWithoutForeshadowingsInput = {
   coverImage?: string | null
   totalWords?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt?: Date | string
@@ -1264,6 +1308,7 @@ export type ProjectUpdateWithoutForeshadowingsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1285,6 +1330,7 @@ export type ProjectUncheckedUpdateWithoutForeshadowingsInput = {
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totalWords?: Prisma.IntFieldUpdateOperationsInput | number
   chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
   outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
   planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1382,6 +1428,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   coverImage?: boolean
   totalWords?: boolean
   chapterCount?: boolean
+  pov?: boolean
   outlineMode?: boolean
   planningRange?: boolean
   createdAt?: boolean
@@ -1405,6 +1452,7 @@ export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   coverImage?: boolean
   totalWords?: boolean
   chapterCount?: boolean
+  pov?: boolean
   outlineMode?: boolean
   planningRange?: boolean
   createdAt?: boolean
@@ -1421,6 +1469,7 @@ export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   coverImage?: boolean
   totalWords?: boolean
   chapterCount?: boolean
+  pov?: boolean
   outlineMode?: boolean
   planningRange?: boolean
   createdAt?: boolean
@@ -1437,13 +1486,14 @@ export type ProjectSelectScalar = {
   coverImage?: boolean
   totalWords?: boolean
   chapterCount?: boolean
+  pov?: boolean
   outlineMode?: boolean
   planningRange?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "genre" | "tags" | "status" | "coverImage" | "totalWords" | "chapterCount" | "outlineMode" | "planningRange" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "genre" | "tags" | "status" | "coverImage" | "totalWords" | "chapterCount" | "pov" | "outlineMode" | "planningRange" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   outlines?: boolean | Prisma.Project$outlinesArgs<ExtArgs>
   chapters?: boolean | Prisma.Project$chaptersArgs<ExtArgs>
@@ -1476,6 +1526,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     coverImage: string | null
     totalWords: number
     chapterCount: number
+    pov: string
     outlineMode: string
     planningRange: number | null
     createdAt: Date
@@ -1918,6 +1969,7 @@ export interface ProjectFieldRefs {
   readonly coverImage: Prisma.FieldRef<"Project", 'String'>
   readonly totalWords: Prisma.FieldRef<"Project", 'Int'>
   readonly chapterCount: Prisma.FieldRef<"Project", 'Int'>
+  readonly pov: Prisma.FieldRef<"Project", 'String'>
   readonly outlineMode: Prisma.FieldRef<"Project", 'String'>
   readonly planningRange: Prisma.FieldRef<"Project", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Project", 'DateTime'>

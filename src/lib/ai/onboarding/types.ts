@@ -20,6 +20,12 @@ export interface ChapterCalculation {
   volumeCount: number
   chaptersPerVolume: number
   avgChapterWords: number
+  /** 用户设定的目标总字数（可选，用于偏差提示） */
+  targetWords?: number
+  /** AI 建议总字数（可选） */
+  suggestedTotalWords?: number
+  /** 与目标字数的偏差百分比（可选） */
+  deviationPercent?: number
 }
 
 // ============ 步骤 1：故事架构 ============

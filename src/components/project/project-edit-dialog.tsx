@@ -126,7 +126,7 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
 
       // 保存叙事人称
       if (pov && pov !== project.pov) {
-        await updateProject(project.id, { pov: pov as any } as any)
+        await updateProject(project.id, { pov: pov as Project['pov'] })
       }
 
       toast.success('项目信息已更新')

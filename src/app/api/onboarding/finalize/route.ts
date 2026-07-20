@@ -10,7 +10,7 @@ import {
   normalizeWorldElementType,
   normalizePlotFunction,
   normalizeTensionLevel,
-} from '@/lib/ai/onboarding-bootstrap'
+} from '@/lib/ai/onboarding/normalize'
 import type { PipelineResult } from '@/lib/ai/onboarding/types'
 
 const FinalizeSchema = z.object({

@@ -88,7 +88,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           <div className="space-y-2">
             <Progress value={progress} className="h-2" />
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>{project.totalChapters} 章</span>
+              <span>{project.chapterCount} 章</span>
               <span>{progress.toFixed(1)}%</span>
             </div>
           </div>

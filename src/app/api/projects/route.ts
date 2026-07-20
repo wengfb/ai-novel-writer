@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { apiSuccess, withErrorHandler, ApiErrors } from '@/lib/api/response'
-import { parseJsonBody, validateQuery } from '@/lib/api/validators'
+import { apiSuccess, withErrorHandler } from '@/lib/api/response'
+import { parseJsonBody, validateQuery, validateRequest } from '@/lib/api/validators'
 import { ProjectQuerySchema, CreateProjectSchema } from '@/lib/api/schemas'
+import type { Prisma } from '@/lib/generated/prisma/client'
 
 /**
  * GET /api/projects
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
     const query = validateQuery(ProjectQuerySchema, request.nextUrl.searchParams)
 
     // 构建查询条件
-    const where: any = {}
+    const where: Prisma.ProjectWhereInput = {}
     if (query.status) {
       where.status = query.status
     }
@@ -86,5 +87,3 @@ export async function POST(request: NextRequest) {
     return apiSuccess({ project }, 201)
   })
 }
-
-import { validateRequest } from '@/lib/api/validators'

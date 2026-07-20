@@ -1,11 +1,14 @@
 # 项目开发进度追踪 (Development Progress)
 
+> **说明**：以下进度百分比为历史快照，仅作功能清单参考。  
+> 最近代码整理（2026-07）：Prisma 客户端同步、`Project` 类型统一、`onboarding-bootstrap` 归位为 `onboarding/normalize`、stores 收敛到 `api/endpoints`、补齐 `ideasApi`、清理脚手架死代码。
+
 ## 📊 项目概览
 
 **项目名称**：AI Novel Writer
 **开始日期**：2025-01-04
-**当前版本**：v1.2.0 (Outline Visualization)
-**整体进度**：████████░░ 86%
+**当前版本**：v1.3.0 (Code Hygiene)
+**整体进度**：████████░░ 88%
 
 ---
 

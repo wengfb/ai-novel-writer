@@ -353,7 +353,7 @@ export function buildForeshadowingsPrompt(
   chapters: { chapterNumber: number; title: string; summary: string }[],
   characters: { name: string }[],
   worldSettings: { name: string }[],
-  params: BootstrapParams
+  _params: BootstrapParams
 ): string {
   const chapterList = chapters
     .map(c => `第${c.chapterNumber}章《${c.title}》：${c.summary}`)

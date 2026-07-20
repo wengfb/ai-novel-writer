@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -40,9 +41,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Prisma 生成客户端（本地/CI 通过 prisma generate 产出）
 /src/lib/generated/prisma
 
-# database
+# 本地数据库文件
 *.db
 *.db-journal
-prisma/migrations/

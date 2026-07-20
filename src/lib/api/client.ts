@@ -1,13 +1,14 @@
 /**
  * API 响应类型
  */
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   error?: {
     code: string
     message: string
-  }
+    details?: unknown
+  } | null
 }
 
 /**
@@ -48,7 +49,10 @@ export class ApiClient {
       const data = await response.json()
 
       if (!data.success) {
-        throw new ApiError(data.error.code, data.error.message)
+        throw new ApiError(
+          data.error?.code || 'UNKNOWN_ERROR',
+          data.error?.message || '请求失败'
+        )
       }
 
       return data
@@ -70,20 +74,30 @@ export class ApiClient {
   /**
    * POST 请求
    */
-  post<T>(endpoint: string, body: any) {
+  post<T>(endpoint: string, body?: unknown) {
     return this.request<T>(endpoint, {
       method: 'POST',
-      body: JSON.stringify(body),
+      body: body !== undefined ? JSON.stringify(body) : undefined,
     })
   }
 
   /**
    * PUT 请求
    */
-  put<T>(endpoint: string, body: any) {
+  put<T>(endpoint: string, body?: unknown) {
     return this.request<T>(endpoint, {
       method: 'PUT',
-      body: JSON.stringify(body),
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    })
+  }
+
+  /**
+   * PATCH 请求
+   */
+  patch<T>(endpoint: string, body?: unknown) {
+    return this.request<T>(endpoint, {
+      method: 'PATCH',
+      body: body !== undefined ? JSON.stringify(body) : undefined,
     })
   }
 
@@ -97,11 +111,11 @@ export class ApiClient {
   /**
    * 流式请求 (SSE)
    */
-  async stream(endpoint: string, body: any): Promise<ReadableStream> {
+  async stream(endpoint: string, body?: unknown): Promise<ReadableStream> {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      body: body !== undefined ? JSON.stringify(body) : undefined,
     })
 
     if (!response.body) {

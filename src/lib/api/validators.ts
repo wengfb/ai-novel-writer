@@ -7,7 +7,7 @@ import { z } from 'zod'
 export async function parseJsonBody<T>(request: NextRequest): Promise<T> {
   try {
     return await request.json()
-  } catch (error) {
+  } catch {
     throw new Error('Invalid JSON body')
   }
 }
@@ -23,7 +23,7 @@ export function validateRequest<T extends z.ZodType>(
     return schema.parse(data)
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const errors = error.issues.map((e: any) => ({
+      const errors = error.issues.map((e) => ({
         field: e.path.join('.'),
         message: e.message,
       }))

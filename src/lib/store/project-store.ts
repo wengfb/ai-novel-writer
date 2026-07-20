@@ -2,41 +2,19 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { useChapterStore } from './chapter-store'
+import { projectsApi } from '@/lib/api/endpoints/projects'
+import type { Project, CreateProjectParams, PovType } from '@/types'
 
-export interface Project {
-  id: string
-  title: string
-  description: string | null
-  genre: string
-  tags: string | null
-  status: 'draft' | 'writing' | 'completed' | 'archived'
-  coverImage: string | null
-  totalWords: number
-  totalChapters: number
-  pov: string
-  outlineMode: 'full' | 'progressive'
-  planningRange: number | null
-  createdAt: Date
-  updatedAt: Date
-}
-
-export interface CreateProjectParams {
-  title: string
-  description?: string
-  genre: string
-  status?: 'draft' | 'writing' | 'completed'
-}
+export type { Project, CreateProjectParams }
 
 type ProjectInput = Project | ProjectResponse
 
 interface ProjectState {
-  // 状态
   projects: Project[]
   currentProject: Project | null
   isLoading: boolean
   error: string | null
 
-  // Actions
   fetchProjects: () => Promise<void>
   setCurrentProject: (project: ProjectInput | null) => void
   createProject: (data: CreateProjectParams) => Promise<Project>
@@ -45,7 +23,8 @@ interface ProjectState {
   clearError: () => void
 }
 
-type ProjectResponse = Omit<Partial<Project>, 'createdAt' | 'updatedAt'> & {
+/** API 原始响应（日期可能是字符串，字段名可能混用） */
+type ProjectResponse = Omit<Partial<Project>, 'createdAt' | 'updatedAt' | 'pov' | 'chapterCount'> & {
   id: string
   title: string
   description?: string | null
@@ -56,6 +35,7 @@ type ProjectResponse = Omit<Partial<Project>, 'createdAt' | 'updatedAt'> & {
   totalWords?: number
   totalChapters?: number
   chapterCount?: number
+  pov?: string
   outlineMode?: string
   planningRange?: number | null
   createdAt: string | Date
@@ -63,6 +43,7 @@ type ProjectResponse = Omit<Partial<Project>, 'createdAt' | 'updatedAt'> & {
 }
 
 function normalizeProject(project: ProjectResponse): Project {
+  const pov = (project.pov || 'third_person') as PovType
   return {
     id: project.id,
     title: project.title,
@@ -72,8 +53,8 @@ function normalizeProject(project: ProjectResponse): Project {
     status: project.status,
     coverImage: project.coverImage ?? null,
     totalWords: project.totalWords ?? 0,
-    totalChapters: project.totalChapters ?? project.chapterCount ?? 0,
-    pov: project.pov || 'third_person',
+    chapterCount: project.chapterCount ?? project.totalChapters ?? 0,
+    pov,
     outlineMode: (project.outlineMode as 'full' | 'progressive') || 'full',
     planningRange: project.planningRange ?? 10,
     createdAt: new Date(project.createdAt),
@@ -84,29 +65,22 @@ function normalizeProject(project: ProjectResponse): Project {
 export const useProjectStore = create<ProjectState>()(
   persist(
     immer((set, get) => ({
-      // 初始状态
       projects: [],
       currentProject: null,
       isLoading: false,
       error: null,
 
-      // 获取项目列表
       fetchProjects: async () => {
-        // 正在请求中或已有数据，跳过重复请求
         const state = get()
         if (state.isLoading) return
         if (state.projects.length > 0) return
 
         set({ isLoading: true, error: null })
         try {
-          const response = await fetch('/api/projects')
-          const data = await response.json()
-
-          if (!data.success) {
-            throw new Error(data.error.message)
-          }
-
-          const projects: Project[] = data.data.projects.map((project: ProjectResponse) => normalizeProject(project))
+          const res = await projectsApi.list()
+          const projects = (res.data?.projects ?? []).map((p) =>
+            normalizeProject(p as ProjectResponse)
+          )
           const currentProject = get().currentProject
           const validCurrentProject = currentProject
             ? projects.find((project) => project.id === currentProject.id) ?? null
@@ -125,9 +99,8 @@ export const useProjectStore = create<ProjectState>()(
         }
       },
 
-      // 设置当前项目
       setCurrentProject: (project) => {
-        const normalizedProject = project ? normalizeProject(project) : null
+        const normalizedProject = project ? normalizeProject(project as ProjectResponse) : null
         const previousProjectId = get().currentProject?.id
         if (previousProjectId !== normalizedProject?.id) {
           useChapterStore.getState().clearProjectContext()
@@ -135,23 +108,12 @@ export const useProjectStore = create<ProjectState>()(
         set({ currentProject: normalizedProject })
       },
 
-      // 创建项目
       createProject: async (data) => {
         set({ isLoading: true, error: null })
         try {
-          const response = await fetch('/api/projects', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-          })
-
-          const result = await response.json()
-
-          if (!result.success) {
-            throw new Error(result.error.message)
-          }
-
-          const newProject = normalizeProject(result.data.project ?? result.data)
+          const res = await projectsApi.create(data)
+          const payload = res.data?.project ?? (res.data as unknown as ProjectResponse)
+          const newProject = normalizeProject(payload as ProjectResponse)
 
           useChapterStore.getState().clearProjectContext()
 
@@ -171,23 +133,12 @@ export const useProjectStore = create<ProjectState>()(
         }
       },
 
-      // 更新项目
       updateProject: async (id, data) => {
         set({ isLoading: true, error: null })
         try {
-          const response = await fetch(`/api/projects/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-          })
-
-          const result = await response.json()
-
-          if (!result.success) {
-            throw new Error(result.error.message)
-          }
-
-          const updatedProject = normalizeProject(result.data.project ?? result.data)
+          const res = await projectsApi.update(id, data)
+          const payload = res.data?.project ?? (res.data as unknown as ProjectResponse)
+          const updatedProject = normalizeProject(payload as ProjectResponse)
 
           set((state) => {
             const index = state.projects.findIndex((p) => p.id === id)
@@ -208,22 +159,12 @@ export const useProjectStore = create<ProjectState>()(
         }
       },
 
-      // 删除项目
       deleteProject: async (id) => {
         set({ isLoading: true, error: null })
         try {
-          const response = await fetch(`/api/projects/${id}`, {
-            method: 'DELETE',
-          })
-
-          const result = await response.json()
-
-          if (!result.success) {
-            throw new Error(result.error.message)
-          }
+          await projectsApi.delete(id)
 
           const shouldClearProject = get().currentProject?.id === id
-
           if (shouldClearProject) {
             useChapterStore.getState().clearProjectContext()
           }
@@ -244,7 +185,6 @@ export const useProjectStore = create<ProjectState>()(
         }
       },
 
-      // 清除错误
       clearError: () => {
         set({ error: null })
       },

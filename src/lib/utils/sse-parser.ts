@@ -7,8 +7,9 @@ export interface SSEEvent {
   type: 'start' | 'progress' | 'done' | 'error'
   chapterId?: string
   content?: string
-  data?: any
+  data?: unknown
   error?: string
+  [key: string]: unknown
 }
 
 /**
@@ -37,7 +38,7 @@ export class SSEParser {
     for (const line of lines) {
       if (line.startsWith('data: ')) {
         try {
-          const data = JSON.parse(line.slice(6))
+          const data = JSON.parse(line.slice(6)) as SSEEvent
           events.push(data)
         } catch (e) {
           console.error('Failed to parse SSE data:', line, e)
@@ -60,6 +61,7 @@ export class SSEParser {
  * 流式处理 SSE 响应
  * @param url - API 端点
  * @param body - 请求体
+ * @param onStart - 开始回调
  * @param onProgress - 进度回调
  * @param onDone - 完成回调
  * @param onError - 错误回调
@@ -67,10 +69,10 @@ export class SSEParser {
  */
 export async function streamSSE(
   url: string,
-  body: any,
-  onStart: (data: any) => void,
+  body: unknown,
+  onStart: (data: SSEEvent) => void,
   onProgress: (content: string) => void,
-  onDone: (data: any) => void,
+  onDone: (data: unknown) => void,
   onError: (error: string) => void,
   signal?: AbortSignal
 ): Promise<void> {
@@ -86,7 +88,7 @@ export async function streamSSE(
     let message = error || 'Request failed'
 
     try {
-      const parsed = JSON.parse(error)
+      const parsed = JSON.parse(error) as { error?: { message?: string } }
       message = parsed.error?.message || message
     } catch {
       // 保留原始错误文本
@@ -116,6 +118,7 @@ export async function streamSSE(
         } else if (event.type === 'progress' && event.content) {
           onProgress(event.content)
         } else if (event.type === 'done') {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { type, ...data } = event
           onDone(event.data ?? data)
           return

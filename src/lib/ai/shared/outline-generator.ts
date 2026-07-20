@@ -2,7 +2,6 @@ import { z } from 'zod'
 import { getAIProviderAsync } from '@/lib/ai/providers'
 import {
   GeneratedOnboardingOutlineSchema,
-  OutlinePlotFunctionValues,
 } from '@/lib/api/schemas'
 
 export type GeneratedOnboardingOutline = z.infer<typeof GeneratedOnboardingOutlineSchema>

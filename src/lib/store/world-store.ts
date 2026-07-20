@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
+import { worldElementsApi } from '@/lib/api/endpoints/world-elements'
 
 export interface WorldElement {
   id: string
@@ -45,14 +46,8 @@ export const useWorldStore = create<WorldState>()(
     fetchWorldElements: async (projectId: string) => {
       set({ isLoading: true, error: null })
       try {
-        const response = await fetch(`/api/projects/${projectId}/world-elements`)
-        const data = await response.json()
-
-        if (!data.success) {
-          throw new Error(data.error.message)
-        }
-
-        set({ worldElements: data.data.elements, isLoading: false })
+        const res = await worldElementsApi.list(projectId)
+        set({ worldElements: res.data?.elements ?? [], isLoading: false })
       } catch (error) {
         set({
           error: error instanceof Error ? error.message : '获取世界观列表失败',
@@ -64,19 +59,8 @@ export const useWorldStore = create<WorldState>()(
     createWorldElement: async (data) => {
       set({ isLoading: true, error: null })
       try {
-        const response = await fetch('/api/world-elements', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        })
-
-        const result = await response.json()
-
-        if (!result.success) {
-          throw new Error(result.error.message)
-        }
-
-        const newElement = result.data
+        const res = await worldElementsApi.create(data)
+        const newElement = (res.data?.worldElement ?? res.data) as WorldElement
 
         set((state) => {
           state.worldElements.push(newElement)
@@ -96,19 +80,8 @@ export const useWorldStore = create<WorldState>()(
     updateWorldElement: async (id, data) => {
       set({ isLoading: true, error: null })
       try {
-        const response = await fetch(`/api/world-elements/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        })
-
-        const result = await response.json()
-
-        if (!result.success) {
-          throw new Error(result.error.message)
-        }
-
-        const updatedElement = result.data
+        const res = await worldElementsApi.update(id, data)
+        const updatedElement = (res.data?.element ?? res.data) as WorldElement
 
         set((state) => {
           const index = state.worldElements.findIndex((e) => e.id === id)
@@ -129,15 +102,7 @@ export const useWorldStore = create<WorldState>()(
     deleteWorldElement: async (id) => {
       set({ isLoading: true, error: null })
       try {
-        const response = await fetch(`/api/world-elements/${id}`, {
-          method: 'DELETE',
-        })
-
-        const result = await response.json()
-
-        if (!result.success) {
-          throw new Error(result.error.message)
-        }
+        await worldElementsApi.delete(id)
 
         set((state) => {
           state.worldElements = state.worldElements.filter((e) => e.id !== id)

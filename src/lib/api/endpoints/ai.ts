@@ -101,7 +101,7 @@ export const aiApi = {
       },
       onProgress,
       (data) => {
-        result = data
+        result = data as GenerateChapterResult
       },
       (error) => {
         throw new Error(error)
@@ -127,7 +127,7 @@ export const aiApi = {
     onProgress: (content: string) => void,
     signal?: AbortSignal
   ): Promise<{ content: string; wordCount: number }> {
-    let result: any = null
+    let result: { content: string; wordCount: number } | null = null
 
     await streamSSE(
       '/api/ai/continue',
@@ -135,13 +135,20 @@ export const aiApi = {
       () => {},
       onProgress,
       (data) => {
-        result = data
+        result = data as { content: string; wordCount: number }
       },
       (error) => {
         throw new Error(error)
       },
       signal
     )
+
+    if (!result) {
+      if (signal?.aborted) {
+        throw new DOMException('续写已取消', 'AbortError')
+      }
+      throw new Error('续写失败：未收到完成结果')
+    }
 
     return result
   },
@@ -154,7 +161,7 @@ export const aiApi = {
     onProgress: (content: string) => void,
     signal?: AbortSignal
   ): Promise<{ rewrittenText: string }> {
-    let result: any = null
+    let result: { rewrittenText: string } | null = null
 
     await streamSSE(
       '/api/ai/rewrite',
@@ -162,7 +169,7 @@ export const aiApi = {
       () => {},
       onProgress,
       (data) => {
-        result = data
+        result = data as { rewrittenText: string }
       },
       (error) => {
         throw new Error(error)
@@ -184,18 +191,11 @@ export const aiApi = {
    * 批量生成章节摘要
    */
   async summarizeChapters(projectId: string): Promise<{ chapterCount: number; message: string }> {
-    const response = await fetch('/api/ai/summarize', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ projectId }),
-    })
-    const data = await response.json()
-
-    if (!data.success) {
-      throw new Error(data.error.message)
-    }
-
-    return data.data
+    const res = await apiClient.post<{ chapterCount: number; message: string }>(
+      '/ai/summarize',
+      { projectId }
+    )
+    return res.data!
   },
 
   /**
@@ -220,33 +220,32 @@ export const aiApi = {
     }>
     summary: { high: number; medium: number; low: number }
   }> {
-    const response = await fetch('/api/ai/consistency-check', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(params),
-    })
-    const data = await response.json()
-
-    if (!data.success) {
-      throw new Error(data.error.message)
-    }
-
-    return data.data
+    const res = await apiClient.post<{
+      report: string
+      conflicts: Array<{
+        type: string
+        severity: 'high' | 'medium' | 'low'
+        elementId: string
+        elementName: string
+        chapterId: string
+        chapterNumber: number
+        description: string
+        suggestion?: string
+        conflictingContent?: string
+        originalSetting?: string
+      }>
+      summary: { high: number; medium: number; low: number }
+    }>('/ai/consistency-check', params)
+    return res.data!
   },
 
   /**
    * 获取上下文信息
    */
   async getContext(projectId: string, chapterId: string): Promise<ContextInfo> {
-    const response = await fetch(
-      `/api/ai/context?projectId=${projectId}&chapterId=${chapterId}`
+    const res = await apiClient.get<ContextInfo>(
+      `/ai/context?projectId=${projectId}&chapterId=${chapterId}`
     )
-    const data = await response.json()
-
-    if (!data.success) {
-      throw new Error(data.error.message)
-    }
-
-    return data.data
+    return res.data!
   },
 }

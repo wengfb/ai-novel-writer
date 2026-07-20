@@ -14,19 +14,20 @@ export const chaptersApi = {
   /**
    * 获取单个章节
    */
-  get: (id: string) => apiClient.get<Chapter>(`/chapters/${id}`),
+  get: (projectId: string, id: string) =>
+    apiClient.get<{ chapter: Chapter }>(`/projects/${projectId}/chapters/${id}`),
 
   /**
    * 创建章节
    */
   create: (projectId: string, data: Omit<CreateChapterParams, 'projectId'>) =>
-    apiClient.post<Chapter>(`/projects/${projectId}/chapters`, data),
+    apiClient.post<{ chapter: Chapter }>(`/projects/${projectId}/chapters`, data),
 
   /**
    * 更新章节
    */
-  update: (id: string, data: Partial<Chapter>) =>
-    apiClient.put<Chapter>(`/chapters/${id}`, data),
+  update: (projectId: string, id: string, data: Partial<Chapter>) =>
+    apiClient.put<{ chapter: Chapter }>(`/projects/${projectId}/chapters/${id}`, data),
 
   /**
    * 删除章节

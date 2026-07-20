@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { StoryIdeaCard } from '@/types'
-import type { ArchitectureChapterCalculation } from '@/lib/ai/onboarding/types'
+import type { ChapterCalculation } from '@/lib/ai/onboarding/types'
 
 // ============ 类型 ============
 
@@ -663,7 +663,7 @@ function StepResultPreview({ stepKey, data, idea }: { stepKey: StepKey; data: Re
             </CollapsibleSection>
           )}
           {data.chapterCalculation && (
-            <DiffWarningBanner calc={data.chapterCalculation as ArchitectureChapterCalculation} />
+            <DiffWarningBanner calc={data.chapterCalculation as ChapterCalculation} />
           )}
         </div>
       )
@@ -776,7 +776,7 @@ const WORD_COUNT_DEVIATION_WARNING_THRESHOLD = 20
 
 // ============ 字数偏差警告 ============
 
-function DiffWarningBanner({ calc }: { calc: ArchitectureChapterCalculation }) {
+function DiffWarningBanner({ calc }: { calc: ChapterCalculation }) {
   if (calc.deviationPercent == null || Math.abs(calc.deviationPercent) <= WORD_COUNT_DEVIATION_WARNING_THRESHOLD) {
     return (
       <div className="flex gap-4 text-xs text-muted-foreground">

@@ -1,4 +1,4 @@
-import { calculateChapterCount, calculateVolumeSplit } from '@/lib/ai/onboarding-bootstrap'
+import { calculateChapterCount, calculateVolumeSplit } from '@/lib/ai/onboarding/normalize'
 import {
   buildArchitecturePrompt,
   buildCharactersPrompt,

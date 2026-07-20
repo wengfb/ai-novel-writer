@@ -8,7 +8,7 @@ import {
   normalizeWorldElementType,
   normalizePlotFunction,
   normalizeTensionLevel,
-} from '@/lib/ai/onboarding-bootstrap'
+} from '@/lib/ai/onboarding/normalize'
 
 const InitSchema = z.object({
   results: z.object({
