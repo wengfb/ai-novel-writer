@@ -392,6 +392,26 @@ model SystemSetting {
   @@index([category])
 }
 
+// Agent 可编辑提示词（覆盖代码默认值）
+// 同一 agentId + slotKey 唯一；content 为空时表示使用默认
+model AgentPrompt {
+  id          String   @id @default(cuid())
+  agentId     String   // 对应 AgentDefinition.id，如 studio-chat
+  slotKey     String   // 提示词槽位，如 system / user / planner
+  name        String   // 展示名
+  description String?  // 用途说明
+  content     String   // 模板正文，支持 {var} 插值
+  variables   String?  // JSON 数组：可用变量说明 [{ name, description }]
+  version     Int      @default(1)
+  isCustom    Boolean  @default(true) // 是否相对默认被用户改过
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([agentId, slotKey])
+  @@index([agentId])
+}
+
 // 创意中心 — 创意主表
 model Idea {
   id              String    @id @default(cuid())

@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { PromptTemplateManager } from '@/lib/ai/prompts/template-manager'
 import { getContextManager } from '@/lib/ai/context-manager'
 import { apiSuccess, withErrorHandler, ApiErrors } from '@/lib/api/response'
 import { parseJsonBody, validateRequest } from '@/lib/api/validators'
@@ -8,10 +7,11 @@ import { GenerateOutlineSchema } from '@/lib/api/schemas'
 import type { Chapter, Character, Foreshadowing, WorldElement } from '@/types'
 import { generateOutlineFromPrompt } from '@/lib/ai/shared/outline-generator'
 import { normalizePlotFunction, normalizeTensionLevel } from '@/lib/ai/onboarding/normalize'
+import { renderAgentSlot } from '@/lib/ai/agents'
 
 /**
  * POST /api/ai/generate/outline
- * AI 生成大纲
+ * AI 生成大纲 — outline-architect Agent
  */
 export async function POST(request: NextRequest) {
   return withErrorHandler(async () => {
@@ -32,13 +32,17 @@ export async function POST(request: NextRequest) {
       return ApiErrors.projectNotFound()
     }
 
-    const promptManager = new PromptTemplateManager()
     const totalWords = data.targetWords * data.chapterCount
-    const prompt = promptManager.render('outline-generation', {
+    const prompt = await renderAgentSlot('outline-architect', 'user', {
       genre: data.genre,
       coreIdea: data.coreIdea,
       style: data.style || '标准叙事',
-      pov: project.pov === 'first_person' ? '第一人称' : project.pov === 'third_person' ? '第三人称' : '多视角切换',
+      pov:
+        project.pov === 'first_person'
+          ? '第一人称'
+          : project.pov === 'third_person'
+            ? '第三人称'
+            : '多视角切换',
       targetWords: data.targetWords,
       chapterCount: data.chapterCount,
       totalWords,
@@ -63,6 +67,7 @@ export async function POST(request: NextRequest) {
         prompt,
         model: data.model,
         systemPrompt,
+        useAgentSystem: true,
       })
     } catch (error) {
       console.error('Failed to generate outline:', error)
@@ -76,7 +81,9 @@ export async function POST(request: NextRequest) {
         data: {
           projectId: data.projectId,
           name: char.name,
-          personality: Array.isArray(char.personality) ? char.personality.join('、') : char.personality,
+          personality: Array.isArray(char.personality)
+            ? char.personality.join('、')
+            : char.personality,
           backstory: char.description,
           motivation: char.goal,
         },

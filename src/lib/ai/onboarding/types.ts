@@ -1,3 +1,10 @@
+/**
+ * Onboarding Bootstrap 领域类型
+ *
+ * 与 generators 输出、validator 输入、API 落库字段一一对应。
+ * chapters 在 Bootstrap 精简模式下仅含前 3 章细纲 + overallOutline。
+ */
+
 import type { StoryIdeaCard } from '@/types'
 
 // ============ 管线参数 ============
@@ -135,10 +142,21 @@ export interface GeneratedChapter {
 }
 
 export interface ChapterOutline {
+  /**
+   * 全书总纲：卷/阶段级概览（非逐章细纲）
+   * Bootstrap 阶段只细化前几章，总纲承担全书节奏说明
+   */
+  overallOutline?: string
+  /** 全书计划总章数（含尚未细化的后续章节） */
+  plannedTotalChapters?: number
+  /**
+   * 已细化的章节大纲
+   * Bootstrap 默认仅含前 3 章细纲
+   */
   chapters: GeneratedChapter[]
   suggestedTotalWords: number
   wordCountRationale: string
-  /** 张力曲线描述 */
+  /** 张力曲线描述（全书） */
   tensionArcSummary: string
 }
 

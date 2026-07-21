@@ -1,63 +1,84 @@
 import type { BootstrapParams } from '../types'
-import {
-  JSON_FORMAT_REQUIREMENT,
-} from './helpers'
+import { JSON_FORMAT_REQUIREMENT } from './helpers'
+import { BOOTSTRAP_DETAILED_CHAPTER_COUNT } from './chapters'
 
+/**
+ * 构建伏笔规划提示词
+ * Bootstrap 仅有前几章细纲 + 全书总纲时：埋设点优先落在已细化章节，回收点可指向全书后续章号
+ */
 export function buildForeshadowingsPrompt(
   chapters: { chapterNumber: number; title: string; summary: string }[],
   characters: { name: string }[],
   worldSettings: { name: string }[],
-  _params: BootstrapParams
+  _params: BootstrapParams,
+  options?: {
+    plannedTotalChapters?: number
+    overallOutline?: string
+  }
 ): string {
+  const detailedCount = chapters.length || BOOTSTRAP_DETAILED_CHAPTER_COUNT
+  const plannedTotal = Math.max(
+    options?.plannedTotalChapters || detailedCount,
+    detailedCount
+  )
+
   const chapterList = chapters
-    .map(c => `第${c.chapterNumber}章《${c.title}》：${c.summary}`)
+    .map((c) => `第${c.chapterNumber}章《${c.title}》：${c.summary}`)
     .join('\n')
 
-  const charNames = characters.map(c => c.name).join('、')
-  const worldNames = worldSettings.map(w => w.name).join('、')
+  const overall = options?.overallOutline?.trim()
+    ? `\n【全书总纲（后续章节仅阶段级）】\n${options.overallOutline.trim()}\n`
+    : ''
 
-  return `你是一位擅长埋伏笔和设置悬念的小说家。请基于以下章节大纲，设计一个完整的伏笔网络。
+  const charNames = characters.map((c) => c.name).join('、')
+  const worldNames = worldSettings.map((w) => w.name).join('、')
 
-【章节大纲】
+  // 角色身份由 onboarding-foreshadowings Agent 的 system 槽位提供
+  return `请基于以下已细化的开篇大纲与全书总纲，设计伏笔网络。
+
+【已细化开篇大纲（第 1-${detailedCount} 章）】
 ${chapterList}
-
+${overall}
 【角色列表】${charNames}
 【世界观元素】${worldNames}
 
-【总章节数】${chapters.length} 章
+【规模】
+- 已细化章数：${detailedCount}
+- 全书计划总章数：${plannedTotal}
 
 【任务要求】
 
-请设计 **10-15 个伏笔**，均匀分布在故事的不同阶段。伏笔类型分布：
-- 剧情伏笔 (plot)：3-5 个（与主线剧情转折相关）
-- 角色伏笔 (character)：3-5 个（与角色身份、背景、关系相关）
-- 世界伏笔 (world)：2-3 个（与世界观秘密、隐藏设定相关）
-- 悬疑伏笔 (mystery)：2-3 个（与谜题、悬念相关）
+请设计 **6-10 个伏笔**（Bootstrap 阶段，宁精勿滥），类型分布大致为：
+- 剧情伏笔 (plot)：2-3 个
+- 角色伏笔 (character)：2-3 个
+- 世界伏笔 (world)：1-2 个
+- 悬疑伏笔 (mystery)：1-2 个
 
 每个伏笔必须包含：
-1. **标题和描述**：title, description（该伏笔的具体内容）
-2. **类型和重要性**：type, importance（1-10）
-3. **埋设点**：plantedInChapterNumber（在哪个章节埋下线索）
-4. **回收点**：expectedChapterNumber（预期在哪个章节揭晓/回收）
-5. **关联角色和元素**：relatedCharacters, relatedElements
+1. title, description
+2. type, importance（1-10）
+3. plantedInChapterNumber（埋设章）
+4. expectedChapterNumber（回收章）
+5. relatedCharacters, relatedElements
 
 设计原则：
-- 伏笔有层次：小的伏笔 2-3 章内回收，大的伏笔贯穿全书
-- 回收点不能全部集中在最后，应该分布在中后期
-- 同一个章节可以同时埋多个伏笔
-- plantedInChapterNumber 和 expectedChapterNumber 必须在 1-${chapters.length} 范围内
-- 每个伏笔的回收点必须 > 埋设点
+- **埋设点优先落在第 1-${detailedCount} 章**（已有细纲，可写清如何埋）
+- 允许少量「短线伏笔」在第 1-${detailedCount} 章内回收
+- **长线伏笔**的回收章可以在 ${detailedCount + 1}-${plannedTotal}（对应总纲中段/后段），但 description 要说明在总纲哪一阶段揭晓
+- plantedInChapterNumber 必须在 1-${detailedCount}
+- expectedChapterNumber 必须在 1-${plannedTotal}，且严格大于 plantedInChapterNumber
+- 不要把所有回收都挤在最后一章
 
 请输出以下 JSON：
 {
   "foreshadowings": [
     {
       "title": "伏笔名称",
-      "description": "伏笔具体描述（埋下了什么线索）",
+      "description": "埋下了什么线索；若回收在后续阶段请点明对应总纲阶段",
       "type": "plot",
       "importance": 5,
-      "plantedInChapterNumber": 3,
-      "expectedChapterNumber": 15,
+      "plantedInChapterNumber": 1,
+      "expectedChapterNumber": 12,
       "relatedCharacters": ["角色名"],
       "relatedElements": ["世界观元素名"]
     }
@@ -65,8 +86,7 @@ ${chapterList}
 }
 
 要求：
-- 伏笔总数 10-15 个
-- 不同类型伏笔要均匀分布
-- 回收章节要合理（不能全部挤在最后几章）
-- 本中途回收的伏笔要标记清楚${JSON_FORMAT_REQUIREMENT}`
+- 伏笔总数 6-10 个
+- 至少 2 个回收点落在第 ${detailedCount + 1} 章及之后（长线）
+- 至少 1 个在开篇 ${detailedCount} 章内可回收（短线）${JSON_FORMAT_REQUIREMENT}`
 }

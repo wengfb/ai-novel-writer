@@ -15,7 +15,10 @@ import type { PipelineResult } from '@/lib/ai/onboarding/types'
 
 /**
  * POST /api/onboarding/bootstrap
- * 基于创意卡初始化项目 — 6 步管线，SSE 流式进度
+ * 基于创意卡初始化项目 — Bootstrap 管线 + 落库，SSE 流式进度
+ *
+ * 生成步骤见 runBootstrapPipeline；本路由在之后执行 writing（事务写库）与 done。
+ * 分章策略：全书总纲 + 前三章细纲（plannedTotalChapters 仍为全书计划章数）。
  */
 export async function POST(request: NextRequest) {
   return withErrorHandler(async () => {

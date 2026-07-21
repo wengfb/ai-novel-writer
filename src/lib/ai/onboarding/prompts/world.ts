@@ -14,7 +14,8 @@ export function buildWorldPrompt(
 ): string {
   const charNames = characters.map(c => c.name).join('、')
 
-  return `你是一位专业的小说世界观设计师。请基于以下故事和角色信息，构建完整的世界观体系。
+  // 角色身份由 onboarding-world Agent 的 system 槽位提供
+  return `请基于以下故事和角色信息，构建完整的世界观体系。
 
 【故事概要】
 ${architecture.storySummary}

@@ -1,8 +1,17 @@
+/**
+ * Bootstrap 结果质量校验
+ *
+ * - errors：建议阻断或至少提示用户的严重问题
+ * - warnings：可接受但值得关注
+ * - chapters / foreshadowings 支持「精简模式」：
+ *   存在 overallOutline 或 细纲章数 < plannedTotal 时，按开篇 3 章标准校验
+ */
+
 import type { PipelineResult, ValidationResult, ValidationWarning } from './types'
 
 /**
  * 对管线完整输出进行质量校验
- * 返回 errors（必须修复）和 warnings（建议关注）
+ * @returns passed = errors.length === 0
  */
 export function validatePipelineResult(result: PipelineResult): ValidationResult {
   const errors: ValidationWarning[] = []
@@ -140,12 +149,84 @@ function validateChapters(
   warnings: ValidationWarning[]
 ) {
   const chapters = r.chapters.chapters
+  const plannedTotal =
+    r.chapters.plannedTotalChapters ||
+    Math.max(chapters.length, r.architecture.volumePlan?.slice(-1)[0]?.chapterRange?.[1] || 0)
+  const isBootstrapLite =
+    Boolean(r.chapters.overallOutline) ||
+    (plannedTotal > 0 && chapters.length > 0 && chapters.length < plannedTotal)
 
+  // Bootstrap 精简模式：全书总纲 + 开篇细纲（通常 3 章）
+  if (isBootstrapLite) {
+    if (!r.chapters.overallOutline || r.chapters.overallOutline.length < 80) {
+      addWarning(
+        errors,
+        'chapters.overallOutline',
+        '缺少全书总纲 overallOutline，或总纲过短',
+        'high'
+      )
+    }
+    if (chapters.length < 3) {
+      addWarning(
+        errors,
+        'chapters.count',
+        `开篇细纲不足：至少需要 3 章，实际 ${chapters.length} 章`,
+        'high'
+      )
+    }
+    if (plannedTotal < chapters.length) {
+      addWarning(
+        warnings,
+        'chapters.plannedTotalChapters',
+        `plannedTotalChapters(${plannedTotal}) 小于已细化章数(${chapters.length})`,
+        'medium'
+      )
+    }
+
+    for (let i = 0; i < chapters.length; i++) {
+      const expected = i + 1
+      if (chapters[i].chapterNumber !== expected) {
+        addWarning(
+          warnings,
+          'chapters.order',
+          `开篇细纲章节号不连续：期望${expected}，实际${chapters[i].chapterNumber}`,
+          'medium'
+        )
+      }
+    }
+
+    for (let i = 1; i < chapters.length; i++) {
+      const prev = chapters[i - 1]
+      const curr = chapters[i]
+      if (!curr.causalFrom || curr.causalFrom.length < 5) {
+        addWarning(
+          warnings,
+          `chapters.${curr.chapterNumber}.causalFrom`,
+          `第${curr.chapterNumber}章缺少因果链（前因）`,
+          'medium'
+        )
+      }
+      if (!prev.causalTo || prev.causalTo.length < 5) {
+        addWarning(
+          warnings,
+          `chapters.${prev.chapterNumber}.causalTo`,
+          `第${prev.chapterNumber}章缺少因果链（后果）`,
+          'medium'
+        )
+      }
+    }
+
+    if (!r.chapters.tensionArcSummary || r.chapters.tensionArcSummary.length < 20) {
+      addWarning(warnings, 'chapters.tensionArc', '缺少全书张力曲线概述', 'low')
+    }
+    return
+  }
+
+  // 全量细纲模式（旧路径 / 后续扩展）
   if (chapters.length < 8) {
     addWarning(errors, 'chapters.count', `章节数量不足：至少8章，实际${chapters.length}章`, 'high')
   }
 
-  // 检查章节号连续性
   for (let i = 0; i < chapters.length; i++) {
     const expected = i + 1
     if (chapters[i].chapterNumber !== expected) {
@@ -153,7 +234,6 @@ function validateChapters(
     }
   }
 
-  // 检查因果链
   for (let i = 1; i < chapters.length; i++) {
     const prev = chapters[i - 1]
     const curr = chapters[i]
@@ -165,8 +245,7 @@ function validateChapters(
     }
   }
 
-  // 检查张力曲线
-  const tensionLevels = chapters.map(c => c.tensionLevel)
+  const tensionLevels = chapters.map((c) => c.tensionLevel)
   const maxTension = Math.max(...tensionLevels)
   const minTension = Math.min(...tensionLevels)
 
@@ -177,8 +256,7 @@ function validateChapters(
     addWarning(warnings, 'chapters.tensionArc', '张力变化范围过小：缺乏起伏感', 'medium')
   }
 
-  // 检查高潮章节分布
-  const climaxChapters = chapters.filter(c => c.tensionLevel >= 8)
+  const climaxChapters = chapters.filter((c) => c.tensionLevel >= 8)
   const lastChapter = chapters[chapters.length - 1]
   if (climaxChapters.length === 0) {
     addWarning(errors, 'chapters.tensionArc', '完全没有张力≥8的高潮章节', 'high')
@@ -187,22 +265,28 @@ function validateChapters(
     addWarning(warnings, 'chapters.tensionArc', '最后一章张力偏低，故事收束可能偏弱', 'low')
   }
 
-  // 检查 plotFunction 分布
-  const functionCounts = chapters.reduce((acc, c) => {
-    acc[c.plotFunction] = (acc[c.plotFunction] || 0) + 1
-    return acc
-  }, {} as Record<string, number>)
+  const functionCounts = chapters.reduce(
+    (acc, c) => {
+      acc[c.plotFunction] = (acc[c.plotFunction] || 0) + 1
+      return acc
+    },
+    {} as Record<string, number>
+  )
   const totalChapters = chapters.length
   const climaxRatio = (functionCounts['高潮'] || 0) / totalChapters
   if (climaxRatio < 0.08) {
     addWarning(warnings, 'chapters.plotFunction', '高潮章节占比过低（<8%），情节可能缺乏爆发力', 'medium')
   }
 
-  // 检查字数
   const totalEstimated = chapters.reduce((sum, c) => sum + (c.estimatedWords || 0), 0)
   const target = r.chapters.suggestedTotalWords
   if (target && Math.abs(totalEstimated - target) / target > 0.3) {
-    addWarning(warnings, 'chapters.wordCount', `章节预估总字数(${totalEstimated.toLocaleString()})与目标(${target.toLocaleString()})偏差超过30%`, 'medium')
+    addWarning(
+      warnings,
+      'chapters.wordCount',
+      `章节预估总字数(${totalEstimated.toLocaleString()})与目标(${target.toLocaleString()})偏差超过30%`,
+      'medium'
+    )
   }
 }
 
@@ -212,27 +296,99 @@ function validateForeshadowings(
   warnings: ValidationWarning[]
 ) {
   const fs = r.foreshadowings.foreshadowings
-  const totalChapters = r.chapters.chapters.length
+  const detailedChapters = r.chapters.chapters.length
+  const plannedTotal =
+    r.chapters.plannedTotalChapters ||
+    Math.max(
+      detailedChapters,
+      r.architecture.volumePlan?.slice(-1)[0]?.chapterRange?.[1] || 0
+    )
+  const isBootstrapLite =
+    Boolean(r.chapters.overallOutline) ||
+    (plannedTotal > 0 && detailedChapters > 0 && detailedChapters < plannedTotal)
+
+  if (isBootstrapLite) {
+    if (fs.length < 4) {
+      addWarning(
+        errors,
+        'foreshadowings.count',
+        `伏笔数量不足：Bootstrap 至少需要4个，实际只有${fs.length}个`,
+        'high'
+      )
+    }
+
+    fs.forEach((f) => {
+      if (f.plantedInChapterNumber < 1 || f.plantedInChapterNumber > detailedChapters) {
+        addWarning(
+          errors,
+          `foreshadowings.${f.title}`,
+          `伏笔"${f.title}"的埋设章节(${f.plantedInChapterNumber})应落在已细化开篇(1-${detailedChapters})`,
+          'high'
+        )
+      }
+      if (f.expectedChapterNumber < 1 || f.expectedChapterNumber > plannedTotal) {
+        addWarning(
+          errors,
+          `foreshadowings.${f.title}`,
+          `伏笔"${f.title}"的回收章节(${f.expectedChapterNumber})超出全书范围(1-${plannedTotal})`,
+          'high'
+        )
+      }
+      if (f.expectedChapterNumber <= f.plantedInChapterNumber) {
+        addWarning(
+          errors,
+          `foreshadowings.${f.title}`,
+          `伏笔"${f.title}"的回收章节(${f.expectedChapterNumber})必须大于埋设章节(${f.plantedInChapterNumber})`,
+          'high'
+        )
+      }
+    })
+
+    const longArc = fs.filter((f) => f.expectedChapterNumber > detailedChapters)
+    if (fs.length >= 4 && longArc.length === 0) {
+      addWarning(
+        warnings,
+        'foreshadowings.distribution',
+        '缺少指向开篇之后的长线伏笔，建议至少保留 1-2 条长线',
+        'medium'
+      )
+    }
+    return
+  }
 
   if (fs.length < 8) {
     addWarning(errors, 'foreshadowings.count', `伏笔数量不足：需要至少8个，实际只有${fs.length}个`, 'high')
   }
 
-  fs.forEach(f => {
-    if (f.plantedInChapterNumber < 1 || f.plantedInChapterNumber > totalChapters) {
-      addWarning(errors, `foreshadowings.${f.title}`, `伏笔"${f.title}"的埋设章节(${f.plantedInChapterNumber})超出范围(1-${totalChapters})`, 'high')
+  fs.forEach((f) => {
+    if (f.plantedInChapterNumber < 1 || f.plantedInChapterNumber > plannedTotal) {
+      addWarning(
+        errors,
+        `foreshadowings.${f.title}`,
+        `伏笔"${f.title}"的埋设章节(${f.plantedInChapterNumber})超出范围(1-${plannedTotal})`,
+        'high'
+      )
     }
-    if (f.expectedChapterNumber < 1 || f.expectedChapterNumber > totalChapters) {
-      addWarning(errors, `foreshadowings.${f.title}`, `伏笔"${f.title}"的回收章节(${f.expectedChapterNumber})超出范围(1-${totalChapters})`, 'high')
+    if (f.expectedChapterNumber < 1 || f.expectedChapterNumber > plannedTotal) {
+      addWarning(
+        errors,
+        `foreshadowings.${f.title}`,
+        `伏笔"${f.title}"的回收章节(${f.expectedChapterNumber})超出范围(1-${plannedTotal})`,
+        'high'
+      )
     }
     if (f.expectedChapterNumber <= f.plantedInChapterNumber) {
-      addWarning(errors, `foreshadowings.${f.title}`, `伏笔"${f.title}"的回收章节(${f.expectedChapterNumber})必须大于埋设章节(${f.plantedInChapterNumber})`, 'high')
+      addWarning(
+        errors,
+        `foreshadowings.${f.title}`,
+        `伏笔"${f.title}"的回收章节(${f.expectedChapterNumber})必须大于埋设章节(${f.plantedInChapterNumber})`,
+        'high'
+      )
     }
   })
 
-  // 检查是否所有回收章节都在最后几章
-  const lastQuarterStart = Math.floor(totalChapters * 0.75)
-  const lateReveals = fs.filter(f => f.expectedChapterNumber >= lastQuarterStart)
+  const lastQuarterStart = Math.floor(plannedTotal * 0.75)
+  const lateReveals = fs.filter((f) => f.expectedChapterNumber >= lastQuarterStart)
   if (lateReveals.length > fs.length * 0.6) {
     addWarning(warnings, 'foreshadowings.distribution', '超过60%的伏笔回收集中在后1/4章节，建议分布更均匀', 'medium')
   }

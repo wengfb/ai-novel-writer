@@ -15,7 +15,8 @@ export function buildArchitecturePrompt(
 ): string {
   const actDistribution = getActDistribution(calc.chapterCount)
 
-  return `你是一位资深的小说策划编辑。请基于以下创意，为小说《${params.projectTitle}》设计完整的全局架构。
+  // 角色身份由 onboarding-architecture Agent 的 system 槽位提供（可在设置页编辑）
+  return `请基于以下创意，为小说《${params.projectTitle}》设计完整的全局架构。
 
 【创意设定】
 - 题材：${idea.genre}

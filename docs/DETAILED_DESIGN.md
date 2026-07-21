@@ -199,16 +199,14 @@ interface ConsistencyWarning {
 - 卡片内容：标题 + 描述 + 冲突文本高亮 + 相关设定链接
 - 操作按钮：「查看设定」「忽略」「应用建议」
 
-### 2.4 提示词模板系统 (Prompt Template Manager)
-**文件**: `src/lib/ai/prompts/template-manager.ts`
+### 2.4 Agent 提示词系统（可编辑）
+**文件**:
+*   `src/lib/ai/agents/definitions/catalog.ts` — Agent 注册表与默认提示词槽位
+*   `src/lib/ai/agents/definitions/default-prompts.ts` — 默认 user 模板正文
+*   `src/lib/ai/agents/prompt-store.ts` — DB 覆盖（`AgentPrompt`）读写
+*   `src/lib/ai/agents/runner.ts` — `runAgent` / `renderAgentSlot` / `streamAgent`
 
-管理所有与 LLM 交互的 Prompt，支持变量插值。
-*   `outline-generation`: 大纲生成
-*   `chapter-generation`: 正文生成
-*   `character-creation`: 角色生成
-*   `world-building`: 世界观生成
-*   `consistency-check`: 一致性检查
-*   `text-rewrite`: 局部重绘（待添加）
+每个 AI 功能点对应一个 Agent；提示词按 `system` / `user` 等 slot 拆分，可在 **设置 → Agent 提示词** 中查看与编辑。运行时统一经 `runAgent` / Chat 路由读取解析后的提示词，不再使用独立的 `PromptTemplateManager`。
 
 ### 2.5 AI 局部重绘系统 (In-painting System) - **待实现**
 **文件**: `src/lib/ai/text-rewriter.ts`

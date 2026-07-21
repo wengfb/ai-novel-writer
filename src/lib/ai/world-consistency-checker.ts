@@ -1,4 +1,5 @@
-import type { Chapter, WorldElement } from '@/types'
+import type { Chapter, Character, WorldElement } from '@/types'
+import { runAgent } from '@/lib/ai/agents'
 
 /**
  * 世界观冲突类型
@@ -18,15 +19,22 @@ export interface WorldConflict {
 
 /**
  * 世界观一致性检查器
- * 负责检测章节内容与世界观设定的冲突
+ * 规则扫描 + consistency-checker Agent（可选）深度审查
  */
 export class WorldConsistencyChecker {
   /**
    * 检查章节与世界观设定的一致性
+   * @param options.useAI 是否调用 consistency-checker Agent 做深度审查
+   * @param options.characters 角色列表（AI 检查时注入）
    */
   async checkChapter(
     chapter: Chapter,
-    worldElements: WorldElement[]
+    worldElements: WorldElement[],
+    options?: {
+      useAI?: boolean
+      characters?: Character[]
+      model?: string
+    }
   ): Promise<WorldConflict[]> {
     const conflicts: WorldConflict[] = []
 
@@ -42,7 +50,99 @@ export class WorldConsistencyChecker {
     const missingRefs = await this.checkMissingReferences(chapter, worldElements)
     conflicts.push(...missingRefs)
 
+    // 4. 可选：Agent 深度一致性检查（显式 useAI: true 时启用，提示词可编辑）
+    if (options?.useAI === true && chapter.content?.trim()) {
+      try {
+        const aiConflicts = await this.checkWithAgent(chapter, worldElements, options?.characters, options?.model)
+        conflicts.push(...aiConflicts)
+      } catch (error) {
+        console.warn('consistency-checker Agent 调用失败，仅保留规则结果:', error)
+      }
+    }
+
     return conflicts
+  }
+
+  /**
+   * 使用 consistency-checker Agent 做角色/内容一致性审查
+   */
+  private async checkWithAgent(
+    chapter: Chapter,
+    worldElements: WorldElement[],
+    characters?: Character[],
+    model?: string
+  ): Promise<WorldConflict[]> {
+    const characterSettings = [
+      characters && characters.length > 0
+        ? characters
+            .map(
+              (c) =>
+                `- ${c.name}（${c.role}）：性格 ${c.personality || '未设定'}；动机 ${c.motivation || '未设定'}；对话风格 ${c.dialogueStyle || '未设定'}`
+            )
+            .join('\n')
+        : '（未提供角色卡，请主要依据正文自洽性判断）',
+      worldElements.length > 0
+        ? `\n世界观要点：\n${worldElements
+            .slice(0, 30)
+            .map((e) => `- [${e.type}] ${e.name}：${e.description.slice(0, 120)}`)
+            .join('\n')}`
+        : '',
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    const result = await runAgent({
+      agentId: 'consistency-checker',
+      model,
+      temperature: 0.3,
+      variables: {
+        characterSettings,
+        content: chapter.content.slice(0, 12000),
+      },
+    })
+
+    return this.parseAgentReport(result.text, chapter)
+  }
+
+  /** 解析 Agent 返回的 JSON 报告为 WorldConflict[] */
+  private parseAgentReport(output: string, chapter: Chapter): WorldConflict[] {
+    try {
+      const jsonMatch =
+        output.match(/```json\s*([\s\S]*?)\s*```/) || output.match(/\{[\s\S]*\}/)
+      if (!jsonMatch) return []
+
+      const parsed = JSON.parse(jsonMatch[1] || jsonMatch[0]) as {
+        hasContradictions?: boolean
+        issues?: string[]
+        suggestions?: string[]
+        personalityConsistency?: number
+        dialogueConsistency?: number
+      }
+
+      if (!parsed.hasContradictions && (!parsed.issues || parsed.issues.length === 0)) {
+        return []
+      }
+
+      const issues = parsed.issues || []
+      const suggestions = parsed.suggestions || []
+
+      return issues.map((issue, index) => ({
+        type: 'inconsistency' as const,
+        severity:
+          (parsed.personalityConsistency ?? 10) < 5 ||
+          (parsed.dialogueConsistency ?? 10) < 5
+            ? ('high' as const)
+            : ('medium' as const),
+        elementId: `ai-${chapter.id}-${index}`,
+        elementName: 'AI 一致性审查',
+        chapterId: chapter.id,
+        chapterNumber: chapter.chapterNumber,
+        description: issue,
+        suggestion: suggestions[index],
+      }))
+    } catch {
+      return []
+    }
   }
 
   /**

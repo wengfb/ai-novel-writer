@@ -10,7 +10,8 @@ export function buildStyleAnchorPrompt(
   summary: string,
   params: BootstrapParams
 ): string {
-  return `你是一位专业的小说作家。请根据以下设定，写一段 800-1200 字的样章，作为本项目后续 AI 生成的写作风格参考。
+  // 角色身份由 onboarding-style-anchor Agent 的 system 槽位提供
+  return `请根据以下设定，写一段 800-1200 字的样章，作为本项目后续 AI 生成的写作风格参考。
 
 【故事设定】
 - 题材：${idea.genre}

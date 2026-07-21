@@ -1,22 +1,27 @@
 /**
- * 章节生成器
- * 实现递归规划 + 场景生成 + 反思优化
+ * 章节生成器（Studio「生成章节 / 续写」业务门面）
+ *
+ * - generateChapter：Mastra Workflow（plan → write → refine）
+ * - continueChapter：chapter-continue Agent 流式输出
+ *
+ * 提示词均来自 Agent 注册表，禁止在此硬编码长模板。
  */
+
 import { getAIProviderAsync } from '@/lib/ai/providers'
-import { PromptTemplateManager } from '@/lib/ai/prompts/template-manager'
 import { getStyleAnchorPrompt } from '@/lib/ai/style-anchor'
 import { prisma } from '@/lib/db/prisma'
+import { streamAgent } from '@/lib/ai/agents/runner'
+import { runChapterGenerationWorkflow } from '@/lib/ai/workflows'
 import type { GenerationParams } from '@/types'
 import { loadProjectContext } from './project-context'
-import { generateChapterWithScenes } from './scenes'
-import { reflectAndRefine } from './refine'
 import { recordGeneration } from './record'
 import { formatIntentConstraints, type OutlineIntent } from './plot-labels'
 
 export class ChapterGenerator {
-  private promptManager = new PromptTemplateManager()
-
-  /** 生成章节（完整流程） */
+  /**
+   * 生成完整章节
+   * 委托 {@link runChapterGenerationWorkflow}：场景规划 → 分场景写作 → 润色
+   */
   async generateChapter(params: {
     projectId: string
     chapterNumber: number
@@ -29,7 +34,6 @@ export class ChapterGenerator {
     tensionLevel?: number
     onProgress?: (progress: { content: string; sceneIndex: number; totalScenes: number }) => void
   }): Promise<{ content: string; totalScenes: number; generationId?: string }> {
-    const startTime = Date.now()
     const {
       projectId,
       chapterNumber,
@@ -40,8 +44,7 @@ export class ChapterGenerator {
       onProgress,
     } = params
 
-    const ai = await getAIProviderAsync(model)
-    const { project, context, contextManager } = await loadProjectContext(projectId, chapterNumber)
+    const { project } = await loadProjectContext(projectId, chapterNumber)
 
     const matchedOutline = project.outlines.find(
       (o) => o.type === 'chapter' && o.order === chapterNumber
@@ -52,55 +55,38 @@ export class ChapterGenerator {
       tensionLevel: params.tensionLevel ?? matchedOutline?.tensionLevel ?? 5,
     }
 
-    const { content: generatedContent, totalScenes } = await generateChapterWithScenes(
-      ai,
-      this.promptManager,
-      contextManager,
+    const result = await runChapterGenerationWorkflow(
       {
+        projectId,
         chapterNumber,
         chapterTitle,
         chapterOutline,
-        context,
         targetWords,
         model,
         outlineIntent,
-        onProgress,
+      },
+      (event) => {
+        if (event.stage === 'write' && event.content != null && event.sceneIndex != null) {
+          onProgress?.({
+            content: event.content,
+            sceneIndex: event.sceneIndex,
+            totalScenes: event.totalScenes ?? 0,
+          })
+        }
       }
     )
 
-    const refinedContent = await reflectAndRefine(ai, contextManager, {
-      content: generatedContent,
-      chapterOutline,
-      context,
-      model,
-      outlineIntent,
-    })
-
-    const prompt = this.buildPrompt({
-      chapterNumber,
-      chapterTitle,
-      chapterOutline,
-      context,
-      targetWords,
-    })
-    const generation = await recordGeneration(ai, {
-      projectId,
-      type: 'chapter',
-      model,
-      prompt,
-      systemPrompt: contextManager.formatContextForPrompt(context),
-      output: refinedContent,
-      duration: Date.now() - startTime,
-    })
-
     return {
-      content: refinedContent,
-      totalScenes,
-      generationId: generation?.id,
+      content: result.content,
+      totalScenes: result.totalScenes,
+      generationId: result.generationId,
     }
   }
 
-  /** 续写章节 */
+  /**
+   * 在已有正文后续写
+   * 使用 chapter-continue Agent + streamAgent，经 onProgress 推送增量
+   */
   async continueChapter(params: {
     projectId: string
     chapterId: string
@@ -146,31 +132,32 @@ export class ChapterGenerator {
       ? `[前文摘要：${chapter.summary}]\n\n${recentContent}`
       : recentContent
 
-    const prompt = this.promptManager.render('chapter-continuation', {
-      chapterNumber: chapter.chapterNumber,
-      currentContent: contentSnippet,
-      targetWords,
-      chapterOutline,
-      pov: context.metadata?.pov || '第三人称',
-    })
+    const continueStyleAnchor = await getStyleAnchorPrompt(projectId)
+    const contextAppend = [
+      `正在续写第${chapter.chapterNumber}章《${chapter.title}》。`,
+      continueStyleAnchor,
+      `## 创作约束\n${intentConstraints}`,
+      contextManager.formatContextForPrompt(context),
+    ]
+      .filter(Boolean)
+      .join('\n\n')
 
     let fullOutput = ''
-    const continueStyleAnchor = await getStyleAnchorPrompt(projectId)
-    const generator = ai.streamGenerate({
-      type: 'chapter',
+    const stream = streamAgent({
+      agentId: 'chapter-continue',
       model,
-      prompt,
-      systemPrompt: `你是一位专业小说作家。正在续写第${chapter.chapterNumber}章《${chapter.title}》。
-
-${continueStyleAnchor ? continueStyleAnchor + '\n\n' : ''}## 创作约束
-${intentConstraints}
-
-${contextManager.formatContextForPrompt(context)}`,
       temperature: 0.8,
-      maxTokens: targetWords * 2,
+      contextAppend,
+      variables: {
+        chapterNumber: chapter.chapterNumber,
+        currentContent: contentSnippet,
+        targetWords,
+        chapterOutline,
+        pov: context.metadata?.pov || '第三人称',
+      },
     })
 
-    for await (const chunk of generator) {
+    for await (const chunk of stream) {
       fullOutput += chunk
       onProgress?.(chunk)
     }
@@ -179,32 +166,11 @@ ${contextManager.formatContextForPrompt(context)}`,
       projectId,
       type: 'chapter',
       model,
-      prompt,
+      prompt: contentSnippet,
       output: fullOutput,
     })
 
     return fullOutput
-  }
-
-  private buildPrompt(params: {
-    chapterNumber: number
-    chapterTitle: string
-    chapterOutline: string
-    context: any
-    targetWords: number
-  }): string {
-    const { chapterNumber, chapterTitle, chapterOutline, context, targetWords } = params
-
-    return this.promptManager.render('chapter-generation', {
-      chapterNumber,
-      chapterTitle,
-      chapterOutline,
-      characters: JSON.stringify(context.characters),
-      worldSettings: JSON.stringify(context.worldElements),
-      previousSummary: context.chapterSummaries.map((s: any) => s.summary).join('\n'),
-      targetWords,
-      pov: context.metadata?.pov || '第三人称',
-    })
   }
 }
 

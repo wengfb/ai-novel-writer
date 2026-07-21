@@ -1,13 +1,12 @@
 /**
- * AI 提示词模板集合
- * 与 PromptTemplateManager 的模板名一一对应
+ * Agent 默认用户提示词正文
+ *
+ * 唯一权威来源：经 catalog.ts 注册为各 Agent 的 promptSlots.defaultContent。
+ * 运行时覆盖存 Prisma AgentPrompt；业务代码应使用 runAgent / renderAgentSlot，
+ * 不要再直接 import 这些常量做插值调用。
  */
 
-// ============== 提示词模板 ==============
-
-/**
- * 大纲生成模板
- */
+/** 大纲生成（outline-architect.user） */
 export const OUTLINE_GENERATION_TEMPLATE = `你是一位专业的小说大纲设计师。根据以下信息生成详细的小说大纲：
 
 **小说类型**：{genre}

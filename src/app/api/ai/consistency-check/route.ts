@@ -8,6 +8,9 @@ import { z } from 'zod'
 const CheckRequestSchema = z.object({
   projectId: z.string().min(1),
   chapterId: z.string().optional(),
+  /** 是否启用 consistency-checker Agent 深度审查，默认 true */
+  useAI: z.boolean().optional(),
+  model: z.string().optional(),
 })
 
 /**
@@ -17,13 +20,14 @@ const CheckRequestSchema = z.object({
 export async function POST(request: NextRequest) {
   return withErrorHandler(async () => {
     const body = await parseJsonBody(request)
-    const { projectId, chapterId } = CheckRequestSchema.parse(body)
+    const { projectId, chapterId, useAI, model } = CheckRequestSchema.parse(body)
 
     // 加载项目数据
     const project = await prisma.project.findUnique({
       where: { id: projectId },
       include: {
         worldElements: true,
+        characters: true,
         chapters: {
           orderBy: { chapterNumber: 'asc' },
         },
@@ -49,11 +53,23 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // 运行检查
-    const conflictsMap = await checker.checkMultipleChapters(
-      targetChapters as any,
-      project.worldElements as any
-    )
+    // 规则扫描 + consistency-checker Agent（可编辑提示词）
+    const conflictsMap = new Map<string, Awaited<ReturnType<typeof checker.checkChapter>>>()
+    for (const chapter of targetChapters) {
+      const conflicts = await checker.checkChapter(
+        chapter as any,
+        project.worldElements as any,
+        {
+          // API 默认启用 Agent 深度审查；传 useAI: false 可仅跑规则扫描
+          useAI: useAI !== false,
+          characters: project.characters as any,
+          model,
+        }
+      )
+      if (conflicts.length > 0) {
+        conflictsMap.set(chapter.id, conflicts)
+      }
+    }
 
     // 生成报告
     const report = checker.generateReport(conflictsMap)

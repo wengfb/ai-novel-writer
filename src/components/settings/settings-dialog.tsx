@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SettingsFormAI } from './settings-form-ai'
 import { SettingsFormUI } from './settings-form-ui'
 import { SettingsFormProject } from './settings-form-project'
+import { SettingsFormAgents } from './settings-form-agents'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
 import { useSettingsStore } from '@/lib/store/settings-store'
@@ -51,11 +52,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>系统设置</DialogTitle>
           <DialogDescription>
-            配置 AI 模型、编辑器偏好和项目默认值。留空的字段将使用环境变量中的默认值。
+            配置 AI 模型、Agent 提示词、编辑器偏好和项目默认值。留空的字段将使用环境变量中的默认值。
           </DialogDescription>
         </DialogHeader>
 
@@ -65,14 +66,19 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </div>
         ) : (
           <Tabs defaultValue="ai" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="ai">AI 配置</TabsTrigger>
+              <TabsTrigger value="agents">Agent 提示词</TabsTrigger>
               <TabsTrigger value="editor">编辑器</TabsTrigger>
               <TabsTrigger value="project">项目默认值</TabsTrigger>
             </TabsList>
 
             <TabsContent value="ai" className="space-y-4 mt-4">
               <SettingsFormAI settings={settings} onUpdate={updateSetting} />
+            </TabsContent>
+
+            <TabsContent value="agents" className="space-y-4 mt-4">
+              <SettingsFormAgents />
             </TabsContent>
 
             <TabsContent value="editor" className="space-y-4 mt-4">

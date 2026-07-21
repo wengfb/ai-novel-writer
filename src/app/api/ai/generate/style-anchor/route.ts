@@ -1,8 +1,13 @@
 import { NextRequest } from 'next/server'
-import { getAIProviderAsync } from '@/lib/ai/providers'
 import { apiSuccess, ApiErrors } from '@/lib/api/response'
 import { validateRequest } from '@/lib/api/validators'
 import { z } from 'zod'
+import { runAgent } from '@/lib/ai/agents'
+
+/**
+ * POST /api/ai/generate/style-anchor
+ * 独立样章生成 — 复用 onboarding-style-anchor Agent（system 可编辑）
+ */
 
 const GenerateStyleAnchorSchema = z.object({
   description: z.string().min(10, '故事描述至少10个字'),
@@ -15,13 +20,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const data = validateRequest(GenerateStyleAnchorSchema, body)
 
-    const ai = await getAIProviderAsync()
-
     const hintSection = data.hint
       ? `\n**用户指定的风格方向**：${data.hint}`
       : ''
 
-    const prompt = `你是一位专业的小说作家。请根据以下故事设定，写一段 500-2000 字的样章作为写作风格参考。
+    const taskBody = `请根据以下故事设定，写一段 500-2000 字的样章作为写作风格参考。
 
 **小说类型**：${data.genre}
 **故事描述**：${data.description}${hintSection}
@@ -33,18 +36,21 @@ export async function POST(request: NextRequest) {
 4. 500-2000 字
 5. 直接输出样章正文，不要加任何说明、标题或标签`
 
-    const result = await ai.generate({
-      type: 'chapter',
-      prompt,
+    const result = await runAgent({
+      agentId: 'onboarding-style-anchor',
       temperature: 0.8,
       maxTokens: 4000,
+      variables: {
+        taskBody,
+        extraConstraints: '',
+      },
     })
 
-    if (result.status !== 'success' || !result.output.trim()) {
+    if (!result.text?.trim()) {
       return ApiErrors.badRequest('样章生成失败，请重试')
     }
 
-    const content = result.output.trim()
+    const content = result.text.trim()
 
     return apiSuccess({
       content,

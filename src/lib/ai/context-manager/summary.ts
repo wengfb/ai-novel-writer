@@ -1,5 +1,8 @@
-import { getAIProviderAsync } from '@/lib/ai/providers'
-import { getPromptTemplateManager } from '@/lib/ai/prompts/template-manager'
+/**
+ * 章节摘要 — chapter-summary Agent
+ */
+
+import { runAgent } from '@/lib/ai/agents'
 
 /**
  * 生成章节摘要（使用 AI）
@@ -15,23 +18,17 @@ export async function generateChapterSummary(
   }
 
   try {
-    const ai = await getAIProviderAsync()
-    const promptManager = getPromptTemplateManager()
-
-    const prompt = promptManager.render('chapter-summary', {
-      chapterTitle: chapterTitle || '未知章节',
-      chapterContent: chapterContent.slice(0, 12000),
-      characters: characterNames?.join('、') || '未知',
-    })
-
-    const result = await ai.generate({
-      type: 'chapter',
-      prompt,
+    const result = await runAgent({
+      agentId: 'chapter-summary',
       temperature: 0.3,
-      maxTokens: 512,
+      variables: {
+        chapterTitle: chapterTitle || '未知章节',
+        chapterContent: chapterContent.slice(0, 12000),
+        characters: characterNames?.join('、') || '未知',
+      },
     })
 
-    const summary = result.output.trim()
+    const summary = result.text.trim()
     if (summary && summary.length > 10) {
       return summary
     }

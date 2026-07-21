@@ -395,6 +395,7 @@ export const ModelName = {
   CharacterSnapshot: 'CharacterSnapshot',
   WorldElementSnapshot: 'WorldElementSnapshot',
   SystemSetting: 'SystemSetting',
+  AgentPrompt: 'AgentPrompt',
   Idea: 'Idea',
   IdeaComment: 'IdeaComment'
 } as const
@@ -412,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "project" | "outline" | "chapter" | "scene" | "character" | "worldElement" | "generation" | "foreshadowing" | "characterSnapshot" | "worldElementSnapshot" | "systemSetting" | "idea" | "ideaComment"
+    modelProps: "project" | "outline" | "chapter" | "scene" | "character" | "worldElement" | "generation" | "foreshadowing" | "characterSnapshot" | "worldElementSnapshot" | "systemSetting" | "agentPrompt" | "idea" | "ideaComment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1230,6 +1231,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AgentPrompt: {
+      payload: Prisma.$AgentPromptPayload<ExtArgs>
+      fields: Prisma.AgentPromptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AgentPromptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentPromptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AgentPromptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentPromptPayload>
+        }
+        findFirst: {
+          args: Prisma.AgentPromptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentPromptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AgentPromptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentPromptPayload>
+        }
+        findMany: {
+          args: Prisma.AgentPromptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentPromptPayload>[]
+        }
+        create: {
+          args: Prisma.AgentPromptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentPromptPayload>
+        }
+        createMany: {
+          args: Prisma.AgentPromptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AgentPromptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentPromptPayload>[]
+        }
+        delete: {
+          args: Prisma.AgentPromptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentPromptPayload>
+        }
+        update: {
+          args: Prisma.AgentPromptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentPromptPayload>
+        }
+        deleteMany: {
+          args: Prisma.AgentPromptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AgentPromptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AgentPromptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentPromptPayload>[]
+        }
+        upsert: {
+          args: Prisma.AgentPromptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgentPromptPayload>
+        }
+        aggregate: {
+          args: Prisma.AgentPromptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAgentPrompt>
+        }
+        groupBy: {
+          args: Prisma.AgentPromptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AgentPromptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AgentPromptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AgentPromptCountAggregateOutputType> | number
+        }
+      }
+    }
     Idea: {
       payload: Prisma.$IdeaPayload<ExtArgs>
       fields: Prisma.IdeaFieldRefs
@@ -1647,6 +1722,23 @@ export const SystemSettingScalarFieldEnum = {
 export type SystemSettingScalarFieldEnum = (typeof SystemSettingScalarFieldEnum)[keyof typeof SystemSettingScalarFieldEnum]
 
 
+export const AgentPromptScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  slotKey: 'slotKey',
+  name: 'name',
+  description: 'description',
+  content: 'content',
+  variables: 'variables',
+  version: 'version',
+  isCustom: 'isCustom',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AgentPromptScalarFieldEnum = (typeof AgentPromptScalarFieldEnum)[keyof typeof AgentPromptScalarFieldEnum]
+
+
 export const IdeaScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -1843,6 +1935,7 @@ export type GlobalOmitConfig = {
   characterSnapshot?: Prisma.CharacterSnapshotOmit
   worldElementSnapshot?: Prisma.WorldElementSnapshotOmit
   systemSetting?: Prisma.SystemSettingOmit
+  agentPrompt?: Prisma.AgentPromptOmit
   idea?: Prisma.IdeaOmit
   ideaComment?: Prisma.IdeaCommentOmit
 }

@@ -97,25 +97,38 @@ export function StepResultPreview({
 
     case 'volume': {
       const chs = extractArray((data.chapters as any)?.chapters || data.chapters)
-      const arch = data as any
+      const outline = data as any
+      const planned = outline.plannedTotalChapters as number | undefined
+      const overall = (outline.overallOutline as string | undefined) || ''
       return (
         <div className="space-y-3 text-sm">
           <p className="text-muted-foreground">
-            共 {Array.isArray(chs) ? chs.length : 0} 章
-            {arch.tensionArcSummary && <span className="block text-xs mt-1 italic">张力曲线：{arch.tensionArcSummary}</span>}
-          </p>
-          <div className="max-h-[400px] overflow-auto space-y-1">
-            {Array.isArray(chs) && chs.slice(0, 30).map((c: any) => (
-              <div key={c.chapterNumber} className="flex items-start gap-2 py-1 border-b border-muted text-xs">
-                <span className="shrink-0 text-muted-foreground w-8">第{c.chapterNumber}章</span>
-                <span className="font-medium shrink-0 w-24 truncate">{c.title}</span>
-                <span className="text-muted-foreground line-clamp-1 flex-1">{c.summary}</span>
-                <Badge variant="outline" className="text-[10px] shrink-0">{c.plotFunction}·{c.tensionLevel}</Badge>
-              </div>
-            ))}
-            {Array.isArray(chs) && chs.length > 30 && (
-              <p className="text-xs text-muted-foreground text-center py-2">... 还有 {chs.length - 30} 章</p>
+            开篇细纲 {Array.isArray(chs) ? chs.length : 0} 章
+            {planned ? ` · 全书计划 ${planned} 章` : ''}
+            {outline.tensionArcSummary && (
+              <span className="block text-xs mt-1 italic">张力曲线：{outline.tensionArcSummary}</span>
             )}
+          </p>
+          {overall && (
+            <CollapsibleSection title="全书总纲">
+              <p className="text-xs text-muted-foreground whitespace-pre-wrap">{overall}</p>
+            </CollapsibleSection>
+          )}
+          <div className="max-h-[400px] overflow-auto space-y-1">
+            {Array.isArray(chs) &&
+              chs.map((c: any) => (
+                <div
+                  key={c.chapterNumber}
+                  className="flex items-start gap-2 py-1 border-b border-muted text-xs"
+                >
+                  <span className="shrink-0 text-muted-foreground w-8">第{c.chapterNumber}章</span>
+                  <span className="font-medium shrink-0 w-24 truncate">{c.title}</span>
+                  <span className="text-muted-foreground line-clamp-1 flex-1">{c.summary}</span>
+                  <Badge variant="outline" className="text-[10px] shrink-0">
+                    {c.plotFunction}·{c.tensionLevel}
+                  </Badge>
+                </div>
+              ))}
           </div>
         </div>
       )

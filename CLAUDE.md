@@ -64,10 +64,11 @@ src/
 ├── lib/
 │   ├── ai/                     # AI 核心引擎
 │   │   ├── providers/          # Gemini / OpenAI 兼容
+│   │   ├── agents/             # Agent 注册表 / 可编辑提示词 / runAgent
+│   │   ├── workflows/          # Mastra Workflow（章节生成 / onboarding）
 │   │   ├── onboarding/         # 引导管线（normalize/prompts/generators/pipeline）
-│   │   ├── prompts/            # 提示词模板
-│   │   ├── context-manager.ts / chapter-generator.ts / rewrite-generator.ts
-│   │   ├── chat-tools.ts / world-consistency-checker.ts
+│   │   ├── context-manager/ chapter-generator/ rewrite-generator.ts
+│   │   ├── chat-tools/ world-consistency-checker.ts
 │   │   └── ...
 │   ├── api/
 │   │   ├── client.ts           # 统一 fetch 客户端
@@ -88,7 +89,9 @@ src/
 - `src/types/index.ts` — 前端统一类型（Project 等以这里为准）
 - `src/lib/ai/providers/` — AI Provider 实现，切换模型/中转在这里改
 - `src/lib/ai/config.ts` — AI 配置获取，DB 设置优先于环境变量
-- `src/lib/ai/context-manager.ts` — 上下文管理器，控制给 AI 传什么内容
+- `src/lib/ai/agents/` — Agent 定义、可编辑提示词、runAgent/streamAgent
+- `src/lib/ai/workflows/` — Mastra 多步编排（章节生成、Bootstrap）
+- `src/lib/ai/context-manager/` — 上下文管理器，控制给 AI 传什么内容
 - `src/lib/ai/onboarding/` — 项目引导生成管线
 - `src/lib/api/endpoints/` — 前端 API 封装（store 应优先走这里，避免裸 fetch）
 - `src/lib/store/` — Zustand store，全局状态管理

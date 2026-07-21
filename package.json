@@ -13,6 +13,8 @@
     "@ai-sdk/openai-compatible": "^2.0.47",
     "@ai-sdk/react": "^3.0.45",
     "@hookform/resolvers": "^5.2.2",
+    "@mastra/ai-sdk": "^1.6.2",
+    "@mastra/core": "^1.51.0",
     "@prisma/adapter-better-sqlite3": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",

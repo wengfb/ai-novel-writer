@@ -1,36 +1,10 @@
 import { NextRequest } from 'next/server'
-import { generateText } from 'ai'
-import { getLanguageModelAsync } from '@/lib/ai/providers'
 import { ApiErrors } from '@/lib/api/response'
 import { prisma } from '@/lib/db/prisma'
+import { runAgent } from '@/lib/ai/agents'
 
-const SYSTEM_PROMPT = `你是一名网络小说编辑。
-
-请随机生成 3 个不同方向的"适合商业网文"的小说创意。3 个方向应该在题材切入点、主角设定或世界观上有明显差异。
-
-要求：
-- 设定合理，容易被大多数普通人理解，不要多种题材混搭
-- 具备长期连载空间
-- 要有内容升华
-- 每项1~2句话即可
-
-请以纯 JSON 数组格式输出，不要用 markdown 代码块包裹：
-
-[
-  {
-    "id": "1",
-    "title": "小说名称",
-    "genre": "题材",
-    "worldBuilding": "世界观",
-    "protagonist": "主角（描述人物设定、身份、性格特征，不要给具体姓名）",
-    "coreConflict": "核心冲突",
-    "mainGoal": "主线目标",
-    "highConcept": "高概念梗概",
-    "sublimation": "内容升华",
-    "openingHook": "开篇切入点"
-  },
-  ...
-]`
+/** 创意生成统一走 story-idea Agent（提示词可在设置页编辑） */
+const STORY_IDEA_AGENT_ID = 'story-idea'
 
 function buildExamplesPrompt(positiveIdeas: Array<{
   title: string; highConcept: string; protagonist: string; coreConflict: string
@@ -176,24 +150,25 @@ export async function POST(request: NextRequest) {
     if (pov) constraints.push(`叙事人称：${pov === 'first_person' ? '第一人称' : pov === 'third_person' ? '第三人称' : '多视角切换'}`)
     if (customRequirements) constraints.push(`用户自定义要求：${customRequirements}`)
 
-    const constraintPrompt = constraints.length > 0
-      ? `\n\n【用户偏好，必须严格遵循】\n${constraints.join('\n')}\n请确保生成的故事构想完全符合以上偏好。`
+    const filters = constraints.length > 0
+      ? `【用户偏好，必须严格遵循】\n${constraints.join('\n')}\n请确保生成的故事构想完全符合以上偏好。`
       : ''
 
     // 拉取正反例
     const { positiveIdeas, negativeIdeas } = await fetchExamples(positiveExampleIds, negativeExampleIds)
-    const examplesPrompt = buildExamplesPrompt(positiveIdeas, negativeIdeas)
+    const examples = buildExamplesPrompt(positiveIdeas, negativeIdeas)
 
-    const { model } = await getLanguageModelAsync()
-
-    const result = await generateText({
-      model,
-      system: SYSTEM_PROMPT + constraintPrompt + examplesPrompt,
-      prompt: '请给我3个随机的小说创作灵感',
+    // 与引导页/创意中心共用 story-idea Agent 及可编辑提示词
+    const agentResult = await runAgent({
+      agentId: STORY_IDEA_AGENT_ID,
+      variables: {
+        filters,
+        examples,
+      },
       temperature: 0.9,
     })
 
-    const rawText = result.text.trim()
+    const rawText = agentResult.text.trim()
 
     // 三级降级解析 JSON
     let cards: Array<{

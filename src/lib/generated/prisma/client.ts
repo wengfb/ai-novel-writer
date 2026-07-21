@@ -95,6 +95,11 @@ export type WorldElementSnapshot = Prisma.WorldElementSnapshotModel
  */
 export type SystemSetting = Prisma.SystemSettingModel
 /**
+ * Model AgentPrompt
+ * 
+ */
+export type AgentPrompt = Prisma.AgentPromptModel
+/**
  * Model Idea
  * 
  */

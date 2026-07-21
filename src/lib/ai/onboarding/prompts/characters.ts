@@ -11,7 +11,8 @@ export function buildCharactersPrompt(
   architecture: { storySummary: string; mainConflict: string; thematicThread: string },
   params: BootstrapParams
 ): string {
-  return `你是一位专业的小说角色设计师。请基于以下故事架构，创建完整的角色群像。
+  // 角色身份由 onboarding-characters Agent 的 system 槽位提供
+  return `请基于以下故事架构，创建完整的角色群像。
 
 【故事概要】
 ${architecture.storySummary}

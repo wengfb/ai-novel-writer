@@ -62,6 +62,7 @@ export const ModelName = {
   CharacterSnapshot: 'CharacterSnapshot',
   WorldElementSnapshot: 'WorldElementSnapshot',
   SystemSetting: 'SystemSetting',
+  AgentPrompt: 'AgentPrompt',
   Idea: 'Idea',
   IdeaComment: 'IdeaComment'
 } as const
@@ -310,6 +311,23 @@ export const SystemSettingScalarFieldEnum = {
 } as const
 
 export type SystemSettingScalarFieldEnum = (typeof SystemSettingScalarFieldEnum)[keyof typeof SystemSettingScalarFieldEnum]
+
+
+export const AgentPromptScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  slotKey: 'slotKey',
+  name: 'name',
+  description: 'description',
+  content: 'content',
+  variables: 'variables',
+  version: 'version',
+  isCustom: 'isCustom',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AgentPromptScalarFieldEnum = (typeof AgentPromptScalarFieldEnum)[keyof typeof AgentPromptScalarFieldEnum]
 
 
 export const IdeaScalarFieldEnum = {

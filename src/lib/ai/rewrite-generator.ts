@@ -1,12 +1,15 @@
+/**
+ * 局部改写 — local-rewriter Agent
+ * 编辑器气泡菜单与统一 Agent 提示词共用
+ */
+
 import { getAIProviderAsync } from './providers'
-import { PromptTemplateManager } from './prompts/template-manager'
 import { getContextManager } from './context-manager'
 import { getStyleAnchorPrompt } from './style-anchor'
+import { streamAgent } from './agents'
 import { prisma } from '@/lib/db/prisma'
-import type { GenerationParams } from '@/types'
 
 export class RewriteGenerator {
-  private promptManager = new PromptTemplateManager()
   private contextManager = getContextManager()
 
   async rewrite(params: {
@@ -23,7 +26,6 @@ export class RewriteGenerator {
       params
     const ai = await getAIProviderAsync(model)
 
-    // 获取章节信息
     const chapter = await prisma.chapter.findUnique({
       where: { id: chapterId },
       include: { project: true },
@@ -33,7 +35,6 @@ export class RewriteGenerator {
       throw new Error('章节不存在')
     }
 
-    // 获取项目完整数据用于构建上下文
     const project = await prisma.project.findUnique({
       where: { id: projectId },
       include: {
@@ -48,15 +49,14 @@ export class RewriteGenerator {
       throw new Error('项目不存在')
     }
 
-    // 构建上下文（角色、世界观、前文摘要等）
     const context = this.contextManager.buildContext({
       currentChapter: chapter.chapterNumber,
-      allChapters: project.chapters.map(ch => ({
+      allChapters: project.chapters.map((ch) => ({
         ...ch,
         summary: ch.summary ?? undefined,
         notes: ch.notes ?? undefined,
       })) as any,
-      characters: project.characters.map(ch => ({
+      characters: project.characters.map((ch) => ({
         ...ch,
         nickname: ch.nickname ?? undefined,
         age: ch.age ?? undefined,
@@ -70,7 +70,7 @@ export class RewriteGenerator {
         characterArc: ch.characterArc ?? undefined,
         avatar: ch.avatar ?? undefined,
       })) as any,
-      worldElements: project.worldElements.map(we => ({
+      worldElements: project.worldElements.map((we) => ({
         ...we,
         type: we.type as any,
         attributes: we.attributes ?? undefined,
@@ -84,47 +84,55 @@ export class RewriteGenerator {
       projectId,
     })
 
-    const prompt = this.promptManager.render('local-rewrite', {
-      style,
-      fullChapterContent: fullChapterContent.slice(-8000), // 截取最后 8000 字作为上下文
-      selectedText,
-    })
-
-    const systemPrompt = `你是一位专业的小说编辑。你正在帮助作者改写一段小说文本。
-改写风格是：${style}。
-
-${this.contextManager.formatContextForPrompt(context)}`
-
     const rewriteStyleAnchor = await getStyleAnchorPrompt(projectId)
+    const contextAppend = [
+      `改写风格是：${style}。`,
+      rewriteStyleAnchor,
+      this.contextManager.formatContextForPrompt(context),
+    ]
+      .filter(Boolean)
+      .join('\n\n')
 
-    // 流式生成
     let fullOutput = ''
-    const generator = ai.streamGenerate({
-      type: 'chapter' as GenerationParams['type'],
+    let systemPrompt = ''
+    let userPrompt = ''
+
+    const stream = streamAgent({
+      agentId: 'local-rewriter',
       model,
-      prompt,
-      systemPrompt: rewriteStyleAnchor
-        ? `${rewriteStyleAnchor}\n\n${systemPrompt}`
-        : systemPrompt,
       temperature: 0.7,
-      maxTokens: Math.max(2048, ai.estimateTokens(selectedText) * 3),
+      contextAppend,
+      variables: {
+        style,
+        fullChapterContent: fullChapterContent.slice(-8000),
+        selectedText,
+      },
     })
 
-    for await (const chunk of generator) {
-      fullOutput += chunk
-      onProgress?.(chunk)
+    // streamAgent 为 AsyncGenerator：yield chunk，return 最终结果
+    let next = await stream.next()
+    while (!next.done) {
+      fullOutput += next.value
+      onProgress?.(next.value)
+      next = await stream.next()
+    }
+    if (next.value) {
+      systemPrompt = next.value.systemPrompt
+      userPrompt = next.value.userPrompt
+      if (!fullOutput && next.value.text) {
+        fullOutput = next.value.text
+      }
     }
 
     if (!fullOutput.trim()) {
       throw new Error('AI 改写失败，返回了空内容')
     }
 
-    // 记录生成历史
     await this.recordGeneration(ai, {
       projectId,
       type: 'rewrite',
       model,
-      prompt,
+      prompt: userPrompt || selectedText,
       systemPrompt,
       output: fullOutput,
       duration: Date.now() - startTime,
@@ -134,16 +142,19 @@ ${this.contextManager.formatContextForPrompt(context)}`
     return fullOutput
   }
 
-  private async recordGeneration(ai: { name: string; model: string }, params: {
-    projectId: string
-    type: string
-    model?: string
-    prompt: string
-    systemPrompt?: string
-    output: string
-    duration?: number
-    targetId?: string
-  }) {
+  private async recordGeneration(
+    ai: { name: string; model: string },
+    params: {
+      projectId: string
+      type: string
+      model?: string
+      prompt: string
+      systemPrompt?: string
+      output: string
+      duration?: number
+      targetId?: string
+    }
+  ) {
     try {
       return await prisma.generation.create({
         data: {
@@ -166,7 +177,6 @@ ${this.contextManager.formatContextForPrompt(context)}`
   }
 }
 
-// 单例
 let rewriteGenerator: RewriteGenerator | null = null
 
 export function getRewriteGenerator(): RewriteGenerator {

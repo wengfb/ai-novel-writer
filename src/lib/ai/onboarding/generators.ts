@@ -1,5 +1,15 @@
+/**
+ * Onboarding 各步 AI 生成器
+ *
+ * 统一路径：build*Prompt → runAgent(onboarding-*) → JSON 提取（可重试）
+ * 风格锚点为纯文本，parseJson=false。
+ *
+ * WHY 不直接调 Provider：保证 system 提示词走可编辑 Agent 注册表。
+ */
+
 import { getAIProviderAsync } from '@/lib/ai/providers'
-import type { AIProvider } from '@/lib/ai/providers/types'
+// 从 runner 直引，避免 onboarding ↔ agents/index 再导出链上的环
+import { runAgent } from '@/lib/ai/agents/runner'
 import type {
   StoryArchitecture,
   CharacterEnsemble,
@@ -18,14 +28,12 @@ import type {
 function extractJSON<T>(output: string): T {
   const trimmed = output.trim()
 
-  // 1. 直接解析
   try {
     return JSON.parse(trimmed) as T
   } catch {
     // continue
   }
 
-  // 2. markdown 代码块提取
   const codeBlockMatch = trimmed.match(/```json\s*([\s\S]*?)\s*```/)
   if (codeBlockMatch) {
     try {
@@ -35,7 +43,6 @@ function extractJSON<T>(output: string): T {
     }
   }
 
-  // 3. 正则匹配最外层 { } 或 [ ]
   const bracketMatch = trimmed.match(/\{[\s\S]*\}/) || trimmed.match(/\[[\s\S]*\]/)
   if (bracketMatch) {
     try {
@@ -48,78 +55,107 @@ function extractJSON<T>(output: string): T {
   throw new Error('无法从 AI 输出中提取有效 JSON')
 }
 
-interface AICallOptions {
-  prompt: string
+interface StepMeta {
+  raw: string
+  provider: string
+  modelUsed: string
+  duration: number
+  tokensUsed?: {
+    promptTokens: number
+    completionTokens: number
+    totalTokens: number
+  }
+  cost?: number
+}
+
+interface CallOptions {
+  agentId: string
+  taskBody: string
   model?: string
   temperature?: number
   maxTokens?: number
-}
-
-interface AICallResult {
-  output: string
-  tokensUsed?: { promptTokens: number; completionTokens: number; totalTokens: number }
-  cost?: number
-  duration: number
+  /** 是否解析 JSON（风格锚点为纯文本） */
+  parseJson?: boolean
 }
 
 /**
- * 带重试的 AI 调用 + JSON 解析
- * 最多重试 2 次，每次追加 "请输出纯 JSON" 指令
+ * 通过 Agent 调用 + 可选 JSON 解析
+ * JSON 失败时最多重试 retries 次，并追加更严的格式约束
  */
-async function callAIAndParse<T>(
-  options: AICallOptions,
-  model?: string,
+async function callAgentStep<T>(
+  options: CallOptions & { parseJson: true },
+  retries?: number
+): Promise<{ data: T } & StepMeta>
+async function callAgentStep(
+  options: CallOptions & { parseJson: false },
+  retries?: number
+): Promise<{ data: string } & StepMeta>
+async function callAgentStep<T>(
+  options: CallOptions,
   retries = 2
-): Promise<{ data: T; raw: string; ai: AIProvider; duration: number; tokensUsed?: AICallResult['tokensUsed']; cost?: number }> {
-  const ai = await getAIProviderAsync(model)
+): Promise<{ data: T | string } & StepMeta> {
+  const parseJson = options.parseJson !== false
   let lastError: Error | null = null
-  let currentPrompt = options.prompt
+  let taskBody = options.taskBody
 
   for (let attempt = 1; attempt <= retries + 1; attempt++) {
-    const startTime = Date.now()
-    const result = await ai.generate({
-      type: 'outline',
-      model: model || ai.model,
-      prompt: currentPrompt,
-      temperature: options.temperature || 0.7,
-      maxTokens: options.maxTokens || 8000,
-    })
-    const duration = Date.now() - startTime
-
-    if (result.status === 'error' || !result.output) {
-      throw new Error(`AI 生成失败: ${result.error || '未知错误'}`)
-    }
-
     try {
-      const data = extractJSON<T>(result.output)
-      return {
-        data,
-        raw: result.output,
-        ai,
-        duration,
+      const result = await runAgent({
+        agentId: options.agentId,
+        model: options.model,
+        temperature: options.temperature,
+        maxTokens: options.maxTokens,
+        variables: {
+          taskBody,
+          extraConstraints: '',
+        },
+      })
+
+      if (!result.text?.trim()) {
+        throw new Error('AI 返回为空')
+      }
+
+      const meta: StepMeta = {
+        raw: result.text,
+        provider: result.provider || 'unknown',
+        modelUsed: result.modelUsed || options.model || 'unknown',
+        duration: result.duration || 0,
         tokensUsed: result.tokensUsed,
         cost: result.cost,
       }
-    } catch (parseError) {
-      lastError = parseError as Error
-      if (attempt <= retries) {
-        // 追加更严格的 JSON 格式要求后重试
-        currentPrompt = `${options.prompt}
+
+      if (!parseJson) {
+        return { data: result.text, ...meta }
+      }
+
+      const data = extractJSON<T>(result.text)
+      return { data, ...meta }
+    } catch (error) {
+      lastError = error as Error
+      if (attempt <= retries && parseJson) {
+        taskBody = `${options.taskBody}
 
 【重要】上一次输出无法解析为有效 JSON。请严格遵守以下要求：
 1. 只输出纯 JSON，不要添加任何解释文字
 2. 所有字符串值中的双引号必须用反斜杠转义
 3. 数组和对象的最后一个元素后不要加逗号
 4. 确保所有花括号和方括号正确配对`
+      } else if (attempt > retries) {
+        break
       }
     }
   }
 
-  throw new Error(`JSON 解析失败（已重试 ${retries} 次）: ${lastError?.message}`)
+  throw new Error(
+    parseJson
+      ? `JSON 解析失败（已重试 ${retries} 次）: ${lastError?.message}`
+      : `Agent 调用失败: ${lastError?.message}`
+  )
 }
 
-// ============ Step 1: 故事架构 ============
+// ============ Step 1: 故事架构 (onboarding-architecture) ============
 
+/** 生成故事架构 JSON */
 export async function generateArchitecture(
   prompt: string,
   model?: string
@@ -129,26 +165,31 @@ export async function generateArchitecture(
   provider: string
   modelUsed: string
   duration: number
-  tokensUsed?: AICallResult['tokensUsed']
+  tokensUsed?: StepMeta['tokensUsed']
   cost?: number
 }> {
-  const result = await callAIAndParse<StoryArchitecture>(
-    { prompt, temperature: 0.7, maxTokens: 6000 },
-    model
-  )
+  const result = await callAgentStep<StoryArchitecture>({
+    agentId: 'onboarding-architecture',
+    taskBody: prompt,
+    model,
+    temperature: 0.7,
+    maxTokens: 6000,
+    parseJson: true,
+  })
   return {
     architecture: result.data,
     raw: result.raw,
-    provider: result.ai.name,
-    modelUsed: model || result.ai.model,
+    provider: result.provider,
+    modelUsed: result.modelUsed,
     duration: result.duration,
     tokensUsed: result.tokensUsed,
     cost: result.cost,
   }
 }
 
-// ============ Step 2: 角色群像 ============
+// ============ Step 2: 角色群像 (onboarding-characters) ============
 
+/** 生成角色群像 JSON */
 export async function generateCharacters(
   prompt: string,
   model?: string
@@ -158,26 +199,31 @@ export async function generateCharacters(
   provider: string
   modelUsed: string
   duration: number
-  tokensUsed?: AICallResult['tokensUsed']
+  tokensUsed?: StepMeta['tokensUsed']
   cost?: number
 }> {
-  const result = await callAIAndParse<CharacterEnsemble>(
-    { prompt, temperature: 0.8, maxTokens: 8000 },
-    model
-  )
+  const result = await callAgentStep<CharacterEnsemble>({
+    agentId: 'onboarding-characters',
+    taskBody: prompt,
+    model,
+    temperature: 0.8,
+    maxTokens: 8000,
+    parseJson: true,
+  })
   return {
     characters: result.data,
     raw: result.raw,
-    provider: result.ai.name,
-    modelUsed: model || result.ai.model,
+    provider: result.provider,
+    modelUsed: result.modelUsed,
     duration: result.duration,
     tokensUsed: result.tokensUsed,
     cost: result.cost,
   }
 }
 
-// ============ Step 3: 世界观 ============
+// ============ Step 3: 世界观 (onboarding-world) ============
 
+/** 生成世界观元素 JSON */
 export async function generateWorldElements(
   prompt: string,
   model?: string
@@ -187,26 +233,34 @@ export async function generateWorldElements(
   provider: string
   modelUsed: string
   duration: number
-  tokensUsed?: AICallResult['tokensUsed']
+  tokensUsed?: StepMeta['tokensUsed']
   cost?: number
 }> {
-  const result = await callAIAndParse<WorldSettings>(
-    { prompt, temperature: 0.7, maxTokens: 8000 },
-    model
-  )
+  const result = await callAgentStep<WorldSettings>({
+    agentId: 'onboarding-world',
+    taskBody: prompt,
+    model,
+    temperature: 0.7,
+    maxTokens: 8000,
+    parseJson: true,
+  })
   return {
     worldSettings: result.data,
     raw: result.raw,
-    provider: result.ai.name,
-    modelUsed: model || result.ai.model,
+    provider: result.provider,
+    modelUsed: result.modelUsed,
     duration: result.duration,
     tokensUsed: result.tokensUsed,
     cost: result.cost,
   }
 }
 
-// ============ Step 4: 分章大纲 ============
+// ============ Step 4: 总纲 + 前三章细纲 (onboarding-chapters) ============
 
+/**
+ * 生成章节大纲 JSON（Bootstrap 精简：overallOutline + 前 3 章）
+ * maxTokens 已下调，避免全量 40 章超时
+ */
 export async function generateChapters(
   prompt: string,
   model?: string
@@ -216,26 +270,32 @@ export async function generateChapters(
   provider: string
   modelUsed: string
   duration: number
-  tokensUsed?: AICallResult['tokensUsed']
+  tokensUsed?: StepMeta['tokensUsed']
   cost?: number
 }> {
-  const result = await callAIAndParse<ChapterOutline>(
-    { prompt, temperature: 0.6, maxTokens: 16000 },
-    model
-  )
+  // Bootstrap 仅需总纲 + 前三章细纲，输出显著缩小，降低超时风险
+  const result = await callAgentStep<ChapterOutline>({
+    agentId: 'onboarding-chapters',
+    taskBody: prompt,
+    model,
+    temperature: 0.6,
+    maxTokens: 6000,
+    parseJson: true,
+  })
   return {
     chapters: result.data,
     raw: result.raw,
-    provider: result.ai.name,
-    modelUsed: model || result.ai.model,
+    provider: result.provider,
+    modelUsed: result.modelUsed,
     duration: result.duration,
     tokensUsed: result.tokensUsed,
     cost: result.cost,
   }
 }
 
-// ============ Step 5: 伏笔系统 ============
+// ============ Step 5: 伏笔 (onboarding-foreshadowings) ============
 
+/** 生成伏笔计划 JSON */
 export async function generateForeshadowings(
   prompt: string,
   model?: string
@@ -245,26 +305,31 @@ export async function generateForeshadowings(
   provider: string
   modelUsed: string
   duration: number
-  tokensUsed?: AICallResult['tokensUsed']
+  tokensUsed?: StepMeta['tokensUsed']
   cost?: number
 }> {
-  const result = await callAIAndParse<ForeshadowingPlan>(
-    { prompt, temperature: 0.7, maxTokens: 6000 },
-    model
-  )
+  const result = await callAgentStep<ForeshadowingPlan>({
+    agentId: 'onboarding-foreshadowings',
+    taskBody: prompt,
+    model,
+    temperature: 0.7,
+    maxTokens: 6000,
+    parseJson: true,
+  })
   return {
     foreshadowings: result.data,
     raw: result.raw,
-    provider: result.ai.name,
-    modelUsed: model || result.ai.model,
+    provider: result.provider,
+    modelUsed: result.modelUsed,
     duration: result.duration,
     tokensUsed: result.tokensUsed,
     cost: result.cost,
   }
 }
 
-// ============ Step 6: 风格锚点 ============
+// ============ Step 6: 风格锚点 (onboarding-style-anchor，纯文本) ============
 
+/** 生成风格锚点样章正文（非 JSON） */
 export async function generateStyleAnchorText(
   prompt: string,
   model?: string
@@ -274,33 +339,33 @@ export async function generateStyleAnchorText(
   provider: string
   modelUsed: string
   duration: number
-  tokensUsed?: AICallResult['tokensUsed']
+  tokensUsed?: StepMeta['tokensUsed']
   cost?: number
 }> {
-  const ai = await getAIProviderAsync(model)
-  const startTime = Date.now()
-  const result = await ai.generate({
-    type: 'outline',
-    model: model || ai.model,
-    prompt,
+  const result = await callAgentStep({
+    agentId: 'onboarding-style-anchor',
+    taskBody: prompt,
+    model,
     temperature: 0.8,
     maxTokens: 3000,
+    parseJson: false,
   })
-  const duration = Date.now() - startTime
 
-  if (result.status === 'error' || !result.output) {
-    throw new Error('风格锚点生成失败')
-  }
-
-  const content = result.output.trim()
+  const content = String(result.data).trim()
   const chineseChars = (content.match(/[一-龥]/g) || []).length
+
+  // 若 Agent 不可用则兜底（理论上不会）
+  if (!content) {
+    const ai = await getAIProviderAsync(model)
+    throw new Error(`风格锚点生成失败（provider: ${ai.name}）`)
+  }
 
   return {
     styleAnchor: { content, wordCount: chineseChars },
-    raw: result.output,
-    provider: ai.name,
-    modelUsed: model || ai.model,
-    duration,
+    raw: result.raw,
+    provider: result.provider,
+    modelUsed: result.modelUsed,
+    duration: result.duration,
     tokensUsed: result.tokensUsed,
     cost: result.cost,
   }

@@ -1,3 +1,11 @@
+/**
+ * POST /api/ai/chat
+ * Studio 对话：复用 studio-chat Agent（可编辑提示词 + 同一工具集）
+ *
+ * 流式协议保持 AI SDK UIMessage，以便前端 useChat / 工具审批不改动。
+ * 系统提示词与温度/步数来自 Agent 注册表，聊天与界面按钮共享定义。
+ */
+
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { streamText, convertToModelMessages, stepCountIs } from 'ai'
@@ -8,12 +16,17 @@ import { getContextManager } from '@/lib/ai/context-manager'
 import { getStyleAnchorPrompt } from '@/lib/ai/style-anchor'
 import { buildChatTools } from '@/lib/ai/chat-tools'
 import { getLanguageModelAsync } from '@/lib/ai/providers'
+import { renderAgentSlot, requireAgentDefinition } from '@/lib/ai/agents'
 import type { Chapter, Character, WorldElement, Foreshadowing } from '@/types'
 import type { UIMessage } from 'ai'
+
+const STUDIO_CHAT_AGENT_ID = 'studio-chat'
 
 const ChatRequestSchema = z.object({
   projectId: z.string().optional(),
   chapterId: z.string().optional(),
+  /** 可切换其它 chatCompatible agent，默认 studio-chat */
+  agentId: z.string().optional(),
   messages: z.array(z.custom<UIMessage>()),
   model: z.string().optional(),
 })
@@ -25,26 +38,38 @@ const WorldElementCategories = ['core_rule', 'detail', 'background'] as const
 const PlotTypes = ['setup', 'conflict', 'climax', 'resolution'] as const
 
 function oneOf<T extends readonly string[]>(value: string | null, values: T, fallback: T[number]): T[number] {
-  return values.includes(value ?? '') ? value as T[number] : fallback
+  return values.includes(value ?? '') ? (value as T[number]) : fallback
 }
 
-
-/**
- * POST /api/ai/chat
- * AI 对话接口（使用 Vercel AI SDK 标准格式）
- */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const data = validateRequest(ChatRequestSchema, body)
-    const { projectId, chapterId, messages, model: modelOverride } = data
+    const {
+      projectId,
+      chapterId,
+      messages,
+      model: modelOverride,
+      agentId: agentIdOverride,
+    } = data
 
     if (messages.length === 0) {
       return ApiErrors.badRequest('消息不能为空')
     }
 
+    const agentId = agentIdOverride || STUDIO_CHAT_AGENT_ID
+    const agentDef = requireAgentDefinition(agentId)
+    if (!agentDef.chatCompatible && agentId !== STUDIO_CHAT_AGENT_ID) {
+      return ApiErrors.badRequest(`Agent ${agentId} 不支持对话模式`)
+    }
+
     const contextManager = getContextManager()
-    let systemPrompt = '你是一个专业的小说创作助手。'
+    let systemPrompt = await renderAgentSlot(agentId, 'system', {
+      projectTitle: '未命名项目',
+      genre: '通用',
+      styleAnchor: '',
+      contextPrompt: '',
+    })
     let tools: ReturnType<typeof buildChatTools> | undefined
 
     if (projectId) {
@@ -157,11 +182,13 @@ export async function POST(request: NextRequest) {
         chapterId: currentChapter?.id ?? chapterId,
       })
 
-      systemPrompt = `你是一个专业的小说创作助手，正在帮助作者创作《${project.title}》这部${project.genre}小说。
-
-${chatStyleAnchor ? chatStyleAnchor + '\n\n' : ''}${contextPrompt}
-
-当用户需要创建/新增/保存/修改/更新角色、世界观、章节内容，或查询项目信息时，请优先考虑调用工具完成操作；如果用户意图明确且信息足够，直接使用对应工具比只给文字建议更合适。用户说”创建角色/新增设定/追加章节/查询项目”等操作类请求时，通常是在要求你操作当前项目数据，而不是只生成一段可复制的文本。写操作会先交由用户确认，不要因为需要确认而回避工具调用。工具完成后，用简洁的中文说明你做了什么，并给出下一步建议。若缺少必要信息，请先向用户提问再行动。`
+      // 提示词来自 studio-chat（或指定 agent）可编辑槽位，与界面生成功能共用
+      systemPrompt = await renderAgentSlot(agentId, 'system', {
+        projectTitle: project.title,
+        genre: project.genre,
+        styleAnchor: chatStyleAnchor || '',
+        contextPrompt,
+      })
     }
 
     const uiMessages = messages.map((message) => {
@@ -182,8 +209,8 @@ ${chatStyleAnchor ? chatStyleAnchor + '\n\n' : ''}${contextPrompt}
       system: systemPrompt,
       messages: modelMessages,
       tools,
-      temperature: 0.8,
-      stopWhen: stepCountIs(5),
+      temperature: agentDef.temperature ?? 0.8,
+      stopWhen: stepCountIs(agentDef.maxSteps ?? 5),
     })
 
     return result.toUIMessageStreamResponse()
@@ -191,6 +218,9 @@ ${chatStyleAnchor ? chatStyleAnchor + '\n\n' : ''}${contextPrompt}
     console.error('Chat API error:', error)
     if (error instanceof Validation_error) {
       return ApiErrors.badRequest('请求参数错误', error.errors)
+    }
+    if (error instanceof Error && error.message.startsWith('未知 Agent')) {
+      return ApiErrors.notFound('Agent')
     }
     return new Response(
       JSON.stringify({ error: '服务器错误' }),
