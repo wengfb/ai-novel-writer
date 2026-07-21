@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db/prisma'
 import { apiSuccess, withErrorHandler, ApiErrors } from '@/lib/api/response'
 import { parseJsonBody, validateId, validateQuery, validateRequest } from '@/lib/api/validators'
 import { ChapterQuerySchema, CreateChapterSchema } from '@/lib/api/schemas'
+import { countWords } from '@/lib/utils/word-count'
 
 type RouteContext = {
   params: Promise<{ projectId: string }>
@@ -120,11 +121,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
 /**
  * 统计字数（中文字符 + 英文单词）
  */
-function countWords(text: string): number {
-  const chineseChars = (text.match(/[\u4e00-\u9fa5]/g) || []).length
-  const englishWords = (text.match(/[a-zA-Z]+/g) || []).length
-  return chineseChars + englishWords
-}
 
 /**
  * 更新项目统计信息

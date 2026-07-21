@@ -1,40 +1,22 @@
 'use client'
 
-import * as React from "react"
-import {
-  Book,
-  Box,
-  FileText,
-  Home,
-  LayoutTemplate,
-  Lightbulb,
-  Pencil,
-  Settings,
-  Users,
-} from "lucide-react"
-
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { useCurrentProject } from "@/hooks/use-projects"
-import { ChapterList } from "@/components/chapter/chapter-list"
-import { CharacterList } from "@/components/character/character-list"
-import { WorldElementList } from "@/components/world/world-element-list"
-import { CreateCharacterDialog } from "@/components/character/create-character-dialog"
-import { CreateWorldElementDialog } from "@/components/world/create-world-element-dialog"
-import { SettingsDialog } from "@/components/settings/settings-dialog"
-import { ProjectEditDialog } from "@/components/project/project-edit-dialog"
-import { OutlineList } from "@/components/outline/outline-list"
-import { OutlineDialog } from "@/components/outline/outline-dialog"
-import { useChapterStore } from "@/lib/store/chapter-store"
-import { useUIStore } from "@/lib/store/ui-store"
-import { useOutlineStore } from "@/lib/store/outline-store"
-import { useCharacterStore, type Character } from "@/lib/store/character-store"
-import { useWorldStore, type WorldElement } from "@/lib/store/world-store"
-import { toast } from "sonner"
-import type { Outline } from "@/lib/store/outline-store"
-
-import { IdeaCenterDialog } from '@/components/ideas/idea-center-dialog'
+import * as React from 'react'
+import { cn } from '@/lib/utils'
+import { Separator } from '@/components/ui/separator'
+import { useCurrentProject } from '@/hooks/use-projects'
+import { ChapterList } from '@/components/chapter/chapter-list'
+import { CharacterList } from '@/components/character/character-list'
+import { WorldElementList } from '@/components/world/world-element-list'
+import { OutlineList } from '@/components/outline/outline-list'
+import { useChapterStore } from '@/lib/store/chapter-store'
+import { useUIStore } from '@/lib/store/ui-store'
+import { useOutlineStore } from '@/lib/store/outline-store'
+import { useCharacterStore, type Character } from '@/lib/store/character-store'
+import { useWorldStore, type WorldElement } from '@/lib/store/world-store'
+import { toast } from 'sonner'
+import type { Outline } from '@/lib/store/outline-store'
+import { SidebarNav } from './sidebar-left/sidebar-nav'
+import { SidebarDialogs } from './sidebar-left/sidebar-dialogs'
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
@@ -59,7 +41,6 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   const [outlineParentId, setOutlineParentId] = React.useState<string | null>(null)
   const [outlineDefaultType, setOutlineDefaultType] = React.useState<'volume' | 'chapter' | 'scene'>('chapter')
 
-  // 创建新章节
   const handleCreateChapter = async () => {
     if (!currentProject) {
       toast.error('请先选择项目')
@@ -67,11 +48,9 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
     }
 
     try {
-      // 计算下一个章节号
       const { chapters } = useChapterStore.getState()
-      const nextChapterNumber = chapters.length > 0
-        ? Math.max(...chapters.map(c => c.chapterNumber)) + 1
-        : 1
+      const nextChapterNumber =
+        chapters.length > 0 ? Math.max(...chapters.map((c) => c.chapterNumber)) + 1 : 1
 
       await createChapter({
         projectId: currentProject.id,
@@ -85,7 +64,6 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
     }
   }
 
-  // 创建/编辑大纲
   const handleCreateOutline = (parentId?: string | null, type?: 'volume' | 'chapter' | 'scene') => {
     setEditingOutline(null)
     setOutlineParentId(parentId || null)
@@ -109,7 +87,6 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
     }
   }
 
-  // 创建/编辑角色
   const handleCreateCharacter = () => {
     setEditingCharacter(null)
     setIsCharacterDialogOpen(true)
@@ -129,7 +106,6 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
     }
   }
 
-  // 创建/编辑世界观元素
   const handleCreateWorldElement = () => {
     setEditingWorldElement(null)
     setIsWorldDialogOpen(true)
@@ -150,101 +126,26 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   }
 
   return (
-    <div className={cn("pb-12 h-full flex flex-col min-w-0", className)}>
+    <div className={cn('pb-12 h-full flex flex-col min-w-0', className)}>
       <div className="space-y-4 py-4 flex-1 flex flex-col">
-        <div className="px-3 py-2">
-          <div className="mb-2 px-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold tracking-tight truncate flex-1">
-              {currentProject?.title || 'AI 小说工坊'}
-            </h2>
-            {currentProject && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6 shrink-0"
-                onClick={() => setIsEditProjectOpen(true)}
-              >
-                 <Pencil className="h-3.5 w-3.5" />
-              </Button>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6 shrink-0"
-              onClick={() => setIsSettingsOpen(true)}
-            >
-               <Settings className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="space-y-1">
-            <Button
-              variant="secondary"
-              className="w-full justify-start"
-              onClick={() => { setCurrentProject(null); setMainView('editor') }}
-            >
-              <Home className="mr-2 h-4 w-4" />
-              工作台
-            </Button>
-            {currentProject && (
-              <Button variant="ghost" className="w-full justify-start">
-                <Book className="mr-2 h-4 w-4" />
-                {currentProject.genre}
-              </Button>
-            )}
-          </div>
-        </div>
-        <Separator className="mx-3 w-auto opacity-50" />
-        <div className="px-3 py-2">
-          <h3 className="mb-2 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            创作资源
-          </h3>
-          <div className="space-y-1">
-            <Button
-              variant="ghost"
-              className="w-full justify-start"
-              onClick={() => setIsIdeaCenterOpen(true)}
-            >
-              <Lightbulb className="mr-2 h-4 w-4" />
-              创意中心
-            </Button>
-            <Button
-              variant={activeSection === 'outline' ? 'secondary' : 'ghost'}
-              className="w-full justify-start"
-              onClick={() => { setActiveSection('outline'); setMainView('outline') }}
-            >
-              <LayoutTemplate className="mr-2 h-4 w-4" />
-              剧情大纲
-            </Button>
-            <Button
-              variant={activeSection === 'chapters' ? 'secondary' : 'ghost'}
-              className="w-full justify-start"
-              onClick={() => { setActiveSection('chapters'); setMainView('editor') }}
-            >
-              <FileText className="mr-2 h-4 w-4" />
-              章节列表
-            </Button>
-            <Button
-              variant={activeSection === 'characters' ? 'secondary' : 'ghost'}
-              className="w-full justify-start"
-              onClick={() => { setActiveSection('characters'); setMainView('editor') }}
-            >
-              <Users className="mr-2 h-4 w-4" />
-              角色设定
-            </Button>
-            <Button
-              variant={activeSection === 'world' ? 'secondary' : 'ghost'}
-              className="w-full justify-start"
-              onClick={() => { setActiveSection('world'); setMainView('editor') }}
-            >
-              <Box className="mr-2 h-4 w-4" />
-              世界观
-            </Button>
-          </div>
-        </div>
+        <SidebarNav
+          currentProject={currentProject}
+          activeSection={activeSection}
+          onGoHome={() => {
+            setCurrentProject(null)
+            setMainView('editor')
+          }}
+          onOpenEditProject={() => setIsEditProjectOpen(true)}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          onOpenIdeaCenter={() => setIsIdeaCenterOpen(true)}
+          onSelectSection={(section, mainView) => {
+            setActiveSection(section)
+            setMainView(mainView)
+          }}
+        />
 
         <Separator className="mx-3 w-auto opacity-50" />
 
-        {/* 动态内容区域 */}
         <div className="flex-1 overflow-hidden">
           {currentProject && activeSection === 'chapters' && (
             <ChapterList projectId={currentProject.id} onCreateChapter={handleCreateChapter} />
@@ -275,64 +176,38 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
           )}
         </div>
       </div>
-      
+
       <div className="px-4 py-4 border-t">
-          <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
-                  WF
-              </div>
-              <div className="text-sm">
-                  <p className="font-medium">WengFB</p>
-                  <p className="text-xs text-muted-foreground">专业版计划</p>
-              </div>
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
+            WF
           </div>
+          <div className="text-sm">
+            <p className="font-medium">WengFB</p>
+            <p className="text-xs text-muted-foreground">专业版计划</p>
+          </div>
+        </div>
       </div>
 
-      {/* 创建对话框 */}
-      {currentProject && (
-        <>
-          <CreateCharacterDialog
-            projectId={currentProject.id}
-            open={isCharacterDialogOpen}
-            onOpenChange={setIsCharacterDialogOpen}
-            editingCharacter={editingCharacter}
-          />
-          <CreateWorldElementDialog
-            projectId={currentProject.id}
-            open={isWorldDialogOpen}
-            onOpenChange={setIsWorldDialogOpen}
-            editingElement={editingWorldElement}
-          />
-          <OutlineDialog
-            projectId={currentProject.id}
-            open={isOutlineDialogOpen}
-            onOpenChange={setIsOutlineDialogOpen}
-            editingOutline={editingOutline}
-            parentId={outlineParentId}
-            defaultType={outlineDefaultType}
-          />
-        </>
-      )}
-
-      {/* 设置对话框 */}
-      <SettingsDialog
-        open={isSettingsOpen}
-        onOpenChange={setIsSettingsOpen}
-      />
-
-      {/* 项目编辑对话框 */}
-      {currentProject && (
-        <ProjectEditDialog
-          project={currentProject}
-          open={isEditProjectOpen}
-          onOpenChange={setIsEditProjectOpen}
-        />
-      )}
-
-      {/* 创意中心弹窗 */}
-      <IdeaCenterDialog
-        open={isIdeaCenterOpen}
-        onOpenChange={setIsIdeaCenterOpen}
+      <SidebarDialogs
+        currentProject={currentProject}
+        isCharacterDialogOpen={isCharacterDialogOpen}
+        setIsCharacterDialogOpen={setIsCharacterDialogOpen}
+        isWorldDialogOpen={isWorldDialogOpen}
+        setIsWorldDialogOpen={setIsWorldDialogOpen}
+        isSettingsOpen={isSettingsOpen}
+        setIsSettingsOpen={setIsSettingsOpen}
+        isEditProjectOpen={isEditProjectOpen}
+        setIsEditProjectOpen={setIsEditProjectOpen}
+        isIdeaCenterOpen={isIdeaCenterOpen}
+        setIsIdeaCenterOpen={setIsIdeaCenterOpen}
+        isOutlineDialogOpen={isOutlineDialogOpen}
+        setIsOutlineDialogOpen={setIsOutlineDialogOpen}
+        editingOutline={editingOutline}
+        editingCharacter={editingCharacter}
+        editingWorldElement={editingWorldElement}
+        outlineParentId={outlineParentId}
+        outlineDefaultType={outlineDefaultType}
       />
     </div>
   )

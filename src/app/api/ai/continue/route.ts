@@ -6,6 +6,7 @@ import { withErrorHandler, ApiErrors } from '@/lib/api/response'
 import { parseJsonBody, validateRequest } from '@/lib/api/validators'
 import { ContinueChapterSchema } from '@/lib/api/schemas'
 import { plainTextToHtml } from '@/lib/utils/text-format'
+import { countWords } from '@/lib/utils/word-count'
 
 /**
  * POST /api/ai/continue
@@ -154,13 +155,6 @@ export async function POST(request: NextRequest) {
 /**
  * 统计字数
  */
-function countWords(text: string): number {
-  // \u53bb\u9664 HTML \u6807\u7b7e\u540e\u7edf\u8ba1
-  const plainText = text.replace(/<[^>]*>/g, '')
-  const chineseChars = (plainText.match(/[\u4e00-\u9fa5]/g) || []).length
-  const englishWords = (plainText.match(/[a-zA-Z]+/g) || []).length
-  return chineseChars + englishWords
-}
 
 /**
  * 更新项目统计信息
