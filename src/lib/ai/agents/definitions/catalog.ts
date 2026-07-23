@@ -551,13 +551,15 @@ export const AGENT_DEFINITIONS: AgentDefinition[] = [
     ],
   },
 
-  // ---------- Onboarding pipeline steps（每步独立 agent，system 可编辑） ----------
+  // ---------- Onboarding pipeline steps（每步独立 agent，system 可编辑；支持对话式 Bootstrap） ----------
   {
     id: 'onboarding-architecture',
     name: '引导：故事架构',
-    description: 'Bootstrap 管线第 1 步：生成故事架构。system 可编辑；任务正文由引导流程注入 {taskBody}。',
+    description: 'Bootstrap 第 1 步：对话协作架构。system 可编辑；任务正文/上下文由引导流程注入。',
     category: 'onboarding',
     temperature: 0.75,
+    chatCompatible: true,
+    maxSteps: 3,
     promptSlots: [
       {
         key: 'system',
@@ -580,9 +582,11 @@ export const AGENT_DEFINITIONS: AgentDefinition[] = [
   {
     id: 'onboarding-characters',
     name: '引导：角色群像',
-    description: 'Bootstrap 管线第 2 步：生成角色群像。',
+    description: 'Bootstrap 第 2 步：对话协作角色群像。',
     category: 'onboarding',
     temperature: 0.8,
+    chatCompatible: true,
+    maxSteps: 3,
     promptSlots: [
       {
         key: 'system',
@@ -603,9 +607,11 @@ export const AGENT_DEFINITIONS: AgentDefinition[] = [
   {
     id: 'onboarding-world',
     name: '引导：世界观',
-    description: 'Bootstrap 管线第 3 步：生成世界观元素。',
+    description: 'Bootstrap 第 3 步：对话协作世界观。',
     category: 'onboarding',
     temperature: 0.75,
+    chatCompatible: true,
+    maxSteps: 3,
     promptSlots: [
       {
         key: 'system',
@@ -626,9 +632,11 @@ export const AGENT_DEFINITIONS: AgentDefinition[] = [
   {
     id: 'onboarding-chapters',
     name: '引导：章节大纲',
-    description: 'Bootstrap 管线第 4 步：全书总纲 + 前三章细纲（不全量逐章）。',
+    description: 'Bootstrap 第 4 步：对话协作总纲 + 前三章细纲。',
     category: 'onboarding',
     temperature: 0.6,
+    chatCompatible: true,
+    maxSteps: 3,
     promptSlots: [
       {
         key: 'system',
@@ -649,9 +657,11 @@ export const AGENT_DEFINITIONS: AgentDefinition[] = [
   {
     id: 'onboarding-foreshadowings',
     name: '引导：伏笔规划',
-    description: 'Bootstrap 管线第 5 步：生成伏笔计划。',
+    description: 'Bootstrap 第 5 步：对话协作伏笔网络。',
     category: 'onboarding',
     temperature: 0.7,
+    chatCompatible: true,
+    maxSteps: 3,
     promptSlots: [
       {
         key: 'system',
@@ -672,9 +682,11 @@ export const AGENT_DEFINITIONS: AgentDefinition[] = [
   {
     id: 'onboarding-style-anchor',
     name: '引导：风格锚点',
-    description: 'Bootstrap 管线第 6 步：生成文风样章。输出纯正文而非 JSON。',
+    description: 'Bootstrap 第 6 步：对话协作文风样章。',
     category: 'onboarding',
     temperature: 0.8,
+    chatCompatible: true,
+    maxSteps: 3,
     promptSlots: [
       {
         key: 'system',

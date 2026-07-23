@@ -41,7 +41,7 @@ export class OpenAICompatibleProvider implements AIProvider {
       const result = await generateText({
         model: this.getModel(model),
         prompt: params.prompt,
-        system: params.systemPrompt,
+        instructions: params.systemPrompt,
         temperature: params.temperature ?? 0.8,
       })
 
@@ -80,7 +80,7 @@ export class OpenAICompatibleProvider implements AIProvider {
       const result = await streamText({
         model: this.getModel(params.model),
         prompt: params.prompt,
-        system: params.systemPrompt,
+        instructions: params.systemPrompt,
         temperature: params.temperature ?? 0.8,
       })
 

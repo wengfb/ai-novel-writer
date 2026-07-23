@@ -27,6 +27,11 @@ const ChatRequestSchema = z.object({
   chapterId: z.string().optional(),
   /** 可切换其它 chatCompatible agent，默认 studio-chat */
   agentId: z.string().optional(),
+  /**
+   * 附加到 system 的动态上下文（Onboarding 创意卡/已确认步骤摘要）
+   * 不用于 Studio 写库工具场景的主 context（有 projectId 时仍走项目上下文）
+   */
+  contextAppend: z.string().optional(),
   messages: z.array(z.custom<UIMessage>()),
   model: z.string().optional(),
 })
@@ -51,6 +56,7 @@ export async function POST(request: NextRequest) {
       messages,
       model: modelOverride,
       agentId: agentIdOverride,
+      contextAppend,
     } = data
 
     if (messages.length === 0) {
@@ -71,6 +77,11 @@ export async function POST(request: NextRequest) {
       contextPrompt: '',
     })
     let tools: ReturnType<typeof buildChatTools> | undefined
+
+    // Onboarding 等无项目场景：system + 动态上下文，不挂写库 tools
+    if (!projectId && contextAppend?.trim()) {
+      systemPrompt = `${systemPrompt}\n\n${contextAppend.trim()}`
+    }
 
     if (projectId) {
       const project = await prisma.project.findUnique({
@@ -189,6 +200,9 @@ export async function POST(request: NextRequest) {
         styleAnchor: chatStyleAnchor || '',
         contextPrompt,
       })
+      if (contextAppend?.trim()) {
+        systemPrompt = `${systemPrompt}\n\n${contextAppend.trim()}`
+      }
     }
 
     const uiMessages = messages.map((message) => {

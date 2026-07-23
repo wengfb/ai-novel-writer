@@ -1,3 +1,8 @@
+/**
+ * 聊天工具结果展示与写操作后的 store 刷新
+ * 从旧 ai-chat 抽出，供统一 Chat 壳复用
+ */
+
 import type { ParsedToolInvocation } from '@/lib/ai/message-parser'
 import { useChapterStore } from '@/lib/store/chapter-store'
 

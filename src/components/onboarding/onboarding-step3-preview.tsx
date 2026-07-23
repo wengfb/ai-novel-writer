@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import type { OnboardingStep3PreviewProps, StepKey, StepState, StepStatus } from './step3/types'
 import { STEP_DEFS } from './step3/constants'
 import { extractArray } from './step3/step-result-preview'
@@ -40,6 +40,7 @@ export function OnboardingStep3Preview({
   useEffect(() => {
     onPhaseChange?.(phase)
   }, [phase, onPhaseChange])
+
   const [steps, setSteps] = useState<StepState[]>(
     STEP_DEFS.map(d => ({
       key: d.key,
@@ -48,29 +49,104 @@ export function OnboardingStep3Preview({
       error: null,
     }))
   )
-  const [feedback, setFeedback] = useState('')
   const [projectId, setProjectId] = useState<string | null>(null)
-
-  const feedbackRef = useRef<HTMLInputElement>(null)
+  void projectId
 
   // 获取当前步骤状态
   const getStep = useCallback((key: StepKey) => steps.find(s => s.key === key)!, [steps])
-  const currentStep = getStep(activeStep)
 
   // 更新步骤
   const updateStep = useCallback((key: StepKey, update: Partial<StepState>) => {
     setSteps(prev => prev.map(s => s.key === key ? { ...s, ...update } : s))
   }, [])
 
-  // 自动触发当前步骤的生成
-  useEffect(() => {
-    if (phase !== 'review') return
-    const step = getStep(activeStep)
-    if (step.status !== 'pending') return
-    generateStep(activeStep)
-  }, [phase, activeStep])
+  // 对话确认后写入本步 data + 进度
+  const handleConfirmExtracted = useCallback(
+    (stepKey: StepKey, data: Record<string, unknown>) => {
+      setSteps((prev) => {
+        const next = prev.map((s) =>
+          s.key === stepKey
+            ? { ...s, status: 'done' as StepStatus, data, error: null }
+            : s
+        )
+        const unique = next.filter((s) => s.status === 'done').map((s) => s.key)
+        const pid = resumeProgress?.projectId
+        if (pid) {
+          localStorage.setItem(`init-progress-${pid}`, JSON.stringify(unique))
+          fetch(`/api/projects/${pid}/init-progress`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ doneSteps: unique }),
+          }).catch(() => {})
+        }
+        return next
+      })
+    },
+    [resumeProgress?.projectId]
+  )
 
-  // 获取生成所需的上下文
+  // 可选快路径：仍走旧 generate API（一键整步）
+  const quickGenerate = async (stepKey: StepKey) => {
+    updateStep(stepKey, { status: 'loading', error: null })
+    onGeneratingChange?.(true)
+    try {
+      const def = STEP_DEFS.find(d => d.key === stepKey)!
+      const context = getRequestContext(stepKey)
+
+      if (stepKey === 'styleAnchor') {
+        const chars = getStep('characters')
+        const world = getStep('world')
+        const charList = extractArray((chars.data as any)?.characters)
+        const worldList = extractArray((world.data as any)?.worldSettings)
+        const res = await fetch('/api/ai/generate/style-anchor', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            description: `${idea.genre}小说《${projectTitle}》，${idea.highConcept}`,
+            genre: idea.genre,
+            hint: userPreferences?.tone,
+            characters: charList.map((c: any) => ({
+              name: c.name,
+              role: c.role,
+              description: c.description?.slice(0, 100),
+            })),
+            worldSettings: worldList.map((w: any) => ({
+              name: w.name,
+              type: w.type,
+              description: w.description?.slice(0, 100),
+            })),
+          }),
+        })
+        const json = await res.json()
+        if (json.success) {
+          updateStep(stepKey, {
+            status: 'done',
+            data: { content: json.data.content, wordCount: json.data.wordCount },
+          })
+          saveCurrentProgress(stepKey)
+        } else throw new Error(json.error?.message)
+        return
+      }
+
+      const res = await fetch(def.apiPath, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(context),
+      })
+      const json = await res.json()
+      if (json.success) {
+        updateStep(stepKey, { status: 'done', data: json.data })
+        saveCurrentProgress(stepKey)
+      } else {
+        throw new Error(json.error?.message || '生成失败')
+      }
+    } catch (e) {
+      updateStep(stepKey, { status: 'pending', error: (e as Error).message })
+    } finally {
+      onGeneratingChange?.(false)
+    }
+  }
+
   const getRequestContext = useCallback((stepKey: StepKey) => {
     const arch = getStep('architecture')
     const chars = getStep('characters')
@@ -115,7 +191,7 @@ export function OnboardingStep3Preview({
         }
       }
 
-      case 'foreshadowings':
+      case 'foreshadowings': {
         const chData = vol.data as any
         const fCharList = extractArray((chars.data as any)?.characters)
         const fWorldList = extractArray((world.data as any)?.worldSettings)
@@ -127,6 +203,7 @@ export function OnboardingStep3Preview({
           characters: fCharList.map((c: any) => ({ name: c.name })),
           worldSettings: fWorldList.map((w: any) => ({ name: w.name })),
         }
+      }
 
       case 'styleAnchor':
         return { idea, tone: userPreferences?.tone }
@@ -134,102 +211,23 @@ export function OnboardingStep3Preview({
       default:
         return base
     }
-  }, [idea, targetWords, pace, userPreferences, steps])
-
-  // 生成
-  const generateStep = async (stepKey: StepKey, prevData?: Record<string, unknown>, fb?: string) => {
-    updateStep(stepKey, { status: 'loading', error: null })
-    onGeneratingChange?.(true)
-
-    try {
-      const def = STEP_DEFS.find(d => d.key === stepKey)!
-      const context = getRequestContext(stepKey)
-
-      // style-anchor 用已有端点，传入已生成的上下文
-      if (stepKey === 'styleAnchor') {
-        const chars = getStep('characters')
-        const world = getStep('world')
-        const res = await fetch('/api/ai/generate/style-anchor', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            description: `${idea.genre}小说《${projectTitle}》，${idea.highConcept}`,
-            genre: idea.genre,
-            hint: userPreferences?.tone,
-            characters: (chars.data as any)?.characters?.map((c: any) => ({
-              name: c.name,
-              role: c.role,
-              description: c.description?.slice(0, 100),
-            })) || [],
-            worldSettings: (world.data as any)?.worldSettings?.map((w: any) => ({
-              name: w.name,
-              type: w.type,
-              description: w.description?.slice(0, 100),
-            })) || [],
-          }),
-        })
-        const json = await res.json()
-        if (json.success) {
-          updateStep(stepKey, { status: 'done', data: { content: json.data.content, wordCount: json.data.wordCount } })
-          saveCurrentProgress(stepKey)
-        } else throw new Error(json.error?.message)
-        return
-      }
-
-      // 构建请求
-      const body: Record<string, unknown> = { ...context }
-      if (prevData && fb) {
-        body.previousOutput = prevData
-        body.feedback = fb
-      }
-
-      const res = await fetch(def.apiPath, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-      const json = await res.json()
-      if (json.success) {
-        updateStep(stepKey, { status: 'done', data: json.data })
-        // 每完成一步就保存进度到 localStorage + 服务端（跨会话持久化）
-        saveCurrentProgress(stepKey)
-      } else {
-        throw new Error(json.error?.message || '生成失败')
-      }
-    } catch (e) {
-      updateStep(stepKey, { status: 'pending', error: (e as Error).message })
-    } finally {
-      onGeneratingChange?.(false)
-    }
-  }
+  }, [idea, targetWords, pace, userPreferences, getStep, pov])
 
   // 每步完成时保存进度
   const saveCurrentProgress = (completedKey: StepKey) => {
-    // 收集当前所有已完成步骤
     const done = steps
       .filter(s => s.status === 'done' || s.key === completedKey)
       .map(s => s.key)
-    // 去重后写入 localStorage
     const unique = [...new Set([...done, completedKey])]
     const pid = resumeProgress?.projectId
     if (pid) {
       localStorage.setItem(`init-progress-${pid}`, JSON.stringify(unique))
-      // 异步写入服务端（不阻塞流程）
       fetch(`/api/projects/${pid}/init-progress`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ doneSteps: unique }),
       }).catch(() => { /* 非关键路径 */ })
     }
-  }
-
-  // 反馈迭代
-  const handleFeedback = async () => {
-    if (!feedback.trim()) return
-    const step = getStep(activeStep)
-    const fb = feedback
-    setFeedback('')
-    await generateStep(activeStep, step.data || {}, fb)
   }
 
   // 跳过当前步骤
@@ -240,7 +238,6 @@ export function OnboardingStep3Preview({
 
   // 跳过后续全部
   const skipAll = async () => {
-    // 标记所有未完成步骤为跳过
     setSteps(prev => prev.map(s =>
       s.status === 'pending' || s.status === 'loading' ? { ...s, status: 'skipped' as StepStatus } : s
     ))
@@ -254,16 +251,26 @@ export function OnboardingStep3Preview({
     if (next) {
       setActiveStep(next.key)
     } else {
-      // 全部完成 → 写库
       finalize()
     }
   }
 
-  // 切换到已完成步骤
+  // 切换到已完成步骤（或当前可对话步）
   const switchToStep = (key: StepKey) => {
     const step = getStep(key)
-    if (step.status === 'done' || step.status === 'loading') {
-      setActiveStep(key)
+    if (step.status === 'done' || step.status === 'loading' || step.status === 'pending' || step.status === 'skipped') {
+      // 只允许访问：已完成、已跳过、或第一个未完成步及之前
+      const firstIncomplete = STEP_DEFS.find(d => {
+        const s = getStep(d.key)
+        return s.status === 'pending' || s.status === 'loading'
+      })?.key
+      const keyIdx = STEP_DEFS.findIndex(d => d.key === key)
+      const lockIdx = firstIncomplete
+        ? STEP_DEFS.findIndex(d => d.key === firstIncomplete)
+        : STEP_DEFS.length
+      if (keyIdx <= lockIdx || step.status === 'done' || step.status === 'skipped') {
+        setActiveStep(key)
+      }
     }
   }
 
@@ -287,7 +294,6 @@ export function OnboardingStep3Preview({
         results.styleAnchor = styleAnchorData.data
       }
 
-      // 续建模式：更新已有项目
       const existingProjectId = resumeProgress?.projectId
       const endpoint = existingProjectId
         ? `/api/projects/${existingProjectId}/init`
@@ -304,9 +310,7 @@ export function OnboardingStep3Preview({
       const json = await res.json()
       if (json.success) {
         const pid = existingProjectId || json.data.projectId
-        // 保存进度到 localStorage（即时回显） + 服务端（跨会话持久化）
         localStorage.setItem(`init-progress-${pid}`, JSON.stringify(completedSteps))
-        // 服务端保存不阻塞流程，失败也不影响已完成结果
         fetch(`/api/projects/${pid}/init-progress`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -326,45 +330,56 @@ export function OnboardingStep3Preview({
   // ======== 配置阶段 ========
   if (phase === 'config') {
     return (
-      <ConfigPhase
-        projectTitle={projectTitle}
-        setProjectTitle={setProjectTitle}
-        targetWords={targetWords}
-        setTargetWords={setTargetWords}
-        pace={pace}
-        setPace={setPace}
-        pov={pov}
-        setPov={setPov}
-        userPreferences={userPreferences}
-        onBack={onBack}
-        onSkipAll={skipAll}
-        onStart={() => setPhase('review')}
-      />
+      <div className="h-full min-h-0 overflow-hidden">
+        <ConfigPhase
+          projectTitle={projectTitle}
+          setProjectTitle={setProjectTitle}
+          targetWords={targetWords}
+          setTargetWords={setTargetWords}
+          pace={pace}
+          setPace={setPace}
+          pov={pov}
+          setPov={setPov}
+          userPreferences={userPreferences}
+          onBack={onBack}
+          onSkipAll={skipAll}
+          onStart={() => setPhase('review')}
+        />
+      </div>
     )
   }
 
   // ======== 完成阶段 ========
   if (phase === 'complete') {
-    return <CompletePhase steps={steps} />
+    return (
+      <div className="h-full min-h-0 overflow-hidden">
+        <CompletePhase steps={steps} />
+      </div>
+    )
   }
 
-  // ======== 审核阶段 ========
+  // ======== 审核阶段（对话式） ========
   return (
-    <ReviewPhase
-      idea={idea}
-      steps={steps}
-      activeStep={activeStep}
-      feedback={feedback}
-      setFeedback={setFeedback}
-      feedbackRef={feedbackRef}
-      getStep={getStep}
-      switchToStep={switchToStep}
-      generateStep={generateStep}
-      updateStep={updateStep}
-      handleFeedback={handleFeedback}
-      skipCurrent={skipCurrent}
-      skipAll={skipAll}
-      goNext={goNext}
-    />
+    <div className="h-full min-h-0 overflow-hidden">
+      <ReviewPhase
+        idea={idea}
+        projectTitle={projectTitle}
+        targetWords={targetWords}
+        pace={pace}
+        pov={pov}
+        userPreferences={userPreferences}
+        steps={steps}
+        activeStep={activeStep}
+        getStep={getStep}
+        switchToStep={switchToStep}
+        updateStep={updateStep}
+        skipCurrent={skipCurrent}
+        skipAll={skipAll}
+        goNext={goNext}
+        onConfirmExtracted={handleConfirmExtracted}
+        onGeneratingChange={onGeneratingChange}
+        onQuickGenerate={quickGenerate}
+      />
+    </div>
   )
 }
