@@ -7,19 +7,31 @@
  */
 
 import type { AgentCatalogItem, AgentDefinition, ResolvedPromptSlot } from './types'
-import { getAgentDefinition, listAgentDefinitions } from './definitions/catalog'
+import {
+  getAgentDefinition,
+  listAgentDefinitions,
+  resolveAgentRef,
+  LEGACY_AGENT_MAP,
+} from './definitions/catalog'
 import { resolveAgentPrompts } from './prompt-store'
 
 /**
  * 获取 Agent 定义；不存在则抛错
+ * 支持旧 agentId（自动映射到合并后的 id）
  * @throws 未知 Agent
  */
 export function requireAgentDefinition(agentId: string): AgentDefinition {
-  const def = getAgentDefinition(agentId)
+  const ref = resolveAgentRef(agentId)
+  const def = getAgentDefinition(ref.agentId)
   if (!def) {
     throw new Error(`未知 Agent: ${agentId}`)
   }
   return def
+}
+
+/** 解析 agentId（含 legacy）为实际 id + 默认 slot */
+export function resolveAgentId(agentId: string) {
+  return resolveAgentRef(agentId)
 }
 
 /**
@@ -60,4 +72,4 @@ function toCatalogItem(def: AgentDefinition, promptSlots: ResolvedPromptSlot[]):
   }
 }
 
-export { getAgentDefinition, listAgentDefinitions }
+export { getAgentDefinition, listAgentDefinitions, resolveAgentRef, LEGACY_AGENT_MAP }

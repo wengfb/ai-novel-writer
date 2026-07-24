@@ -19,7 +19,7 @@ export async function generateChapterSummary(
 
   try {
     const result = await runAgent({
-      agentId: 'chapter-summary',
+      agentId: 'summary',
       temperature: 0.3,
       variables: {
         chapterTitle: chapterTitle || '未知章节',

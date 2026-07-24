@@ -26,8 +26,10 @@ export interface UnifiedChatProps {
   /** 绑定项目（Studio 写库工具需要） */
   projectId?: string
   chapterId?: string
-  /** 默认 studio-chat；Onboarding 可换 onboarding-* */
+  /** 默认 studio-chat；Onboarding 用 onboarding + systemSlot */
   agentId?: string
+  /** 多 slot agent 的 system 槽位，如 system.architecture */
+  systemSlot?: string
   /** 会话 id 后缀，避免多实例串会话 */
   sessionKey?: string
   api?: string
@@ -55,6 +57,7 @@ export function UnifiedChat({
   projectId,
   chapterId,
   agentId = 'studio-chat',
+  systemSlot,
   sessionKey,
   api = '/api/ai/chat',
   showSettings = true,
@@ -74,16 +77,21 @@ export function UnifiedChat({
           projectId,
           chapterId,
           agentId,
+          systemSlot,
           contextAppend,
         },
       }),
-    [api, projectId, chapterId, agentId, contextAppend]
+    [api, projectId, chapterId, agentId, systemSlot, contextAppend]
   )
 
   const runtime = useChatRuntime({
-    id: [projectId ?? 'global', chapterId ?? 'none', agentId, sessionKey ?? 'default'].join(
-      ':'
-    ),
+    id: [
+      projectId ?? 'global',
+      chapterId ?? 'none',
+      agentId,
+      systemSlot ?? 'default',
+      sessionKey ?? 'default',
+    ].join(':'),
     transport,
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
   })

@@ -5,12 +5,13 @@ import { prisma } from '@/lib/db/prisma'
 import { apiSuccess, ApiErrors, withErrorHandler } from '@/lib/api/response'
 import { validateRequest } from '@/lib/api/validators'
 import { z } from 'zod'
-import { runAgent } from '@/lib/ai/agents'
+import { runAgentObject } from '@/lib/ai/agents'
+import { GeneratedWorldElementCardSchema } from '@/lib/ai/agents/schemas'
 
 /**
  * AI 生成世界观元素 API
  * POST /api/ai/generate/world-element
- * 使用 world-builder Agent
+ * 使用 world agent + 结构化输出
  */
 
 const GenerateWorldElementSchema = z.object({
@@ -20,15 +21,6 @@ const GenerateWorldElementSchema = z.object({
   requirements: z.string().optional(),
   model: z.string().optional(),
 })
-
-function extractJsonObject(output: string): any {
-  const jsonMatch =
-    output.match(/```json\n([\s\S]*?)\n```/) || output.match(/\{[\s\S]*\}/)
-  if (jsonMatch) {
-    return JSON.parse(jsonMatch[1] || jsonMatch[0])
-  }
-  return JSON.parse(output)
-}
 
 export async function POST(request: NextRequest) {
   return withErrorHandler(async () => {
@@ -70,11 +62,13 @@ export async function POST(request: NextRequest) {
     const startTime = Date.now()
     let agentResult
     try {
-      agentResult = await runAgent({
-        agentId: 'world-builder',
+      agentResult = await runAgentObject({
+        agentId: 'world',
         model,
         temperature: 0.75,
         contextAppend: systemContext,
+        schema: GeneratedWorldElementCardSchema,
+        schemaName: 'WorldElementCard',
         variables: {
           elementType,
           storyContext: storyContextStr,
@@ -83,38 +77,21 @@ export async function POST(request: NextRequest) {
         },
       })
     } catch (error) {
-      console.error('world-builder failed:', error)
+      console.error('world agent failed:', error)
       return ApiErrors.aiGenerationFailed('世界观元素生成失败')
     }
     const duration = Date.now() - startTime
-
-    if (!agentResult.text?.trim()) {
-      return ApiErrors.aiGenerationFailed('世界观元素生成失败')
-    }
-
-    let elementData: any
-    try {
-      elementData = extractJsonObject(agentResult.text)
-    } catch (error) {
-      console.error('Failed to parse world element JSON:', error)
-      return ApiErrors.aiGenerationFailed('AI 返回格式错误，请重试')
-    }
+    const elementData = agentResult.object
 
     const worldElement = await prisma.worldElement.create({
       data: {
         projectId,
         type: elementType as any,
         name: elementData.name || '未命名',
-        description: elementData.description || null,
+        description: elementData.description || '',
         attributes: elementData.attributes
-          ? JSON.stringify(
-              elementData.rules
-                ? { ...elementData.attributes, rules: elementData.rules }
-                : elementData.attributes
-            )
-          : elementData.rules
-            ? JSON.stringify({ rules: elementData.rules })
-            : null,
+          ? JSON.stringify(elementData.attributes)
+          : null,
       },
     })
 

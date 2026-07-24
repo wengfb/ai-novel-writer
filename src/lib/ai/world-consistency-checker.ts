@@ -1,5 +1,6 @@
 import type { Chapter, Character, WorldElement } from '@/types'
-import { runAgent } from '@/lib/ai/agents'
+import { runAgentObject } from '@/lib/ai/agents'
+import { ConsistencyReportSchema } from '@/lib/ai/agents/schemas'
 
 /**
  * 世界观冲突类型
@@ -19,7 +20,7 @@ export interface WorldConflict {
 
 /**
  * 世界观一致性检查器
- * 规则扫描 + consistency-checker Agent（可选）深度审查
+ * 规则扫描 + consistency Agent（可选）深度审查
  */
 export class WorldConsistencyChecker {
   /**
@@ -56,7 +57,7 @@ export class WorldConsistencyChecker {
         const aiConflicts = await this.checkWithAgent(chapter, worldElements, options?.characters, options?.model)
         conflicts.push(...aiConflicts)
       } catch (error) {
-        console.warn('consistency-checker Agent 调用失败，仅保留规则结果:', error)
+        console.warn('consistency Agent 调用失败，仅保留规则结果:', error)
       }
     }
 
@@ -64,7 +65,7 @@ export class WorldConsistencyChecker {
   }
 
   /**
-   * 使用 consistency-checker Agent 做角色/内容一致性审查
+   * 使用 consistency Agent 做角色/内容一致性审查
    */
   private async checkWithAgent(
     chapter: Chapter,
@@ -91,58 +92,52 @@ export class WorldConsistencyChecker {
       .filter(Boolean)
       .join('\n')
 
-    const result = await runAgent({
-      agentId: 'consistency-checker',
+    const result = await runAgentObject({
+      agentId: 'consistency',
       model,
       temperature: 0.3,
+      schema: ConsistencyReportSchema,
+      schemaName: 'ConsistencyReport',
       variables: {
         characterSettings,
         content: chapter.content.slice(0, 12000),
       },
     })
 
-    return this.parseAgentReport(result.text, chapter)
+    return this.mapReportToConflicts(result.object, chapter)
   }
 
-  /** 解析 Agent 返回的 JSON 报告为 WorldConflict[] */
-  private parseAgentReport(output: string, chapter: Chapter): WorldConflict[] {
-    try {
-      const jsonMatch =
-        output.match(/```json\s*([\s\S]*?)\s*```/) || output.match(/\{[\s\S]*\}/)
-      if (!jsonMatch) return []
-
-      const parsed = JSON.parse(jsonMatch[1] || jsonMatch[0]) as {
-        hasContradictions?: boolean
-        issues?: string[]
-        suggestions?: string[]
-        personalityConsistency?: number
-        dialogueConsistency?: number
-      }
-
-      if (!parsed.hasContradictions && (!parsed.issues || parsed.issues.length === 0)) {
-        return []
-      }
-
-      const issues = parsed.issues || []
-      const suggestions = parsed.suggestions || []
-
-      return issues.map((issue, index) => ({
-        type: 'inconsistency' as const,
-        severity:
-          (parsed.personalityConsistency ?? 10) < 5 ||
-          (parsed.dialogueConsistency ?? 10) < 5
-            ? ('high' as const)
-            : ('medium' as const),
-        elementId: `ai-${chapter.id}-${index}`,
-        elementName: 'AI 一致性审查',
-        chapterId: chapter.id,
-        chapterNumber: chapter.chapterNumber,
-        description: issue,
-        suggestion: suggestions[index],
-      }))
-    } catch {
+  private mapReportToConflicts(
+    parsed: {
+      hasContradictions?: boolean
+      issues?: string[]
+      suggestions?: string[]
+      personalityConsistency?: number
+      dialogueConsistency?: number
+    },
+    chapter: Chapter
+  ): WorldConflict[] {
+    if (!parsed.hasContradictions && (!parsed.issues || parsed.issues.length === 0)) {
       return []
     }
+
+    const issues = parsed.issues || []
+    const suggestions = parsed.suggestions || []
+
+    return issues.map((issue, index) => ({
+      type: 'inconsistency' as const,
+      severity:
+        (parsed.personalityConsistency ?? 10) < 5 ||
+        (parsed.dialogueConsistency ?? 10) < 5
+          ? ('high' as const)
+          : ('medium' as const),
+      elementId: `ai-${chapter.id}-${index}`,
+      elementName: 'AI 一致性审查',
+      chapterId: chapter.id,
+      chapterNumber: chapter.chapterNumber,
+      description: issue,
+      suggestion: suggestions[index],
+    }))
   }
 
   /**

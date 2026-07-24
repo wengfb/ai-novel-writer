@@ -2,40 +2,35 @@
 
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { useOutlineStore } from '@/lib/store/outline-store'
 import { useOutlines } from '@/hooks/use-outlines'
 import { toast } from 'sonner'
 import type { Outline } from '@/lib/store/outline-store'
-import { createDefaultOutlineForm, type OutlineFormData } from './outline-dialog/types'
-import { OutlineBasicFields } from './outline-dialog/basic-fields'
-import { OutlineIntentFields } from './outline-dialog/intent-fields'
-import { OutlinePlanningFields } from './outline-dialog/planning-fields'
+import { createDefaultOutlineForm, type OutlineFormData } from './outline-form/types'
+import { OutlineBasicFields } from './outline-form/basic-fields'
+import { OutlineIntentFields } from './outline-form/intent-fields'
+import { OutlinePlanningFields } from './outline-form/planning-fields'
+import { LayoutTemplate, Loader2 } from 'lucide-react'
+import { DetailSection, DetailWorkspace } from '@/components/studio/detail-workspace'
 
-interface OutlineDialogProps {
+interface OutlineEditPanelProps {
   projectId: string
-  open: boolean
-  onOpenChange: (open: boolean) => void
   editingOutline?: Outline | null
   parentId?: string | null
   defaultType?: 'volume' | 'chapter' | 'scene'
+  onClose?: () => void
+  onSaved?: () => void
 }
 
-export function OutlineDialog({
+/** 大纲节点创建/编辑 — 与角色/世界观统一的中间区工作页 */
+export function OutlineEditPanel({
   projectId,
-  open,
-  onOpenChange,
   editingOutline,
   parentId,
   defaultType = 'chapter',
-}: OutlineDialogProps) {
+  onClose,
+  onSaved,
+}: OutlineEditPanelProps) {
   const { createOutline, updateOutline, deleteOutline } = useOutlineStore()
   const { flatOutlines } = useOutlines(projectId)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
@@ -46,9 +41,9 @@ export function OutlineDialog({
     createDefaultOutlineForm({ defaultType, parentId })
   )
 
-  const resetForm = () => {
+  const resetForm = React.useCallback(() => {
     setFormData(createDefaultOutlineForm({ defaultType, parentId }))
-  }
+  }, [defaultType, parentId])
 
   React.useEffect(() => {
     if (editingOutline) {
@@ -70,7 +65,7 @@ export function OutlineDialog({
     } else {
       resetForm()
     }
-  }, [editingOutline, open, defaultType, parentId])
+  }, [editingOutline, resetForm])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -120,7 +115,8 @@ export function OutlineDialog({
       }
 
       resetForm()
-      onOpenChange(false)
+      onSaved?.()
+      onClose?.()
     } catch {
       toast.error(isEditing ? '更新大纲失败' : '创建大纲失败')
     } finally {
@@ -135,7 +131,8 @@ export function OutlineDialog({
     try {
       await deleteOutline(editingOutline.id)
       toast.success('大纲删除成功')
-      onOpenChange(false)
+      onSaved?.()
+      onClose?.()
     } catch {
       toast.error('删除大纲失败')
     } finally {
@@ -163,55 +160,73 @@ export function OutlineDialog({
   }
 
   const availableParents = getAvailableParents()
+  const typeLabel =
+    formData.type === 'volume' ? '卷' : formData.type === 'scene' ? '场景' : '章'
+
+  const pageTitle = isEditing
+    ? formData.title.trim() || editingOutline?.title || '大纲详情'
+    : '新建大纲节点'
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{isEditing ? '编辑大纲' : '创建大纲'}</DialogTitle>
-          <DialogDescription>
-            {isEditing ? '修改大纲节点信息' : '添加新的大纲节点到你的小说项目中'}
-          </DialogDescription>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <OutlineBasicFields
-            formData={formData}
-            setFormData={setFormData}
-            availableParents={availableParents}
-          />
-          <OutlineIntentFields formData={formData} setFormData={setFormData} />
-          <OutlinePlanningFields formData={formData} setFormData={setFormData} />
-
-          <DialogFooter className="flex justify-between">
-            <div>
-              {isEditing && (
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={handleDelete}
-                  disabled={isSubmitting || isDeleting}
-                >
-                  {isDeleting ? '删除中...' : '删除'}
-                </Button>
-              )}
-            </div>
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isSubmitting}
-              >
+    <form onSubmit={handleSubmit} className="flex h-full min-h-0 flex-col">
+      <DetailWorkspace
+        title={pageTitle}
+        description={
+          isEditing
+            ? '调整节点结构、叙事意图与规划参数，保存后左侧树同步更新'
+            : '创建卷 / 章 / 场景节点，并挂到合适的父级下'
+        }
+        icon={LayoutTemplate}
+        badges={[typeLabel]}
+        onBack={onClose}
+        dangerAction={
+          isEditing ? (
+            <Button
+              type="button"
+              variant="outline"
+              className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+              onClick={handleDelete}
+              disabled={isSubmitting || isDeleting}
+            >
+              {isDeleting ? '删除中...' : '删除'}
+            </Button>
+          ) : null
+        }
+        actions={
+          <>
+            {onClose && (
+              <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
                 取消
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? '保存中...' : isEditing ? '保存修改' : '创建大纲'}
-              </Button>
-            </div>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+            )}
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isSubmitting ? '保存中...' : isEditing ? '保存' : '创建'}
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-8">
+          <DetailSection title="节点结构" description="类型、排序、标题、父级与目标字数">
+            <OutlineBasicFields
+              formData={formData}
+              setFormData={setFormData}
+              availableParents={availableParents}
+            />
+          </DetailSection>
+
+          <DetailSection
+            title="叙事意图"
+            description="作为 AI 生成章节时的 prompt 约束"
+          >
+            <OutlineIntentFields formData={formData} setFormData={setFormData} />
+          </DetailSection>
+
+          <DetailSection title="规划参数" description="规划模式、弹性范围与置信度">
+            <OutlinePlanningFields formData={formData} setFormData={setFormData} />
+          </DetailSection>
+        </div>
+      </DetailWorkspace>
+    </form>
   )
 }

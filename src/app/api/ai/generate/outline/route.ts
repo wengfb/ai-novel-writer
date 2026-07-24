@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     const totalWords = data.targetWords * data.chapterCount
-    const prompt = await renderAgentSlot('outline-architect', 'user', {
+    const prompt = await renderAgentSlot('outline', 'user.generate', {
       genre: data.genre,
       coreIdea: data.coreIdea,
       style: data.style || '标准叙事',

@@ -37,7 +37,8 @@ export async function POST(request: NextRequest) {
 5. 直接输出样章正文，不要加任何说明、标题或标签`
 
     const result = await runAgent({
-      agentId: 'onboarding-style-anchor',
+      agentId: 'onboarding',
+      systemSlot: 'system.style-anchor',
       temperature: 0.8,
       maxTokens: 4000,
       variables: {

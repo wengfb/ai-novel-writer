@@ -1,6 +1,5 @@
-'use client'
-
 import { useProjects, useCurrentProject } from '@/hooks/use-projects'
+import { useUIStore } from '@/lib/store/ui-store'
 import { ProjectCard } from './project-card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -14,6 +13,7 @@ interface ProjectListProps {
 export function ProjectList({ onCreateProject }: ProjectListProps) {
   const { projects, isLoading, error } = useProjects()
   const { setCurrentProject } = useCurrentProject()
+  const { openEditor } = useUIStore()
 
   if (isLoading) {
     return <ProjectListSkeleton />
@@ -48,7 +48,10 @@ export function ProjectList({ onCreateProject }: ProjectListProps) {
         <ProjectCard
           key={project.id}
           project={project}
-          onClick={() => setCurrentProject(project)}
+          onClick={() => {
+            setCurrentProject(project)
+            openEditor()
+          }}
         />
       ))}
     </div>

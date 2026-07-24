@@ -29,6 +29,7 @@ import { Check, ChevronDown, Plus, Loader2, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useProjects } from '@/hooks/use-projects'
 import { useProjectStore } from '@/lib/store/project-store'
+import { useUIStore } from '@/lib/store/ui-store'
 import { toast } from 'sonner'
 
 interface ProjectSelectorProps {
@@ -41,11 +42,13 @@ export function ProjectSelector({ className, onNewProject }: ProjectSelectorProp
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null)
   const { projects, isLoading } = useProjects()
   const { currentProject, setCurrentProject, deleteProject } = useProjectStore()
+  const { setMainView, openEditor } = useUIStore()
 
   const handleSelectProject = async (projectId: string) => {
     const project = projects.find(p => p.id === projectId)
     if (project) {
       setCurrentProject(project)
+      openEditor()
       setOpen(false)
     }
   }

@@ -2,9 +2,9 @@
  * Agent 框架类型定义
  *
  * 设计目标：
- * 1. 每个 AI 功能点 = 一个 Agent（聊天 UI 与界面按钮共用同一 agentId）
- * 2. 提示词按 slot 拆分，可在「设置 → Agent 提示词」查看/编辑
- * 3. 运行时由 registry + prompt-store 解析默认值与用户覆盖
+ * 1. 一个领域能力 = 一个 Agent；领域内多模板 = 多 Slot
+ * 2. 结构化任务走 runAgentObject（Zod schema）；散文走 runAgent / streamAgent
+ * 3. 提示词可在「设置 → Agent 提示词」查看/编辑（DB 覆盖）
  */
 
 /** 提示词槽位中可用变量的元信息（供设置页展示） */
@@ -22,7 +22,7 @@ export interface PromptVariableMeta {
  * 用户覆盖写入 Prisma AgentPrompt，不改这里
  */
 export interface PromptSlotDefinition {
-  /** 槽位键，如 system / user */
+  /** 槽位键，如 system / user / system.plan / user.continue */
   key: string
   /** UI 展示名 */
   name: string
@@ -67,7 +67,7 @@ export type AgentCategory =
  * @see definitions/catalog.ts
  */
 export interface AgentDefinition {
-  /** 唯一 ID，如 studio-chat、onboarding-architecture */
+  /** 唯一 ID，如 studio-chat、chapter、onboarding */
   id: string
   /** 展示名 */
   name: string
@@ -77,9 +77,8 @@ export interface AgentDefinition {
   category: AgentCategory
   /**
    * 提示词槽位
-   * - system：系统指令（多数 agent 至少一个）
-   * - user：用户消息模板（任务型 agent）
-   * - 其它：多步专用（如 planner / refine）
+   * - system / system.*：系统指令
+   * - user / user.*：用户消息模板（任务型）
    */
   promptSlots: PromptSlotDefinition[]
   /** 默认采样温度 */
@@ -118,6 +117,10 @@ export interface AgentRunRequest {
    * 未传则用 user 槽位 + variables 渲染
    */
   userMessage?: string
+  /** system 槽位键，默认 system；多模板 agent 如 system.plan */
+  systemSlot?: string
+  /** user 槽位键，默认 user；多模板 agent 如 user.continue */
+  userSlot?: string
   /** 附加系统上下文（如项目 context），拼在 system 之后 */
   contextAppend?: string
   temperature?: number
@@ -125,7 +128,7 @@ export interface AgentRunRequest {
   maxTokens?: number
 }
 
-/** 任务型 Agent 运行结果 */
+/** 任务型 Agent 运行结果（散文） */
 export interface AgentRunResult {
   agentId: string
   /** 模型输出正文 */
@@ -144,4 +147,12 @@ export interface AgentRunResult {
     totalTokens: number
   }
   cost?: number
+}
+
+/** 结构化任务运行结果 */
+export interface AgentObjectResult<T> extends Omit<AgentRunResult, 'text'> {
+  /** 已通过 Zod 校验的对象 */
+  object: T
+  /** 原始 JSON 字符串（调试 / 落库） */
+  text: string
 }

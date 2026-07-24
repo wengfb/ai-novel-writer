@@ -14,7 +14,7 @@ import {
   AlertDialogContent, AlertDialogDescription as AlertDesc,
   AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Lightbulb, RefreshCw, AlertCircle } from 'lucide-react'
+import { Lightbulb, RefreshCw, AlertCircle, ArrowLeft } from 'lucide-react'
 import { useIdeas } from '@/hooks/use-ideas'
 import { IdeaDetail } from '@/components/ideas/idea-detail'
 import { IdeaGeneratePanel } from '@/components/ideas/idea-generate-panel'
@@ -23,10 +23,15 @@ import { filterIdeas } from './idea-center/constants'
 import { IdeaGridCard } from './idea-center/idea-grid-card'
 import { IdeaCenterToolbar } from './idea-center/toolbar'
 
+interface IdeaCenterPageProps {
+  onClose?: () => void
+  onCreateProject?: (idea: import('@/types').StoryIdeaCard, ideaId: string) => void
+}
+
 /**
- * 创意中心页面 — 卡片网格 + 模态框详情
+ * 创意中心页面 — 中间区全页：卡片网格 + 详情弹层
  */
-export function IdeaCenterPage() {
+export function IdeaCenterPage({ onClose, onCreateProject }: IdeaCenterPageProps) {
   const {
     ideas, isLoading, error,
     currentIdea, currentIdeaComments,
@@ -76,11 +81,16 @@ export function IdeaCenterPage() {
       sublimation: idea.sublimation,
       openingHook: idea.openingHook,
     }
+    if (onCreateProject) {
+      onCreateProject(ideaCard, idea.id)
+      handleDetailOpenChange(false)
+      return
+    }
     sessionStorage.setItem('onboardingSelectedIdea', JSON.stringify(ideaCard))
     sessionStorage.setItem('onboardingFromIdeaCenter', 'true')
     sessionStorage.setItem('onboardingIdeaId', idea.id)
     window.location.href = '/'
-  }, [])
+  }, [onCreateProject])
 
   const handleDelete = async (id: string) => {
     await deleteIdea(id)
@@ -89,7 +99,22 @@ export function IdeaCenterPage() {
 
   return (
     <>
-      <div className="flex h-full flex-col overflow-hidden">
+      <div className="flex h-full flex-col overflow-hidden bg-background">
+        <div className="flex shrink-0 items-center gap-2 border-b px-4 py-2">
+          {onClose && (
+            <Button variant="ghost" size="sm" className="shrink-0 gap-1.5" onClick={onClose}>
+              <ArrowLeft className="h-4 w-4" />
+              返回
+            </Button>
+          )}
+          <Lightbulb className="h-5 w-5 shrink-0 text-yellow-500" />
+          <span className="font-semibold">创意中心</span>
+          {hasExamples && (
+            <span className="truncate text-xs text-muted-foreground">
+              · AI 已学习 {positiveExampleCount + negativeExampleCount} 个偏好
+            </span>
+          )}
+        </div>
         <IdeaCenterToolbar
           search={search}
           setSearch={setSearch}

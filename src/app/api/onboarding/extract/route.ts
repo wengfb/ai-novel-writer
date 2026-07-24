@@ -1,6 +1,7 @@
 /**
  * POST /api/onboarding/extract
- * 将当前步骤对话内容整理为可落库的结构化结果（JSON / 样章正文）
+ * 将当前步骤对话内容整理为可落库的结构化结果
+ * JSON 步骤走 runAgentObject + 共享 schema；风格锚点走散文 runAgent
  */
 
 import { NextRequest } from 'next/server'
@@ -8,10 +9,18 @@ import { z } from 'zod'
 import { apiSuccess, withErrorHandler, ApiErrors } from '@/lib/api/response'
 import { parseJsonBody } from '@/lib/api/validators'
 import { StoryIdeaCardSchema } from '@/lib/api/schemas'
-import { runAgent } from '@/lib/ai/agents/runner'
+import { runAgent, runAgentObject } from '@/lib/ai/agents/runner'
+import {
+  OnboardingArchitectureSchema,
+  OnboardingCharactersSchema,
+  OnboardingWorldSchema,
+  OnboardingChaptersSchema,
+  OnboardingForeshadowingsSchema,
+} from '@/lib/ai/agents/schemas'
 import { calculateChapterCount } from '@/lib/ai/onboarding/normalize'
 import {
   STEP_AGENT_ID,
+  STEP_SYSTEM_SLOT,
   buildExtractTaskBody,
   getExtractSchemaInstruction,
 } from '@/lib/ai/onboarding/bootstrap-chat'
@@ -36,7 +45,6 @@ const RequestSchema = z.object({
   audience: z.string().optional(),
   tone: z.string().optional(),
   pov: z.string().optional(),
-  /** 已确认的前置步骤数据（extract 需要完整 schema 时用） */
   prior: z
     .object({
       architecture: z.any().optional(),
@@ -50,26 +58,16 @@ const RequestSchema = z.object({
   model: z.string().optional(),
 })
 
-function extractJSON(output: string): unknown {
-  const trimmed = output.trim()
-  try {
-    return JSON.parse(trimmed)
-  } catch {
-    // continue
+function extractArr(v: unknown): unknown[] {
+  if (Array.isArray(v)) return v
+  if (v && typeof v === 'object') {
+    const o = v as Record<string, unknown>
+    if (Array.isArray(o.characters)) return o.characters
+    if (Array.isArray(o.worldSettings)) return o.worldSettings
+    if (Array.isArray(o.chapters)) return o.chapters
+    if (Array.isArray(o.foreshadowings)) return o.foreshadowings
   }
-  const codeBlockMatch = trimmed.match(/```json\s*([\s\S]*?)\s*```/)
-  if (codeBlockMatch) {
-    try {
-      return JSON.parse(codeBlockMatch[1])
-    } catch {
-      // continue
-    }
-  }
-  const bracketMatch = trimmed.match(/\{[\s\S]*\}/) || trimmed.match(/\[[\s\S]*\]/)
-  if (bracketMatch) {
-    return JSON.parse(bracketMatch[0])
-  }
-  throw new Error('无法从 AI 输出中提取有效 JSON')
+  return []
 }
 
 function normalizeStepPayload(stepKey: StepKey, raw: unknown): Record<string, unknown> {
@@ -88,14 +86,13 @@ function normalizeStepPayload(stepKey: StepKey, raw: unknown): Record<string, un
       return { architecture }
     }
     case 'characters': {
-      const characters = (data as any).characters?.characters
-        ? (data as any).characters
-        : { characters: Array.isArray((data as any).characters) ? (data as any).characters : (data as any).characters || [] }
-      // 若直接是数组
       if (Array.isArray(data)) return { characters: { characters: data } }
       if (Array.isArray((data as any).characters)) {
         return { characters: { characters: (data as any).characters } }
       }
+      const characters = (data as any).characters?.characters
+        ? (data as any).characters
+        : { characters: (data as any).characters || [] }
       return { characters }
     }
     case 'world': {
@@ -111,7 +108,6 @@ function normalizeStepPayload(stepKey: StepKey, raw: unknown): Record<string, un
       }
     }
     case 'volume': {
-      // 前端/finalize 期望 chapters 字段
       const outline = (data as any).chapters?.chapters ? (data as any).chapters : data
       return outline as Record<string, unknown>
     }
@@ -127,12 +123,30 @@ function normalizeStepPayload(stepKey: StepKey, raw: unknown): Record<string, un
   }
 }
 
+function schemaForStep(stepKey: StepKey): z.ZodType<unknown> | null {
+  switch (stepKey) {
+    case 'architecture':
+      return OnboardingArchitectureSchema
+    case 'characters':
+      return OnboardingCharactersSchema
+    case 'world':
+      return OnboardingWorldSchema
+    case 'volume':
+      return OnboardingChaptersSchema
+    case 'foreshadowings':
+      return OnboardingForeshadowingsSchema
+    default:
+      return null
+  }
+}
+
 export async function POST(request: NextRequest) {
   return withErrorHandler(async () => {
     const body = await parseJsonBody<unknown>(request)
     const data = RequestSchema.parse(body)
     const stepKey = data.stepKey as StepKey
     const agentId = STEP_AGENT_ID[stepKey]
+    const systemSlot = STEP_SYSTEM_SLOT[stepKey]
     const calc = calculateChapterCount(data.targetWords, data.pace)
 
     const schemaHint = getExtractSchemaInstruction(stepKey)
@@ -161,11 +175,11 @@ ${data.conversationText.slice(0, 24000)}
 
 【参考任务】
 ${taskRef.slice(0, 4000)}`
-      : `你是结构化提取助手。请根据【对话记录】中已达成一致的内容，输出**一份**符合 schema 的纯 JSON（不要 markdown 代码块、不要解释）。
+      : `请根据【对话记录】中已达成一致的内容，输出一份符合 schema 的结构化结果。
 
 若对话未覆盖某些字段，请基于上下文合理补全，保持与对话不矛盾。
 
-【Schema】
+【Schema 说明】
 ${schemaHint}
 
 【对话记录】
@@ -174,44 +188,50 @@ ${data.conversationText.slice(0, 24000)}
 【完整字段参考任务（可忽略数量上限，以对话为准做合理精简）】
 ${taskRef.slice(0, 6000)}`
 
-    const result = await runAgent({
-      agentId,
-      model: data.model,
-      temperature: isStyle ? 0.75 : 0.3,
-      maxTokens: isStyle ? 4000 : 8000,
-      userMessage,
-      contextAppend: isStyle
-        ? '当前任务是输出可直接作为风格锚点的样章正文。'
-        : '当前任务是结构化提取：只输出 JSON，不要对话。',
-    })
-
-    if (!result.text?.trim()) {
-      return ApiErrors.badRequest('提取结果为空，请先多聊几轮再确认')
-    }
-
     let payload: Record<string, unknown>
+
     if (isStyle) {
+      const result = await runAgent({
+        agentId,
+        systemSlot,
+        model: data.model,
+        temperature: 0.75,
+        maxTokens: 4000,
+        userMessage,
+        contextAppend: '当前任务是输出可直接作为风格锚点的样章正文。',
+      })
+      if (!result.text?.trim()) {
+        return ApiErrors.badRequest('提取结果为空，请先多聊几轮再确认')
+      }
       payload = normalizeStepPayload(stepKey, result.text)
     } else {
+      const schema = schemaForStep(stepKey)
+      if (!schema) {
+        return ApiErrors.badRequest('未知步骤')
+      }
       try {
-        const parsed = extractJSON(result.text)
-        payload = normalizeStepPayload(stepKey, parsed)
-      } catch {
-        // 再试一次更严
-        const retry = await runAgent({
+        const result = await runAgentObject({
           agentId,
+          systemSlot,
           model: data.model,
-          temperature: 0.1,
-          userMessage: `${userMessage}
-
-【重要】上一次输出无法解析为 JSON。请只输出纯 JSON 对象，不要任何其它文字。`,
+          temperature: 0.3,
+          maxTokens: 8000,
+          userMessage,
+          contextAppend: '当前任务是结构化提取：严格按 schema 输出对象。',
+          schema: schema as any,
+          schemaName: `OnboardingExtract_${stepKey}`,
         })
-        const parsed = extractJSON(retry.text)
-        payload = normalizeStepPayload(stepKey, parsed)
+        payload = normalizeStepPayload(stepKey, result.object)
+      } catch (error) {
+        console.error('extract structured failed:', error)
+        return ApiErrors.badRequest(
+          error instanceof Error
+            ? `结构化提取失败：${error.message}`
+            : '结构化提取失败，请再聊几轮后重试'
+        )
       }
     }
 
-    // architecture 附带字数计算
     if (stepKey === 'architecture') {
       payload.chapterCalculation = calc
     }
@@ -219,20 +239,6 @@ ${taskRef.slice(0, 6000)}`
     return apiSuccess({
       stepKey,
       data: payload,
-      provider: result.provider,
-      model: result.modelUsed,
-      duration: result.duration,
     })
   })
-}
-
-function extractArr(data: unknown): any[] {
-  if (!data) return []
-  if (Array.isArray(data)) return data
-  if (typeof data === 'object') {
-    for (const v of Object.values(data as object)) {
-      if (Array.isArray(v)) return v
-    }
-  }
-  return []
 }

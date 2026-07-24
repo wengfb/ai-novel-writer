@@ -195,7 +195,7 @@ function createRefineChapterStep(onProgress?: ProgressSink) {
         outlineIntent: inputData.outlineIntent as OutlineIntent,
       })
 
-      const prompt = await renderAgentSlot('chapter-writer', 'user', {
+      const prompt = await renderAgentSlot('chapter', 'user.full', {
         chapterNumber: inputData.chapterNumber,
         chapterTitle: inputData.chapterTitle,
         chapterOutline: inputData.chapterOutline,

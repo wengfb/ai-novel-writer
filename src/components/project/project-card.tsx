@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import type { Project } from '@/lib/store/project-store'
 import { useProjectStore } from '@/lib/store/project-store'
-import { ProjectEditDialog } from '@/components/project/project-edit-dialog'
+import { useUIStore } from '@/lib/store/ui-store'
 import { Pencil, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -28,8 +28,8 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, onClick }: ProjectCardProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [showEditDialog, setShowEditDialog] = useState(false)
-  const { deleteProject } = useProjectStore()
+  const { deleteProject, setCurrentProject } = useProjectStore()
+  const { setMainView } = useUIStore()
 
   const targetWords = 100000
   const progress = Math.min((project.totalWords / targetWords) * 100, 100)
@@ -60,7 +60,11 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           variant="ghost"
           size="icon"
           className="absolute top-2 right-9 h-7 w-7 opacity-0 group-hover:opacity-100 hover:bg-primary/10 hover:text-primary z-10"
-          onClick={(e) => { e.stopPropagation(); setShowEditDialog(true) }}
+          onClick={(e) => {
+            e.stopPropagation()
+            setCurrentProject(project)
+            setMainView('project')
+          }}
         >
           <Pencil className="h-3.5 w-3.5" />
         </Button>
@@ -112,11 +116,6 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
         </AlertDialogContent>
       </AlertDialog>
 
-      <ProjectEditDialog
-        project={project}
-        open={showEditDialog}
-        onOpenChange={setShowEditDialog}
-      />
     </>
   )
 }

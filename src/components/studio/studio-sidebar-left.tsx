@@ -1,8 +1,9 @@
 'use client'
 
 import * as React from 'react'
+import { FolderOpen, Lightbulb, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Separator } from '@/components/ui/separator'
+import { Button } from '@/components/ui/button'
 import { useCurrentProject } from '@/hooks/use-projects'
 import { ChapterList } from '@/components/chapter/chapter-list'
 import { CharacterList } from '@/components/character/character-list'
@@ -16,7 +17,6 @@ import { useWorldStore, type WorldElement } from '@/lib/store/world-store'
 import { toast } from 'sonner'
 import type { Outline } from '@/lib/store/outline-store'
 import { SidebarNav } from './sidebar-left/sidebar-nav'
-import { SidebarDialogs } from './sidebar-left/sidebar-dialogs'
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
@@ -26,20 +26,17 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   const { deleteOutline } = useOutlineStore()
   const { deleteCharacter } = useCharacterStore()
   const { deleteWorldElement } = useWorldStore()
-  const { setMainView } = useUIStore()
-
-  const [activeSection, setActiveSection] = React.useState<string>('chapters')
-  const [isCharacterDialogOpen, setIsCharacterDialogOpen] = React.useState(false)
-  const [isWorldDialogOpen, setIsWorldDialogOpen] = React.useState(false)
-  const [isSettingsOpen, setIsSettingsOpen] = React.useState(false)
-  const [isEditProjectOpen, setIsEditProjectOpen] = React.useState(false)
-  const [isIdeaCenterOpen, setIsIdeaCenterOpen] = React.useState(false)
-  const [isOutlineDialogOpen, setIsOutlineDialogOpen] = React.useState(false)
-  const [editingOutline, setEditingOutline] = React.useState<Outline | null>(null)
-  const [editingCharacter, setEditingCharacter] = React.useState<Character | null>(null)
-  const [editingWorldElement, setEditingWorldElement] = React.useState<WorldElement | null>(null)
-  const [outlineParentId, setOutlineParentId] = React.useState<string | null>(null)
-  const [outlineDefaultType, setOutlineDefaultType] = React.useState<'volume' | 'chapter' | 'scene'>('chapter')
+  const {
+    mainView,
+    bookSection,
+    setMainView,
+    selectBookSection,
+    openOutlineEdit,
+    openOutlineGenerate,
+    openCharacterEdit,
+    openWorldEdit,
+    openEditor,
+  } = useUIStore()
 
   const handleCreateChapter = async () => {
     if (!currentProject) {
@@ -58,6 +55,7 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
         title: '新章节',
         content: '<p>开始你的创作...</p>',
       })
+      openEditor()
       toast.success('章节创建成功')
     } catch {
       toast.error('创建章节失败')
@@ -65,17 +63,19 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   }
 
   const handleCreateOutline = (parentId?: string | null, type?: 'volume' | 'chapter' | 'scene') => {
-    setEditingOutline(null)
-    setOutlineParentId(parentId || null)
-    setOutlineDefaultType(type || 'chapter')
-    setIsOutlineDialogOpen(true)
+    openOutlineEdit({
+      editingOutline: null,
+      parentId: parentId || null,
+      defaultType: type || 'chapter',
+    })
   }
 
-  const handleEditOutline = (outline: Outline) => {
-    setEditingOutline(outline)
-    setOutlineParentId(null)
-    setOutlineDefaultType(outline.type)
-    setIsOutlineDialogOpen(true)
+  const handleSelectOutline = (outline: Outline) => {
+    openOutlineEdit({
+      editingOutline: outline,
+      parentId: null,
+      defaultType: outline.type,
+    })
   }
 
   const handleDeleteOutline = async (outline: Outline) => {
@@ -88,13 +88,11 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   }
 
   const handleCreateCharacter = () => {
-    setEditingCharacter(null)
-    setIsCharacterDialogOpen(true)
+    openCharacterEdit({ character: null })
   }
 
-  const handleEditCharacter = (character: Character) => {
-    setEditingCharacter(character)
-    setIsCharacterDialogOpen(true)
+  const handleSelectCharacter = (character: Character) => {
+    openCharacterEdit({ character })
   }
 
   const handleDeleteCharacter = async (character: Character) => {
@@ -107,13 +105,11 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   }
 
   const handleCreateWorldElement = () => {
-    setEditingWorldElement(null)
-    setIsWorldDialogOpen(true)
+    openWorldEdit({ element: null })
   }
 
-  const handleEditWorldElement = (element: WorldElement) => {
-    setEditingWorldElement(element)
-    setIsWorldDialogOpen(true)
+  const handleSelectWorldElement = (element: WorldElement) => {
+    openWorldEdit({ element })
   }
 
   const handleDeleteWorldElement = async (element: WorldElement) => {
@@ -125,90 +121,107 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
     }
   }
 
+  const sectionContent = currentProject
+    ? {
+        chapters: (
+          <ChapterList
+            projectId={currentProject.id}
+            onCreateChapter={handleCreateChapter}
+          />
+        ),
+        outline: (
+          <OutlineList
+            projectId={currentProject.id}
+            onCreateOutline={handleCreateOutline}
+            onSelectOutline={handleSelectOutline}
+            onDeleteOutline={handleDeleteOutline}
+            onGenerateOutline={openOutlineGenerate}
+          />
+        ),
+        characters: (
+          <CharacterList
+            projectId={currentProject.id}
+            onCreateCharacter={handleCreateCharacter}
+            onSelectCharacter={handleSelectCharacter}
+            onDeleteCharacter={handleDeleteCharacter}
+          />
+        ),
+        world: (
+          <WorldElementList
+            projectId={currentProject.id}
+            onCreateElement={handleCreateWorldElement}
+            onSelectElement={handleSelectWorldElement}
+            onDeleteElement={handleDeleteWorldElement}
+          />
+        ),
+      }
+    : {
+        chapters: null,
+        outline: null,
+        characters: null,
+        world: null,
+      }
+
   return (
-    <div className={cn('pb-12 h-full flex flex-col min-w-0', className)}>
-      <div className="space-y-4 py-4 flex-1 flex flex-col">
+    <div className={cn('flex h-full min-w-0 flex-col', className)}>
+      <div className="flex min-h-0 flex-1 flex-col">
         <SidebarNav
           currentProject={currentProject}
-          activeSection={activeSection}
-          onGoHome={() => {
-            setCurrentProject(null)
-            setMainView('editor')
+          bookSection={bookSection}
+          mainView={mainView}
+          onOpenEditProject={() => {
+            if (currentProject) setMainView('project')
           }}
-          onOpenEditProject={() => setIsEditProjectOpen(true)}
-          onOpenSettings={() => setIsSettingsOpen(true)}
-          onOpenIdeaCenter={() => setIsIdeaCenterOpen(true)}
-          onSelectSection={(section, mainView) => {
-            setActiveSection(section)
-            setMainView(mainView)
-          }}
+          onSelectSection={selectBookSection}
+          sectionContent={sectionContent}
         />
 
-        <Separator className="mx-3 w-auto opacity-50" />
-
-        <div className="flex-1 overflow-hidden">
-          {currentProject && activeSection === 'chapters' && (
-            <ChapterList projectId={currentProject.id} onCreateChapter={handleCreateChapter} />
-          )}
-          {currentProject && activeSection === 'characters' && (
-            <CharacterList
-              projectId={currentProject.id}
-              onCreateCharacter={handleCreateCharacter}
-              onEditCharacter={handleEditCharacter}
-              onDeleteCharacter={handleDeleteCharacter}
-            />
-          )}
-          {currentProject && activeSection === 'world' && (
-            <WorldElementList
-              projectId={currentProject.id}
-              onCreateElement={handleCreateWorldElement}
-              onEditElement={handleEditWorldElement}
-              onDeleteElement={handleDeleteWorldElement}
-            />
-          )}
-          {activeSection === 'outline' && currentProject && (
-            <OutlineList
-              projectId={currentProject.id}
-              onCreateOutline={handleCreateOutline}
-              onEditOutline={handleEditOutline}
-              onDeleteOutline={handleDeleteOutline}
-            />
-          )}
-        </div>
+        {!currentProject && <div className="min-h-0 flex-1" />}
       </div>
 
-      <div className="px-4 py-4 border-t">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
-            WF
-          </div>
-          <div className="text-sm">
-            <p className="font-medium">WengFB</p>
-            <p className="text-xs text-muted-foreground">专业版计划</p>
+      <div className="mt-auto shrink-0 border-t">
+        <div className="space-y-1 px-3 py-2">
+          <Button
+            variant={mainView === 'ideas' ? 'secondary' : 'ghost'}
+            className="w-full justify-start"
+            onClick={() => setMainView('ideas')}
+          >
+            <Lightbulb className="mr-2 h-4 w-4" />
+            创意中心
+          </Button>
+          <Button
+            variant={mainView === 'projects' || !currentProject ? 'secondary' : 'ghost'}
+            className="w-full justify-start"
+            onClick={() => {
+              setCurrentProject(null)
+              setMainView('projects')
+            }}
+          >
+            <FolderOpen className="mr-2 h-4 w-4" />
+            全部项目
+          </Button>
+          <Button
+            variant={mainView === 'settings' ? 'secondary' : 'ghost'}
+            className="w-full justify-start"
+            onClick={() => setMainView('settings')}
+          >
+            <Settings className="mr-2 h-4 w-4" />
+            系统设置
+          </Button>
+        </div>
+
+        <div className="border-t px-4 py-3">
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+              WF
+            </div>
+            <div className="text-sm">
+              <p className="font-medium">WengFB</p>
+              <p className="text-xs text-muted-foreground">专业版计划</p>
+            </div>
           </div>
         </div>
       </div>
-
-      <SidebarDialogs
-        currentProject={currentProject}
-        isCharacterDialogOpen={isCharacterDialogOpen}
-        setIsCharacterDialogOpen={setIsCharacterDialogOpen}
-        isWorldDialogOpen={isWorldDialogOpen}
-        setIsWorldDialogOpen={setIsWorldDialogOpen}
-        isSettingsOpen={isSettingsOpen}
-        setIsSettingsOpen={setIsSettingsOpen}
-        isEditProjectOpen={isEditProjectOpen}
-        setIsEditProjectOpen={setIsEditProjectOpen}
-        isIdeaCenterOpen={isIdeaCenterOpen}
-        setIsIdeaCenterOpen={setIsIdeaCenterOpen}
-        isOutlineDialogOpen={isOutlineDialogOpen}
-        setIsOutlineDialogOpen={setIsOutlineDialogOpen}
-        editingOutline={editingOutline}
-        editingCharacter={editingCharacter}
-        editingWorldElement={editingWorldElement}
-        outlineParentId={outlineParentId}
-        outlineDefaultType={outlineDefaultType}
-      />
     </div>
   )
 }

@@ -16,13 +16,26 @@ import {
 } from '@/lib/ai/onboarding/prompts'
 import type { BootstrapParams } from '@/lib/ai/onboarding/types'
 
+/** 引导步骤统一使用 onboarding agent（system slot 由 STEP_SYSTEM_SLOT 指定） */
+export const ONBOARDING_AGENT_ID = 'onboarding' as const
+
+export const STEP_SYSTEM_SLOT: Record<StepKey, string> = {
+  architecture: 'system.architecture',
+  characters: 'system.characters',
+  world: 'system.world',
+  volume: 'system.chapters',
+  foreshadowings: 'system.foreshadowings',
+  styleAnchor: 'system.style-anchor',
+}
+
+/** 对话 / extract 使用的 agentId（均为 onboarding；兼容旧调用名） */
 export const STEP_AGENT_ID: Record<StepKey, string> = {
-  architecture: 'onboarding-architecture',
-  characters: 'onboarding-characters',
-  world: 'onboarding-world',
-  volume: 'onboarding-chapters',
-  foreshadowings: 'onboarding-foreshadowings',
-  styleAnchor: 'onboarding-style-anchor',
+  architecture: 'onboarding',
+  characters: 'onboarding',
+  world: 'onboarding',
+  volume: 'onboarding',
+  foreshadowings: 'onboarding',
+  styleAnchor: 'onboarding',
 }
 
 export const STEP_WELCOME: Record<StepKey, { title: string; subtitle: string }> = {

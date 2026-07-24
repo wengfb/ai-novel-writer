@@ -5,13 +5,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import {
   Form,
   FormControl,
   FormField,
@@ -32,6 +25,7 @@ import { Button } from '@/components/ui/button'
 import { useProjectStore, type Project } from '@/lib/store/project-store'
 import { settingsApi } from '@/lib/api/endpoints/settings'
 import { toast } from 'sonner'
+import { ArrowLeft } from 'lucide-react'
 
 const editProjectSchema = z.object({
   title: z.string().min(1, '请输入项目名称').max(200, '标题最多200个字符'),
@@ -42,13 +36,14 @@ const editProjectSchema = z.object({
 
 type EditProjectFormValues = z.infer<typeof editProjectSchema>
 
-interface ProjectEditDialogProps {
+interface ProjectEditPanelProps {
   project: Project
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  onClose?: () => void
+  onSaved?: () => void
 }
 
-export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDialogProps) {
+/** 编辑项目 — 中间区工作页 */
+export function ProjectEditPanel({ project, onClose, onSaved }: ProjectEditPanelProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [styleAnchor, setStyleAnchor] = useState('')
   const [stylePrompt, setStylePrompt] = useState('')
@@ -67,23 +62,19 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
   })
 
   useEffect(() => {
-    if (open) {
-      form.reset({
-        title: project.title,
-        description: project.description || '',
-        genre: project.genre,
-        status: project.status === 'archived' ? 'draft' : project.status,
-      })
-
-      // 加载项目级风格锚点
-      settingsApi.list().then(res => {
-        if (res.success && res.data) {
-          setStyleAnchor(res.data.settings[`project.${project.id}.styleAnchor`] || '')
-        }
-      }).catch(() => {})
-      setPov(project.pov)
-    }
-  }, [open, project, form])
+    form.reset({
+      title: project.title,
+      description: project.description || '',
+      genre: project.genre,
+      status: project.status === 'archived' ? 'draft' : project.status,
+    })
+    setPov(project.pov)
+    settingsApi.list().then(res => {
+      if (res.success && res.data) {
+        setStyleAnchor(res.data.settings[`project.${project.id}.styleAnchor`] || '')
+      }
+    }).catch(() => {})
+  }, [project, form])
 
   const handleGenerateStyleAnchor = async () => {
     const description = form.getValues('description')
@@ -130,7 +121,8 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
       }
 
       toast.success('项目信息已更新')
-      onOpenChange(false)
+      onSaved?.()
+      onClose?.()
     } catch {
       toast.error('更新失败，请重试')
     } finally {
@@ -139,12 +131,21 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
   }
 
   return (
-    <Dialog open={open} onOpenChange={(next) => { if (!next && isGeneratingStyle) return; onOpenChange(next) }}>
-      <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>编辑项目信息</DialogTitle>
-          <DialogDescription>修改项目的基本信息和创意方向</DialogDescription>
-        </DialogHeader>
+    <div className="flex h-full min-h-0 flex-col bg-background">
+      <div className="flex shrink-0 items-center gap-3 border-b px-4 py-3 sm:px-6">
+        {onClose && (
+          <Button variant="ghost" size="sm" className="shrink-0 gap-1.5" onClick={onClose} disabled={isGeneratingStyle}>
+            <ArrowLeft className="h-4 w-4" />
+            返回写作
+          </Button>
+        )}
+        <div className="min-w-0">
+          <h1 className="text-lg font-semibold">编辑项目</h1>
+          <p className="text-sm text-muted-foreground">基本信息、叙事人称与风格锚点</p>
+        </div>
+      </div>
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+        <div className="mx-auto max-w-2xl">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -283,7 +284,7 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
+                onClick={() => onClose?.()}
                 disabled={isSubmitting}
               >
                 取消
@@ -294,7 +295,8 @@ export function ProjectEditDialog({ project, open, onOpenChange }: ProjectEditDi
             </div>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+        </div>
+      </div>
+    </div>
   )
 }

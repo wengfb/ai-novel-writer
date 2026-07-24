@@ -5,12 +5,13 @@ import { prisma } from '@/lib/db/prisma'
 import { apiSuccess, ApiErrors, withErrorHandler } from '@/lib/api/response'
 import { validateRequest } from '@/lib/api/validators'
 import { z } from 'zod'
-import { runAgent } from '@/lib/ai/agents'
+import { runAgentObject } from '@/lib/ai/agents'
+import { GeneratedCharacterCardSchema } from '@/lib/ai/agents/schemas'
 
 /**
  * AI 生成角色 API
  * POST /api/ai/generate/character
- * 使用 character-creator Agent（提示词可编辑，与聊天工具语义对齐）
+ * 使用 character agent + 结构化输出
  */
 
 const GenerateCharacterSchema = z.object({
@@ -20,15 +21,6 @@ const GenerateCharacterSchema = z.object({
   requirements: z.string().optional(),
   model: z.string().optional(),
 })
-
-function extractJsonObject(output: string): any {
-  const jsonMatch =
-    output.match(/```json\n([\s\S]*?)\n```/) || output.match(/\{[\s\S]*\}/)
-  if (jsonMatch) {
-    return JSON.parse(jsonMatch[1] || jsonMatch[0])
-  }
-  return JSON.parse(output)
-}
 
 export async function POST(request: NextRequest) {
   return withErrorHandler(async () => {
@@ -77,11 +69,14 @@ export async function POST(request: NextRequest) {
     const startTime = Date.now()
     let agentResult
     try {
-      agentResult = await runAgent({
-        agentId: 'character-creator',
+      agentResult = await runAgentObject({
+        agentId: 'character',
+        userSlot: 'user.create',
         model,
         temperature: 0.8,
         contextAppend: systemContext,
+        schema: GeneratedCharacterCardSchema,
+        schemaName: 'CharacterCard',
         variables: {
           role,
           storyContext: storyContextStr,
@@ -90,22 +85,11 @@ export async function POST(request: NextRequest) {
         },
       })
     } catch (error) {
-      console.error('character-creator failed:', error)
+      console.error('character agent failed:', error)
       return ApiErrors.aiGenerationFailed('角色生成失败')
     }
     const duration = Date.now() - startTime
-
-    if (!agentResult.text?.trim()) {
-      return ApiErrors.aiGenerationFailed('角色生成失败')
-    }
-
-    let characterData: any
-    try {
-      characterData = extractJsonObject(agentResult.text)
-    } catch (error) {
-      console.error('Failed to parse character JSON:', error)
-      return ApiErrors.aiGenerationFailed('AI 返回格式错误，请重试')
-    }
+    const characterData = agentResult.object
 
     const extractAge = (age: any): number | null => {
       if (typeof age === 'number') return age

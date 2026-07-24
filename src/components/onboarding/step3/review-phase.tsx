@@ -24,6 +24,7 @@ import { StepResultPreview, extractArray } from './step-result-preview'
 import { UnifiedChat, type UnifiedChatApi } from '@/components/chat/unified-chat'
 import {
   STEP_AGENT_ID,
+  STEP_SYSTEM_SLOT,
   STEP_WELCOME,
   buildOnboardingChatContextAppend,
   buildStepOpeningMessage,
@@ -245,6 +246,7 @@ export function ReviewPhase({
               <UnifiedChat
                 key={activeStep}
                 agentId={STEP_AGENT_ID[activeStep]}
+                systemSlot={STEP_SYSTEM_SLOT[activeStep]}
                 sessionKey={`onboarding-${activeStep}`}
                 showSettings={false}
                 contextAppend={contextAppend}

@@ -1,33 +1,32 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { cn } from '@/lib/utils'
 import type { StoryIdeaCard } from '@/types'
 import { OnboardingStep1Welcome } from './onboarding-step1-welcome'
 import { OnboardingStep3Preview } from './onboarding-step3-preview'
+import type { OnboardingContext } from '@/lib/store/ui-store'
+import { Button } from '@/components/ui/button'
+import { ArrowLeft } from 'lucide-react'
 
-interface ProjectOnboardingDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+interface ProjectOnboardingPanelProps {
+  context?: OnboardingContext | null
   onComplete: (projectId: string) => void
+  onCancel?: () => void
   onSwitchToManual?: () => void
-  /** 续建模式：从已有项目续建，直接跳到审核流程 */
-  resumeProject?: { id: string; title: string; genre: string; description: string }
-  /** 预填创意（从创意中心跳转）：跳过 step1，直接进入 step2 */
-  prefillIdea?: StoryIdeaCard
+  className?: string
 }
 
-export function ProjectOnboardingDialog({
-  open,
-  onOpenChange,
+/** 项目引导 — 中间区全页向导 */
+export function ProjectOnboardingPanel({
+  context,
   onComplete,
+  onCancel,
   onSwitchToManual,
-  resumeProject,
-  prefillIdea,
-}: ProjectOnboardingDialogProps) {
-  // 续建模式：从项目数据重构 idea 卡 + 从 DB 加载进度
+  className,
+}: ProjectOnboardingPanelProps) {
+  const resumeProject = context?.mode === 'resume' ? context.resumeProject : undefined
+  const prefillIdea = context?.mode === 'prefill' ? context.prefillIdea : undefined
   const resumeIdea = resumeProject ? buildIdeaFromProject(resumeProject) : null
   const [resumeProgress, setResumeProgress] = useState<{
     projectId: string; doneSteps: StepKey[]
@@ -73,12 +72,6 @@ export function ProjectOnboardingDialog({
     tone?: string
   }>(resumeProject ? { genre: resumeProject.genre } : {})
 
-  // 生成中拦截关闭事件，防止误触模态框外或 Esc 导致关闭
-  const handleOpenChange = (next: boolean) => {
-    if (!next && isGenerating) return
-    onOpenChange(next)
-  }
-
   const handleStep1Next = (idea: StoryIdeaCard, preferences?: { audience?: string; genre?: string; tone?: string }) => {
     setSelectedIdea(idea)
     if (preferences) setUserPreferences(preferences)
@@ -92,8 +85,6 @@ export function ProjectOnboardingDialog({
   const handleComplete = (projectId: string) => {
     setIsGenerating(false)
     onComplete(projectId)
-    onOpenChange(false)
-    // 重置状态
     setStep(1)
     setStep2Phase('config')
     setSelectedIdea(null)
@@ -101,25 +92,40 @@ export function ProjectOnboardingDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className={cn(
-        (step === 1 || step2Phase === 'config') ? 'sm:max-w-lg' : 'max-w-[62vw] sm:max-w-[62vw]',
-        'h-[70vh] p-0 overflow-hidden'
-      )}>
-        <VisuallyHidden>
-          <DialogTitle>项目创建向导</DialogTitle>
-          <DialogDescription>
+    <div className={cn('flex h-full min-h-0 flex-col bg-background', className)}>
+      <div className="flex shrink-0 items-center gap-3 border-b px-4 py-3 sm:px-6">
+        {onCancel && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="shrink-0 gap-1.5"
+            disabled={isGenerating}
+            onClick={onCancel}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            返回
+          </Button>
+        )}
+        <div className="min-w-0">
+          <h1 className="text-lg font-semibold">
+            {resumeProject ? '继续初始化项目' : '新建项目向导'}
+          </h1>
+          <p className="text-sm text-muted-foreground">
             {step === 1 && '设置偏好，让 AI 为你生成创意方向'}
-            {step === 2 && '确认项目信息并开始创作'}
-          </DialogDescription>
-        </VisuallyHidden>
+            {step === 2 && step2Phase === 'config' && '确认项目信息'}
+            {step === 2 && step2Phase === 'review' && '审核并生成设定'}
+            {step === 2 && step2Phase === 'complete' && '初始化完成'}
+          </p>
+        </div>
+      </div>
 
-        <div className={step === 1 ? 'block' : 'hidden'}>
+      <div className="min-h-0 flex-1 overflow-auto">
+        <div className={cn('mx-auto max-w-4xl p-6', step === 1 ? 'block' : 'hidden')}>
           <OnboardingStep1Welcome onNext={handleStep1Next} onSwitchToManual={onSwitchToManual} />
         </div>
 
         {selectedIdea && progressLoaded && (
-          <div className={step === 2 ? 'block' : 'hidden'}>
+          <div className={cn('mx-auto max-w-5xl p-6', step === 2 ? 'block' : 'hidden')}>
             <OnboardingStep3Preview
               idea={selectedIdea}
               userPreferences={userPreferences}
@@ -131,8 +137,8 @@ export function ProjectOnboardingDialog({
             />
           </div>
         )}
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   )
 }
 

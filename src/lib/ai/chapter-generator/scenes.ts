@@ -1,16 +1,14 @@
 /**
  * 场景规划 + 分场景写作
  *
- * - analyzeScenes → scene-planner Agent
- * - generateScene → scene-writer Agent
- * - generateChapterWithScenes：循环写作（Workflow 的 write 步也复用 generateScene）
- *
- * 提示词可在设置页编辑，勿在此硬编码长模板。
+ * - analyzeScenes → chapter / plan（结构化）
+ * - generateScene → chapter / write（散文）
  */
 
 import type { ContextManager } from '@/lib/ai/context-manager'
 import { getStyleAnchorPrompt } from '@/lib/ai/style-anchor'
-import { runAgent } from '@/lib/ai/agents/runner'
+import { runAgent, runAgentObject } from '@/lib/ai/agents/runner'
+import { ScenePlanSchema } from '@/lib/ai/agents/schemas'
 import type { GenerationParams } from '@/types'
 import { formatIntentConstraints, PLOT_FUNCTION_LABELS, type OutlineIntent } from './plot-labels'
 
@@ -22,34 +20,7 @@ export type ScenePlan = {
   estimatedWords: number
 }
 
-function parseScenesJson(output: string, chapterOutline: string): ScenePlan[] {
-  try {
-    const jsonMatch =
-      output.match(/```json\n([\s\S]*?)\n```/) ||
-      output.match(/```\n([\s\S]*?)\n```/) ||
-      output.match(/\{[\s\S]*\}/)
-
-    if (jsonMatch) {
-      const parsed = JSON.parse(jsonMatch[1] || jsonMatch[0])
-      if (Array.isArray(parsed.scenes) && parsed.scenes.length > 0) {
-        return parsed.scenes
-      }
-    }
-  } catch (error) {
-    console.error('Failed to parse scenes:', error)
-  }
-
-  return [
-    {
-      title: '完整章节',
-      goal: chapterOutline,
-      characters: [],
-      estimatedWords: 3000,
-    },
-  ]
-}
-
-/** 分析大纲，划分 3-5 个场景（scene-planner Agent） */
+/** 分析大纲，划分 3-5 个场景 */
 export async function analyzeScenes(params: {
   chapterOutline: string
   context: any
@@ -71,27 +42,45 @@ export async function analyzeScenes(params: {
     ? `- 情感目标：${outlineIntent.emotionalGoal}`
     : ''
 
-  const result = await runAgent({
-    agentId: 'scene-planner',
-    model,
-    temperature: 0.7,
-    variables: {
-      chapterOutline,
-      plotFunction: PLOT_FUNCTION_LABELS[outlineIntent.plotFunction] || outlineIntent.plotFunction,
-      tensionLevel: outlineIntent.tensionLevel,
-      emotionalGoalLine,
-      briefContext,
-    },
-  })
+  try {
+    const result = await runAgentObject({
+      agentId: 'chapter',
+      systemSlot: 'system.plan',
+      userSlot: 'user.plan',
+      model,
+      temperature: 0.7,
+      schema: ScenePlanSchema,
+      schemaName: 'ScenePlan',
+      variables: {
+        chapterOutline,
+        plotFunction: PLOT_FUNCTION_LABELS[outlineIntent.plotFunction] || outlineIntent.plotFunction,
+        tensionLevel: outlineIntent.tensionLevel,
+        emotionalGoalLine,
+        briefContext,
+      },
+    })
 
-  if (!result.text.trim()) {
-    throw new Error('AI 场景分析失败：返回为空')
+    return result.object.scenes.map((s) => ({
+      title: s.title,
+      goal: s.goal,
+      location: s.location,
+      characters: s.characters ?? [],
+      estimatedWords: s.estimatedWords ?? 1000,
+    }))
+  } catch (error) {
+    console.error('scene plan structured failed, fallback single scene:', error)
+    return [
+      {
+        title: '完整章节',
+        goal: chapterOutline,
+        characters: [],
+        estimatedWords: 3000,
+      },
+    ]
   }
-
-  return parseScenesJson(result.text, chapterOutline)
 }
 
-/** 生成单个场景正文（scene-writer Agent） */
+/** 生成单个场景正文 */
 export async function generateScene(
   contextManager: ContextManager,
   params: {
@@ -132,7 +121,9 @@ export async function generateScene(
     .join('\n\n')
 
   const result = await runAgent({
-    agentId: 'scene-writer',
+    agentId: 'chapter',
+    systemSlot: 'system.write',
+    userSlot: 'user.write',
     model,
     temperature: 0.8,
     variables: {

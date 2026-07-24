@@ -3,15 +3,8 @@
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AlertCircle, Loader2 } from 'lucide-react'
+import { AlertCircle, Loader2, Sparkles, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { Form } from '@/components/ui/form'
 import { useAIStore } from '@/lib/store/ai-store'
 import { type Chapter, useChapterStore } from '@/lib/store/chapter-store'
@@ -23,21 +16,20 @@ import {
 } from './generate-chapter-dialog/schema'
 import { GenerateChapterFormFields } from './generate-chapter-dialog/form-fields'
 
-interface AIGenerateChapterDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  projectId: string | null
+interface AIGenerateChapterPanelProps {
+  projectId: string
   chapters: Chapter[]
   flatOutlines?: Outline[]
+  onClose?: () => void
 }
 
-export function AIGenerateChapterDialog({
-  open,
-  onOpenChange,
+/** AI 生成章节 — 编辑器上方可折叠面板 */
+export function AIGenerateChapterPanel({
   projectId,
   chapters,
   flatOutlines = [],
-}: AIGenerateChapterDialogProps) {
+  onClose,
+}: AIGenerateChapterPanelProps) {
   const { generateChapter, isGeneratingChapter } = useAIStore()
   const [submitError, setSubmitError] = React.useState<string | null>(null)
   const nextChapterNumber = React.useMemo(
@@ -75,22 +67,20 @@ export function AIGenerateChapterDialog({
   )
 
   React.useEffect(() => {
-    if (open) {
-      setSubmitError(null)
-      const { title, outline, targetWords, emotionalGoal, plotFunction, tensionLevel } =
-        getOutlineData(nextChapterNumber)
-      form.reset({
-        chapterNumber: nextChapterNumber,
-        chapterTitle: title,
-        chapterOutline: outline,
-        targetWords,
-        model: '',
-        emotionalGoal,
-        plotFunction,
-        tensionLevel,
-      })
-    }
-  }, [form, nextChapterNumber, open, getOutlineData])
+    setSubmitError(null)
+    const { title, outline, targetWords, emotionalGoal, plotFunction, tensionLevel } =
+      getOutlineData(nextChapterNumber)
+    form.reset({
+      chapterNumber: nextChapterNumber,
+      chapterTitle: title,
+      chapterOutline: outline,
+      targetWords,
+      model: '',
+      emotionalGoal,
+      plotFunction,
+      tensionLevel,
+    })
+  }, [form, nextChapterNumber, getOutlineData])
 
   const watchedChapterNumber = form.watch('chapterNumber')
   React.useEffect(() => {
@@ -105,13 +95,8 @@ export function AIGenerateChapterDialog({
   }, [watchedChapterNumber, getOutlineData, form])
 
   const onSubmit = async (values: GenerateChapterFormValues) => {
-    if (!projectId) {
-      toast.error('请先选择项目')
-      return
-    }
-
     setSubmitError(null)
-    onOpenChange(false)
+    onClose?.()
 
     try {
       await generateChapter({
@@ -141,14 +126,24 @@ export function AIGenerateChapterDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[560px]">
-        <DialogHeader>
-          <DialogTitle>AI 生成章节</DialogTitle>
-          <DialogDescription>
-            根据当前项目的角色、世界观和前文上下文生成一个新章节。
-          </DialogDescription>
-        </DialogHeader>
+    <div className="border-b bg-muted/20">
+      <div className="mx-auto max-w-3xl px-6 py-4">
+        <div className="mb-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <div>
+              <h2 className="text-sm font-semibold">AI 生成章节</h2>
+              <p className="text-xs text-muted-foreground">
+                根据角色、世界观和前文上下文生成新章节
+              </p>
+            </div>
+          </div>
+          {onClose && (
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onClose}>
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -161,10 +156,12 @@ export function AIGenerateChapterDialog({
               </div>
             )}
 
-            <div className="flex justify-end gap-3 pt-2">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                取消
-              </Button>
+            <div className="flex justify-end gap-3">
+              {onClose && (
+                <Button type="button" variant="outline" onClick={onClose}>
+                  取消
+                </Button>
+              )}
               <Button type="submit" disabled={isGeneratingChapter || !projectId}>
                 {isGeneratingChapter && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isGeneratingChapter ? '生成中...' : '开始生成'}
@@ -172,7 +169,7 @@ export function AIGenerateChapterDialog({
             </div>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   )
 }

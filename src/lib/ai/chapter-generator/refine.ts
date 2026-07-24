@@ -1,6 +1,5 @@
 /**
- * 章节反思润色
- * 统一走 chapter-editor Agent（system/user 可编辑）
+ * 章节反思润色 — chapter / refine
  */
 
 import type { ContextManager } from '@/lib/ai/context-manager'
@@ -43,7 +42,9 @@ export async function reflectAndRefine(
     .join('\n\n')
 
   const result = await runAgent({
-    agentId: 'chapter-editor',
+    agentId: 'chapter',
+    systemSlot: 'system.refine',
+    userSlot: 'user.refine',
     model,
     temperature: 0.6,
     variables: {

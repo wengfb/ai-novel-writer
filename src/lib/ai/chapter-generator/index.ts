@@ -144,7 +144,9 @@ export class ChapterGenerator {
 
     let fullOutput = ''
     const stream = streamAgent({
-      agentId: 'chapter-continue',
+      agentId: 'chapter',
+      systemSlot: 'system.continue',
+      userSlot: 'user.continue',
       model,
       temperature: 0.8,
       contextAppend,

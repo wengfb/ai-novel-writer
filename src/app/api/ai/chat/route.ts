@@ -16,7 +16,7 @@ import { getContextManager } from '@/lib/ai/context-manager'
 import { getStyleAnchorPrompt } from '@/lib/ai/style-anchor'
 import { buildChatTools } from '@/lib/ai/chat-tools'
 import { getLanguageModelAsync } from '@/lib/ai/providers'
-import { renderAgentSlot, requireAgentDefinition } from '@/lib/ai/agents'
+import { renderAgentSlot, requireAgentDefinition, resolveAgentId } from '@/lib/ai/agents'
 import type { Chapter, Character, WorldElement, Foreshadowing } from '@/types'
 import type { UIMessage } from 'ai'
 
@@ -27,6 +27,8 @@ const ChatRequestSchema = z.object({
   chapterId: z.string().optional(),
   /** 可切换其它 chatCompatible agent，默认 studio-chat */
   agentId: z.string().optional(),
+  /** 多 slot agent（如 onboarding）指定 system 槽位 */
+  systemSlot: z.string().optional(),
   /**
    * 附加到 system 的动态上下文（Onboarding 创意卡/已确认步骤摘要）
    * 不用于 Studio 写库工具场景的主 context（有 projectId 时仍走项目上下文）
@@ -56,6 +58,7 @@ export async function POST(request: NextRequest) {
       messages,
       model: modelOverride,
       agentId: agentIdOverride,
+      systemSlot: systemSlotOverride,
       contextAppend,
     } = data
 
@@ -69,8 +72,12 @@ export async function POST(request: NextRequest) {
       return ApiErrors.badRequest(`Agent ${agentId} 不支持对话模式`)
     }
 
+    const legacy = resolveAgentId(agentId)
+    const systemSlot =
+      systemSlotOverride || legacy.systemSlot || 'system'
+
     const contextManager = getContextManager()
-    let systemPrompt = await renderAgentSlot(agentId, 'system', {
+    let systemPrompt = await renderAgentSlot(agentId, systemSlot, {
       projectTitle: '未命名项目',
       genre: '通用',
       styleAnchor: '',
@@ -193,8 +200,8 @@ export async function POST(request: NextRequest) {
         chapterId: currentChapter?.id ?? chapterId,
       })
 
-      // 提示词来自 studio-chat（或指定 agent）可编辑槽位，与界面生成功能共用
-      systemPrompt = await renderAgentSlot(agentId, 'system', {
+      // 提示词来自 Agent 可编辑槽位
+      systemPrompt = await renderAgentSlot(agentId, systemSlot, {
         projectTitle: project.title,
         genre: project.genre,
         styleAnchor: chatStyleAnchor || '',

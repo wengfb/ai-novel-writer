@@ -1,29 +1,38 @@
 'use client'
 
-import * as React from "react"
-import { MoreHorizontal, Save, Sparkles } from "lucide-react"
+import * as React from 'react'
+import { FolderOpen, MoreHorizontal, Pencil, Save, Settings, Sparkles } from 'lucide-react'
 
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { useChapterStore } from "@/lib/store/chapter-store"
-import { AIGenerateChapterDialog } from "@/components/ai/ai-generate-chapter-dialog"
-import { useProjectStore } from "@/lib/store/project-store"
-import { useOutlines } from "@/hooks/use-outlines"
-import { AIContinueButton } from "@/components/ai/ai-continue-button"
-import { ProjectSelector } from "@/components/project/project-selector"
-import { ProjectOnboardingDialog } from "@/components/onboarding/project-onboarding-dialog"
-import { ProjectCreateDialog } from "@/components/project/project-create-dialog"
-import { toast } from "sonner"
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { useChapterStore } from '@/lib/store/chapter-store'
+import { useProjectStore } from '@/lib/store/project-store'
+import { useUIStore } from '@/lib/store/ui-store'
+import { useOutlines } from '@/hooks/use-outlines'
+import { AIContinueButton } from '@/components/ai/ai-continue-button'
+import { ProjectSelector } from '@/components/project/project-selector'
+import { toast } from 'sonner'
 
 export function StudioHeader() {
-  const { currentChapter, chapters, updateChapterContent, saveChapter, isSaving, lastSaved } = useChapterStore()
+  const { currentChapter, updateChapterContent, saveChapter, isSaving, lastSaved } = useChapterStore()
   const { currentProject, setCurrentProject } = useProjectStore()
+  const {
+    setMainView,
+    startOnboarding,
+    setGenerateChapterPanelOpen,
+    generateChapterPanelOpen,
+    openEditor,
+  } = useUIStore()
   const { flatOutlines } = useOutlines(currentProject?.id || '')
   const [accumulatedContent, setAccumulatedContent] = React.useState('')
-  const [baseContent, setBaseContent] = React.useState('') // 保存开始续写时的原始内容
-  const [isOnboardingOpen, setIsOnboardingOpen] = React.useState(false)
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false)
-  const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false)
+  const [baseContent, setBaseContent] = React.useState('')
 
   const handleSave = async () => {
     if (!currentChapter) {
@@ -41,47 +50,24 @@ export function StudioHeader() {
 
   const handleAIContentGenerated = (chunk: string) => {
     if (currentChapter) {
-      // 第一次收到 chunk 时，保存原始内容
-      setBaseContent(prev => prev || (currentChapter.content || ''))
-      setAccumulatedContent(prev => prev + chunk)
+      setBaseContent((prev) => prev || (currentChapter.content || ''))
+      setAccumulatedContent((prev) => prev + chunk)
     }
   }
 
-  // 当累积内容变化时，基于原始内容 + 累积内容来更新章节内容
   React.useEffect(() => {
     if (currentChapter && accumulatedContent && baseContent) {
       updateChapterContent(currentChapter.id, baseContent + accumulatedContent)
     }
   }, [accumulatedContent, baseContent, currentChapter, updateChapterContent])
 
-  // 重置累积内容和原始内容
   React.useEffect(() => {
     setAccumulatedContent('')
     setBaseContent('')
   }, [currentChapter?.id])
 
   const handleNewProject = () => {
-    setIsOnboardingOpen(true)
-  }
-
-  const handleSwitchToManual = () => {
-    setIsOnboardingOpen(false)
-    setTimeout(() => setIsCreateDialogOpen(true), 100)
-  }
-
-  const handleOnboardingComplete = async (projectId: string) => {
-    setIsOnboardingOpen(false)
-    try {
-      const response = await fetch(`/api/projects/${projectId}`)
-      if (response.ok) {
-        const result = await response.json()
-        if (result.success && result.data) {
-          setCurrentProject(result.data.project ?? result.data)
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load project:', error)
-    }
+    startOnboarding({ mode: 'new' })
   }
 
   const handleGenerateChapter = () => {
@@ -89,7 +75,13 @@ export function StudioHeader() {
       toast.error('请先选择项目')
       return
     }
-    setIsGenerateDialogOpen(true)
+    openEditor()
+    setGenerateChapterPanelOpen(!generateChapterPanelOpen)
+  }
+
+  const handleGoAllProjects = () => {
+    setCurrentProject(null)
+    setMainView('projects')
   }
 
   return (
@@ -99,68 +91,75 @@ export function StudioHeader() {
           <ProjectSelector onNewProject={handleNewProject} />
           <Separator orientation="vertical" className="h-6" />
           <div className="text-sm text-muted-foreground">
-            {currentChapter ? `第 ${currentChapter.chapterNumber} 章：${currentChapter.title}` : '未选择章节'}
+            {currentChapter
+              ? `第 ${currentChapter.chapterNumber} 章：${currentChapter.title}`
+              : '未选择章节'}
           </div>
         </div>
-      
-      <div className="ml-auto flex items-center gap-2">
-         <div className="text-xs text-muted-foreground mr-2">
-             {isSaving ? '保存中...' : lastSaved ? `已保存 ${new Date(lastSaved).toLocaleTimeString()}` : '未保存'}
-         </div>
-         <Button
-           size="sm"
-           variant="outline"
-           className="h-8"
-           onClick={handleSave}
-           disabled={isSaving || !currentChapter}
-         >
-             <Save className="mr-2 h-3.5 w-3.5" />
-             {isSaving ? '保存中...' : '保存'}
-         </Button>
-         <Button
-           size="sm"
-           variant="outline"
-           className="h-8"
-           onClick={handleGenerateChapter}
-           disabled={!currentProject}
-         >
-             <Sparkles className="mr-2 h-3.5 w-3.5" />
-             AI生成章节
-         </Button>
-         <AIContinueButton
-           onContentGenerated={handleAIContentGenerated}
-           defaultTargetWords={
-             flatOutlines.find(
-               (o) => o.type === 'chapter' && o.order === currentChapter?.chapterNumber
-             )?.targetWords ?? undefined
-           }
-         />
-         <Button variant="ghost" size="icon" className="h-8 w-8">
-             <MoreHorizontal className="h-4 w-4" />
-         </Button>
-      </div>
-    </header>
 
-
-      <ProjectOnboardingDialog
-        open={isOnboardingOpen}
-        onOpenChange={setIsOnboardingOpen}
-        onComplete={handleOnboardingComplete}
-        onSwitchToManual={handleSwitchToManual}
-      />
-
-      <ProjectCreateDialog
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-      />
-
-      <AIGenerateChapterDialog
-        open={isGenerateDialogOpen}
-        onOpenChange={setIsGenerateDialogOpen}
-        projectId={currentProject?.id ?? null}
-        chapters={chapters}
-        flatOutlines={flatOutlines}
-      />
+        <div className="ml-auto flex items-center gap-2">
+          <div className="mr-2 text-xs text-muted-foreground">
+            {isSaving
+              ? '保存中...'
+              : lastSaved
+                ? `已保存 ${new Date(lastSaved).toLocaleTimeString()}`
+                : '未保存'}
+          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-8"
+            onClick={handleSave}
+            disabled={isSaving || !currentChapter}
+          >
+            <Save className="mr-2 h-3.5 w-3.5" />
+            {isSaving ? '保存中...' : '保存'}
+          </Button>
+          <Button
+            size="sm"
+            variant={generateChapterPanelOpen ? 'secondary' : 'outline'}
+            className="h-8"
+            onClick={handleGenerateChapter}
+            disabled={!currentProject}
+          >
+            <Sparkles className="mr-2 h-3.5 w-3.5" />
+            AI生成章节
+          </Button>
+          <AIContinueButton
+            onContentGenerated={handleAIContentGenerated}
+            defaultTargetWords={
+              flatOutlines.find(
+                (o) => o.type === 'chapter' && o.order === currentChapter?.chapterNumber
+              )?.targetWords ?? undefined
+            }
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8" title="更多">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem
+                disabled={!currentProject}
+                onClick={() => setMainView('project')}
+              >
+                <Pencil className="mr-2 h-4 w-4" />
+                编辑项目
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setMainView('settings')}>
+                <Settings className="mr-2 h-4 w-4" />
+                系统设置
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleGoAllProjects}>
+                <FolderOpen className="mr-2 h-4 w-4" />
+                全部项目
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </header>
     </>
   )
 }

@@ -1,10 +1,51 @@
 import { NextRequest } from 'next/server'
+import { z } from 'zod'
 import { ApiErrors } from '@/lib/api/response'
 import { prisma } from '@/lib/db/prisma'
-import { runAgent } from '@/lib/ai/agents'
+import { runAgentObject } from '@/lib/ai/agents'
+import { StoryIdeaCardOutputSchema } from '@/lib/ai/agents/schemas'
 
 /** 创意生成统一走 story-idea Agent（提示词可在设置页编辑） */
 const STORY_IDEA_AGENT_ID = 'story-idea'
+
+/**
+ * 生成侧宽松卡：字段尽量 string 化，缺省后端补
+ * （聊天同通道下模型字段常不齐，硬 schema 会全军覆没）
+ */
+const GeneratedIdeaCardSchema = z
+  .object({
+    id: z.union([z.string(), z.number()]).optional(),
+    title: z.string().optional(),
+    genre: z.string().optional(),
+    worldBuilding: z.string().optional(),
+    protagonist: z.string().optional(),
+    coreConflict: z.string().optional(),
+    mainGoal: z.string().optional(),
+    highConcept: z.string().optional(),
+    sublimation: z.string().optional(),
+    openingHook: z.string().optional(),
+  })
+  .passthrough()
+
+function normalizeIdeaCards(raw: unknown): Array<z.infer<typeof GeneratedIdeaCardSchema>> {
+  if (Array.isArray(raw)) return raw as any
+  if (raw && typeof raw === 'object') {
+    const o = raw as Record<string, unknown>
+    for (const key of ['ideas', 'cards', 'data', 'stories', 'results']) {
+      if (Array.isArray(o[key])) return o[key] as any
+    }
+  }
+  return []
+}
+
+/** 宽松接收任意 JSON，再在业务侧 normalize */
+const StoryIdeaBatchSchema = z.any().transform((raw) => {
+  const list = normalizeIdeaCards(raw)
+  return list
+    .map((card, i) => GeneratedIdeaCardSchema.parse(card))
+    .filter((c) => c.title || c.highConcept || c.genre)
+    .slice(0, 5)
+})
 
 function buildExamplesPrompt(positiveIdeas: Array<{
   title: string; highConcept: string; protagonist: string; coreConflict: string
@@ -158,19 +199,7 @@ export async function POST(request: NextRequest) {
     const { positiveIdeas, negativeIdeas } = await fetchExamples(positiveExampleIds, negativeExampleIds)
     const examples = buildExamplesPrompt(positiveIdeas, negativeIdeas)
 
-    // 与引导页/创意中心共用 story-idea Agent 及可编辑提示词
-    const agentResult = await runAgent({
-      agentId: STORY_IDEA_AGENT_ID,
-      variables: {
-        filters,
-        examples,
-      },
-      temperature: 0.9,
-    })
-
-    const rawText = agentResult.text.trim()
-
-    // 三级降级解析 JSON
+    // 与引导页/创意中心共用 story-idea Agent + 结构化输出
     let cards: Array<{
       id: string; title: string; genre: string; worldBuilding: string
       protagonist: string; coreConflict: string; mainGoal: string
@@ -178,42 +207,48 @@ export async function POST(request: NextRequest) {
     }>
 
     try {
-      cards = JSON.parse(rawText)
-    } catch {
-      const jsonMatch = rawText.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/)
-      if (jsonMatch) {
-        try {
-          cards = JSON.parse(jsonMatch[1])
-        } catch {
-          console.error('Failed to parse JSON from response:', rawText)
-          return ApiErrors.serverError('生成失败，AI 返回格式异常，请重试')
-        }
-      } else {
-        const arrMatch = rawText.match(/\[\s*\{[\s\S]*\}\s*\]/)
-        if (arrMatch) {
-          try {
-            cards = JSON.parse(arrMatch[0])
-          } catch {
-            console.error('Failed to parse JSON array from response:', rawText)
-            return ApiErrors.serverError('生成失败，AI 返回格式异常，请重试')
-          }
-        } else {
-          console.error('No JSON found in response:', rawText)
-          return ApiErrors.serverError('生成失败，AI 返回格式异常，请重试')
-        }
+      const agentResult = await runAgentObject({
+        agentId: STORY_IDEA_AGENT_ID,
+        variables: {
+          filters,
+          examples,
+        },
+        temperature: 0.9,
+        maxTokens: 4000,
+        schema: StoryIdeaBatchSchema,
+        schemaName: 'StoryIdeaList',
+        schemaDescription:
+          'JSON 数组，长度 3；每项含 title, genre, worldBuilding, protagonist, coreConflict, mainGoal, highConcept, sublimation, openingHook（id 可省略）',
+      })
+      const list = agentResult.object as Array<Record<string, unknown>>
+      if (!Array.isArray(list) || list.length === 0) {
+        console.error('story-idea empty list, raw text:', agentResult.text?.slice(0, 1500))
+        throw new Error('模型未返回创意列表')
       }
+      cards = list.slice(0, 3).map((card, index) => ({
+        id: String(card.id ?? index + 1),
+        title: String(card.title || `${card.genre || '新'}小说`),
+        genre: String(card.genre || '未分类'),
+        worldBuilding: String(card.worldBuilding || ''),
+        protagonist: String(card.protagonist || ''),
+        coreConflict: String(card.coreConflict || ''),
+        mainGoal: String(card.mainGoal || ''),
+        highConcept: String(card.highConcept || ''),
+        sublimation: String(card.sublimation || ''),
+        openingHook: String(card.openingHook || ''),
+      }))
+    } catch (error) {
+      console.error('story-idea structured generation failed:', error)
+      return ApiErrors.serverError(
+        error instanceof Error
+          ? `生成失败：${error.message.slice(0, 200)}`
+          : '生成失败，AI 返回格式异常，请重试'
+      )
     }
 
-    if (!Array.isArray(cards) || cards.length === 0) {
+    if (cards.length === 0) {
       return ApiErrors.serverError('生成失败，未获得有效创意，请重试')
     }
-
-    // 确保每个卡片都有 id
-    cards = cards.slice(0, 3).map((card, index) => ({
-      ...card,
-      id: card.id || String(index + 1),
-      title: card.title || `${card.genre || '新'}小说`,
-    }))
 
     // 自动保存到 Idea 表
     let savedIds: string[] = []

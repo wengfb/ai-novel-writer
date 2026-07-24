@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { useChapterStore } from '@/lib/store/chapter-store'
+import { useUIStore } from '@/lib/store/ui-store'
 import { toast } from 'sonner'
 
 interface ChapterListProps {
@@ -19,6 +20,7 @@ export function ChapterList({ projectId, onCreateChapter }: ChapterListProps) {
   const { currentChapter, setCurrentChapter } = useCurrentChapter()
   const deleteChapter = useChapterStore((s) => s.deleteChapter)
   const fetchChapters = useChapterStore((s) => s.fetchChapters)
+  const openEditor = useUIStore((s) => s.openEditor)
 
   const handleDelete = async (chapter: { id: string }) => {
     try {
@@ -56,7 +58,11 @@ export function ChapterList({ projectId, onCreateChapter }: ChapterListProps) {
               key={chapter.id}
               chapter={chapter}
               isActive={currentChapter?.id === chapter.id}
-              onClick={() => setCurrentChapter(chapter)}
+              onClick={() => {
+                setCurrentChapter(chapter)
+                // 从设置/创意等全局页返回时，必须切到编辑器
+                openEditor()
+              }}
               onDelete={handleDelete}
             />
           ))}

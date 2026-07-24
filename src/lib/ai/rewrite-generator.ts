@@ -98,7 +98,7 @@ export class RewriteGenerator {
     let userPrompt = ''
 
     const stream = streamAgent({
-      agentId: 'local-rewriter',
+      agentId: 'rewrite',
       model,
       temperature: 0.7,
       contextAppend,
