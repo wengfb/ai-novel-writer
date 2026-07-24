@@ -5,7 +5,7 @@ import { useProjectStore } from '@/lib/store/project-store'
  * 项目列表 Hook
  */
 export function useProjects() {
-  const { projects, isLoading, error, fetchProjects } = useProjectStore()
+  const { projects, isLoading, hasFetched, error, fetchProjects } = useProjectStore()
 
   useEffect(() => {
     fetchProjects()
@@ -14,6 +14,7 @@ export function useProjects() {
   return {
     projects,
     isLoading,
+    hasFetched,
     error,
     refetch: fetchProjects,
   }

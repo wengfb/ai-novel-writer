@@ -116,7 +116,7 @@ export function SidebarNav({
                   </CollapsibleTrigger>
                   <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-none">
                     {open && (
-                      <div className="mt-1 h-[min(50vh,360px)] overflow-hidden rounded-md border border-border/60 bg-muted/20">
+                      <div className="mt-1 h-[min(80vh,576px)] overflow-hidden rounded-md border border-border/60 bg-muted/20">
                         {sectionContent[id]}
                       </div>
                     )}

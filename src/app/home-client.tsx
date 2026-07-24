@@ -36,9 +36,9 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
     return localStorage.getItem("hasCompletedOnboarding") === "true"
   })
 
-  const { projects, isLoading } = useProjects()
+  const { projects, isLoading, hasFetched } = useProjects()
   const { currentProject, setCurrentProject } = useProjectStore()
-  const { chapters } = useChapterStore()
+  const { chapters, fetchChapters } = useChapterStore()
   const {
     mainView,
     setMainView,
@@ -50,6 +50,12 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
     openEditor,
   } = useUIStore()
   const { flatOutlines } = useOutlines(currentProject?.id || "")
+
+  // 进入项目即拉章节（不依赖左侧章节列表是否展开），fetch 后会默认选中最新章
+  useEffect(() => {
+    if (!currentProject?.id) return
+    void fetchChapters(currentProject.id)
+  }, [currentProject?.id, fetchChapters])
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -73,12 +79,31 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
     }
   }, [startOnboarding])
 
+  // 仅在项目列表真正拉取完成后，才根据「零项目」自动进入新建引导，避免首屏空数组竞态
   useEffect(() => {
-    if (isLoading || hasCompletedOnboarding) return
+    if (!hasFetched || isLoading || hasCompletedOnboarding) return
+    if (currentProject) return
     if (projects.length === 0 && mainView !== "onboarding") {
       startOnboarding({ mode: "new" })
     }
-  }, [isLoading, hasCompletedOnboarding, projects.length, mainView, startOnboarding])
+  }, [
+    hasFetched,
+    isLoading,
+    hasCompletedOnboarding,
+    currentProject,
+    projects.length,
+    mainView,
+    startOnboarding,
+  ])
+
+  // 有当前项目却停在「全部项目」页时，自动进入编辑器。
+  // 「全部项目」入口会先清空 currentProject，不会误伤；若 persist 的项目已被删除，fetch 校验后会清掉 currentProject 再回到列表。
+  useEffect(() => {
+    if (!currentProject) return
+    if (mainView === "projects") {
+      openEditor()
+    }
+  }, [currentProject, mainView, openEditor])
 
   useEffect(() => {
     if (currentProject) return

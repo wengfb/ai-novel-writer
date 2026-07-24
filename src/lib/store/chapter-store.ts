@@ -47,6 +47,21 @@ function normalizeChapter(chapter: ChapterResponse): Chapter {
   }
 }
 
+/** 最新章节：优先章号最大，其次最近更新 */
+function pickLatestChapter(chapters: Chapter[]): Chapter | null {
+  if (chapters.length === 0) return null
+  return chapters.reduce((latest, chapter) => {
+    if (chapter.chapterNumber > latest.chapterNumber) return chapter
+    if (
+      chapter.chapterNumber === latest.chapterNumber &&
+      chapter.updatedAt.getTime() > latest.updatedAt.getTime()
+    ) {
+      return chapter
+    }
+    return latest
+  })
+}
+
 interface ChapterState {
   chapters: Chapter[]
   currentChapter: Chapter | null
@@ -90,12 +105,15 @@ export const useChapterStore = create<ChapterState>()(
           normalizeChapter(c as ChapterResponse)
         )
         const currentChapter = get().currentChapter
-        const syncedCurrent = currentChapter
-          ? chapters.find((c) => c.id === currentChapter.id) || currentChapter
-          : null
+        // 仅当仍属于本项目时保留选中；否则默认打开最新章节
+        const stillValid =
+          currentChapter &&
+          currentChapter.projectId === projectId
+            ? chapters.find((c) => c.id === currentChapter.id) ?? null
+            : null
         set({
           chapters,
-          currentChapter: syncedCurrent,
+          currentChapter: stillValid ?? pickLatestChapter(chapters),
           isLoading: false,
           lastFetchedProjectId: projectId,
         })
@@ -200,7 +218,7 @@ export const useChapterStore = create<ChapterState>()(
         set((state) => {
           state.chapters = state.chapters.filter((c) => c.id !== id)
           if (state.currentChapter?.id === id) {
-            state.currentChapter = null
+            state.currentChapter = pickLatestChapter(state.chapters)
           }
           state.isLoading = false
         })

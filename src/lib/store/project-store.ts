@@ -13,6 +13,8 @@ interface ProjectState {
   projects: Project[]
   currentProject: Project | null
   isLoading: boolean
+  /** 是否已完成至少一次项目列表拉取（成功或失败），用于避免首屏空列表误触发引导 */
+  hasFetched: boolean
   error: string | null
 
   fetchProjects: () => Promise<void>
@@ -68,12 +70,14 @@ export const useProjectStore = create<ProjectState>()(
       projects: [],
       currentProject: null,
       isLoading: false,
+      hasFetched: false,
       error: null,
 
       fetchProjects: async () => {
         const state = get()
         if (state.isLoading) return
-        if (state.projects.length > 0) return
+        // 本会话已拉取过则跳过（含空列表），避免重复请求与首屏竞态
+        if (state.hasFetched) return
 
         set({ isLoading: true, error: null })
         try {
@@ -90,11 +94,17 @@ export const useProjectStore = create<ProjectState>()(
             useChapterStore.getState().clearProjectContext()
           }
 
-          set({ projects, currentProject: validCurrentProject, isLoading: false })
+          set({
+            projects,
+            currentProject: validCurrentProject,
+            isLoading: false,
+            hasFetched: true,
+          })
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : '获取项目列表失败',
             isLoading: false,
+            hasFetched: true,
           })
         }
       },
