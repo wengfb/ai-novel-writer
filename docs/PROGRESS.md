@@ -1,7 +1,8 @@
 # 项目开发进度追踪 (Development Progress)
 
 > **说明**：以下进度百分比为历史快照，仅作功能清单参考。  
-> 最近代码整理（2026-07）：Prisma 客户端同步、`Project` 类型统一、`onboarding-bootstrap` 归位为 `onboarding/normalize`、stores 收敛到 `api/endpoints`、补齐 `ideasApi`、清理脚手架死代码。
+> 最近代码整理（2026-07）：Prisma 客户端同步、`Project` 类型统一、`onboarding-bootstrap` 归位为 `onboarding/normalize`、stores 收敛到 `api/endpoints`、补齐 `ideasApi`、清理脚手架死代码。  
+> **测试文档总览**：[docs/TESTING.md](./TESTING.md)（已测 / 未测 / 缺陷优先级 / 复跑方式）。
 
 ## 📊 项目概览
 
@@ -24,7 +25,28 @@
 | **状态管理** | ██████████ 100% | ✅ 完成 |
 | **API 客户端** | ██████████ 100% | ✅ 完成 |
 | **文档** | ██████████ 100% | ✅ 完成 |
-| **测试** | ░░░░░░░░░░ 0% | ⏸️ 待开始 |
+| **测试** | █████░░░░░ 55% | ⏳ 主路径 + CRUD + 扩展（Agent/AI流/Change-set）；无 CI 套件 |
+
+---
+
+## 🧪 测试文档索引
+
+完整清单（已测 / **未测** / 缺陷）：**[TESTING.md](./TESTING.md)**
+
+| 文档 | 内容 |
+|------|------|
+| [`TESTING.md`](./TESTING.md) | 总览、未测项 U-xx、缺陷优先级、复跑 |
+| [`SMOKE_TEST_2026-07-28.md`](./SMOKE_TEST_2026-07-28.md) | 用户主路径、设计问题 |
+| [`SMOKE_TEST_CRUD_2026-07-28.md`](./SMOKE_TEST_CRUD_2026-07-28.md) | 领域 CRUD 矩阵 |
+| [`SMOKE_TEST_EXT_2026-07-29.md`](./SMOKE_TEST_EXT_2026-07-29.md) | Agent / AI 流 / Change-set |
+
+| 维度 | 结论 |
+|------|------|
+| 核心链路 | 首页 / 创意 / Studio / 设置 / 空项目 / 保存 **可用** |
+| AI | 模型测试、共创、一致性、rewrite/continue、generate 角色/世界观 **可用** |
+| CRUD | API 61/62；UI 主领域通；大纲刷新 / 导出角色有 bug |
+| 未测重点 | 全量 onboarding、整章/大纲生成、改写 UI、Change-set 前端（见 TESTING §4） |
+| 待修优先级 | P0 去重 → 标题同步 → 导出 personality → 提示词缓存 → 大纲刷新 |
 
 ---
 
