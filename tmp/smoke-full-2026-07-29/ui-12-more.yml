@@ -1,0 +1,31 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert
+  - menu [active] [ref=e1268]:
+    - menuitem "编辑项目" [ref=e1269]:
+      - img
+      - text: 编辑项目
+    - menuitem "系统设置" [ref=e1270]:
+      - img
+      - text: 系统设置
+    - separator [ref=e1271]
+    - menuitem "全部项目" [ref=e1272]:
+      - img
+      - text: 全部项目

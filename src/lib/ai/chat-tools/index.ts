@@ -10,12 +10,18 @@ import { createOutlineTools } from './outline-tools'
 import { createForeshadowingTools } from './foreshadowing-tools'
 import { createProjectTools } from './project-tools'
 import { createConsistencyTools } from './consistency-tools'
+import { getAllowedChatTools } from './permissions'
 
 export type { ChatToolOptions } from './types'
 
-/** 组装当前项目可用的全部 Chat Tools */
-export function buildChatTools(options: ChatToolOptions) {
-  return {
+export interface BuildChatToolsOptions extends ChatToolOptions {
+  agentId?: string
+  scopeType?: import('@/lib/ai/agent-workspace').AssistantScopeType
+}
+
+/** 根据当前 Agent 与参考作用域组装最小工具集。 */
+export function buildChatTools({ agentId = 'studio-chat', scopeType, ...options }: BuildChatToolsOptions) {
+  const allTools = {
     ...createCharacterTools(options),
     ...createWorldTools(options),
     ...createChapterTools(options),
@@ -24,4 +30,6 @@ export function buildChatTools(options: ChatToolOptions) {
     ...createForeshadowingTools(options),
     ...createConsistencyTools(options),
   }
+  const allowed = new Set(getAllowedChatTools(agentId, scopeType))
+  return Object.fromEntries(Object.entries(allTools).filter(([name]) => allowed.has(name)))
 }

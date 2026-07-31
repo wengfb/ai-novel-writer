@@ -35,9 +35,11 @@ export interface CreateCharacterParams {
 interface CharacterState {
   characters: Character[]
   isLoading: boolean
+  loadedProjectId: string | null
+  loadingProjectId: string | null
   error: string | null
 
-  fetchCharacters: (projectId: string) => Promise<void>
+  fetchCharacters: (projectId: string, force?: boolean) => Promise<void>
   createCharacter: (data: CreateCharacterParams) => Promise<Character>
   updateCharacter: (id: string, data: Partial<Character>) => Promise<void>
   deleteCharacter: (id: string) => Promise<void>
@@ -45,20 +47,31 @@ interface CharacterState {
 }
 
 export const useCharacterStore = create<CharacterState>()(
-  immer((set) => ({
+  immer((set, get) => ({
     characters: [],
     isLoading: false,
+    loadedProjectId: null,
+    loadingProjectId: null,
     error: null,
 
-    fetchCharacters: async (projectId: string) => {
-      set({ isLoading: true, error: null })
+    fetchCharacters: async (projectId, force = false) => {
+      const { loadedProjectId, loadingProjectId } = get()
+      if (!force && (loadedProjectId === projectId || loadingProjectId === projectId)) return
+
+      set({ isLoading: true, loadingProjectId: projectId, error: null })
       try {
         const res = await charactersApi.list(projectId)
-        set({ characters: res.data?.characters ?? [], isLoading: false })
+        set({
+          characters: res.data?.characters ?? [],
+          isLoading: false,
+          loadedProjectId: projectId,
+          loadingProjectId: null,
+        })
       } catch (error) {
         set({
           error: error instanceof Error ? error.message : '获取角色列表失败',
           isLoading: false,
+          loadingProjectId: null,
         })
       }
     },

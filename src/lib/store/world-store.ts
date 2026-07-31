@@ -28,9 +28,11 @@ export interface CreateWorldElementParams {
 interface WorldState {
   worldElements: WorldElement[]
   isLoading: boolean
+  loadedProjectId: string | null
+  loadingProjectId: string | null
   error: string | null
 
-  fetchWorldElements: (projectId: string) => Promise<void>
+  fetchWorldElements: (projectId: string, force?: boolean) => Promise<void>
   createWorldElement: (data: CreateWorldElementParams) => Promise<WorldElement>
   updateWorldElement: (id: string, data: Partial<WorldElement>) => Promise<void>
   deleteWorldElement: (id: string) => Promise<void>
@@ -38,20 +40,31 @@ interface WorldState {
 }
 
 export const useWorldStore = create<WorldState>()(
-  immer((set) => ({
+  immer((set, get) => ({
     worldElements: [],
     isLoading: false,
+    loadedProjectId: null,
+    loadingProjectId: null,
     error: null,
 
-    fetchWorldElements: async (projectId: string) => {
-      set({ isLoading: true, error: null })
+    fetchWorldElements: async (projectId, force = false) => {
+      const { loadedProjectId, loadingProjectId } = get()
+      if (!force && (loadedProjectId === projectId || loadingProjectId === projectId)) return
+
+      set({ isLoading: true, loadingProjectId: projectId, error: null })
       try {
         const res = await worldElementsApi.list(projectId)
-        set({ worldElements: res.data?.elements ?? [], isLoading: false })
+        set({
+          worldElements: res.data?.elements ?? [],
+          isLoading: false,
+          loadedProjectId: projectId,
+          loadingProjectId: null,
+        })
       } catch (error) {
         set({
           error: error instanceof Error ? error.message : '获取世界观列表失败',
           isLoading: false,
+          loadingProjectId: null,
         })
       }
     },

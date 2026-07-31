@@ -1,7 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { apiSuccess, apiError } from '@/lib/api/response'
-import { clearConfigCache } from '@/lib/ai/config'
+import {
+  AI_CONTEXT_MAX_TOKENS_LIMIT,
+  AI_MAX_OUTPUT_TOKENS_LIMIT,
+  clearConfigCache,
+} from '@/lib/ai/config'
 
 // 获取所有系统设置
 export async function GET() {
@@ -16,14 +20,71 @@ export async function GET() {
       return acc
     }, {} as Record<string, string>)
 
+    // 密钥绝不能回传到浏览器；留空的输入框表示“保留现有密钥”。
+    const publicSettings = Object.fromEntries(
+      Object.entries(settingsObj).filter(([key]) => key !== 'ai.apiKey')
+    )
+    const publicCategories = Object.fromEntries(
+      Object.entries(groupByCategory(settings) as Record<string, Array<{ key: string; value: string; description: string }>>).map(([category, categorySettings]) => [
+        category,
+        categorySettings.filter((setting) => setting.key !== 'ai.apiKey'),
+      ])
+    )
+
     return apiSuccess({
-      settings: settingsObj,
-      categories: groupByCategory(settings),
+      settings: publicSettings,
+      categories: publicCategories,
     })
   } catch (error) {
     console.error('获取系统设置失败:', error)
     return apiError('SERVER_ERROR', '获取系统设置失败')
   }
+}
+
+/**
+ * 校验并规范化可写入的设置值。
+ * 对 token 类数字做上下限钳制，避免 1e8 这类危险默认值再次写入。
+ */
+function normalizeSettingValue(key: string, raw: unknown): { ok: true; value: string } | { ok: false; message: string } {
+  if (raw === null || raw === undefined) {
+    return { ok: false, message: `设置 ${key} 不能为空` }
+  }
+  const value = String(raw).trim()
+
+  if (key === 'ai.contextMaxTokens') {
+    if (value === '') return { ok: true, value: '' }
+    const n = Number(value)
+    if (!Number.isFinite(n) || n <= 0 || !Number.isInteger(n)) {
+      return { ok: false, message: '上下文窗口上限必须是正整数' }
+    }
+    if (n > AI_CONTEXT_MAX_TOKENS_LIMIT) {
+      return { ok: false, message: `上下文窗口上限不能超过 ${AI_CONTEXT_MAX_TOKENS_LIMIT.toLocaleString()}` }
+    }
+    return { ok: true, value: String(n) }
+  }
+
+  if (key === 'ai.maxTokens') {
+    if (value === '') return { ok: true, value: '' }
+    const n = Number(value)
+    if (!Number.isFinite(n) || n <= 0 || !Number.isInteger(n)) {
+      return { ok: false, message: '最大输出 Token 必须是正整数' }
+    }
+    if (n > AI_MAX_OUTPUT_TOKENS_LIMIT) {
+      return { ok: false, message: `最大输出 Token 不能超过 ${AI_MAX_OUTPUT_TOKENS_LIMIT.toLocaleString()}` }
+    }
+    return { ok: true, value: String(n) }
+  }
+
+  if (key === 'ai.temperature') {
+    if (value === '') return { ok: true, value: '' }
+    const n = Number(value)
+    if (!Number.isFinite(n) || n < 0 || n > 2) {
+      return { ok: false, message: '生成温度必须在 0–2 之间' }
+    }
+    return { ok: true, value: String(n) }
+  }
+
+  return { ok: true, value: String(raw) }
 }
 
 // 批量更新系统设置
@@ -36,21 +97,35 @@ export async function PUT(request: NextRequest) {
       return apiError('INVALID_SETTINGS', '无效的设置数据', undefined, 400)
     }
 
+    const normalized: Record<string, string> = {}
+    for (const [key, raw] of Object.entries(settings as Record<string, unknown>)) {
+      // 前端不会提交 apiKey 明文替换策略以外的字段时跳过空密钥覆盖
+      if (key === 'ai.apiKey' && (raw === '' || raw == null)) continue
+      const result = normalizeSettingValue(key, raw)
+      if (!result.ok) {
+        return apiError('INVALID_SETTINGS', result.message, undefined, 400)
+      }
+      // 空字符串表示清除该项，由 upsert 写入空值；读路径会回退默认
+      normalized[key] = result.value
+    }
+
     // 使用事务批量更新
-    const updates = Object.entries(settings).map(([key, value]) => {
+    const updates = Object.entries(normalized).map(([key, value]) => {
       return prisma.systemSetting.upsert({
         where: { key },
-        update: { value: value as string },
+        update: { value },
         create: {
           key,
-          value: value as string,
+          value,
           category: getCategoryByKey(key),
           description: getDescriptionByKey(key),
         },
       })
     })
 
-    await prisma.$transaction(updates)
+    if (updates.length > 0) {
+      await prisma.$transaction(updates)
+    }
 
     // 清除 AI 配置缓存，下次请求时重新读取
     clearConfigCache()

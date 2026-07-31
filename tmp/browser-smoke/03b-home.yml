@@ -1,0 +1,80 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "AI 小说工坊" [level=2] [ref=e10]
+            - button [ref=e11]
+          - button "工作台" [ref=e16]:
+            - img [ref=e17]
+            - text: 工作台
+        - generic [ref=e20]:
+          - heading "创作资源" [level=3] [ref=e21]
+          - generic [ref=e22]:
+            - button "创意中心" [ref=e23]
+            - button "剧情大纲" [ref=e26]
+            - button "章节列表" [ref=e31]
+            - button "角色设定" [ref=e35]
+            - button "世界观" [ref=e41]
+      - generic [ref=e47]:
+        - generic [ref=e48]: WF
+        - generic [ref=e49]:
+          - paragraph [ref=e50]: WengFB
+          - paragraph [ref=e51]: 专业版计划
+    - separator [ref=e52]
+    - generic [ref=e56]:
+      - banner [ref=e57]:
+        - generic [ref=e58]:
+          - combobox [ref=e59]:
+            - generic [ref=e60]: 选择项目
+            - img [ref=e61]
+          - generic [ref=e63]: 未选择章节
+        - generic [ref=e64]:
+          - generic [ref=e65]: 未保存
+          - button "保存" [disabled]:
+            - img
+            - text: 保存
+          - button "AI生成章节" [disabled]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [disabled]:
+            - img
+            - text: AI 续写
+          - button [ref=e66]:
+            - img [ref=e67]
+      - generic [ref=e74]:
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - paragraph [ref=e77]: 项目工作台
+            - heading "选择一个小说项目" [level=1] [ref=e78]
+            - paragraph [ref=e79]: 进入项目后可以继续编辑章节、管理角色与世界观，或从这里创建一个全新的故事。
+          - generic [ref=e80]:
+            - button "创意中心" [ref=e81]
+            - button "新建项目" [ref=e84]
+        - generic [ref=e108]:
+          - generic [ref=e109] [cursor=pointer]:
+            - button [ref=e110]
+            - button [ref=e114]
+            - generic [ref=e118]
+            - generic [ref=e121]
+          - generic [ref=e131] [cursor=pointer]:
+            - button [ref=e132]
+            - button [ref=e136]
+            - generic [ref=e140]
+            - generic [ref=e143]
+    - separator [ref=e90]
+    - generic [ref=e95]:
+      - generic [ref=e96]:
+        - generic [ref=e97]:
+          - img [ref=e98]
+          - text: AI 副驾驶
+        - tablist [ref=e101]:
+          - tab "对话" [selected] [ref=e102]
+          - tab "上下文" [ref=e103]
+          - tab "工具箱" [ref=e104]
+      - tabpanel "对话" [ref=e105]:
+        - paragraph [ref=e107]: 请先选择项目
+  - button "Open Next.js Dev Tools" [ref=e158] [cursor=pointer]:
+    - img [ref=e159]
+  - alert [ref=e162]

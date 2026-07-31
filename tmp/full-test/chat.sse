@@ -1,0 +1,68 @@
+data: {"type":"start"}
+
+data: {"type":"start-step"}
+
+data: {"type":"reasoning-start","id":"reasoning-0"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"用户"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"只"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"要求"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"回答"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"一个"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"词"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"\""}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"ok"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"\"，"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"看起来"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"是在"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"测试"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"或"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"确认"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"我的"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"响应"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"。"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"直接"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"回复"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"\""}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"ok"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"\""}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"即可"}
+
+data: {"type":"reasoning-delta","id":"reasoning-0","delta":"。"}
+
+data: {"type":"reasoning-end","id":"reasoning-0"}
+
+data: {"type":"text-start","id":"txt-0"}
+
+data: {"type":"text-delta","id":"txt-0","delta":"ok"}
+
+data: {"type":"text-end","id":"txt-0"}
+
+data: {"type":"finish-step"}
+
+data: {"type":"finish","finishReason":"stop"}
+
+data: [DONE]
+

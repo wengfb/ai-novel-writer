@@ -35,7 +35,7 @@
 | 主路径 | **可用**（首页 → 创意 → Studio → 设置 → 空项目写作） |
 | 领域 CRUD | **基本可用**（项目/章/角/世界/创意 API+UI；大纲刷新有问题） |
 | AI 能力 | **大部分可用**（模型测试、共创、rewrite/continue、generate 角色/世界观） |
-| 数据质量 | **差**（历史角色/世界观重复、章节标题与正文不一致） |
+| 数据质量 | **API 回归通过**（init 去重、导出 personality；真实 onboarding 全链路仍建议抽测） |
 | 测试完备度 | **约 55%** — 高成本 AI 全管线与部分 UI 仍未测 |
 
 ---
@@ -66,7 +66,7 @@
 | 大纲 | ✅ | ⚠️ | 创建/更新后侧栏刷新差；删除无确认 |
 | 创意 | ✅ | ⚠️ | 评分/评论/删除已测；纯表单新建未测 |
 | 设置 | ✅ 读/幂等写 | ⚠️ 打开+模型测试 | 未系统改全量配置项 |
-| 导出 | ⚠️ | ❌ 无入口 | txt 可；md+角色 500 |
+| 导出 | ✅ API | ❌ 无入口 | md+角色 personality 字符串已修复；UI 仍无入口 |
 | 上下文 | ✅ 需 chapterId | ✅ 面板打开 | |
 | Agents list | ✅ | ✅ | |
 
@@ -98,8 +98,8 @@
 | U-02 | **从创意「开始创作」完整开书** | 配置页之后的真正创建+初始化 | 与 U-01 合并 |
 | U-03 | **AI 生成整章正文并落库** | `/api/ai/generate/chapter` + 前端「AI生成章节」 | 短 targetWords 专项 |
 | U-04 | **AI 生成大纲 / 分卷 / 架构全管线** | outline、volume-plan、architecture 等 | 专项；注意重复写入 |
-| U-05 | **初始化幂等与去重回归** | 重复跑 init 是否再灌角色/世界观 | 修 P0 后必回归 |
-| U-06 | **章节 title ↔ 正文 H1 ↔ 大纲同步** | 生成/保存后一致性 | 修 P0 后必回归 |
+| U-05 | **AI 生成去重回归** | onboarding 与聊天工具会在创建前判断/合并同名角色和世界观；需以真实 AI 流程复验 | 本轮已实现，待 AI 回归 |
+| U-06 | **章节创建标题预填与正文无 H1 回归** | 创建时自动继承同章号大纲标题；用户后续可独立修改；AI 正文不应含 H1 | 本轮已实现，待 AI/UI 回归 |
 
 ### 4.2 功能未测（中优先级）
 
@@ -147,20 +147,41 @@
 
 | 优先级 | 缺陷 | 来源 |
 |--------|------|------|
-| P0 | 角色/世界观大量重复；初始化缺幂等 | 冒烟 |
-| P0 | 章节侧栏标题与正文 H1 / 大纲不一致 | 冒烟 |
-| P0 | 导出 Markdown + 角色 → `personality.join` 崩溃 | CRUD |
-| P0/P1 | Agent 提示词保存后 catalog 最多 15s 读旧缓存 | EXT |
-| P1 | 大纲创建/更新后侧栏不刷新 | CRUD/EXT |
-| P1 | 大纲默认 type=chapter；删除无确认 | CRUD/EXT |
-| P1 | 创意卡片 button 嵌套 / a11y 名称错误 | 冒烟 |
-| P1 | 右侧面板点击被 header/滚动条拦截 | 冒烟 |
-| P1 | 聊天 UI 中英文混杂 | 冒烟 |
-| P1 | ideas `sortBy=updatedAt` 不支持 | 冒烟 |
-| P1 | `contextMaxTokens` 等配置无上限 | 冒烟 |
-| P2 | Onboarding 非法输入 500 | EXT |
-| P2 | Chat 非 UIMessage → 500 | EXT |
+| P0（API 回归通过） | AI/init 角色世界观去重：同名跳过、同批合并 | 冒烟 |
+| 设计决策（API+单元通过） | 章节标题可独立于大纲；正文 H1 剥离单元 4/4 | 用户确认 / 本轮修复 |
+| P0（API 回归通过） | 导出 Markdown + 角色 `personality` 字符串/数组兼容 | CRUD |
+| P0/P1（API 回归通过） | Agent 提示词缓存改挂 `globalThis`，保存后立即读新值 | EXT |
+| P1（store 代码+API 通过，UI 建议目视） | 大纲 create/update 后 `force` 刷新不再被 `isLoading` 短路 | CRUD/EXT |
+| P1（已修） | 根级新建大纲默认 type=volume；编辑页删除需确认（侧栏树原有确认） | CRUD/EXT |
+| P1（已修） | 创意卡片：并列 button + `打开创意`/`删除创意` accessible name | 冒烟 |
+| P1（已修） | 右栏 overflow/z-index 隔离，避免中栏叠层挡点击 | 冒烟 |
+| P1（已修） | 聊天 UI 中文化（composer/按钮/附件/操作栏） | 冒烟 |
+| P1（已修 API 回归） | ideas `sortBy=updatedAt` 已支持 | 冒烟 |
+| P1（已修 API 回归） | `contextMaxTokens`≤2e6、`maxTokens`≤2e5；读写侧钳制 | 冒烟 |
+| P2（已修） | Onboarding/settings 等 ZodError/非法 JSON 统一 400 | EXT |
+| P2（已修） | Chat 校验 messages；裸 content 归一化 parts；坏格式 400 | EXT |
 | P2 | 专注模式不完整；更多菜单过瘦；评论无 DELETE | 冒烟 |
+
+---
+
+### 4.5 最近修复的验证记录（2026-07-29）
+
+| 项目 | 结果 | 备注 |
+|------|------|------|
+| **全量已修项回归** | ✅ **38/38 PASS** | 报告 `tmp/regression-2026-07-29/REPORT.md` |
+| 单元：H1 剥离 | ✅ 4/4 | `stripLeadingChapterHeading` |
+| 单元：名称去重 | ✅ | `dedupeGeneratedEntities` 空格/同名合并 |
+| init 去重 | ✅ | 已有「测人设/天网」不重复；同批「新角色甲」「云端区」各 1 |
+| 导出 md + 角色/世界 | ✅ 200 | personality 字符串正常 |
+| 大纲 C/U + list | ✅ | 卷/章创建与改标题后 list 正确 |
+| 章节标题可独立改 | ✅ | 章标题改后大纲标题不变 |
+| ideas sortBy | ✅ | updatedAt / createdAt |
+| token 上限 | ✅ | 超限 400 / 合法 200 |
+| Agent 提示词缓存 | ✅ | PUT 后立刻 GET 见 marker |
+| 非法 body 400 | ✅ | finalize/idea-extract/chat |
+| chat content 字符串 | ✅ 200 stream | 非 500 |
+| 静态：i18n/a11y/布局/大纲 UX | ✅ | 源码断言 |
+| 真实 onboarding 全量 AI 开书 | ⏳ 未跑 | U-01/U-02/U-03 仍建议专项 |
 
 ---
 
@@ -168,6 +189,9 @@
 
 ```bash
 # 需已启动：npm run dev
+
+# 已修项综合回归（约 30s，自建自删；含 API + 单元静态断言）
+# 产物：tmp/regression-2026-07-29/REPORT.md
 
 # 领域 CRUD API（约 1 分钟，自建自删）
 python3 tmp/smoke-crud-2026-07-28/run_api_crud.py
@@ -182,11 +206,11 @@ python3 tmp/smoke-ext-2026-07-29/run_ext_tests.py
 
 ## 6. 下轮建议顺序
 
-1. **修 P0 缺陷** → 用 U-05、U-06、导出用例回归  
-2. **修提示词缓存 + 大纲 store 刷新** → 扩展脚本 + 大纲 UI 回归  
-3. **补 U-01/U-02 开书全链路**（可降模型、限步）  
-4. **补 U-03 短章生成 + U-13/U-14 续写改写 UI**  
-5. **沉淀正式 Playwright test 到仓库**（替代仅 tmp 脚本）
+1. **UI 目视**：右栏协作/发送可点、聊天中文文案、大纲侧栏刷新
+2. **真实 AI 回归 U-05/U-06**，并补 **U-01/U-02/U-03**（可降模型、限步）
+3. **导出 UI 入口 / 更多菜单**
+4. **专注模式完善**
+5. **沉淀正式 Playwright test 到仓库**
 
 ---
 
@@ -195,3 +219,8 @@ python3 tmp/smoke-ext-2026-07-29/run_ext_tests.py
 | 日期 | 说明 |
 |------|------|
 | 2026-07-29 | 建立总览；汇总三份报告的已测/未测/缺陷优先级 |
+| 2026-07-29 | 实现 AI 创建前重复拦截（提示词自检、生成结果合并、聊天工具复用）；章节创建自动预填同章号大纲标题，AI 生成/续写入库前剥离正文 H1。相关真实 AI/UI 回归仍列为 U-05/U-06。 |
+| 2026-07-29 | 修复：导出 personality 兼容字符串/数组；Agent 提示词缓存改 globalThis；大纲 store force 刷新不再被 isLoading 短路。API 回归通过。 |
+| 2026-07-29 | 修复：settings token 上限；ideas sortBy=updatedAt；根级大纲默认 volume + 编辑删除确认；创意卡 a11y 并列按钮。 |
+| 2026-07-29 | 修复：聊天 UI 中文化；右栏 overflow/z-index 防叠层；withErrorHandler 捕获 ZodError；chat messages 校验与 content→parts 归一化。 |
+| 2026-07-29 | **回归 38/38 PASS**（export/init 去重/大纲/token/提示词缓存/chat 400/i18n 静态）；产物 `tmp/regression-2026-07-29/`。 |

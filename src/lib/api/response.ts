@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { z } from 'zod'
 import { Validation_error } from '@/lib/api/validators'
 
 /**
@@ -90,16 +91,41 @@ export function withErrorHandler<T>(
   return handler().catch((error) => {
     console.error('API Error:', error)
 
-    if (error instanceof Validation_error) {
-      return ApiErrors.badRequest('参数验证失败', error.errors)
+    // Next 路由拆包可能导致不同模块实例的 instanceof 失效，同时认 name
+    if (
+      error instanceof Validation_error ||
+      (error && typeof error === 'object' && 'name' in error && error.name === 'ValidationError')
+    ) {
+      const details =
+        error instanceof Validation_error
+          ? error.errors
+          : (error as { errors?: unknown }).errors
+      return ApiErrors.badRequest(
+        error instanceof Error ? error.message : '参数验证失败',
+        details
+      )
+    }
+
+    // 路由里直接 schema.parse() 时抛出的 ZodError → 400
+    if (
+      error instanceof z.ZodError ||
+      (error && typeof error === 'object' && 'name' in error && error.name === 'ZodError' && 'issues' in error)
+    ) {
+      const issues = (error as z.ZodError).issues || []
+      const details = issues.map((issue) => ({
+        field: issue.path.join('.') || '(root)',
+        message: issue.message,
+      }))
+      return ApiErrors.badRequest('参数验证失败', details)
     }
 
     // Prisma 错误处理
-    if (error.code === 'P2025') {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
       return ApiErrors.notFound()
     }
 
     // 其他错误
-    return ApiErrors.serverError(error.message)
+    const message = error instanceof Error ? error.message : '服务器错误'
+    return ApiErrors.serverError(message)
   })
 }

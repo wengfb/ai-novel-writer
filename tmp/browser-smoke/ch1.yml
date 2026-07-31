@@ -1,0 +1,48 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]
+          - generic [ref=e12]
+        - generic [ref=e14]:
+          - heading "创作资源" [level=3] [ref=e548]
+          - generic [ref=e16]
+        - generic [ref=e121]:
+          - button "新建章节" [ref=e554]
+          - generic [ref=e127]
+      - generic [ref=e24]:
+        - generic [ref=e25]: WF
+        - generic [ref=e26]:
+          - paragraph [ref=e27]: WengFB
+          - paragraph [ref=e28]: 专业版计划
+    - separator [ref=e29]
+    - generic [ref=e33]:
+      - banner [ref=e34]:
+        - generic [ref=e35]:
+          - combobox [ref=e36]
+          - generic [ref=e38]: 未选择章节
+        - generic [ref=e39]:
+          - generic [ref=e40]: 未保存
+          - button "保存" [disabled]
+          - button "AI生成章节" [ref=e557]
+          - button "AI 续写" [disabled]
+          - button [ref=e41]
+      - paragraph [ref=e147]: 开始你的创作...
+    - separator [ref=e57]
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - generic [ref=e64]:
+          - img [ref=e65]
+          - text: AI 副驾驶
+        - tablist [ref=e68]:
+          - tab "对话" [selected] [ref=e558]
+          - tab "上下文" [ref=e559]
+          - tab "工具箱" [ref=e560]
+      - tabpanel "对话" [ref=e561]:
+        - generic [ref=e150]:
+          - button "AI 工具设置" [ref=e562]
+          - generic [ref=e158]
+  - button "Open Next.js Dev Tools" [ref=e80] [cursor=pointer]:
+    - img [ref=e81]
+  - alert [ref=e117]

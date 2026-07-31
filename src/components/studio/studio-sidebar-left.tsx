@@ -23,7 +23,7 @@ type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 export function StudioSidebarLeft({ className }: SidebarProps) {
   const { currentProject, setCurrentProject } = useCurrentProject()
   const { createChapter } = useChapterStore()
-  const { deleteOutline } = useOutlineStore()
+  const { outlines, deleteOutline } = useOutlineStore()
   const { deleteCharacter } = useCharacterStore()
   const { deleteWorldElement } = useWorldStore()
   const {
@@ -32,7 +32,6 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
     setMainView,
     selectBookSection,
     openOutlineEdit,
-    openOutlineGenerate,
     openCharacterEdit,
     openWorldEdit,
     openEditor,
@@ -49,10 +48,18 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
       const nextChapterNumber =
         chapters.length > 0 ? Math.max(...chapters.map((c) => c.chapterNumber)) + 1 : 1
 
+      const matchedOutline = outlines.find(
+        (outline) =>
+          outline.projectId === currentProject.id &&
+          outline.type === 'chapter' &&
+          outline.order === nextChapterNumber
+      )
+
       await createChapter({
         projectId: currentProject.id,
         chapterNumber: nextChapterNumber,
-        title: '新章节',
+        // 创建时继承同章号大纲标题；之后章节与大纲均可独立编辑。
+        title: matchedOutline?.title || '新章节',
         content: '<p>开始你的创作...</p>',
       })
       openEditor()
@@ -63,10 +70,13 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
   }
 
   const handleCreateOutline = (parentId?: string | null, type?: 'volume' | 'chapter' | 'scene') => {
+    // 根级新建默认「卷」；在父节点下新建时使用传入类型，否则默认章。
+    const resolvedType =
+      type || (parentId ? 'chapter' : 'volume')
     openOutlineEdit({
       editingOutline: null,
       parentId: parentId || null,
-      defaultType: type || 'chapter',
+      defaultType: resolvedType,
     })
   }
 
@@ -135,7 +145,6 @@ export function StudioSidebarLeft({ className }: SidebarProps) {
             onCreateOutline={handleCreateOutline}
             onSelectOutline={handleSelectOutline}
             onDeleteOutline={handleDeleteOutline}
-            onGenerateOutline={openOutlineGenerate}
           />
         ),
         characters: (

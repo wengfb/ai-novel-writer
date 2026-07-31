@@ -11,6 +11,7 @@ import { useEffect, useMemo, useRef, type ReactNode } from 'react'
 import {
   AssistantRuntimeProvider,
   useAui,
+  useThread,
 } from '@assistant-ui/react'
 import {
   AssistantChatTransport,
@@ -21,6 +22,7 @@ import { Thread } from '@/components/assistant-ui/thread'
 import { ChatSettingsPanel } from '@/components/ai/chat-settings-panel'
 import { cn } from '@/lib/utils'
 import { ToolStateRefresher } from './tool-state-refresher'
+import type { AssistantScopeType } from '@/lib/ai/agent-workspace'
 
 export interface UnifiedChatProps {
   /** 绑定项目（Studio 写库工具需要） */
@@ -36,6 +38,12 @@ export interface UnifiedChatProps {
   showSettings?: boolean
   /** 拼到 system 的动态上下文（创意卡 / 已确认步骤） */
   contextAppend?: string
+  /** 当前参考资产，用于后端收紧工具集。 */
+  scopeType?: AssistantScopeType
+  scopeId?: string
+  /** 为主 Agent 提供只更新当前页面草稿的工具。 */
+  draftTarget?: 'idea' | 'onboarding' | 'outline'
+  draftStep?: 'architecture' | 'characters' | 'world' | 'volume' | 'foreshadowings' | 'styleAnchor'
   /** 进入会话后自动发送的首条用户消息（仅空会话时） */
   autoSendMessage?: string
   /** 空会话欢迎标题（覆盖官方 Welcome） */
@@ -43,14 +51,8 @@ export interface UnifiedChatProps {
   welcomeSubtitle?: string
   className?: string
   header?: ReactNode
-  /** 暴露 runtime 侧能力给父组件（整理对话文本等） */
-  chatApiRef?: React.MutableRefObject<UnifiedChatApi | null>
-}
-
-export interface UnifiedChatApi {
-  /** 将当前线程消息拼成纯文本，供 extract 使用 */
-  getConversationText: () => string
-  isRunning: () => boolean
+  /** 主 Agent 完成一个工具调用后触发，用于同步非持久化的页面草稿。 */
+  onToolCallComplete?: (toolName: string, result: unknown) => void
 }
 
 export function UnifiedChat({
@@ -62,12 +64,16 @@ export function UnifiedChat({
   api = '/api/ai/chat',
   showSettings = true,
   contextAppend,
+  scopeType,
+  scopeId,
+  draftTarget,
+  draftStep,
   autoSendMessage,
   welcomeTitle = '开始与 AI 助手对话',
   welcomeSubtitle = '可以帮你分析剧情、完善角色、优化文笔…',
   className,
   header,
-  chatApiRef,
+  onToolCallComplete,
 }: UnifiedChatProps) {
   const transport = useMemo(
     () =>
@@ -79,9 +85,13 @@ export function UnifiedChat({
           agentId,
           systemSlot,
           contextAppend,
+          scopeType,
+          scopeId,
+          draftTarget,
+          draftStep,
         },
       }),
-    [api, projectId, chapterId, agentId, systemSlot, contextAppend]
+    [api, projectId, chapterId, agentId, systemSlot, contextAppend, scopeType, scopeId, draftTarget, draftStep]
   )
 
   const runtime = useChatRuntime({
@@ -103,7 +113,7 @@ export function UnifiedChat({
       ) : null}
       <ChatBridge
         autoSendMessage={autoSendMessage}
-        chatApiRef={chatApiRef}
+        onToolCallComplete={onToolCallComplete}
       />
       <div className={cn('flex h-full min-h-0 max-h-full flex-col overflow-hidden', className)}>
         {showSettings ? <ChatSettingsPanel /> : null}
@@ -122,51 +132,36 @@ export function UnifiedChat({
   )
 }
 
-/** 在 RuntimeProvider 内：首轮 auto-send + 暴露对话文本 API */
+/** 在 RuntimeProvider 内：首轮 auto-send 与工具完成事件桥接。 */
 function ChatBridge({
   autoSendMessage,
-  chatApiRef,
+  onToolCallComplete,
 }: {
   autoSendMessage?: string
-  chatApiRef?: React.MutableRefObject<UnifiedChatApi | null>
+  onToolCallComplete?: (toolName: string, result: unknown) => void
 }) {
   const aui = useAui()
+  const messages = useThread((thread) => thread.messages)
   const sentRef = useRef(false)
+  const toolCallCompleteRef = useRef(onToolCallComplete)
+  const handledToolCallsRef = useRef(new Set<string>())
 
   useEffect(() => {
-    if (!chatApiRef) return
-    chatApiRef.current = {
-      getConversationText: () => {
-        try {
-          const state = aui.thread().getState()
-          const messages = state.messages ?? []
-          return messages
-            .map((m) => {
-              const role = m.role === 'user' ? '用户' : m.role === 'assistant' ? '助手' : m.role
-              const text = (m.content || [])
-                .filter((p: any) => p.type === 'text' && p.text)
-                .map((p: any) => p.text as string)
-                .join('\n')
-              return text ? `【${role}】\n${text}` : ''
-            })
-            .filter(Boolean)
-            .join('\n\n')
-        } catch {
-          return ''
-        }
-      },
-      isRunning: () => {
-        try {
-          return Boolean(aui.thread().getState().isRunning)
-        } catch {
-          return false
-        }
-      },
+    toolCallCompleteRef.current = onToolCallComplete
+  }, [onToolCallComplete])
+
+  useEffect(() => {
+    if (!toolCallCompleteRef.current) return
+    for (const message of messages) {
+      if (message.role !== 'assistant') continue
+      for (const part of message.content) {
+        if (part.type !== 'tool-call' || part.result === undefined) continue
+        if (handledToolCallsRef.current.has(part.toolCallId)) continue
+        handledToolCallsRef.current.add(part.toolCallId)
+        toolCallCompleteRef.current(part.toolName, part.result)
+      }
     }
-    return () => {
-      if (chatApiRef) chatApiRef.current = null
-    }
-  }, [aui, chatApiRef])
+  }, [messages])
 
   useEffect(() => {
     if (!autoSendMessage?.trim() || sentRef.current) return

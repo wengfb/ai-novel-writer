@@ -12,6 +12,20 @@ export function createWorldTools({ projectId }: ChatToolOptions) {
       inputSchema: zodSchema(CreateWorldElementInputSchema),
       needsApproval: true,
       execute: async (input) => {
+        const existing = await prisma.worldElement.findFirst({
+          where: {
+            projectId,
+            name: { equals: input.name.trim() },
+          },
+          select: { id: true, name: true, type: true, scope: true },
+        })
+
+        // 同一轮或长对话里重复调用时复用已有设定，避免 AI 污染上下文。
+        // 常规表单不受此限制，用户仍可有意创建同名但不同定义的设定。
+        if (existing) {
+          return { ok: true, reused: true, worldElement: existing }
+        }
+
         const attributes = normalizeJsonValue(input.attributes)
         const constraints = normalizeJsonValue(input.constraints)
         const exceptions = normalizeJsonValue(input.exceptions)

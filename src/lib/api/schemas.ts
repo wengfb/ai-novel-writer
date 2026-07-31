@@ -226,7 +226,7 @@ export const IdeaQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(50).default(20),
   status: z.enum(IdeaStatusValues).optional(),
   genre: z.string().optional(),
-  sortBy: z.enum(['createdAt', 'rating']).default('createdAt'),
+  sortBy: z.enum(['createdAt', 'updatedAt', 'rating']).default('createdAt'),
   sortOrder: z.enum(['asc', 'desc']).default('desc'),
   aiGenerated: z.coerce.boolean().optional(),
 })
@@ -249,6 +249,7 @@ export const UpdateIdeaSchema = z.object({
   sublimation: z.string().optional(),
   openingHook: z.string().optional(),
   aiGenerated: z.boolean().optional(),
+  convertedToProjectId: z.string().cuid().optional().nullable(),
 })
 
 export const CreateIdeaCommentSchema = z.object({

@@ -63,6 +63,11 @@ export const ModelName = {
   WorldElementSnapshot: 'WorldElementSnapshot',
   SystemSetting: 'SystemSetting',
   AgentPrompt: 'AgentPrompt',
+  AgentConversation: 'AgentConversation',
+  AgentConversationMessage: 'AgentConversationMessage',
+  ChangeSet: 'ChangeSet',
+  ChangeSetItem: 'ChangeSetItem',
+  AgentHandoff: 'AgentHandoff',
   Idea: 'Idea',
   IdeaComment: 'IdeaComment'
 } as const
@@ -328,6 +333,86 @@ export const AgentPromptScalarFieldEnum = {
 } as const
 
 export type AgentPromptScalarFieldEnum = (typeof AgentPromptScalarFieldEnum)[keyof typeof AgentPromptScalarFieldEnum]
+
+
+export const AgentConversationScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  scopeType: 'scopeType',
+  scopeId: 'scopeId',
+  agentId: 'agentId',
+  systemSlot: 'systemSlot',
+  title: 'title',
+  contextSnapshot: 'contextSnapshot',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  archivedAt: 'archivedAt'
+} as const
+
+export type AgentConversationScalarFieldEnum = (typeof AgentConversationScalarFieldEnum)[keyof typeof AgentConversationScalarFieldEnum]
+
+
+export const AgentConversationMessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  clientMessageId: 'clientMessageId',
+  role: 'role',
+  parts: 'parts',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type AgentConversationMessageScalarFieldEnum = (typeof AgentConversationMessageScalarFieldEnum)[keyof typeof AgentConversationMessageScalarFieldEnum]
+
+
+export const ChangeSetScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  sourceConversationId: 'sourceConversationId',
+  sourceAgentId: 'sourceAgentId',
+  title: 'title',
+  requestSummary: 'requestSummary',
+  confirmedFacts: 'confirmedFacts',
+  openQuestions: 'openQuestions',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChangeSetScalarFieldEnum = (typeof ChangeSetScalarFieldEnum)[keyof typeof ChangeSetScalarFieldEnum]
+
+
+export const ChangeSetItemScalarFieldEnum = {
+  id: 'id',
+  changeSetId: 'changeSetId',
+  resourceType: 'resourceType',
+  resourceId: 'resourceId',
+  resourceTitle: 'resourceTitle',
+  impactKind: 'impactKind',
+  evidence: 'evidence',
+  confidence: 'confidence',
+  proposedAction: 'proposedAction',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChangeSetItemScalarFieldEnum = (typeof ChangeSetItemScalarFieldEnum)[keyof typeof ChangeSetItemScalarFieldEnum]
+
+
+export const AgentHandoffScalarFieldEnum = {
+  id: 'id',
+  changeSetId: 'changeSetId',
+  fromAgentId: 'fromAgentId',
+  toAgentId: 'toAgentId',
+  targetConversationId: 'targetConversationId',
+  brief: 'brief',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AgentHandoffScalarFieldEnum = (typeof AgentHandoffScalarFieldEnum)[keyof typeof AgentHandoffScalarFieldEnum]
 
 
 export const IdeaScalarFieldEnum = {

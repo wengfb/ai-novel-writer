@@ -1,0 +1,222 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "神格觉醒" [level=2] [ref=e747]
+            - button "编辑项目" [ref=e748]:
+              - img
+          - paragraph [ref=e749]: 科幻
+        - generic [ref=e11]:
+          - heading "本书" [level=3] [ref=e750]
+          - generic [ref=e751]:
+            - button "章节列表" [ref=e753]:
+              - img
+              - generic [ref=e754]: 章节列表
+              - img
+            - generic [ref=e785]:
+              - button "剧情大纲" [expanded] [active] [ref=e786]:
+                - img
+                - generic [ref=e787]: 剧情大纲
+                - img
+              - generic [ref=e973]:
+                - generic [ref=e974]:
+                  - button "新建大纲" [ref=e975]:
+                    - img
+                    - text: 新建大纲
+                  - button "AI 生成" [ref=e976]:
+                    - img
+                    - text: AI 生成
+                - generic [ref=e980]:
+                  - generic [ref=e981]:
+                    - generic [ref=e982] [cursor=pointer]:
+                      - button [ref=e983]:
+                        - img [ref=e984]
+                      - img [ref=e987]
+                      - generic [ref=e989]: 第一卷
+                      - button [ref=e990]:
+                        - img
+                    - generic [ref=e991]:
+                      - generic [ref=e993] [cursor=pointer]:
+                        - img [ref=e995]
+                        - generic [ref=e998]: 代码深渊
+                        - generic [ref=e999]: 铺垫
+                        - generic [ref=e1000]: T6
+                        - button [ref=e1001]:
+                          - img
+                      - generic [ref=e1003] [cursor=pointer]:
+                        - img [ref=e1005]
+                        - generic [ref=e1008]: 第一次吞噬
+                        - generic [ref=e1009]: 推进
+                        - generic [ref=e1010]: T8
+                        - button [ref=e1011]:
+                          - img
+                      - generic [ref=e1013] [cursor=pointer]:
+                        - img [ref=e1015]
+                        - generic [ref=e1018]: 地下联络站
+                        - generic [ref=e1019]: 铺垫
+                        - generic [ref=e1020]: T5
+                        - button [ref=e1021]:
+                          - img
+                      - generic [ref=e1023] [cursor=pointer]:
+                        - img [ref=e1025]
+                        - generic [ref=e1028]: 前科学家
+                        - generic [ref=e1029]: 铺垫
+                        - generic [ref=e1030]: T5
+                        - button [ref=e1031]:
+                          - img
+                      - generic [ref=e1033] [cursor=pointer]:
+                        - img [ref=e1035]
+                        - generic [ref=e1038]: 逃亡与选择
+                        - generic [ref=e1039]: 转折
+                        - generic [ref=e1040]: T9
+                        - button [ref=e1041]:
+                          - img
+                      - generic [ref=e1043] [cursor=pointer]:
+                        - img [ref=e1045]
+                        - generic [ref=e1048]: 意识裂隙
+                        - generic [ref=e1049]: 推进
+                        - generic [ref=e1050]: T7
+                        - button [ref=e1051]:
+                          - img
+                      - generic [ref=e1053] [cursor=pointer]:
+                        - img [ref=e1055]
+                        - generic [ref=e1058]: 黑市奇遇
+                        - generic [ref=e1059]: 过渡
+                        - generic [ref=e1060]: T8
+                        - button [ref=e1061]:
+                          - img
+                      - generic [ref=e1063] [cursor=pointer]:
+                        - img [ref=e1065]
+                        - generic [ref=e1068]: 织女的过去
+                        - generic [ref=e1069]: 高潮
+                        - generic [ref=e1070]: T10
+                        - button [ref=e1071]:
+                          - img
+                      - generic [ref=e1073] [cursor=pointer]:
+                        - img [ref=e1075]
+                        - generic [ref=e1078]: 云端渗透
+                        - generic [ref=e1079]: 推进
+                        - generic [ref=e1080]: T7
+                        - button [ref=e1081]:
+                          - img
+                      - generic [ref=e1083] [cursor=pointer]:
+                        - img [ref=e1085]
+                        - generic [ref=e1088]: 火种室对决
+                        - generic [ref=e1089]: 推进
+                        - generic [ref=e1090]: T10
+                        - button [ref=e1091]:
+                          - img
+                  - generic [ref=e1093] [cursor=pointer]:
+                    - img [ref=e1095]
+                    - generic [ref=e1098]: 代码深渊
+                    - generic [ref=e1099]: 铺垫
+                    - generic [ref=e1100]: T8
+                    - button [ref=e1101]:
+                      - img
+            - button "角色设定" [ref=e789]:
+              - img
+              - generic [ref=e790]: 角色设定
+              - img
+            - button "世界观" [ref=e792]:
+              - img
+              - generic [ref=e793]: 世界观
+              - img
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 神格觉醒
+            - img
+          - generic [ref=e37]: 第 3 章：地下联络站
+        - generic [ref=e38]:
+          - generic [ref=e39]: 未保存
+          - button "保存" [ref=e794]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [ref=e795]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [ref=e796]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e1102]:
+        - generic [ref=e1104]:
+          - img [ref=e1106]
+          - heading "选择大纲节点" [level=2] [ref=e1110]
+          - paragraph [ref=e1111]: 在左侧大纲树中点击节点，可在此处查看与编辑详情；也可新建节点或使用 AI 生成。
+          - generic [ref=e1112]:
+            - button "新建节点" [ref=e1113]:
+              - img
+              - text: 新建节点
+            - button "AI 生成大纲" [ref=e1114]:
+              - img
+              - text: AI 生成大纲
+    - separator [ref=e58]
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - button "协作" [ref=e64]
+        - button "上下文" [ref=e65]
+        - button "生成" [ref=e66]
+      - generic [ref=e67]:
+        - generic [ref=e938]:
+          - generic [ref=e939]:
+            - img [ref=e940]
+            - generic [ref=e943]: 创作助手 · 在线
+          - button "创作总监 统筹项目方向、跨模块协作与下一步。" [ref=e1115]:
+            - generic [ref=e945]:
+              - generic [ref=e946]: 创作总监
+              - generic [ref=e947]: 统筹项目方向、跨模块协作与下一步。
+            - img
+          - paragraph [ref=e948]: 正在参考：神格觉醒 · 项目全局资料
+        - generic [ref=e954]:
+          - generic [ref=e1116]:
+            - heading "和创作总监一起创作" [level=1] [ref=e1117]
+            - paragraph [ref=e1118]: 正在参考：神格觉醒 · 项目全局资料
+          - generic [ref=e960]:
+            - textbox "Message input" [ref=e961]:
+              - /placeholder: Send a message...
+            - generic [ref=e962]:
+              - button "Add Attachment" [ref=e963]:
+                - img
+                - generic [ref=e964]: Add Attachment
+              - generic [ref=e965]:
+                - button "Send message" [disabled]:
+                  - img
+                  - generic: Send message
+        - generic [ref=e967]:
+          - button "补齐项目资料" [ref=e1119]:
+            - img
+            - text: 补齐项目资料
+          - button "检查初始化缺口" [ref=e1120]:
+            - img
+            - text: 检查初始化缺口
+          - button "规划下一步" [ref=e1121]:
+            - img
+            - text: 规划下一步
+  - button "Open Next.js Dev Tools" [ref=e114] [cursor=pointer]:
+    - img [ref=e115]
+  - alert [ref=e75]

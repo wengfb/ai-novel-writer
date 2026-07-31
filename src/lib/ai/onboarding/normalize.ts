@@ -72,6 +72,31 @@ export function normalizeTensionLevel(tensionLevel?: number): number {
   return Math.round(tensionLevel)
 }
 
+/**
+ * 将名称规整为可用于 AI 生成结果比对的键。
+ *
+ * 仅用于拦截 AI 在同一批生成结果中的明显重复；不作为数据库唯一约束，
+ * 从而保留用户有意创建同名、不同身份设定的自由。
+ */
+export function normalizeGeneratedEntityName(name: unknown): string {
+  return typeof name === 'string'
+    ? name.trim().replace(/\s+/g, '').toLocaleLowerCase()
+    : ''
+}
+
+/**
+ * 合并 AI 一次返回的同名实体，保留首条信息最完整的记录。
+ */
+export function dedupeGeneratedEntities<T extends { name?: unknown }>(items: T[]): T[] {
+  const seen = new Set<string>()
+  return items.filter((item) => {
+    const key = normalizeGeneratedEntityName(item.name)
+    if (!key || seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
 // ============ 动态章节/分卷计算 ============
 
 const PACE_CONFIG = {

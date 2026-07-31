@@ -1,0 +1,102 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "AI 小说工坊" [level=2] [ref=e10]
+        - generic [ref=e12]:
+          - img [ref=e13]
+          - paragraph [ref=e15]: 选择项目后可管理章节、大纲与设定
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 选择项目
+            - img
+          - generic [ref=e37]: 开书模式 · 与 AI 共创你的故事
+        - button "取消创建" [ref=e77]:
+          - img
+          - text: 取消创建
+      - main [ref=e78]:
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - generic [ref=e84]:
+              - img [ref=e86]
+              - generic [ref=e88]:
+                - heading "先和创意编辑聊聊" [level=2] [ref=e89]
+                - paragraph [ref=e90]: 从一句模糊想法开始。满意后再整理为创意卡，进入结构化项目审核。
+            - paragraph [ref=e91]: 提示：整理前的对话不会自动保存；确认创意卡后会保存到创意中心，随时可以继续初始化。
+          - generic [ref=e92]:
+            - generic [ref=e98]:
+              - generic [ref=e99]:
+                - paragraph [ref=e103]: 我想和你一起打磨一个可以正式开书的小说创意。请先问我最关键的问题，必要时给我少量备选方向。
+                - generic [ref=e104]:
+                  - generic [ref=e105]:
+                    - button "Reasoning" [ref=e108]:
+                      - img [ref=e109]
+                      - generic [ref=e117]: Reasoning
+                      - img [ref=e118]
+                    - generic [ref=e120]:
+                      - paragraph [ref=e121]: 你好！很高兴和你一起打磨故事创意。
+                      - paragraph [ref=e122]: 先问第一个最关键的问题：
+                      - paragraph [ref=e123]:
+                        - strong [ref=e124]: 你心里已经有一个模糊的故事方向或题材偏好了吗？
+                        - text: 比如是玄幻、科幻、都市、悬疑、历史、游戏电竞，还是其他？或者你目前只有一个碎片式的灵感（一个场景、一句台词、一种设定）？
+                      - paragraph [ref=e125]: 如果完全没想好，也可以说说你平时爱看什么类型的小说或剧集，我们可以从那里切入。
+                  - generic [ref=e127]:
+                    - button "Copy" [ref=e128]:
+                      - img
+                      - generic [ref=e129]: Copy
+                    - button "Refresh" [ref=e130]:
+                      - img
+                      - generic [ref=e131]: Refresh
+                    - button "More" [ref=e132]:
+                      - img
+                      - generic [ref=e133]: More
+              - generic [ref=e134]:
+                - button "Scroll to bottom" [ref=e135]:
+                  - img
+                  - generic [ref=e136]: Scroll to bottom
+                - generic [ref=e138]:
+                  - textbox "Message input" [active] [ref=e139]:
+                    - /placeholder: Send a message...
+                  - generic [ref=e140]:
+                    - button "Add Attachment" [ref=e141]:
+                      - img
+                      - generic [ref=e142]: Add Attachment
+                    - generic [ref=e143]:
+                      - button "Send message" [disabled]:
+                        - img
+                        - generic: Send message
+            - complementary [ref=e144]:
+              - generic [ref=e145]:
+                - img [ref=e146]
+                - heading "创意卡" [level=3] [ref=e148]
+              - generic [ref=e149]: 和 AI 讨论后，点击“整理为创意卡”。确认前不会写入创意中心。
+              - button "整理为创意卡" [ref=e151]:
+                - img
+                - text: 整理为创意卡
+          - generic [ref=e153]:
+            - button "随机给我灵感" [ref=e154]:
+              - img
+              - text: 随机给我灵感
+            - button "直接创建项目" [ref=e155]
+  - button "Open Next.js Dev Tools" [ref=e73] [cursor=pointer]:
+    - img [ref=e74]
+  - alert [ref=e156]

@@ -48,6 +48,7 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
     generateChapterPanelOpen,
     setGenerateChapterPanelOpen,
     openEditor,
+    isOutlineNodeCoCreating,
   } = useUIStore()
   const { flatOutlines } = useOutlines(currentProject?.id || "")
 
@@ -126,21 +127,8 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
   const handleOnboardingComplete = async (projectId: string) => {
     localStorage.setItem("hasCompletedOnboarding", "true")
     setHasCompletedOnboarding(true)
-
-    const prefillIdeaId = onboardingContext?.prefillIdeaId
+    // 创意关联已在配置确认创建项目壳时完成；此处只收尾并进入项目
     clearOnboarding()
-
-    if (prefillIdeaId) {
-      try {
-        await fetch(`/api/ideas/${prefillIdeaId}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: "converted" }),
-        })
-      } catch {
-        /* ignore */
-      }
-    }
 
     try {
       const response = await fetch(`/api/projects/${projectId}`)
@@ -168,6 +156,12 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
     clearOnboarding()
     setIsCreateDialogOpen(true)
     setMainView("projects")
+  }
+
+  /** 新建项目 → 用已有创意：复用创意中心，详情页「创建项目」再进 prefill */
+  const handlePickExistingIdea = () => {
+    clearOnboarding()
+    setMainView("ideas")
   }
 
   const handleNewProject = () => {
@@ -204,6 +198,8 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
             onComplete={handleOnboardingComplete}
             onCancel={handleOnboardingCancel}
             onSwitchToManual={handleSwitchToManual}
+            onPickExistingIdea={handlePickExistingIdea}
+            showHeader={false}
           />
         )
       case "ideas":
@@ -268,9 +264,17 @@ export function HomeClient({ defaultLayout }: HomeClientProps) {
 
   return (
     <>
-      <StudioLayoutClient defaultLayout={defaultLayout}>
+      <StudioLayoutClient
+        defaultLayout={defaultLayout}
+        showRightSidebar={
+          !!currentProject &&
+          mainView !== "onboarding" &&
+          mainView !== "ideas" &&
+          !isOutlineNodeCoCreating
+        }
+      >
         <div className="flex h-full min-h-0 flex-col">
-          <StudioHeader />
+          <StudioHeader onboardingMode={mainView === "onboarding"} onCancelOnboarding={handleOnboardingCancel} />
           <main key={mainView} className="min-h-0 flex-1 overflow-hidden bg-background">
             {renderMainContent()}
           </main>

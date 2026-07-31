@@ -14,6 +14,9 @@ import {
   OnboardingChaptersSchema,
   OnboardingForeshadowingsSchema,
 } from '@/lib/ai/agents/schemas'
+import {
+  dedupeGeneratedEntities,
+} from './normalize'
 import type {
   StoryArchitecture,
   CharacterEnsemble,
@@ -129,7 +132,12 @@ export async function generateCharacters(
     variables: { taskBody: prompt, extraConstraints: '' },
   })
   return {
-    characters: result.object as CharacterEnsemble,
+    characters: {
+      ...result.object as CharacterEnsemble,
+      characters: dedupeGeneratedEntities(
+        (result.object as CharacterEnsemble).characters || []
+      ),
+    },
     ...toMeta(result, model),
   }
 }
@@ -158,7 +166,12 @@ export async function generateWorldElements(
     variables: { taskBody: prompt, extraConstraints: '' },
   })
   return {
-    worldSettings: result.object as WorldSettings,
+    worldSettings: {
+      ...result.object as WorldSettings,
+      worldSettings: dedupeGeneratedEntities(
+        (result.object as WorldSettings).worldSettings || []
+      ),
+    },
     ...toMeta(result, model),
   }
 }

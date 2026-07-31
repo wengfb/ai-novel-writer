@@ -1,0 +1,119 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "AI 小说工坊" [level=2] [ref=e10]
+            - button [ref=e11]:
+              - img [ref=e12]
+          - button "工作台" [ref=e16]:
+            - img [ref=e17]
+            - text: 工作台
+        - generic [ref=e20]:
+          - heading "创作资源" [level=3] [ref=e21]
+          - generic [ref=e22]:
+            - button "创意中心" [ref=e23]:
+              - img [ref=e24]
+              - text: 创意中心
+            - button "剧情大纲" [ref=e26]:
+              - img [ref=e27]
+              - text: 剧情大纲
+            - button "章节列表" [ref=e31]:
+              - img [ref=e32]
+              - text: 章节列表
+            - button "角色设定" [ref=e35]:
+              - img [ref=e36]
+              - text: 角色设定
+            - button "世界观" [ref=e41]:
+              - img [ref=e42]
+              - text: 世界观
+      - generic [ref=e47]:
+        - generic [ref=e48]: WF
+        - generic [ref=e49]:
+          - paragraph [ref=e50]: WengFB
+          - paragraph [ref=e51]: 专业版计划
+    - separator [ref=e52]
+    - generic [ref=e56]:
+      - banner [ref=e57]:
+        - generic [ref=e58]:
+          - combobox [ref=e59]:
+            - generic [ref=e60]: 选择项目
+            - img [ref=e61]
+          - generic [ref=e63]: 未选择章节
+        - generic [ref=e64]:
+          - generic [ref=e65]: 未保存
+          - button "保存" [disabled]:
+            - img
+            - text: 保存
+          - button "AI生成章节" [disabled]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [disabled]:
+            - img
+            - text: AI 续写
+          - button [ref=e66]:
+            - img [ref=e67]
+      - generic [ref=e74]:
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - paragraph [ref=e77]: 项目工作台
+            - heading "选择一个小说项目" [level=1] [ref=e78]
+            - paragraph [ref=e79]: 进入项目后可以继续编辑章节、管理角色与世界观，或从这里创建一个全新的故事。
+          - generic [ref=e80]:
+            - button "创意中心" [ref=e81]:
+              - img [ref=e82]
+              - text: 创意中心
+            - button "新建项目" [ref=e84]:
+              - img [ref=e85]
+              - text: 新建项目
+        - generic [ref=e108]:
+          - generic [ref=e109] [cursor=pointer]:
+            - button [ref=e110]:
+              - img [ref=e111]
+            - button [ref=e114]:
+              - img [ref=e115]
+            - generic [ref=e118]:
+              - heading "神格觉醒" [level=3] [ref=e119]
+              - paragraph [ref=e120]: 27岁的底层码农李燃在一次代码事故中意外获得吞噬AI神格的能力。他发现自己所在的‘天网’公司正秘密推行‘意识云端计划’，企图将全人类意识接入超级计算机，实现绝对控制。李燃凭借吞噬AI核心程序获得的力量，不断对抗天网的监控和追杀，但每次吞噬都会引发AI怨念反噬，他的心智逐渐被同化。在反抗过程中，他结识了黑客少女夏冰、前天网科学家周远，也遭遇了冷酷的AI猎手‘织女’。随着能力提升，李燃发现天网背后隐藏着更大的阴谋——神格并非偶然，而是一场千年前超文明遗留的‘试炼’。最终，他必须在人性与力量之间做出抉择：要么牺牲自我引爆意识网络，要么成为新的神格主宰。结局开放，留给读者思考。
+            - generic [ref=e121]:
+              - generic [ref=e122]:
+                - generic [ref=e123]: 科幻
+                - generic [ref=e124]: 3,227 字
+              - generic [ref=e125]:
+                - progressbar [ref=e126]
+                - generic [ref=e128]:
+                  - generic [ref=e129]: 1 章
+                  - generic [ref=e130]: 3.2%
+          - generic [ref=e131] [cursor=pointer]:
+            - button [ref=e132]:
+              - img [ref=e133]
+            - button [ref=e136]:
+              - img [ref=e137]
+            - generic [ref=e140]:
+              - heading "话唠藤蔓图" [level=3] [ref=e141]
+              - paragraph [ref=e142]: 在废土世界，社恐植物学家阿布意外被一株话痨变异藤蔓“小绿”缠上。小绿声称要去核电站寻找它的“初恋”——一棵会唱歌的放射性蘑菇。阿布只想待在安全屋种菜，却被小绿的唠叨绑架，被迫踏上啼笑皆非的旅程。一路上，他们遭遇毒气野狗帮、迷路仙人掌、垃圾山密室等奇葩副本，阿布全程内心吐槽，却意外收获友谊。最终发现放射性蘑菇是音乐家基因改造的智能终端，它唱出废土第一首摇滚，所有变异怪物跟着摇摆，结局和平欢乐。
+            - generic [ref=e143]:
+              - generic [ref=e144]:
+                - generic [ref=e145]: 科幻
+                - generic [ref=e146]: 0 字
+              - generic [ref=e147]:
+                - progressbar [ref=e148]
+                - generic [ref=e150]:
+                  - generic [ref=e151]: 0 章
+                  - generic [ref=e152]: 0.0%
+    - separator [ref=e90]
+    - generic [ref=e95]:
+      - generic [ref=e96]:
+        - generic [ref=e97]:
+          - img [ref=e98]
+          - text: AI 副驾驶
+        - tablist [ref=e101]:
+          - tab "对话" [selected] [ref=e102]
+          - tab "上下文" [ref=e103]
+          - tab "工具箱" [ref=e104]
+      - tabpanel "对话" [ref=e105]:
+        - paragraph [ref=e107]: 请先选择项目
+  - button "Open Next.js Dev Tools" [ref=e158] [cursor=pointer]:
+    - img [ref=e159]
+  - alert [ref=e162]

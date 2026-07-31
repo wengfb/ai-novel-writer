@@ -16,6 +16,7 @@ import type { PipelineResult } from '@/lib/ai/onboarding/types'
 const FinalizeSchema = z.object({
   projectTitle: z.string().min(1),
   idea: StoryIdeaCardSchema,
+  ideaId: z.string().cuid().optional(),
   results: z.object({
     architecture: z.any().optional(),
     characters: z.any().optional(),
@@ -156,6 +157,15 @@ export async function POST(request: NextRequest) {
           where: { key: `project.${project.id}.styleAnchor` },
           create: { key: `project.${project.id}.styleAnchor`, value: r.styleAnchor.content, category: 'project', description: `《${data.projectTitle}》风格锚点` },
           update: { value: r.styleAnchor.content },
+        })
+      }
+
+      if (data.ideaId) {
+        const idea = await tx.idea.findUnique({ where: { id: data.ideaId }, select: { id: true } })
+        if (!idea) throw new Error('关联创意不存在，无法完成项目创建')
+        await tx.idea.update({
+          where: { id: data.ideaId },
+          data: { status: 'converted', convertedToProjectId: project.id },
         })
       }
 

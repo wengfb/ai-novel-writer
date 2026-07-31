@@ -5,7 +5,7 @@ import { getContextManager } from '@/lib/ai/context-manager'
 import { withErrorHandler, ApiErrors } from '@/lib/api/response'
 import { parseJsonBody, validateRequest } from '@/lib/api/validators'
 import { GenerateChapterSchema } from '@/lib/api/schemas'
-import { plainTextToHtml } from '@/lib/utils/text-format'
+import { plainTextToHtml, stripLeadingChapterHeading } from '@/lib/utils/text-format'
 import { countWords } from '@/lib/utils/word-count'
 
 /**
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
             },
           })
 
-          fullContent = plainTextToHtml(result.content)
+          fullContent = plainTextToHtml(stripLeadingChapterHeading(result.content))
 
           // 计算字数（去除 HTML 标签后统计）
           const wordCount = countWords(fullContent)

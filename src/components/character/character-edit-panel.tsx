@@ -9,7 +9,8 @@ import {
   type CharacterFormData,
 } from './create-dialog/types'
 import { CharacterFormFields } from './create-dialog/form-fields'
-import { Loader2, User } from 'lucide-react'
+import { Loader2, Sparkles, User } from 'lucide-react'
+import { useUIStore } from '@/lib/store/ui-store'
 import { DetailSection, DetailWorkspace } from '@/components/studio/detail-workspace'
 
 interface CharacterEditPanelProps {
@@ -34,6 +35,7 @@ export function CharacterEditPanel({
   onSaved,
 }: CharacterEditPanelProps) {
   const { createCharacter, updateCharacter, deleteCharacter } = useCharacterStore()
+  const openAssistantForScope = useUIStore((state) => state.openAssistantForScope)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [isDeleting, setIsDeleting] = React.useState(false)
 
@@ -156,6 +158,22 @@ export function CharacterEditPanel({
         }
         actions={
           <>
+            {isEditing && character ? (
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => openAssistantForScope({
+                  type: 'character',
+                  id: character.id,
+                  title: character.name,
+                  subtitle: '角色设定',
+                  contextAppend: `当前正在协作的角色：${character.name}\n角色定位：${character.role}\n角色性格：${character.personality || '未填写'}\n角色背景：${character.backstory || '未填写'}\n请围绕该角色给出建议；涉及写库时必须调用工具并等待用户确认。`,
+                }, 'character')}
+              >
+                <Sparkles className="mr-2 h-4 w-4 text-primary" />
+                AI 协作
+              </Button>
+            ) : null}
             {onClose && (
               <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
                 取消

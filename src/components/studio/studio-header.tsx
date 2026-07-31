@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { FolderOpen, MoreHorizontal, Pencil, Save, Settings, Sparkles } from 'lucide-react'
+import { FolderOpen, MoreHorizontal, PanelRightClose, Pencil, Save, Settings, Sparkles, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -20,7 +20,12 @@ import { AIContinueButton } from '@/components/ai/ai-continue-button'
 import { ProjectSelector } from '@/components/project/project-selector'
 import { toast } from 'sonner'
 
-export function StudioHeader() {
+interface StudioHeaderProps {
+  onboardingMode?: boolean
+  onCancelOnboarding?: () => void
+}
+
+export function StudioHeader({ onboardingMode = false, onCancelOnboarding }: StudioHeaderProps) {
   const { currentChapter, updateChapterContent, saveChapter, isSaving, lastSaved } = useChapterStore()
   const { currentProject, setCurrentProject } = useProjectStore()
   const {
@@ -29,6 +34,8 @@ export function StudioHeader() {
     setGenerateChapterPanelOpen,
     generateChapterPanelOpen,
     openEditor,
+    rightSidebarCollapsed,
+    toggleRightSidebar,
   } = useUIStore()
   const { flatOutlines } = useOutlines(currentProject?.id || '')
   const [accumulatedContent, setAccumulatedContent] = React.useState('')
@@ -91,12 +98,15 @@ export function StudioHeader() {
           <ProjectSelector onNewProject={handleNewProject} />
           <Separator orientation="vertical" className="h-6" />
           <div className="text-sm text-muted-foreground">
-            {currentChapter
-              ? `第 ${currentChapter.chapterNumber} 章：${currentChapter.title}`
-              : '未选择章节'}
+            {onboardingMode ? '新建项目 · 选择开书方式' : currentChapter ? `第 ${currentChapter.chapterNumber} 章：${currentChapter.title}` : '未选择章节'}
           </div>
         </div>
 
+        {onboardingMode ? (
+          <Button size="sm" variant="ghost" className="ml-auto h-8" onClick={onCancelOnboarding}>
+            <X className="mr-2 h-3.5 w-3.5" />取消创建
+          </Button>
+        ) : (
         <div className="ml-auto flex items-center gap-2">
           <div className="mr-2 text-xs text-muted-foreground">
             {isSaving
@@ -114,6 +124,16 @@ export function StudioHeader() {
           >
             <Save className="mr-2 h-3.5 w-3.5" />
             {isSaving ? '保存中...' : '保存'}
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-8"
+            onClick={toggleRightSidebar}
+            title={rightSidebarCollapsed ? '退出专注写作模式' : '进入专注写作模式'}
+          >
+            <PanelRightClose className="mr-2 h-3.5 w-3.5" />
+            {rightSidebarCollapsed ? '显示助手' : '专注写作'}
           </Button>
           <Button
             size="sm"
@@ -159,6 +179,7 @@ export function StudioHeader() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+        )}
       </header>
     </>
   )

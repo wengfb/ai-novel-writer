@@ -8,19 +8,42 @@
 
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { streamText, convertToModelMessages, stepCountIs } from 'ai'
+import { streamText, convertToModelMessages, stepCountIs, type ToolSet } from 'ai'
 import { z } from 'zod'
 import { validateRequest, Validation_error } from '@/lib/api/validators'
 import { ApiErrors } from '@/lib/api/response'
 import { getContextManager } from '@/lib/ai/context-manager'
 import { getStyleAnchorPrompt } from '@/lib/ai/style-anchor'
 import { buildChatTools } from '@/lib/ai/chat-tools'
+import { createIdeaDraftTools, createOnboardingDraftTools, createOutlineDraftTools } from '@/lib/ai/chat-tools/draft-tools'
 import { getLanguageModelAsync } from '@/lib/ai/providers'
 import { renderAgentSlot, requireAgentDefinition, resolveAgentId } from '@/lib/ai/agents'
+import { getAgentRuntimeConfig } from '@/lib/ai/agents/runtime-config'
+import { getAIDefaultGenerationConfig } from '@/lib/ai/config'
 import type { Chapter, Character, WorldElement, Foreshadowing } from '@/types'
 import type { UIMessage } from 'ai'
+import type { AssistantScopeType } from '@/lib/ai/agent-workspace'
 
 const STUDIO_CHAT_AGENT_ID = 'studio-chat'
+
+/**
+ * UIMessage 最小契约：AI SDK 流式对话需要 parts（或可转 parts 的 content）。
+ * 裸 `{ role, content: string }` 会在 convertToModelMessages 阶段炸掉，这里提前 400。
+ */
+const ChatUIMessageSchema = z
+  .object({
+    id: z.string().optional(),
+    role: z.enum(['user', 'assistant', 'system']),
+    parts: z.array(z.unknown()).optional(),
+    content: z.union([z.string(), z.array(z.unknown())]).optional(),
+  })
+  .refine(
+    (message) =>
+      (Array.isArray(message.parts) && message.parts.length > 0) ||
+      (typeof message.content === 'string' && message.content.trim().length > 0) ||
+      (Array.isArray(message.content) && message.content.length > 0),
+    { message: '消息需要非空的 parts 或 content' }
+  )
 
 const ChatRequestSchema = z.object({
   projectId: z.string().optional(),
@@ -34,7 +57,13 @@ const ChatRequestSchema = z.object({
    * 不用于 Studio 写库工具场景的主 context（有 projectId 时仍走项目上下文）
    */
   contextAppend: z.string().optional(),
-  messages: z.array(z.custom<UIMessage>()),
+  /** 右侧协作工作区的结构化参考对象，仅用于工具最小化和上下文标识。 */
+  scopeType: z.enum(['project', 'chapter', 'character', 'outline', 'world']).optional(),
+  scopeId: z.string().optional(),
+  /** 前端草稿工具目标：仅回传结构化草稿，不会写数据库。 */
+  draftTarget: z.enum(['idea', 'onboarding', 'outline']).optional(),
+  draftStep: z.enum(['architecture', 'characters', 'world', 'volume', 'foreshadowings', 'styleAnchor']).optional(),
+  messages: z.array(ChatUIMessageSchema).min(1, '消息不能为空'),
   model: z.string().optional(),
 })
 
@@ -60,14 +89,19 @@ export async function POST(request: NextRequest) {
       agentId: agentIdOverride,
       systemSlot: systemSlotOverride,
       contextAppend,
+      scopeType,
+      scopeId: _scopeId,
+      draftTarget,
+      draftStep,
     } = data
-
-    if (messages.length === 0) {
-      return ApiErrors.badRequest('消息不能为空')
-    }
+    void _scopeId
 
     const agentId = agentIdOverride || STUDIO_CHAT_AGENT_ID
     const agentDef = requireAgentDefinition(agentId)
+    const [agentRuntimeConfig, globalConfig] = await Promise.all([
+      getAgentRuntimeConfig(agentDef.id),
+      getAIDefaultGenerationConfig(),
+    ])
     if (!agentDef.chatCompatible && agentId !== STUDIO_CHAT_AGENT_ID) {
       return ApiErrors.badRequest(`Agent ${agentId} 不支持对话模式`)
     }
@@ -83,11 +117,19 @@ export async function POST(request: NextRequest) {
       styleAnchor: '',
       contextPrompt: '',
     })
-    let tools: ReturnType<typeof buildChatTools> | undefined
+    let tools: ToolSet | undefined
 
     // Onboarding 等无项目场景：system + 动态上下文，不挂写库 tools
     if (!projectId && contextAppend?.trim()) {
       systemPrompt = `${systemPrompt}\n\n${contextAppend.trim()}`
+    }
+
+    if (draftTarget === 'idea') {
+      tools = createIdeaDraftTools()
+    } else if (draftTarget === 'onboarding' && draftStep) {
+      tools = createOnboardingDraftTools()
+    } else if (draftTarget === 'outline') {
+      tools = createOutlineDraftTools()
     }
 
     if (projectId) {
@@ -195,10 +237,14 @@ export async function POST(request: NextRequest) {
       const contextPrompt = contextManager.formatContextForPrompt(context)
       const chatStyleAnchor = await getStyleAnchorPrompt(projectId)
 
-      tools = buildChatTools({
-        projectId,
-        chapterId: currentChapter?.id ?? chapterId,
-      })
+      tools = draftTarget === 'outline'
+        ? createOutlineDraftTools()
+        : buildChatTools({
+          projectId,
+          chapterId: currentChapter?.id ?? chapterId,
+          agentId,
+          scopeType: scopeType as AssistantScopeType | undefined,
+        })
 
       // 提示词来自 Agent 可编辑槽位
       systemPrompt = await renderAgentSlot(agentId, systemSlot, {
@@ -212,25 +258,49 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const uiMessages = messages.map((message) => {
-      const { id: _messageId, ...rest } = message
-      void _messageId
-      return rest
+    // 统一为带 parts 的 UIMessage，兼容仅 content 的旧客户端
+    const uiMessages = messages.map((message, index) => {
+      const role = message.role
+      const id = message.id || `msg-${index}`
+      if (Array.isArray(message.parts) && message.parts.length > 0) {
+        return { id, role, parts: message.parts } as UIMessage
+      }
+      if (typeof message.content === 'string') {
+        return {
+          id,
+          role,
+          parts: [{ type: 'text', text: message.content }],
+        } as UIMessage
+      }
+      if (Array.isArray(message.content)) {
+        return { id, role, parts: message.content } as UIMessage
+      }
+      return { id, role, parts: [] } as UIMessage
     })
 
-    const modelMessages = await convertToModelMessages(uiMessages, {
-      tools,
-      ignoreIncompleteToolCalls: true,
-    })
+    let modelMessages
+    try {
+      modelMessages = await convertToModelMessages(uiMessages, {
+        tools,
+        ignoreIncompleteToolCalls: true,
+      })
+    } catch (error) {
+      console.error('convertToModelMessages failed:', error)
+      return ApiErrors.badRequest(
+        '消息格式无效，请使用 UIMessage（含 parts）或 content 文本',
+        error instanceof Error ? error.message : undefined
+      )
+    }
 
-    const { model } = await getLanguageModelAsync(modelOverride)
+    const { model } = await getLanguageModelAsync(modelOverride || agentRuntimeConfig.model)
 
     const result = streamText({
       model,
       system: systemPrompt,
       messages: modelMessages,
       tools,
-      temperature: agentDef.temperature ?? 0.8,
+      temperature: agentRuntimeConfig.temperature ?? globalConfig.temperature ?? agentDef.temperature ?? 0.8,
+      maxOutputTokens: agentRuntimeConfig.maxTokens ?? globalConfig.maxTokens,
       stopWhen: stepCountIs(agentDef.maxSteps ?? 5),
     })
 
@@ -240,12 +310,18 @@ export async function POST(request: NextRequest) {
     if (error instanceof Validation_error) {
       return ApiErrors.badRequest('请求参数错误', error.errors)
     }
+    if (error instanceof z.ZodError) {
+      return ApiErrors.badRequest(
+        '请求参数错误',
+        error.issues.map((issue) => ({
+          field: issue.path.join('.') || '(root)',
+          message: issue.message,
+        }))
+      )
+    }
     if (error instanceof Error && error.message.startsWith('未知 Agent')) {
       return ApiErrors.notFound('Agent')
     }
-    return new Response(
-      JSON.stringify({ error: '服务器错误' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    )
+    return ApiErrors.serverError(error instanceof Error ? error.message : '服务器错误')
   }
 }

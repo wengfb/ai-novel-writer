@@ -1,0 +1,15 @@
+- generic [ref=e158]:
+  - generic [ref=e601]:
+    - heading "开始与 AI 助手对话" [level=1] [ref=e602]
+    - paragraph [ref=e603]: 可以帮你分析剧情、完善角色、优化文笔…
+  - generic [ref=e164]:
+    - textbox "Message input" [ref=e564]:
+      - /placeholder: Send a message...
+    - generic [ref=e166]:
+      - button "Add Attachment" [ref=e565]:
+        - img
+        - generic [ref=e168]: Add Attachment
+      - generic [ref=e169]:
+        - button "Send message" [disabled]:
+          - img
+          - generic: Send message

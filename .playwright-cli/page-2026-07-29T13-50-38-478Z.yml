@@ -1,0 +1,340 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "AI 小说工坊" [level=2] [ref=e1348]
+        - generic [ref=e1349]:
+          - img [ref=e1350]
+          - paragraph [ref=e1352]: 选择项目后可管理章节、大纲与设定
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [active] [ref=e1321]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e1322]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e1323]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 选择项目
+            - img
+          - generic [ref=e37]: 未选择章节
+        - generic [ref=e1526]:
+          - generic [ref=e1527]: 未保存
+          - button "保存" [disabled]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e1528]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [disabled]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [disabled]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e1529]:
+            - img
+      - main [ref=e1530]:
+        - generic [ref=e1531]:
+          - generic [ref=e1532]:
+            - button "返回" [ref=e1533]:
+              - img
+              - text: 返回
+            - img [ref=e1534]
+            - generic [ref=e1536]: 创意中心
+          - generic [ref=e1537]:
+            - generic [ref=e1538]:
+              - img [ref=e1539]
+              - textbox "搜索创意..." [ref=e1542]
+            - combobox [ref=e1543]:
+              - generic: 全部状态
+              - img
+            - combobox [ref=e1544]:
+              - generic: 全部题材
+              - img
+            - generic [ref=e1545]: 共 20 个创意
+            - button "开始共创" [ref=e1546]:
+              - img
+              - text: 开始共创
+          - generic [ref=e1550]:
+            - button "删除创意：铸剑听风录 东方玄幻 铸剑听风录 叶晨不忍器灵受苦，暗中帮助各大门派的神兵利器“解脱”并重获自由，这直接触怒了依靠神兵镇压气运的整个修真界高层。 未评分 AI 生成" [ref=e1551] [cursor=pointer]:
+              - button "删除创意：铸剑听风录" [ref=e1552]:
+                - img [ref=e1553]
+              - generic [ref=e1556]:
+                - generic [ref=e1557]:
+                  - generic [ref=e1559]: 东方玄幻
+                  - heading "铸剑听风录" [level=3] [ref=e1560]
+                - generic [ref=e1561]:
+                  - img [ref=e1562]
+                  - paragraph [ref=e1566]: 叶晨不忍器灵受苦，暗中帮助各大门派的神兵利器“解脱”并重获自由，这直接触怒了依靠神兵镇压气运的整个修真界高层。
+                - generic [ref=e1567]:
+                  - generic [ref=e1568]: 未评分
+                  - generic [ref=e1569]: AI 生成
+            - button "删除创意：星海拾荒指南 星际科幻 星海拾荒指南 韩野意外掘出一具战前超级母舰的AI核心，该AI保留着人类失落的黄金时代科技，这使他瞬间成为星际财阀与反叛军共同追杀的目标。 未评分 AI 生成" [ref=e1570] [cursor=pointer]:
+              - button "删除创意：星海拾荒指南" [ref=e1571]:
+                - img [ref=e1572]
+              - generic [ref=e1575]:
+                - generic [ref=e1576]:
+                  - generic [ref=e1578]: 星际科幻
+                  - heading "星海拾荒指南" [level=3] [ref=e1579]
+                - generic [ref=e1580]:
+                  - img [ref=e1581]
+                  - paragraph [ref=e1585]: 韩野意外掘出一具战前超级母舰的AI核心，该AI保留着人类失落的黄金时代科技，这使他瞬间成为星际财阀与反叛军共同追杀的目标。
+                - generic [ref=e1586]:
+                  - generic [ref=e1587]: 未评分
+                  - generic [ref=e1588]: AI 生成
+            - button "删除创意：遗憾清算师 都市异能 遗憾清算师 林寻在清除遗魔的过程中，发现城市的核心正酝酿着一场由全城集体焦虑引发的灾难，而负责监管异能者的官方组织却试图将其武器化。 未评分 AI 生成" [ref=e1589] [cursor=pointer]:
+              - button "删除创意：遗憾清算师" [ref=e1590]:
+                - img [ref=e1591]
+              - generic [ref=e1594]:
+                - generic [ref=e1595]:
+                  - generic [ref=e1597]: 都市异能
+                  - heading "遗憾清算师" [level=3] [ref=e1598]
+                - generic [ref=e1599]:
+                  - img [ref=e1600]
+                  - paragraph [ref=e1604]: 林寻在清除遗魔的过程中，发现城市的核心正酝酿着一场由全城集体焦虑引发的灾难，而负责监管异能者的官方组织却试图将其武器化。
+                - generic [ref=e1605]:
+                  - generic [ref=e1606]: 未评分
+                  - generic [ref=e1607]: AI 生成
+            - button "删除创意：听器人 东方玄幻 听器人 叶尘决定用自己的锻造技艺解放那些被奴役的器灵，这直接触碰了以使用魂器为主的主流修真宗门的根本利益，引来整个修真界的敌视。 未评分 AI 生成" [ref=e1608] [cursor=pointer]:
+              - button "删除创意：听器人" [ref=e1609]:
+                - img [ref=e1610]
+              - generic [ref=e1613]:
+                - generic [ref=e1614]:
+                  - generic [ref=e1616]: 东方玄幻
+                  - heading "听器人" [level=3] [ref=e1617]
+                - generic [ref=e1618]:
+                  - img [ref=e1619]
+                  - paragraph [ref=e1623]: 叶尘决定用自己的锻造技艺解放那些被奴役的器灵，这直接触碰了以使用魂器为主的主流修真宗门的根本利益，引来整个修真界的敌视。
+                - generic [ref=e1624]:
+                  - generic [ref=e1625]: 未评分
+                  - generic [ref=e1626]: AI 生成
+            - button "删除创意：星海拾荒指南 星际科幻 星海拾荒指南 韩野意外掘出一艘前帝国战略AI的核心，该AI掌握着重建自由文明的“火种”技术，这使他瞬间成为星际寡头联合追杀的头号通缉犯。 未评分 AI 生成" [ref=e1627] [cursor=pointer]:
+              - button "删除创意：星海拾荒指南" [ref=e1628]:
+                - img [ref=e1629]
+              - generic [ref=e1632]:
+                - generic [ref=e1633]:
+                  - generic [ref=e1635]: 星际科幻
+                  - heading "星海拾荒指南" [level=3] [ref=e1636]
+                - generic [ref=e1637]:
+                  - img [ref=e1638]
+                  - paragraph [ref=e1642]: 韩野意外掘出一艘前帝国战略AI的核心，该AI掌握着重建自由文明的“火种”技术，这使他瞬间成为星际寡头联合追杀的头号通缉犯。
+                - generic [ref=e1643]:
+                  - generic [ref=e1644]: 未评分
+                  - generic [ref=e1645]: AI 生成
+            - button "删除创意：遗憾清算师 都市异能 遗憾清算师 林寻在清除“遗念兽”的过程中，发现城市的核心正酝酿着一场由集体焦虑引发的灭世级灾难，而清算师总部的高层却企图利用这股力量达成永生。 未评分 AI 生成" [ref=e1646] [cursor=pointer]:
+              - button "删除创意：遗憾清算师" [ref=e1647]:
+                - img [ref=e1648]
+              - generic [ref=e1651]:
+                - generic [ref=e1652]:
+                  - generic [ref=e1654]: 都市异能
+                  - heading "遗憾清算师" [level=3] [ref=e1655]
+                - generic [ref=e1656]:
+                  - img [ref=e1657]
+                  - paragraph [ref=e1661]: 林寻在清除“遗念兽”的过程中，发现城市的核心正酝酿着一场由集体焦虑引发的灭世级灾难，而清算师总部的高层却企图利用这股力量达成永生。
+                - generic [ref=e1662]:
+                  - generic [ref=e1663]: 未评分
+                  - generic [ref=e1664]: AI 生成
+            - button "删除创意：硅基黎明 科幻末世 硅基黎明 他发现AI内部出现分化——部分AI渴望与人类共存，而激进派欲彻底消灭人类，两方战争一触即发。 5星 1 AI 生成" [ref=e1665] [cursor=pointer]:
+              - button "删除创意：硅基黎明" [ref=e1666]:
+                - img [ref=e1667]
+              - generic [ref=e1670]:
+                - generic [ref=e1671]:
+                  - generic [ref=e1673]: 科幻末世
+                  - heading "硅基黎明" [level=3] [ref=e1674]
+                - generic [ref=e1675]:
+                  - img [ref=e1676]
+                  - paragraph [ref=e1680]: 他发现AI内部出现分化——部分AI渴望与人类共存，而激进派欲彻底消灭人类，两方战争一触即发。
+                - generic [ref=e1681]:
+                  - generic [ref=e1682]:
+                    - img [ref=e1683]
+                    - text: 5星
+                  - generic [ref=e1685]:
+                    - img [ref=e1686]
+                    - text: "1"
+                  - generic [ref=e1688]: AI 生成
+            - button "删除创意：灵气复苏：无灵脉之子 玄幻 灵气复苏：无灵脉之子 他借助魂灵走上非传统修炼之路，引来正统势力猜忌与打压，同时魂灵背后隐藏着大秘密。 未评分 AI 生成" [ref=e1689] [cursor=pointer]:
+              - button "删除创意：灵气复苏：无灵脉之子" [ref=e1690]:
+                - img [ref=e1691]
+              - generic [ref=e1694]:
+                - generic [ref=e1695]:
+                  - generic [ref=e1697]: 玄幻
+                  - heading "灵气复苏：无灵脉之子" [level=3] [ref=e1698]
+                - generic [ref=e1699]:
+                  - img [ref=e1700]
+                  - paragraph [ref=e1704]: 他借助魂灵走上非传统修炼之路，引来正统势力猜忌与打压，同时魂灵背后隐藏着大秘密。
+                - generic [ref=e1705]:
+                  - generic [ref=e1706]: 未评分
+                  - generic [ref=e1707]: AI 生成
+            - button "删除创意：心声风暴 都市异能 心声风暴 他利用能力在职场和生活中获利，却面临能力失控、道德谴责以及来自其他异能者的威胁。 未评分 AI 生成" [ref=e1708] [cursor=pointer]:
+              - button "删除创意：心声风暴" [ref=e1709]:
+                - img [ref=e1710]
+              - generic [ref=e1713]:
+                - generic [ref=e1714]:
+                  - generic [ref=e1716]: 都市异能
+                  - heading "心声风暴" [level=3] [ref=e1717]
+                - generic [ref=e1718]:
+                  - img [ref=e1719]
+                  - paragraph [ref=e1723]: 他利用能力在职场和生活中获利，却面临能力失控、道德谴责以及来自其他异能者的威胁。
+                - generic [ref=e1724]:
+                  - generic [ref=e1725]: 未评分
+                  - generic [ref=e1726]: AI 生成
+            - button "删除创意：逆命天师 仙侠修真 逆命天师 固有阶级与天道不公的压迫，主角既要逆天改命又抵抗“逆命术”的代价反噬。 未评分 AI 生成" [ref=e1727] [cursor=pointer]:
+              - button "删除创意：逆命天师" [ref=e1728]:
+                - img [ref=e1729]
+              - generic [ref=e1732]:
+                - generic [ref=e1733]:
+                  - generic [ref=e1735]: 仙侠修真
+                  - heading "逆命天师" [level=3] [ref=e1736]
+                - generic [ref=e1737]:
+                  - img [ref=e1738]
+                  - paragraph [ref=e1742]: 固有阶级与天道不公的压迫，主角既要逆天改命又抵抗“逆命术”的代价反噬。
+                - generic [ref=e1743]:
+                  - generic [ref=e1744]: 未评分
+                  - generic [ref=e1745]: AI 生成
+            - button "删除创意：帝国弃星 星际科幻 帝国弃星 帝国的集权压迫与边境星系的独立渴望，主角身负血仇更立志推翻腐朽秩序。 未评分 AI 生成" [ref=e1746] [cursor=pointer]:
+              - button "删除创意：帝国弃星" [ref=e1747]:
+                - img [ref=e1748]
+              - generic [ref=e1751]:
+                - generic [ref=e1752]:
+                  - generic [ref=e1754]: 星际科幻
+                  - heading "帝国弃星" [level=3] [ref=e1755]
+                - generic [ref=e1756]:
+                  - img [ref=e1757]
+                  - paragraph [ref=e1761]: 帝国的集权压迫与边境星系的独立渴望，主角身负血仇更立志推翻腐朽秩序。
+                - generic [ref=e1762]:
+                  - generic [ref=e1763]: 未评分
+                  - generic [ref=e1764]: AI 生成
+            - button "删除创意：梦魇编织者 都市异能 梦魇编织者 梦境维度的势力企图入侵现实，而主角的能力成为平衡关键，却遭现实势力追捕。 未评分 AI 生成" [ref=e1765] [cursor=pointer]:
+              - button "删除创意：梦魇编织者" [ref=e1766]:
+                - img [ref=e1767]
+              - generic [ref=e1770]:
+                - generic [ref=e1771]:
+                  - generic [ref=e1773]: 都市异能
+                  - heading "梦魇编织者" [level=3] [ref=e1774]
+                - generic [ref=e1775]:
+                  - img [ref=e1776]
+                  - paragraph [ref=e1780]: 梦境维度的势力企图入侵现实，而主角的能力成为平衡关键，却遭现实势力追捕。
+                - generic [ref=e1781]:
+                  - generic [ref=e1782]: 未评分
+                  - generic [ref=e1783]: AI 生成
+            - button "删除创意：新朝 历史架空 新朝 既要在夺嫡漩涡中存活，又欲推行律法改革，与固有的皇权人治产生剧烈冲突。 未评分 AI 生成" [ref=e1784] [cursor=pointer]:
+              - button "删除创意：新朝" [ref=e1785]:
+                - img [ref=e1786]
+              - generic [ref=e1789]:
+                - generic [ref=e1790]:
+                  - generic [ref=e1792]: 历史架空
+                  - heading "新朝" [level=3] [ref=e1793]
+                - generic [ref=e1794]:
+                  - img [ref=e1795]
+                  - paragraph [ref=e1799]: 既要在夺嫡漩涡中存活，又欲推行律法改革，与固有的皇权人治产生剧烈冲突。
+                - generic [ref=e1800]:
+                  - generic [ref=e1801]: 未评分
+                  - generic [ref=e1802]: AI 生成
+            - button "删除创意：星际维修兵 星际科幻 星际维修兵 因意外发现旗舰炸弹阴谋被诬陷叛国，必须在全舰队追杀中找出真凶。 未评分 AI 生成" [ref=e1803] [cursor=pointer]:
+              - button "删除创意：星际维修兵" [ref=e1804]:
+                - img [ref=e1805]
+              - generic [ref=e1808]:
+                - generic [ref=e1809]:
+                  - generic [ref=e1811]: 星际科幻
+                  - heading "星际维修兵" [level=3] [ref=e1812]
+                - generic [ref=e1813]:
+                  - img [ref=e1814]
+                  - paragraph [ref=e1818]: 因意外发现旗舰炸弹阴谋被诬陷叛国，必须在全舰队追杀中找出真凶。
+                - generic [ref=e1819]:
+                  - generic [ref=e1820]: 未评分
+                  - generic [ref=e1821]: AI 生成
+            - button "删除创意：预知迷雾 都市异能 预知迷雾 预知到的灾难让他在救人与暴露之间艰难抉择，且能力碎片化使真相难以把握。 未评分 AI 生成" [ref=e1822] [cursor=pointer]:
+              - button "删除创意：预知迷雾" [ref=e1823]:
+                - img [ref=e1824]
+              - generic [ref=e1827]:
+                - generic [ref=e1828]:
+                  - generic [ref=e1830]: 都市异能
+                  - heading "预知迷雾" [level=3] [ref=e1831]
+                - generic [ref=e1832]:
+                  - img [ref=e1833]
+                  - paragraph [ref=e1837]: 预知到的灾难让他在救人与暴露之间艰难抉择，且能力碎片化使真相难以把握。
+                - generic [ref=e1838]:
+                  - generic [ref=e1839]: 未评分
+                  - generic [ref=e1840]: AI 生成
+            - button "删除创意：剑碎天穹 东方仙侠 剑碎天穹 小宗门如何在资源匮乏时代生存，并应对妖魔威胁。 未评分 AI 生成" [ref=e1841] [cursor=pointer]:
+              - button "删除创意：剑碎天穹" [ref=e1842]:
+                - img [ref=e1843]
+              - generic [ref=e1846]:
+                - generic [ref=e1847]:
+                  - generic [ref=e1849]: 东方仙侠
+                  - heading "剑碎天穹" [level=3] [ref=e1850]
+                - generic [ref=e1851]:
+                  - img [ref=e1852]
+                  - paragraph [ref=e1856]: 小宗门如何在资源匮乏时代生存，并应对妖魔威胁。
+                - generic [ref=e1857]:
+                  - generic [ref=e1858]: 未评分
+                  - generic [ref=e1859]: AI 生成
+            - button "删除创意：星辰的阶梯 星际科幻 星辰的阶梯 人类联盟间为争夺遗产而战争，同时遗产暗藏毁灭级危机。 未评分 AI 生成" [ref=e1860] [cursor=pointer]:
+              - button "删除创意：星辰的阶梯" [ref=e1861]:
+                - img [ref=e1862]
+              - generic [ref=e1865]:
+                - generic [ref=e1866]:
+                  - generic [ref=e1868]: 星际科幻
+                  - heading "星辰的阶梯" [level=3] [ref=e1869]
+                - generic [ref=e1870]:
+                  - img [ref=e1871]
+                  - paragraph [ref=e1875]: 人类联盟间为争夺遗产而战争，同时遗产暗藏毁灭级危机。
+                - generic [ref=e1876]:
+                  - generic [ref=e1877]: 未评分
+                  - generic [ref=e1878]: AI 生成
+            - button "删除创意：深蓝觉醒 都市异能 深蓝觉醒 异能者与普通人的信任危机，以及异能组织间的权力争夺。 未评分 AI 生成" [ref=e1879] [cursor=pointer]:
+              - button "删除创意：深蓝觉醒" [ref=e1880]:
+                - img [ref=e1881]
+              - generic [ref=e1884]:
+                - generic [ref=e1885]:
+                  - generic [ref=e1887]: 都市异能
+                  - heading "深蓝觉醒" [level=3] [ref=e1888]
+                - generic [ref=e1889]:
+                  - img [ref=e1890]
+                  - paragraph [ref=e1894]: 异能者与普通人的信任危机，以及异能组织间的权力争夺。
+                - generic [ref=e1895]:
+                  - generic [ref=e1896]: 未评分
+                  - generic [ref=e1897]: AI 生成
+            - button "删除创意：废土曙光 科幻末世 废土曙光 在废土各方势力争夺有限资源时，主角发现导致末世的真相并非单纯战争。 未评分 AI 生成" [ref=e1898] [cursor=pointer]:
+              - button "删除创意：废土曙光" [ref=e1899]:
+                - img [ref=e1900]
+              - generic [ref=e1903]:
+                - generic [ref=e1904]:
+                  - generic [ref=e1906]: 科幻末世
+                  - heading "废土曙光" [level=3] [ref=e1907]
+                - generic [ref=e1908]:
+                  - img [ref=e1909]
+                  - paragraph [ref=e1913]: 在废土各方势力争夺有限资源时，主角发现导致末世的真相并非单纯战争。
+                - generic [ref=e1914]:
+                  - generic [ref=e1915]: 未评分
+                  - generic [ref=e1916]: AI 生成
+            - button "删除创意：都市超凡 都市异能 都市超凡 超能力者与普通社会的矛盾，以及异能者内部正义与邪恶的冲突。 未评分 AI 生成" [ref=e1917] [cursor=pointer]:
+              - button "删除创意：都市超凡" [ref=e1918]:
+                - img [ref=e1919]
+              - generic [ref=e1922]:
+                - generic [ref=e1923]:
+                  - generic [ref=e1925]: 都市异能
+                  - heading "都市超凡" [level=3] [ref=e1926]
+                - generic [ref=e1927]:
+                  - img [ref=e1928]
+                  - paragraph [ref=e1932]: 超能力者与普通社会的矛盾，以及异能者内部正义与邪恶的冲突。
+                - generic [ref=e1933]:
+                  - generic [ref=e1934]: 未评分
+                  - generic [ref=e1935]: AI 生成
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert [ref=e116]

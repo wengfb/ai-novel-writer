@@ -16,9 +16,27 @@ import type {
 } from './types'
 import { normalizePromptContent } from './prompt-utils'
 
-/** agentId::slotKey → 槽位（仅缓存 DB 行，defaultContent 在 resolve 时回填） */
-let cache: Map<string, ResolvedPromptSlot> | null = null
-let cacheExpiry = 0
+/**
+ * 进程级缓存。Next.js 开发/路由拆包时各文件可能拿到不同 module 实例，
+ * 模块级 let 会导致「写路径清缓存、读路径仍用旧 Map」。挂到 globalThis 统一共享。
+ */
+type PromptCacheState = {
+  cache: Map<string, ResolvedPromptSlot> | null
+  cacheExpiry: number
+}
+
+const PROMPT_CACHE_GLOBAL_KEY = '__aiNovelWriterAgentPromptCache__'
+
+function getPromptCacheState(): PromptCacheState {
+  const g = globalThis as typeof globalThis & {
+    [PROMPT_CACHE_GLOBAL_KEY]?: PromptCacheState
+  }
+  if (!g[PROMPT_CACHE_GLOBAL_KEY]) {
+    g[PROMPT_CACHE_GLOBAL_KEY] = { cache: null, cacheExpiry: 0 }
+  }
+  return g[PROMPT_CACHE_GLOBAL_KEY]!
+}
+
 const CACHE_TTL = 15_000
 
 function cacheKey(agentId: string, slotKey: string) {
@@ -27,8 +45,9 @@ function cacheKey(agentId: string, slotKey: string) {
 
 /** 清除提示词缓存（保存/重置后必须调用） */
 export function clearPromptCache() {
-  cache = null
-  cacheExpiry = 0
+  const state = getPromptCacheState()
+  state.cache = null
+  state.cacheExpiry = 0
 }
 
 /** 解析 AgentPrompt.variables JSON */
@@ -90,13 +109,14 @@ function resolveSlot(
 export async function resolveAgentPrompts(
   definition: AgentDefinition
 ): Promise<ResolvedPromptSlot[]> {
+  const state = getPromptCacheState()
   const now = Date.now()
-  if (!cache || now >= cacheExpiry) {
-    cache = new Map()
+  if (!state.cache || now >= state.cacheExpiry) {
+    const next = new Map<string, ResolvedPromptSlot>()
     try {
       const rows = await prisma.agentPrompt.findMany()
       for (const row of rows) {
-        cache.set(cacheKey(row.agentId, row.slotKey), {
+        next.set(cacheKey(row.agentId, row.slotKey), {
           key: row.slotKey,
           name: row.name,
           description: row.description ?? undefined,
@@ -110,13 +130,14 @@ export async function resolveAgentPrompts(
       }
     } catch {
       // 表未迁移或 DB 暂不可用：降级为纯默认
-      cache = new Map()
+      next.clear()
     }
-    cacheExpiry = now + CACHE_TTL
+    state.cache = next
+    state.cacheExpiry = now + CACHE_TTL
   }
 
   return definition.promptSlots.map((slot) => {
-    const cached = cache!.get(cacheKey(definition.id, slot.key))
+    const cached = state.cache!.get(cacheKey(definition.id, slot.key))
     if (!cached) return resolveSlot(slot, null)
     return {
       ...cached,

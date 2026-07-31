@@ -75,7 +75,9 @@ export const useOutlineStore = create<OutlineState>()(
 
     fetchOutlines: async (projectId: string, force = false) => {
       const state = get()
-      if (state.isLoading) return
+      // create/update/delete 会先把 isLoading 置 true 再 force 刷新；
+      // 若不放行 force，会直接 return，侧栏永远看不到新节点。
+      if (!force && state.isLoading) return
       if (!force && state.lastFetchedProjectId === projectId) return
 
       set({ isLoading: true, error: null })
@@ -107,6 +109,7 @@ export const useOutlineStore = create<OutlineState>()(
         const newOutline = (res.data?.outline ?? res.data) as Outline
 
         await get().fetchOutlines(projectId, true)
+        set({ isLoading: false })
 
         return newOutline
       } catch (error) {
@@ -121,9 +124,32 @@ export const useOutlineStore = create<OutlineState>()(
     updateOutline: async (id: string, data: Partial<Outline>) => {
       set({ isLoading: true, error: null })
       try {
-        await outlinesApi.update(id, data)
+        const res = await outlinesApi.update(id, data)
+        const updated = (res.data?.outline ?? res.data) as Outline | undefined
+
+        // 乐观更新当前树，避免 force 刷新前 UI 仍显示旧标题
+        if (updated?.id) {
+          set((state) => {
+            const patchNode = (nodes: Outline[]): Outline[] =>
+              nodes.map((node) => {
+                if (node.id === updated.id) return { ...node, ...updated }
+                if (node.children?.length) {
+                  return { ...node, children: patchNode(node.children) }
+                }
+                return node
+              })
+            state.outlines = patchNode(state.outlines)
+            state.flatOutlines = state.flatOutlines.map((node) =>
+              node.id === updated.id ? { ...node, ...updated } : node
+            )
+            if (state.currentOutline?.id === updated.id) {
+              state.currentOutline = { ...state.currentOutline, ...updated }
+            }
+          })
+        }
 
         const projectId =
+          updated?.projectId ||
           get().outlines[0]?.projectId ||
           get().flatOutlines[0]?.projectId ||
           get().lastFetchedProjectId

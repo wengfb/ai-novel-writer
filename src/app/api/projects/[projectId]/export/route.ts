@@ -114,6 +114,32 @@ export async function POST(
 }
 
 /**
+ * 角色 personality 在库中可能是字符串或历史数组形态，统一成可读文本。
+ */
+function formatPersonality(personality: unknown): string {
+  if (personality == null) return ''
+  if (Array.isArray(personality)) {
+    return personality.map(String).filter(Boolean).join('、')
+  }
+  if (typeof personality === 'string') return personality.trim()
+  return String(personality)
+}
+
+/**
+ * 尝试把 JSON 字符串字段解析成对象/数组；失败则原样返回。
+ */
+function parseMaybeJson(value: unknown): unknown {
+  if (typeof value !== 'string') return value
+  const trimmed = value.trim()
+  if (!trimmed || (trimmed[0] !== '{' && trimmed[0] !== '[')) return value
+  try {
+    return JSON.parse(trimmed)
+  } catch {
+    return value
+  }
+}
+
+/**
  * 生成 Markdown 格式
  */
 function generateMarkdown(
@@ -159,8 +185,9 @@ function generateMarkdown(
       if (char.nickname) lines.push(`**昵称**：${char.nickname}\n`)
       if (char.age || char.gender) lines.push(`**年龄**：${char.age || '?'}  |  **性别**：${char.gender || '?'}\n`)
       if (char.appearance) lines.push(`**外貌**：${char.appearance}\n`)
-      if (char.personality && char.personality.length > 0) {
-        lines.push(`**性格**：${char.personality.join('、')}\n`)
+      const personalityText = formatPersonality(char.personality)
+      if (personalityText) {
+        lines.push(`**性格**：${personalityText}\n`)
       }
       if (char.backstory) lines.push(`**背景**：${char.backstory}\n`)
       if (char.motivation) lines.push(`**动机**：${char.motivation}\n`)
@@ -176,16 +203,26 @@ function generateMarkdown(
       if (element.description) {
         lines.push(`${element.description}\n`)
       }
-      if (element.attributes && Object.keys(element.attributes).length > 0) {
-        lines.push(`**属性**：\n`)
-        for (const [key, value] of Object.entries(element.attributes)) {
-          lines.push(`- ${key}: ${value}\n`)
+      const attributes = parseMaybeJson(element.attributes)
+      if (attributes && typeof attributes === 'object' && !Array.isArray(attributes)) {
+        const entries = Object.entries(attributes as Record<string, unknown>)
+        if (entries.length > 0) {
+          lines.push(`**属性**：\n`)
+          for (const [key, value] of entries) {
+            lines.push(`- ${key}: ${String(value)}\n`)
+          }
         }
       }
-      if (element.rules && element.rules.length > 0) {
+      const rules = parseMaybeJson(element.rules ?? element.constraints)
+      if (Array.isArray(rules) && rules.length > 0) {
         lines.push(`**规则**：\n`)
-        for (const rule of element.rules) {
-          lines.push(`- ${rule}\n`)
+        for (const rule of rules) {
+          if (typeof rule === 'string') {
+            lines.push(`- ${rule}\n`)
+          } else if (rule && typeof rule === 'object') {
+            const rec = rule as Record<string, unknown>
+            lines.push(`- ${String(rec.description || rec.rule || JSON.stringify(rule))}\n`)
+          }
         }
       }
       lines.push(`\n`)

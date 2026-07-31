@@ -1,0 +1,223 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - heading [level=2]: AI 小说工坊
+                  - button:
+                    - img
+                - generic:
+                  - button:
+                    - img
+                    - text: 工作台
+              - generic:
+                - heading [level=3]: 创作资源
+                - generic:
+                  - button:
+                    - img
+                    - text: 创意中心
+                  - button:
+                    - img
+                    - text: 剧情大纲
+                  - button:
+                    - img
+                    - text: 章节列表
+                  - button:
+                    - img
+                    - text: 角色设定
+                  - button:
+                    - img
+                    - text: 世界观
+            - generic:
+              - generic:
+                - generic: WF
+                - generic:
+                  - paragraph: WengFB
+                  - paragraph: 专业版计划
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - banner:
+              - generic:
+                - combobox:
+                  - generic: 选择项目
+                  - img
+                - generic: 未选择章节
+              - generic:
+                - generic: 未保存
+                - button [disabled]:
+                  - img
+                  - text: 保存
+                - button [disabled]:
+                  - img
+                  - text: AI生成章节
+                - button [disabled]:
+                  - img
+                  - text: AI 续写
+                - button:
+                  - img
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - paragraph: 项目工作台
+                        - heading [level=1]: 选择一个小说项目
+                        - paragraph: 进入项目后可以继续编辑章节、管理角色与世界观，或从这里创建一个全新的故事。
+                      - generic:
+                        - button:
+                          - img
+                          - text: 创意中心
+                        - button:
+                          - img
+                          - text: 新建项目
+                    - generic:
+                      - generic:
+                        - button:
+                          - img
+                        - button:
+                          - img
+                        - generic:
+                          - heading [level=3]: 神格觉醒
+                          - paragraph: 27岁的底层码农李燃在一次代码事故中意外获得吞噬AI神格的能力。他发现自己所在的‘天网’公司正秘密推行‘意识云端计划’，企图将全人类意识接入超级计算机，实现绝对控制。李燃凭借吞噬AI核心程序获得的力量，不断对抗天网的监控和追杀，但每次吞噬都会引发AI怨念反噬，他的心智逐渐被同化。在反抗过程中，他结识了黑客少女夏冰、前天网科学家周远，也遭遇了冷酷的AI猎手‘织女’。随着能力提升，李燃发现天网背后隐藏着更大的阴谋——神格并非偶然，而是一场千年前超文明遗留的‘试炼’。最终，他必须在人性与力量之间做出抉择：要么牺牲自我引爆意识网络，要么成为新的神格主宰。结局开放，留给读者思考。
+                        - generic:
+                          - generic:
+                            - generic: 科幻
+                            - generic: 9,426 字
+                          - generic:
+                            - progressbar
+                            - generic:
+                              - generic: 2 章
+                              - generic: 9.4%
+                      - generic:
+                        - button:
+                          - img
+                        - button:
+                          - img
+                        - generic:
+                          - heading [level=3]: 话唠藤蔓图
+                          - paragraph: 在废土世界，社恐植物学家阿布意外被一株话痨变异藤蔓“小绿”缠上。小绿声称要去核电站寻找它的“初恋”——一棵会唱歌的放射性蘑菇。阿布只想待在安全屋种菜，却被小绿的唠叨绑架，被迫踏上啼笑皆非的旅程。一路上，他们遭遇毒气野狗帮、迷路仙人掌、垃圾山密室等奇葩副本，阿布全程内心吐槽，却意外收获友谊。最终发现放射性蘑菇是音乐家基因改造的智能终端，它唱出废土第一首摇滚，所有变异怪物跟着摇摆，结局和平欢乐。
+                        - generic:
+                          - generic:
+                            - generic: 科幻
+                            - generic: 0 字
+                          - generic:
+                            - progressbar
+                            - generic:
+                              - generic: 0 章
+                              - generic: 0.0%
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - img
+                  - text: AI 副驾驶
+                - tablist:
+                  - tab [selected]: 对话
+                  - tab: 上下文
+                  - tab: 工具箱
+              - tabpanel:
+                - generic:
+                  - paragraph: 请先选择项目
+  - button "Open Next.js Dev Tools" [ref=e80] [cursor=pointer]:
+    - img [ref=e81]
+  - alert
+  - dialog "项目创建向导" [ref=e119]:
+    - generic [ref=e120]:
+      - heading "项目创建向导" [level=2] [ref=e121]
+      - paragraph [ref=e122]: 确认项目信息并开始创作
+    - generic [ref=e293]:
+      - generic [ref=e294]:
+        - button "故事架构" [ref=e295]:
+          - generic [ref=e298]: 故事架构
+          - img [ref=e299]
+        - button "角色群像" [disabled] [ref=e301]:
+          - generic [ref=e304]: 角色群像
+        - button "世界观" [disabled] [ref=e305]:
+          - generic [ref=e308]: 世界观
+        - button "分卷大纲" [disabled] [ref=e309]:
+          - generic [ref=e312]: 分卷大纲
+        - button "伏笔网络" [disabled] [ref=e313]:
+          - generic [ref=e316]: 伏笔网络
+        - button "风格锚点" [disabled] [ref=e317]:
+          - generic [ref=e320]: 风格锚点
+      - generic [ref=e321]:
+        - generic [ref=e322]:
+          - generic [ref=e323]:
+            - img [ref=e325]
+            - generic [ref=e327]:
+              - heading "故事架构" [level=3] [ref=e328]
+              - paragraph [ref=e329]: 第 1/6 步 · 专家对话
+            - button "一键生成" [ref=e330]:
+              - img
+              - text: 一键生成
+          - generic [ref=e336]:
+            - generic [ref=e337]:
+              - paragraph [ref=e341]: 项目《仙道长生》｜题材：玄幻仙侠｜高概念：一个普通青年获得上古仙帝传承，在残酷的修仙界步步为营，最终证道长生。 请先给一版**轻量架构草稿**（不要 JSON）： 1. 故事梗概 150–250 字（开篇到结局） 2. 核心内外冲突各 1–2 句 3. 三幕各用一句话概括 4. 建议分几卷、每卷一句话目标 主角/冲突参考：一个天赋普通的年轻人，性格坚韧，重情重义，因意外获得上古仙帝传承。；如何在资源有限、强者如林的修仙世界中争夺机缘，抵御外部威胁与内部背叛。 开篇钩子：主角被宗门当作探路炮灰，扔进上古遗迹，却在濒死之际触发了传承。 主题：探讨在绝对力量面前，人性的选择与坚持，以及在长生之路上的责任与牺牲。 目标约 1,000,000 字，节奏 medium。
+              - generic [ref=e345]:
+                - button "Reasoning" [expanded] [ref=e346]:
+                  - img [ref=e347]
+                  - generic [ref=e355]:
+                    - text: Reasoning
+                    - generic: Reasoning
+                  - img [ref=e356]
+                - generic [ref=e361]:
+                  - paragraph [ref=e362]:
+                    - text: 我们被问到：“项目《仙道长生》｜题材：玄幻仙侠｜高概念：一个普通青年获得上古仙帝传承，在残酷的修仙界步步为营，最终证道长生。请先给一版
+                    - strong [ref=e363]: 轻量架构草稿
+                    - text: （不要 JSON）：1. 故事梗概 150–250 字（开篇到结局）2. 核心内外冲突各 1–2 句3. 三幕各用一句话概括4. 建议分几卷、每卷一句话目标”
+                  - paragraph [ref=e364]: 我们需要输出这些，并且要符合故事架构师的角色。注意：用户说“先给一版轻量架构草稿（不要 JSON）”，所以我们应该用中文，条目清晰，简洁专业。后续还可以迭代。现在先基于给定的核心冲突开篇等设计。
+                  - paragraph [ref=e365]: 我们需要考虑故事梗概：主角获得传承，在残酷世界成长，最终证道长生。开篇钩子：被当炮灰扔进遗迹，触发传承。核心冲突：资源有限、强者如林、内部背叛。主题：人性选择，责任牺牲。
+                  - paragraph [ref=e366]: 所以架构草稿：
+                  - list [ref=e367]:
+                    - listitem [ref=e368]: 故事梗概：一个普通宗门弟子叶凡（假设主角名）因资质平庸被当作探路炮灰，扔进上古遗迹。濒死之际意外触发仙帝传承，从此踏上修仙之路。但传承带来无尽觊觎和追杀，他必须在资源匮乏、宗门剥削、正道魔道夹缝中求生。从弱小中崛起，收挚友，抗强敌，揭开仙帝陨落之谜。历经背叛与牺牲，他在飞升与守护之间做出选择，最终以凡人之躯证道长生，守护三界安宁。
+                  - paragraph [ref=e369]: 大概150-250字。
+                  - list [ref=e370]:
+                    - listitem [ref=e371]:
+                      - text: 核心内外冲突：
+                      - list [ref=e372]:
+                        - listitem [ref=e373]: 外部冲突：在残酷修仙界争夺有限资源，应对各大势力、宗门高层、魔道巨枭的追杀与剥削。
+                        - listitem [ref=e374]: 内部冲●
+            - generic [ref=e376]:
+              - button "Scroll to bottom" [ref=e377]:
+                - img
+                - generic [ref=e378]: Scroll to bottom
+              - generic [ref=e380]:
+                - textbox "Message input" [active] [ref=e381]:
+                  - /placeholder: Send a message...
+                - generic [ref=e382]:
+                  - button "Add Attachment" [ref=e383]:
+                    - img
+                    - generic [ref=e384]: Add Attachment
+                  - button "Stop generating" [ref=e386]:
+                    - img
+        - generic [ref=e387]:
+          - generic [ref=e388]:
+            - generic [ref=e389]:
+              - img [ref=e390]
+              - text: 本步结果
+            - paragraph [ref=e392]: 对话满意后点「整理并确认」，会提取结构化数据供创建项目使用。
+          - generic [ref=e394]:
+            - paragraph [ref=e395]: 尚未确认本步结果。
+            - paragraph [ref=e396]: 在左侧与专家讨论，然后点下方按钮整理。
+          - generic [ref=e397]:
+            - button "整理并确认本步" [ref=e398]
+            - generic [ref=e399]:
+              - generic [ref=e400]:
+                - button "跳过" [ref=e401]
+                - button "跳过后续" [ref=e402]
+              - button "继续 →" [disabled]
+    - button "Close" [ref=e167]:
+      - img
+      - generic [ref=e168]: Close

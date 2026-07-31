@@ -15,6 +15,16 @@ const DEFAULT_OPENAI_BASE_URL = 'https://api.openai.com/v1'
 const DEFAULT_GEMINI_MODEL = 'gemini-2.5-flash'
 const DEFAULT_CONTEXT_MAX_TOKENS = 100000
 
+/** 上下文窗口上限（防止误填天文数字导致内存/费用爆炸） */
+export const AI_CONTEXT_MAX_TOKENS_LIMIT = 2_000_000
+/** 单次最大输出 Token 上限 */
+export const AI_MAX_OUTPUT_TOKENS_LIMIT = 200_000
+
+function clampPositiveInt(value: number, max: number): number | undefined {
+  if (!Number.isFinite(value) || value <= 0) return undefined
+  return Math.min(Math.floor(value), max)
+}
+
 // 缓存 DB 设置，避免每次请求都读库
 let cachedDBSettings: Record<string, string> | null = null
 let cacheExpiry = 0
@@ -58,7 +68,8 @@ export function getContextMaxTokens(): number {
   const envValue = process.env.AI_CONTEXT_MAX_TOKENS
   if (envValue) {
     const parsed = parseInt(envValue, 10)
-    if (!isNaN(parsed) && parsed > 0) return parsed
+    const clamped = clampPositiveInt(parsed, AI_CONTEXT_MAX_TOKENS_LIMIT)
+    if (clamped) return clamped
   }
   return DEFAULT_CONTEXT_MAX_TOKENS
 }
@@ -69,9 +80,20 @@ export async function getContextMaxTokensAsync(): Promise<number> {
   const dbValue = dbSettings['ai.contextMaxTokens']
   if (dbValue) {
     const parsed = parseInt(dbValue, 10)
-    if (!isNaN(parsed) && parsed > 0) return parsed
+    const clamped = clampPositiveInt(parsed, AI_CONTEXT_MAX_TOKENS_LIMIT)
+    if (clamped) return clamped
   }
   return getContextMaxTokens()
+}
+
+export async function getAIDefaultGenerationConfig(): Promise<{ temperature?: number; maxTokens?: number }> {
+  const settings = await getDBSettings()
+  const temperature = Number(settings['ai.temperature'])
+  const maxTokens = Number(settings['ai.maxTokens'])
+  return {
+    temperature: Number.isFinite(temperature) && temperature >= 0 && temperature <= 2 ? temperature : undefined,
+    maxTokens: clampPositiveInt(maxTokens, AI_MAX_OUTPUT_TOKENS_LIMIT),
+  }
 }
 
 export function normalizeAIProvider(provider?: string): AIProviderName {

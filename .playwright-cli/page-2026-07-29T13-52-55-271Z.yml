@@ -1,0 +1,263 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "神格觉醒" [level=2] [ref=e2203]
+            - button "编辑项目" [ref=e2204]:
+              - img
+          - paragraph [ref=e2205]: 科幻
+        - generic [ref=e11]:
+          - heading "本书" [level=3] [ref=e2206]
+          - generic [ref=e2207]:
+            - button "章节列表" [ref=e2209]:
+              - img
+              - generic [ref=e2210]: 章节列表
+              - img
+            - button "剧情大纲" [ref=e2235]:
+              - img
+              - generic [ref=e2236]: 剧情大纲
+              - img
+            - button "角色设定" [ref=e2238]:
+              - img
+              - generic [ref=e2239]: 角色设定
+              - img
+            - button "世界观" [ref=e2241]:
+              - img
+              - generic [ref=e2242]: 世界观
+              - img
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e1321]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e1322]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e1323]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 神格觉醒
+            - img
+          - generic [ref=e37]: 第 2 章：吞噬初醒
+        - generic [ref=e2137]:
+          - generic [ref=e2138]: 未保存
+          - button "保存" [ref=e2243]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e2754]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [ref=e2244]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [ref=e2245]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e2140]:
+            - img
+      - main [ref=e2755]:
+        - generic [ref=e2756]:
+          - generic [ref=e2757]:
+            - generic [ref=e2758]:
+              - button "返回" [ref=e2759]:
+                - img
+                - text: 返回
+              - generic [ref=e2760]:
+                - heading "系统设置" [level=1] [ref=e2761]
+                - paragraph [ref=e2762]: AI 模型、Agent 参数与提示词、编辑器与项目默认值
+            - button "保存设置" [ref=e2763]
+          - generic [ref=e2766]:
+            - tablist [ref=e2767]:
+              - tab "AI 配置" [ref=e2768]
+              - tab "Agent 配置" [active] [selected] [ref=e2769]
+              - tab "编辑器" [ref=e2770]
+              - tab "项目默认值" [ref=e2771]
+            - tabpanel "Agent 配置" [ref=e2813]:
+              - generic [ref=e2814]:
+                - paragraph [ref=e2815]:
+                  - text: 每个 AI 功能对应一个 Agent。可分别配置模型、温度与最大输出 Token，也可编辑提示词。 聊天面板与界面按钮共用同一套定义。使用
+                  - code [ref=e2816]: "{变量名}"
+                  - text: 作为运行时变量占位符。
+                - generic [ref=e2817]:
+                  - generic [ref=e2818]:
+                    - generic [ref=e2819]: 选择 Agent
+                    - combobox [ref=e2820]:
+                      - generic:
+                        - generic:
+                          - generic: Studio 创作助手
+                          - generic: 对话
+                      - img
+                    - combobox [ref=e2821]
+                    - generic [ref=e2822]:
+                      - generic [ref=e2823]:
+                        - generic [ref=e2824]: 对话
+                        - generic [ref=e2825]: 可对话
+                        - generic [ref=e2826]: studio-chat
+                      - paragraph [ref=e2827]: 项目内多轮对话助手，支持角色/世界观/章节等工具操作。
+                      - generic [ref=e2828]:
+                        - generic [ref=e2829]:
+                          - generic [ref=e2830]: 运行参数
+                          - button "获取列表" [ref=e2831]:
+                            - img
+                            - text: 获取列表
+                        - generic [ref=e2832]:
+                          - textbox "模型（留空继承全局）" [ref=e2833]
+                          - button "打开模型列表" [ref=e2834]:
+                            - img
+                        - generic [ref=e2835]:
+                          - spinbutton [ref=e2836]
+                          - spinbutton [ref=e2837]
+                        - generic [ref=e2838]:
+                          - button "测试模型" [ref=e2839]:
+                            - img
+                            - text: 测试模型
+                          - button "保存参数" [ref=e2840]
+                      - generic [ref=e2841]:
+                        - generic [ref=e2842]: 提示词槽位
+                        - button "系统指令" [ref=e2844]:
+                          - generic [ref=e2845]: 系统指令
+                  - generic [ref=e2846]:
+                    - generic [ref=e2848]:
+                      - heading "系统指令" [level=4] [ref=e2849]
+                      - paragraph [ref=e2850]: Studio 聊天的主系统提示词。
+                    - generic [ref=e2851]:
+                      - text: 可用变量：
+                      - list [ref=e2852]:
+                        - listitem [ref=e2853]:
+                          - code [ref=e2854]: "{projectTitle}"
+                          - text: — 项目标题（必填）
+                        - listitem [ref=e2855]:
+                          - code [ref=e2856]: "{genre}"
+                          - text: — 小说类型（必填）
+                        - listitem [ref=e2857]:
+                          - code [ref=e2858]: "{styleAnchor}"
+                          - text: — 风格锚点文本（可为空）
+                        - listitem [ref=e2859]:
+                          - code [ref=e2860]: "{contextPrompt}"
+                          - text: — 上下文管理器格式化后的项目上下文
+                    - textbox [ref=e2864]: "你是一个专业的小说创作助手，正在帮助作者创作《{projectTitle}》这部{genre}小说。 {styleAnchor} {contextPrompt} 当用户需要创建/新增/保存/修改/更新角色、世界观、章节内容，或查询项目信息时，请优先考虑调用工具完成操作；如果用户意图明确且信息足够，直接使用对应工具比只给文字建议更合适。用户说\"创建角色/新增设定/追加章节/查询项目\"等操作类请求时，通常是在要求你操作当前项目数据，而不是只生成一段可复制的文本。写操作会先交由用户确认，不要因为需要确认而回避工具调用。工具完成后，用简洁的中文说明你做了什么，并给出下一步建议。若缺少必要信息，请先向用户提问再行动。"
+                    - generic [ref=e2865]:
+                      - button "恢复默认" [disabled]:
+                        - img
+                        - text: 恢复默认
+                      - button "保存提示词" [disabled]:
+                        - img
+                        - text: 保存提示词
+    - separator [ref=e2347]
+    - generic [ref=e2351]:
+      - generic [ref=e2352]:
+        - button "协作" [ref=e2353]
+        - button "上下文" [ref=e2354]
+        - button "生成" [ref=e2355]
+      - generic [ref=e2360]:
+        - generic [ref=e2362]:
+          - heading "当前上下文" [level=3] [ref=e2363]
+          - generic [ref=e2364]: 6,400 / 100,000
+        - generic [ref=e2367]:
+          - generic [ref=e2368]:
+            - img [ref=e2369]
+            - heading "当前章节" [level=4] [ref=e2372]
+          - generic [ref=e2373]: 第 2 章：吞噬初醒
+        - generic [ref=e2374]:
+          - generic [ref=e2375]:
+            - img [ref=e2376]
+            - heading "活跃角色" [level=4] [ref=e2381]
+          - generic [ref=e2382]:
+            - generic [ref=e2383]:
+              - generic [ref=e2384]: 李燃
+              - generic [ref=e2385]:
+                - generic [ref=e2386]: protagonist
+                - switch [checked] [ref=e2387]
+            - generic [ref=e2388]:
+              - generic [ref=e2389]: 李燃
+              - generic [ref=e2390]:
+                - generic [ref=e2391]: supporting
+                - switch [checked] [ref=e2392]
+            - generic [ref=e2393]:
+              - generic [ref=e2394]: 织女（Vega）
+              - generic [ref=e2395]:
+                - generic [ref=e2396]: antagonist
+                - switch [checked] [ref=e2397]
+            - generic [ref=e2398]:
+              - generic [ref=e2399]: 夏冰
+              - generic [ref=e2400]:
+                - generic [ref=e2401]: supporting
+                - switch [checked] [ref=e2402]
+            - generic [ref=e2403]:
+              - generic [ref=e2404]: 夏冰
+              - generic [ref=e2405]:
+                - generic [ref=e2406]: supporting
+                - switch [checked] [ref=e2407]
+            - generic [ref=e2408]:
+              - generic [ref=e2409]: 织女
+              - generic [ref=e2410]:
+                - generic [ref=e2411]: supporting
+                - switch [checked] [ref=e2412]
+            - generic [ref=e2413]:
+              - generic [ref=e2414]: 江锋
+              - generic [ref=e2415]:
+                - generic [ref=e2416]: supporting
+                - switch [checked] [ref=e2417]
+            - generic [ref=e2418]:
+              - generic [ref=e2419]: 周远
+              - generic [ref=e2420]:
+                - generic [ref=e2421]: supporting
+                - switch [checked] [ref=e2422]
+        - generic [ref=e2423]:
+          - generic [ref=e2424]:
+            - img [ref=e2425]
+            - heading "相关世界观" [level=4] [ref=e2428]
+          - generic [ref=e2429]:
+            - generic [ref=e2430]:
+              - generic [ref=e2431]: 天网公司
+              - generic [ref=e2432]:
+                - generic [ref=e2433]: other
+                - switch [checked] [ref=e2434]
+            - generic [ref=e2435]:
+              - generic [ref=e2436]: 天网公司（SkyNet Inc.）
+              - generic [ref=e2437]:
+                - generic [ref=e2438]: organization
+                - switch [checked] [ref=e2439]
+            - generic [ref=e2440]:
+              - generic [ref=e2441]: 底层区与云端区
+              - generic [ref=e2442]:
+                - generic [ref=e2443]: location
+                - switch [checked] [ref=e2444]
+            - generic [ref=e2445]:
+              - generic [ref=e2446]: 天网公司（SkyNet Inc.）
+              - generic [ref=e2447]:
+                - generic [ref=e2448]: organization
+                - switch [checked] [ref=e2449]
+            - generic [ref=e2450]:
+              - generic [ref=e2451]: 灰域 (Grey Domain)
+              - generic [ref=e2452]:
+                - generic [ref=e2453]: organization
+                - switch [checked] [ref=e2454]
+            - generic [ref=e2455]:
+              - generic [ref=e2456]: 底层区与云端区
+              - generic [ref=e2457]:
+                - generic [ref=e2458]: location
+                - switch [checked] [ref=e2459]
+        - generic [ref=e2460]:
+          - button "预览 AI 所见内容" [ref=e2461]:
+            - img
+            - text: 预览 AI 所见内容
+          - button "检查一致性" [ref=e2462]:
+            - img
+            - text: 检查一致性
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert [ref=e116]

@@ -8,7 +8,9 @@ export async function parseJsonBody<T>(request: NextRequest): Promise<T> {
   try {
     return await request.json()
   } catch {
-    throw new Error('Invalid JSON body')
+    throw new Validation_error('请求体不是有效的 JSON', [
+      { field: 'body', message: '无法解析 JSON' },
+    ])
   }
 }
 

@@ -45,6 +45,7 @@ export interface UpdateIdeaInput {
   sublimation?: string
   openingHook?: string
   aiGenerated?: boolean
+  convertedToProjectId?: string | null
 }
 
 export interface GenerateIdeasInput {

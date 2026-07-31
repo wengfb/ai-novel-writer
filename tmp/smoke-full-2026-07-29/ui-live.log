@@ -1,0 +1,66 @@
+=== UI 1: Ideas center ===
+ideas snapshot done
+=== click left 创意中心 ===
+=== ideas actions snapshot done ===
+=== U-15/U-16: 开始共创 ===
+wait 1: "{\"stop\":false,\"saveDisabled\":true,\"saveText\":\"保存创意卡\"}"
+wait 2: "{\"stop\":false,\"saveDisabled\":true,\"saveText\":\"保存创意卡\"}"
+wait 3: "{\"stop\":false,\"saveDisabled\":true,\"saveText\":\"保存创意卡\"}"
+wait 4: "{\"stop\":false,\"saveDisabled\":true,\"saveText\":\"保存创意卡\"}"
+wait 5: "{\"stop\":false,\"saveDisabled\":true,\"saveText\":\"保存创意卡\"}"
+wait 6: "{\"stop\":false,\"saveDisabled\":true,\"saveText\":\"保存创意卡\"}"
+=== U-22 settings tabs ===
+opened tab AI模型
+wait 7: "{\"stop\":false,\"saveDisabled\":null,\"saveText\":null}"
+opened tab Agent
+opened tab 智能体
+opened tab 编辑器
+opened tab 项目
+wait 8: "{\"stop\":false,\"saveDisabled\":null,\"saveText\":null}"
+opened tab 导出
+opened tab 通用
+settings done
+wait 9: "{\"stop\":false,\"saveDisabled\":null,\"saveText\":null}"
+wait 10: "{\"stop\":false,\"saveDisabled\":null,\"saveText\":null}"
+wait 11: "{\"stop\":false,\"saveDisabled\":null,\"saveText\":null}"
+wait 12: "{\"stop\":false,\"saveDisabled\":null,\"saveText\":null}"
+=== U-16 save idea card ===
+=== open 神格觉醒 project ===
+=== U-24 context panel ===
+=== U-gen generate panel ===
+=== open right 生成 panel ===
+=== U-25 consistency UI ===
+consistency wait 1: "wait"
+consistency wait 2: "wait"
+consistency wait 3: "wait"
+consistency wait 4: "wait"
+consistency wait 5: "wait"
+consistency wait 6: "wait"
+consistency wait 7: "wait"
+consistency wait 8: "wait"
+consistency wait 9: "wait"
+consistency wait 10: "wait"
+consistency wait 12: "wait"
+=== U-25 retry from 上下文 ===
+=== U-13 AI 续写 click ===
+=== U-13 AI 续写 dialog ===
+continue UI attempted
+=== U-03 AI生成章节 dialog ===
+=== more menu ===
+=== U-01/U-02 new project onboarding ===
+=== path: AI 一起想创意 ===
+=== path: 用已有创意 ===
+=== U-02 idea detail create project config ===
+=== U-02 create project from idea ===
+documenting config then cancel
+=== reopen 神格觉醒 for focus/outline ===
+=== focus mode ===
+=== outline tab ===
+=== characters tab ===
+=== world tab ===
+UI batch done
+=== U-20/U-21 agent settings UI ===
+=== U-44 narrow viewport ===
+=== U-14 bubble menu probe ===
+=== U-26 stats UI via more/edit? ===
+UI extended done

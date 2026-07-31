@@ -1,0 +1,135 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "UI-CRUD测试项目" [level=2] [ref=e124]
+            - button "编辑项目" [ref=e125]:
+              - img
+          - paragraph [ref=e126]: 玄幻
+        - generic [ref=e11]:
+          - heading "本书" [level=3] [ref=e127]
+          - generic [ref=e128]:
+            - button "章节列表" [ref=e130]:
+              - img
+              - generic [ref=e131]: 章节列表
+              - img
+            - button "剧情大纲" [ref=e142]:
+              - img
+              - generic [ref=e143]: 剧情大纲
+              - img
+            - button "角色设定" [ref=e145]:
+              - img
+              - generic [ref=e146]: 角色设定
+              - img
+            - generic [ref=e147]:
+              - button "世界观" [expanded] [ref=e148]:
+                - img
+                - generic [ref=e149]: 世界观
+                - img
+              - generic [ref=e1198]:
+                - button "新建世界观" [ref=e1200]:
+                  - img
+                  - text: 新建世界观
+                - generic [ref=e1205]: 暂无世界观元素
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: UI-CRUD测试项目
+            - img
+          - generic [ref=e37]: 第 1 章：新章节
+        - generic [ref=e38]:
+          - generic [ref=e39]: 已保存 23:56:59
+          - button "保存" [ref=e228]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [ref=e150]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [ref=e229]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e1122]:
+        - generic [ref=e1207]:
+          - img [ref=e1209]
+          - heading "选择世界观" [level=2] [ref=e1212]
+          - paragraph [ref=e1213]: 在左侧列表中点击元素，可在此处查看与编辑详情。
+          - button "新建世界观" [ref=e1215]:
+            - img
+            - text: 新建世界观
+    - separator [ref=e171]
+    - generic [ref=e175]:
+      - generic [ref=e176]:
+        - button "协作" [ref=e177]
+        - button "上下文" [ref=e178]
+        - button "生成" [ref=e179]
+      - generic [ref=e180]:
+        - generic [ref=e181]:
+          - generic [ref=e182]:
+            - img [ref=e183]
+            - generic [ref=e186]: 创作助手 · 在线
+          - button "创作总监 统筹项目方向、跨模块协作与下一步。" [ref=e1216]:
+            - generic [ref=e188]:
+              - generic [ref=e189]: 创作总监
+              - generic [ref=e190]: 统筹项目方向、跨模块协作与下一步。
+            - img
+          - paragraph [ref=e191]: 正在参考：UI-CRUD测试项目 · 项目全局资料
+        - generic [ref=e197]:
+          - generic [ref=e1217]:
+            - heading "和创作总监一起创作" [level=1] [ref=e1218]
+            - paragraph [ref=e1219]: 正在参考：UI-CRUD测试项目 · 项目全局资料
+          - generic [ref=e203]:
+            - textbox "Message input" [ref=e204]:
+              - /placeholder: Send a message...
+            - generic [ref=e205]:
+              - button "Add Attachment" [ref=e206]:
+                - img
+                - generic [ref=e207]: Add Attachment
+              - generic [ref=e208]:
+                - button "Send message" [disabled]:
+                  - img
+                  - generic: Send message
+        - generic [ref=e210]:
+          - button "补齐项目资料" [ref=e1220]:
+            - img
+            - text: 补齐项目资料
+          - button "检查初始化缺口" [ref=e1221]:
+            - img
+            - text: 检查初始化缺口
+          - button "规划下一步" [ref=e1222]:
+            - img
+            - text: 规划下一步
+  - region "Notifications alt+T":
+    - list:
+      - listitem [ref=e1223]:
+        - button "Close toast" [ref=e1224] [cursor=pointer]:
+          - img [ref=e1225]
+        - img [ref=e1229]
+        - generic [ref=e1233]: 世界观元素删除成功
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert [ref=e74]

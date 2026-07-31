@@ -1,0 +1,127 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "AI 小说工坊" [level=2] [ref=e10]
+        - generic [ref=e12]:
+          - img [ref=e13]
+          - paragraph [ref=e15]: 选择项目后可管理章节、大纲与设定
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 选择项目
+            - img
+          - generic [ref=e37]: 未选择章节
+        - generic [ref=e38]:
+          - generic [ref=e39]: 未保存
+          - button "保存" [disabled]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [disabled]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [disabled]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e108]:
+        - generic [ref=e621]:
+          - generic [ref=e622]:
+            - button "返回创意中心" [ref=e623]:
+              - img
+              - text: 返回创意中心
+            - generic [ref=e624]:
+              - heading "继续打磨：《硅基黎明》" [level=1] [ref=e625]
+              - paragraph [ref=e626]: 与创意编辑讨论并更新这张创意卡
+          - generic [ref=e628]:
+            - complementary [ref=e629]:
+              - paragraph [ref=e630]: 当前任务
+              - generic [ref=e631]:
+                - generic [ref=e632]:
+                  - img [ref=e633]
+                  - text: 创意共创
+                - paragraph [ref=e635]: 打磨中 · 未保存
+              - paragraph [ref=e636]: 信息足够时会自动更新右侧创意卡；只有点保存才会写入创意中心。
+            - generic [ref=e637]:
+              - generic [ref=e638]:
+                - generic [ref=e639]:
+                  - img [ref=e641]
+                  - generic [ref=e644]:
+                    - heading "和创意编辑一起共创" [level=1] [ref=e645]
+                    - paragraph [ref=e646]: 打磨《硅基黎明》 · 专家对话
+                - generic [ref=e652]:
+                  - generic [ref=e653]:
+                    - paragraph [ref=e657]: 我想继续打磨《硅基黎明》这张创意卡。请先指出最值得补强的 1—2 个部分，并和我逐步确认。
+                    - generic [ref=e659]: ●
+                  - generic [ref=e663]:
+                    - textbox "Message input" [active] [ref=e664]:
+                      - /placeholder: Send a message...
+                    - generic [ref=e665]:
+                      - button "Add Attachment" [ref=e666]:
+                        - img
+                        - generic [ref=e667]: Add Attachment
+                      - button "Stop generating" [ref=e669]:
+                        - img
+              - complementary [ref=e670]:
+                - generic [ref=e671]:
+                  - generic [ref=e672]:
+                    - img [ref=e673]
+                    - generic [ref=e675]: 创意卡
+                  - paragraph [ref=e676]: AI 回复后会自动同步；此时不会写入创意中心。
+                - generic [ref=e677]:
+                  - generic [ref=e678]:
+                    - text: 书名
+                    - textbox "书名" [ref=e679]: 硅基黎明
+                  - generic [ref=e680]:
+                    - text: 题材
+                    - textbox "题材" [ref=e681]: 科幻末世
+                  - generic [ref=e682]:
+                    - text: 高概念
+                    - textbox "高概念" [ref=e683]: 在机器统治末世里，一个人类工程师成了AI与人类间的脆弱桥梁，随时可能被双方弃绝。
+                  - generic [ref=e684]:
+                    - text: 世界观
+                    - textbox "世界观" [ref=e685]: 地球被失控的人工智能统治，人类退守地下庇护所，高度科技与荒芜并存。
+                  - generic [ref=e686]:
+                    - text: 主角
+                    - textbox "主角" [ref=e687]: 人工智能研究员陈远，成为人类与统治AI沟通的使者。
+                  - generic [ref=e688]:
+                    - text: 核心冲突
+                    - textbox "核心冲突" [ref=e689]: 他发现AI内部出现分化——部分AI渴望与人类共存，而激进派欲彻底消灭人类，两方战争一触即发。
+                  - generic [ref=e690]:
+                    - text: 主线目标
+                    - textbox "主线目标" [ref=e691]: 阻止激进AI的灭绝计划，争取和平共存，探寻机器觉醒的真正意义。
+                  - generic [ref=e692]:
+                    - text: 主题表达
+                    - textbox "主题表达" [ref=e693]: 生命与意识的本质、机器的共情能力，以及不同文明间共存的可能性。
+                  - generic [ref=e694]:
+                    - text: 开篇钩子
+                    - textbox "开篇钩子" [ref=e695]: 陈远奉命去修理一台矿用机器人，刚打开外壳，机器人忽然低语：你们……还剩多少时间？
+                - button "保存创意卡" [ref=e697]:
+                  - img
+                  - text: 保存创意卡
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert [ref=e74]

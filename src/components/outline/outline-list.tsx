@@ -5,7 +5,7 @@ import { OutlineItem } from './outline-item'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
-import { Plus, Sparkles } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import type { Outline } from '@/lib/store/outline-store'
 import { useUIStore } from '@/lib/store/ui-store'
 
@@ -14,16 +14,14 @@ interface OutlineListProps {
   onCreateOutline?: (parentId?: string | null, type?: 'volume' | 'chapter' | 'scene') => void
   onSelectOutline?: (outline: Outline) => void
   onDeleteOutline?: (outline: Outline) => void
-  onGenerateOutline?: () => void
 }
 
-/** 左侧大纲树：仅导航与操作入口，详情在中间区 */
+/** 左侧大纲树只承担导航和手动新增；AI 规划统一收敛到中间工作台。 */
 export function OutlineList({
   projectId,
   onCreateOutline,
   onSelectOutline,
   onDeleteOutline,
-  onGenerateOutline,
 }: OutlineListProps) {
   const { outlines, isLoading } = useOutlines(projectId)
   const { setCurrentOutline } = useCurrentOutline()
@@ -45,7 +43,7 @@ export function OutlineList({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="space-y-1.5 px-3 py-2">
+      <div className="px-3 py-2">
         <Button
           variant="outline"
           size="sm"
@@ -55,24 +53,13 @@ export function OutlineList({
           <Plus className="mr-2 h-4 w-4" />
           新建大纲
         </Button>
-        {onGenerateOutline && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full"
-            onClick={onGenerateOutline}
-          >
-            <Sparkles className="mr-2 h-4 w-4" />
-            AI 生成
-          </Button>
-        )}
       </div>
 
       <ScrollArea className="flex-1">
         {outlines.length === 0 ? (
           <div className="flex h-40 flex-col items-center justify-center px-3 text-center text-muted-foreground">
             <p className="text-sm">暂无大纲</p>
-            <p className="mt-1 text-xs">新建节点或使用 AI 生成</p>
+            <p className="mt-1 text-xs">在中间工作区开始规划，或手动新建节点</p>
           </div>
         ) : (
           <div className="box-border w-full space-y-1 overflow-hidden p-2">

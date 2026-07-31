@@ -1,0 +1,607 @@
+{
+  "total": 62,
+  "passed": 61,
+  "failed": 1,
+  "by_domain": {
+    "project": {
+      "pass": 8,
+      "fail": 0
+    },
+    "chapter": {
+      "pass": 8,
+      "fail": 0
+    },
+    "character": {
+      "pass": 7,
+      "fail": 0
+    },
+    "world": {
+      "pass": 8,
+      "fail": 0
+    },
+    "outline": {
+      "pass": 8,
+      "fail": 0
+    },
+    "idea": {
+      "pass": 15,
+      "fail": 0
+    },
+    "settings": {
+      "pass": 2,
+      "fail": 0
+    },
+    "export": {
+      "pass": 2,
+      "fail": 1
+    },
+    "context": {
+      "pass": 2,
+      "fail": 0
+    },
+    "agents": {
+      "pass": 1,
+      "fail": 0
+    }
+  },
+  "cases": [
+    {
+      "domain": "project",
+      "op": "list",
+      "name": "list projects",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "project",
+      "op": "create",
+      "name": "create project",
+      "ok": true,
+      "status": 201,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "project",
+      "op": "read",
+      "name": "get project",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8h6s000njyvrzwnwxbyu"
+    },
+    {
+      "domain": "project",
+      "op": "update",
+      "name": "update project meta",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8h6s000njyvrzwnwxbyu"
+    },
+    {
+      "domain": "project",
+      "op": "read",
+      "name": "verify project update",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8h6s000njyvrzwnwxbyu"
+    },
+    {
+      "domain": "project",
+      "op": "extra",
+      "name": "project stats",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8h6s000njyvrzwnwxbyu"
+    },
+    {
+      "domain": "chapter",
+      "op": "list",
+      "name": "list chapters (empty)",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8h6s000njyvrzwnwxbyu"
+    },
+    {
+      "domain": "chapter",
+      "op": "create",
+      "name": "create chapter 1",
+      "ok": true,
+      "status": 201,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "chapter",
+      "op": "read",
+      "name": "get chapter",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8hgz000ojyvr967574eg"
+    },
+    {
+      "domain": "chapter",
+      "op": "update",
+      "name": "update chapter",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8hgz000ojyvr967574eg"
+    },
+    {
+      "domain": "chapter",
+      "op": "read",
+      "name": "verify chapter update",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8hgz000ojyvr967574eg"
+    },
+    {
+      "domain": "chapter",
+      "op": "create",
+      "name": "create chapter 2 temp",
+      "ok": true,
+      "status": 201,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "chapter",
+      "op": "delete",
+      "name": "delete chapter 2",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8hl3000pjyvr6l8zbuwo"
+    },
+    {
+      "domain": "chapter",
+      "op": "read",
+      "name": "verify chapter deleted",
+      "ok": true,
+      "status": 404,
+      "detail": "{\"code\": \"CHAPTER_NOT_FOUND\", \"message\": \"章节不存在\"}",
+      "id": "cms4u8hl3000pjyvr6l8zbuwo"
+    },
+    {
+      "domain": "character",
+      "op": "list",
+      "name": "list characters",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "character",
+      "op": "create",
+      "name": "create character",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "character",
+      "op": "read",
+      "name": "get character",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8hox000qjyvrrr9xp0lb"
+    },
+    {
+      "domain": "character",
+      "op": "update",
+      "name": "update character",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8hox000qjyvrrr9xp0lb"
+    },
+    {
+      "domain": "character",
+      "op": "read",
+      "name": "verify character update",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8hox000qjyvrrr9xp0lb"
+    },
+    {
+      "domain": "character",
+      "op": "create",
+      "name": "create temp character",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8hsy000rjyvroskma5j9"
+    },
+    {
+      "domain": "character",
+      "op": "delete",
+      "name": "delete temp character",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8hsy000rjyvroskma5j9"
+    },
+    {
+      "domain": "world",
+      "op": "list",
+      "name": "list world elements",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "world",
+      "op": "create",
+      "name": "create world element",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "world",
+      "op": "read",
+      "name": "get world element",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8hya000sjyvrfamqx1oy"
+    },
+    {
+      "domain": "world",
+      "op": "update",
+      "name": "update world element",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8hya000sjyvrfamqx1oy"
+    },
+    {
+      "domain": "world",
+      "op": "read",
+      "name": "verify world update",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8hya000sjyvrfamqx1oy"
+    },
+    {
+      "domain": "world",
+      "op": "create",
+      "name": "create temp world",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8i2i000tjyvranx9lo5d"
+    },
+    {
+      "domain": "world",
+      "op": "delete",
+      "name": "delete temp world",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8i2i000tjyvranx9lo5d"
+    },
+    {
+      "domain": "world",
+      "op": "extra",
+      "name": "reject invalid schema",
+      "ok": true,
+      "status": 400,
+      "detail": "{\"code\": \"INVALID_PARAMS\", \"message\": \"参数验证失败\", \"details\": [{\"field\": \"type\", \"message\": \"Invalid option: expected one of \\\"location\\\"|\\\"history\\\"|\\\"magic\\\"|\\\"organization\\\"|\\\"item\\\"|\\\"other\\\"\"}, {\"field\": \"category\", \"message\": \"Invalid option: expected one of \\\"core_rule\\\"|\\\"detail\\\"|\\\"background\\",
+      "id": null
+    },
+    {
+      "domain": "outline",
+      "op": "list",
+      "name": "list outlines",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "outline",
+      "op": "create",
+      "name": "create volume",
+      "ok": true,
+      "status": 201,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "outline",
+      "op": "create",
+      "name": "create chapter node",
+      "ok": true,
+      "status": 201,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "outline",
+      "op": "read",
+      "name": "get outline node",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8i9q000vjyvro0lfv20k"
+    },
+    {
+      "domain": "outline",
+      "op": "update",
+      "name": "update outline node",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8i9q000vjyvro0lfv20k"
+    },
+    {
+      "domain": "outline",
+      "op": "read",
+      "name": "verify outline update",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8i9q000vjyvro0lfv20k"
+    },
+    {
+      "domain": "outline",
+      "op": "create",
+      "name": "create temp scene",
+      "ok": true,
+      "status": 201,
+      "detail": "",
+      "id": "cms4u8ihe000wjyvrs05un1vm"
+    },
+    {
+      "domain": "outline",
+      "op": "delete",
+      "name": "delete temp scene",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8ihe000wjyvrs05un1vm"
+    },
+    {
+      "domain": "idea",
+      "op": "list",
+      "name": "list ideas",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "idea",
+      "op": "extra",
+      "name": "sortBy=updatedAt rejected",
+      "ok": true,
+      "status": 400,
+      "detail": "{\"code\": \"INVALID_PARAMS\", \"message\": \"参数验证失败\", \"details\": [{\"field\": \"sortBy\", \"message\": \"Invalid option: expected one of \\\"createdAt\\\"|\\\"rating\\\"\"}]}",
+      "id": null
+    },
+    {
+      "domain": "idea",
+      "op": "create",
+      "name": "create idea",
+      "ok": true,
+      "status": 201,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "idea",
+      "op": "read",
+      "name": "get idea",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8ikz000xjyvrc7qcr6oz"
+    },
+    {
+      "domain": "idea",
+      "op": "update",
+      "name": "update idea + favorite",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8ikz000xjyvrc7qcr6oz"
+    },
+    {
+      "domain": "idea",
+      "op": "read",
+      "name": "verify idea update",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8ikz000xjyvrc7qcr6oz"
+    },
+    {
+      "domain": "idea",
+      "op": "extra",
+      "name": "rate idea score=4",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8ikz000xjyvrc7qcr6oz"
+    },
+    {
+      "domain": "idea",
+      "op": "extra",
+      "name": "re-rate idea score=2",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8ikz000xjyvrc7qcr6oz"
+    },
+    {
+      "domain": "idea",
+      "op": "read",
+      "name": "verify rating=2",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8ikz000xjyvrc7qcr6oz"
+    },
+    {
+      "domain": "idea",
+      "op": "extra",
+      "name": "rate with wrong field `rating` rejected",
+      "ok": true,
+      "status": 400,
+      "detail": "{\"code\": \"INVALID_PARAMS\", \"message\": \"评分必须是 1-5 的整数\"}",
+      "id": "cms4u8ikz000xjyvrc7qcr6oz"
+    },
+    {
+      "domain": "idea",
+      "op": "extra",
+      "name": "create comment",
+      "ok": true,
+      "status": 201,
+      "detail": "",
+      "id": "cms4u8ikz000xjyvrc7qcr6oz"
+    },
+    {
+      "domain": "idea",
+      "op": "extra",
+      "name": "list comments",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8ikz000xjyvrc7qcr6oz"
+    },
+    {
+      "domain": "idea",
+      "op": "extra",
+      "name": "delete comment has no API (expect 404)",
+      "ok": true,
+      "status": 404,
+      "detail": "",
+      "id": "cms4u8ikz000xjyvrc7qcr6oz"
+    },
+    {
+      "domain": "settings",
+      "op": "read",
+      "name": "get settings",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "settings",
+      "op": "update",
+      "name": "put settings (idempotent model)",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "export",
+      "op": "extra",
+      "name": "GET export should 405",
+      "ok": true,
+      "status": 405,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "export",
+      "op": "create",
+      "name": "POST export markdown",
+      "ok": false,
+      "status": 500,
+      "detail": "{\"code\": \"SERVER_ERROR\", \"message\": \"char.personality.join is not a function\"}",
+      "id": "cms4u8h6s000njyvrzwnwxbyu"
+    },
+    {
+      "domain": "export",
+      "op": "create",
+      "name": "POST export txt chapters-only",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8h6s000njyvrzwnwxbyu"
+    },
+    {
+      "domain": "context",
+      "op": "read",
+      "name": "get context with chapterId",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "context",
+      "op": "extra",
+      "name": "context without chapterId fails",
+      "ok": true,
+      "status": 400,
+      "detail": "{\"code\": \"INVALID_PARAMS\", \"message\": \"缺少必要参数\"}",
+      "id": null
+    },
+    {
+      "domain": "agents",
+      "op": "list",
+      "name": "list agents",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": null
+    },
+    {
+      "domain": "project",
+      "op": "delete",
+      "name": "delete project",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8h6s000njyvrzwnwxbyu"
+    },
+    {
+      "domain": "project",
+      "op": "read",
+      "name": "verify project deleted",
+      "ok": true,
+      "status": 404,
+      "detail": "{\"code\": \"PROJECT_NOT_FOUND\", \"message\": \"项目不存在\"}",
+      "id": "cms4u8h6s000njyvrzwnwxbyu"
+    },
+    {
+      "domain": "idea",
+      "op": "delete",
+      "name": "delete idea",
+      "ok": true,
+      "status": 200,
+      "detail": "",
+      "id": "cms4u8ikz000xjyvrc7qcr6oz"
+    },
+    {
+      "domain": "idea",
+      "op": "read",
+      "name": "verify idea deleted",
+      "ok": true,
+      "status": 404,
+      "detail": "{\"code\": \"NOT_FOUND\", \"message\": \"创意不存在\"}",
+      "id": "cms4u8ikz000xjyvrc7qcr6oz"
+    }
+  ]
+}

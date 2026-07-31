@@ -1,0 +1,139 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "AI 小说工坊" [level=2] [ref=e10]
+        - generic [ref=e12]:
+          - img [ref=e13]
+          - paragraph [ref=e15]: 选择项目后可管理章节、大纲与设定
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 选择项目
+            - img
+          - generic [ref=e37]: 未选择章节
+        - generic [ref=e38]:
+          - generic [ref=e39]: 未保存
+          - button "保存" [disabled]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [disabled]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [disabled]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e118]:
+        - generic [ref=e119]:
+          - generic [ref=e120]:
+            - generic [ref=e121]:
+              - button "返回" [ref=e122]:
+                - img
+                - text: 返回
+              - generic [ref=e123]:
+                - heading "系统设置" [level=1] [ref=e124]
+                - paragraph [ref=e125]: AI 模型、Agent 提示词、编辑器与项目默认值
+            - button "保存设置" [ref=e126]
+          - generic [ref=e129]:
+            - tablist [ref=e130]:
+              - tab "AI 配置" [ref=e131]
+              - tab "Agent 提示词" [active] [selected] [ref=e132]
+              - tab "编辑器" [ref=e133]
+              - tab "项目默认值" [ref=e134]
+            - tabpanel "Agent 提示词" [ref=e174]:
+              - generic [ref=e175]:
+                - paragraph [ref=e176]:
+                  - text: 每个 AI 功能对应一个 Agent。提示词在此可见可编辑；聊天面板与界面按钮共用同一套定义。 使用
+                  - code [ref=e177]: "{变量名}"
+                  - text: 作为运行时变量占位符。
+                - generic [ref=e178]:
+                  - generic [ref=e179]:
+                    - generic [ref=e180]: 选择 Agent
+                    - combobox [ref=e181]:
+                      - generic:
+                        - generic:
+                          - generic: Studio 创作助手
+                          - generic: 对话
+                      - img
+                    - combobox [ref=e182]
+                    - generic [ref=e183]:
+                      - generic [ref=e184]:
+                        - generic [ref=e185]: 对话
+                        - generic [ref=e186]: 可对话
+                        - generic [ref=e187]: studio-chat
+                      - paragraph [ref=e188]: 项目内多轮对话助手，支持角色/世界观/章节等工具操作。
+                      - generic [ref=e189]:
+                        - generic [ref=e190]: 运行参数
+                        - textbox "模型 ID（留空继承全局）" [ref=e191]
+                        - generic [ref=e192]:
+                          - spinbutton [ref=e193]
+                          - spinbutton [ref=e194]
+                        - generic [ref=e195]:
+                          - button "测试模型" [ref=e196]:
+                            - img
+                            - text: 测试模型
+                          - button "保存参数" [ref=e197]
+                      - generic [ref=e198]:
+                        - generic [ref=e199]: 提示词槽位
+                        - button "系统指令" [ref=e201]:
+                          - generic [ref=e202]: 系统指令
+                  - generic [ref=e203]:
+                    - generic [ref=e205]:
+                      - heading "系统指令" [level=4] [ref=e206]
+                      - paragraph [ref=e207]: Studio 聊天的主系统提示词。
+                    - generic [ref=e208]:
+                      - text: 可用变量：
+                      - list [ref=e209]:
+                        - listitem [ref=e210]:
+                          - code [ref=e211]: "{projectTitle}"
+                          - text: — 项目标题（必填）
+                        - listitem [ref=e212]:
+                          - code [ref=e213]: "{genre}"
+                          - text: — 小说类型（必填）
+                        - listitem [ref=e214]:
+                          - code [ref=e215]: "{styleAnchor}"
+                          - text: — 风格锚点文本（可为空）
+                        - listitem [ref=e216]:
+                          - code [ref=e217]: "{contextPrompt}"
+                          - text: — 上下文管理器格式化后的项目上下文
+                    - textbox [ref=e221]: "你是一个专业的小说创作助手，正在帮助作者创作《{projectTitle}》这部{genre}小说。 {styleAnchor} {contextPrompt} 当用户需要创建/新增/保存/修改/更新角色、世界观、章节内容，或查询项目信息时，请优先考虑调用工具完成操作；如果用户意图明确且信息足够，直接使用对应工具比只给文字建议更合适。用户说\"创建角色/新增设定/追加章节/查询项目\"等操作类请求时，通常是在要求你操作当前项目数据，而不是只生成一段可复制的文本。写操作会先交由用户确认，不要因为需要确认而回避工具调用。工具完成后，用简洁的中文说明你做了什么，并给出下一步建议。若缺少必要信息，请先向用户提问再行动。"
+                    - generic [ref=e222]:
+                      - button "恢复默认" [disabled]:
+                        - img
+                        - text: 恢复默认
+                      - button "保存提示词" [disabled]:
+                        - img
+                        - text: 保存提示词
+    - separator [ref=e58]
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - button "协作" [ref=e64]
+        - button "上下文" [ref=e65]
+        - button "生成" [ref=e66]
+      - generic [ref=e67]: 请先选择项目
+  - button "Open Next.js Dev Tools" [ref=e73] [cursor=pointer]:
+    - img [ref=e74]
+  - alert [ref=e84]

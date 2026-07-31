@@ -100,6 +100,31 @@ export type SystemSetting = Prisma.SystemSettingModel
  */
 export type AgentPrompt = Prisma.AgentPromptModel
 /**
+ * Model AgentConversation
+ * 
+ */
+export type AgentConversation = Prisma.AgentConversationModel
+/**
+ * Model AgentConversationMessage
+ * 
+ */
+export type AgentConversationMessage = Prisma.AgentConversationMessageModel
+/**
+ * Model ChangeSet
+ * 
+ */
+export type ChangeSet = Prisma.ChangeSetModel
+/**
+ * Model ChangeSetItem
+ * 
+ */
+export type ChangeSetItem = Prisma.ChangeSetItemModel
+/**
+ * Model AgentHandoff
+ * 
+ */
+export type AgentHandoff = Prisma.AgentHandoffModel
+/**
  * Model Idea
  * 
  */

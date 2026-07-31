@@ -1,0 +1,72 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic
+  - button "Open Next.js Dev Tools" [ref=e158] [cursor=pointer]:
+    - img [ref=e159]
+  - alert
+  - dialog "创建角色" [ref=e826]:
+    - generic [ref=e827]:
+      - heading "创建角色" [level=2] [ref=e828]
+      - paragraph [ref=e829]: 添加新的角色到你的小说项目中
+    - generic [ref=e830]:
+      - generic [ref=e831]:
+        - generic [ref=e832]:
+          - generic [ref=e833]: 角色名称 *
+          - textbox "角色名称 *" [active] [ref=e834]:
+            - /placeholder: 例如：林轩
+        - generic [ref=e835]:
+          - generic [ref=e836]: 昵称
+          - textbox "昵称" [ref=e837]:
+            - /placeholder: 例如：剑圣
+      - generic [ref=e838]:
+        - generic [ref=e839]:
+          - generic [ref=e840]: 年龄
+          - spinbutton "年龄" [ref=e841]
+        - generic [ref=e842]:
+          - generic [ref=e843]: 性别
+          - textbox "性别" [ref=e844]:
+            - /placeholder: 例如：男
+        - generic [ref=e845]:
+          - generic [ref=e846]: 重要性 (1-10)
+          - spinbutton "重要性 (1-10)" [ref=e847]: "5"
+      - generic [ref=e848]:
+        - generic [ref=e849]: 角色类型
+        - combobox [ref=e850]:
+          - generic: 配角
+          - img
+        - combobox [ref=e851]
+      - generic [ref=e852]:
+        - generic [ref=e853]: 外貌描述
+        - textbox "外貌描述" [ref=e854]:
+          - /placeholder: 描述角色的外貌特征...
+      - generic [ref=e855]:
+        - generic [ref=e856]: 性格特点
+        - textbox "性格特点" [ref=e857]:
+          - /placeholder: 描述角色的性格特点...
+      - generic [ref=e858]:
+        - generic [ref=e859]: 背景故事
+        - textbox "背景故事" [ref=e860]:
+          - /placeholder: 描述角色的背景故事...
+      - generic [ref=e861]:
+        - generic [ref=e862]: 角色动机
+        - textbox "角色动机" [ref=e863]:
+          - /placeholder: 描述角色的动机和目标...
+      - generic [ref=e865]:
+        - button "取消" [ref=e866]
+        - button "创建角色" [ref=e867]
+    - button "Close" [ref=e868]:
+      - img
+      - generic [ref=e869]: Close

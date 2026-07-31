@@ -1,0 +1,1308 @@
+[     390ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[     548ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[   33342ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[   34340ms] [LOG] [Fast Refresh] done in 1098ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[   40199ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[   40251ms] [LOG] [Fast Refresh] done in 152ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[   71101ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[   71149ms] [LOG] [Fast Refresh] done in 149ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  181627ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  181664ms] [LOG] [Fast Refresh] done in 136ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  465449ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  465562ms] [LOG] [Fast Refresh] done in 158ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  465814ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  466677ms] [LOG] [Fast Refresh] done in 963ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  466795ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  467840ms] [LOG] [Fast Refresh] done in 1146ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  474154ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  474233ms] [LOG] [Fast Refresh] done in 128ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  482553ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  482628ms] [LOG] [Fast Refresh] done in 136ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  491431ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  491476ms] [LOG] [Fast Refresh] done in 89ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  500997ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  501101ms] [ERROR] ./src/components/onboarding/project-onboarding-panel.tsx:133:13
+Parsing ecmascript source code failed
+  131 |               onSwitchToManual={onSwitchToManual}
+  132 |             />
+> 133 |           ) : (
+      |             ^
+  134 |             <OnboardingIdeaCoCreation
+  135 |               onConfirmed={(idea, ideaId) => {
+  136 |                 setSelectedIdea(idea)
+
+Expected '</', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  503626ms] [ERROR] ./src/components/onboarding/project-onboarding-panel.tsx:133:13
+Parsing ecmascript source code failed
+  131 |               onSwitchToManual={onSwitchToManual}
+  132 |             />
+> 133 |           ) : (
+      |             ^
+  134 |             <OnboardingIdeaCoCreation
+  135 |               onConfirmed={(idea, ideaId) => {
+  136 |                 setSelectedIdea(idea)
+
+Expected '</', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  503726ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  504384ms] [ERROR] ./src/components/onboarding/project-onboarding-panel.tsx:133:13
+Parsing ecmascript source code failed
+  131 |               onSwitchToManual={onSwitchToManual}
+  132 |             />
+> 133 |           ) : (
+      |             ^
+  134 |             <OnboardingIdeaCoCreation
+  135 |               onConfirmed={(idea, ideaId) => {
+  136 |                 setSelectedIdea(idea)
+
+Expected '</', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  504615ms] [ERROR] ./src/components/onboarding/project-onboarding-panel.tsx:133:13
+Parsing ecmascript source code failed
+  131 |               onSwitchToManual={onSwitchToManual}
+  132 |             />
+> 133 |           ) : (
+      |             ^
+  134 |             <OnboardingIdeaCoCreation
+  135 |               onConfirmed={(idea, ideaId) => {
+  136 |                 setSelectedIdea(idea)
+
+Expected '</', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  504648ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  518856ms] [ERROR] ./src/components/onboarding/project-onboarding-panel.tsx:133:13
+Parsing ecmascript source code failed
+  131 |               onSwitchToManual={onSwitchToManual}
+  132 |             />
+> 133 |           ) : (
+      |             ^
+  134 |             <OnboardingIdeaCoCreation
+  135 |               onConfirmed={(idea, ideaId) => {
+  136 |                 setSelectedIdea(idea)
+
+Expected '</', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  518904ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  518975ms] [ERROR] ./src/components/onboarding/project-onboarding-panel.tsx:133:13
+Parsing ecmascript source code failed
+  131 |               onSwitchToManual={onSwitchToManual}
+  132 |             />
+> 133 |           ) : (
+      |             ^
+  134 |             <OnboardingIdeaCoCreation
+  135 |               onConfirmed={(idea, ideaId) => {
+  136 |                 setSelectedIdea(idea)
+
+Expected '</', got ':'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  519042ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  530311ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  530329ms] [ERROR] ./src/components/onboarding/project-onboarding-panel.tsx:164:1
+Parsing ecmascript source code failed
+  162 |     </div>
+  163 |   )
+> 164 | }
+      | ^
+  165 |
+  166 | // ============ 辅助函数 ============
+  167 |
+
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+
+Import traces:
+  Client Component Browser:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  554903ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  555005ms] [ERROR] ./src/components/onboarding/project-onboarding-panel.tsx:164:1
+Parsing ecmascript source code failed
+  162 |     </div>
+  163 |   )
+> 164 | }
+      | ^
+  165 |
+  166 | // ============ 辅助函数 ============
+  167 |
+
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+
+Import traces:
+  Client Component Browser:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  603429ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  603658ms] [LOG] [Fast Refresh] done in 175ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  604915ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  605850ms] [LOG] [Fast Refresh] done in 1036ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  606727ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  606730ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  655900ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  656010ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  665605ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  666332ms] [LOG] [Fast Refresh] done in 827ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  672484ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  672494ms] [LOG] [Fast Refresh] done in 110ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  702312ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  702367ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  711403ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  711448ms] [LOG] [Fast Refresh] done in 91ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  722031ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  722109ms] [LOG] [Fast Refresh] done in 136ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  731415ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  731439ms] [LOG] [Fast Refresh] done in 124ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  775809ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  775871ms] [LOG] [Fast Refresh] done in 163ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  776960ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  777013ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  777903ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  778883ms] [LOG] [Fast Refresh] done in 1080ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  784797ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  784804ms] [LOG] [Fast Refresh] done in 107ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  893689ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  894475ms] [LOG] [Fast Refresh] done in 887ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  991035ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  991092ms] [LOG] [Fast Refresh] done in 158ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1132784ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1132805ms] [LOG] [Fast Refresh] done in 121ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1303657ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1303728ms] [LOG] [Fast Refresh] done in 171ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1305752ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1305822ms] [LOG] [Fast Refresh] done in 170ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2206990ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2207051ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2215549ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2215561ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2230060ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2230145ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2265098ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2265119ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2273478ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2273491ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2282222ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2282311ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2292019ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2292036ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2307582ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2307993ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2307993ms] [ERROR] ./src/components/studio/studio-header.tsx:182:8
+Parsing ecmascript source code failed
+  180 |           </DropdownMenu>
+  181 |         </div>
+> 182 |       </header>
+      |        ^^^^^^^^
+  183 |     </>
+  184 |   )
+  185 | }
+
+Unterminated regexp literal
+
+Import traces:
+  Client Component Browser:
+    ./src/components/studio/studio-header.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/studio/studio-header.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2325184ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2325259ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2336173ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2336185ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2345528ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2345555ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2355946ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2355969ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2355970ms] [ERROR] ./src/components/onboarding/project-onboarding-panel.tsx:128:12
+Parsing ecmascript source code failed
+  126 |       </div>
+  127 |
+> 128 |       <div className={cn('min-h-0 flex-1', step === 1 ? 'overflow-y-auto' : 'overflow-hidden')}>
+      |            ^^^^^^^^^
+  129 |         <div className={cn('h-full min-h-0', step === 1 ? 'w-full' : 'flex flex-col')}>
+  130 |           {step === 1 ? (
+  131 |             <>
+
+Expected '</', got 'className'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2365180ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2365215ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2375040ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2375051ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2425560ms] [ERROR] ./src/components/layout/studio-layout.tsx:30:8
+Parsing ecmascript source code failed
+  28 |
+  29 | /** 正常 Studio 三栏工作区；项目创建向导使用 HomeClient 的独立全屏壳。 */
+> 30 | export function StudioLayoutClient({ children, defaultLayout, showRightSidebar = true }: StudioLayoutClientProps) {
+     |        ^^^^^^^^
+  31 |   const { rightSidebarCollapsed, toggleRightSidebar } = useUIStore()
+  32 |   const rightPanelRef = React.useRef<PanelImperativeHandle>(null)
+  33 |   const { defaultLayout: savedLayout, onLayoutChanged } = useDefaultLayout({ id: "studio-layout", storage: safeStorage })
+
+Expected ';', got 'function'
+
+Import traces:
+  Client Component Browser:
+    ./src/components/layout/studio-layout.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/layout/studio-layout.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2425661ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2426176ms] [LOG] [Fast Refresh] done in 473ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2426376ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2427803ms] [LOG] [Fast Refresh] done in 1528ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2480739ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2480762ms] [LOG] [Fast Refresh] done in 123ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2482176ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2482335ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2483152ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2484088ms] [LOG] [Fast Refresh] done in 1037ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2490083ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2490127ms] [LOG] [Fast Refresh] done in 144ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2509741ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2509771ms] [LOG] [Fast Refresh] done in 105ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2554763ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2554823ms] [LOG] [Fast Refresh] done in 160ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2555967ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2556033ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2556345ms] [ERROR] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HTTPAccessFallbackBoundary notFound={<SegmentViewNode>} forbidden={undefined} unauthorized={undefined}>
+      <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+        <RedirectBoundary>
+          <RedirectErrorBoundary router={{...}}>
+            <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} segmentPath={[...]} ...>
+              <SegmentViewNode type="page" pagePath="page.tsx">
+                <SegmentTrieNode>
+                <Page>
+                  <HomeClient>
+                    <StudioLayoutClient defaultLayout={undefined} showRightSidebar={true}>
+                      <ResizablePanelGroup direction="horizontal" defaultLayout={{left:50,center:50}} ...>
+                        <Group orientation="horizontal" className="flex data-..." defaultLayout={{left:50,center:50}} ...>
+                          <div aria-orientation="horizontal" className="flex data-..." data-group={true} ...>
+                            <Panel id="left" minSize="250px">
+                              <div
+                                data-panel={true}
+                                data-testid="left"
+                                id="left"
+                                ref={function}
+                                style={{
++                                 minHeight: 0
++                                 maxHeight: "100%"
++                                 height: "auto"
+-                                 height: "auto"
++                                 minWidth: 0
++                                 maxWidth: "100%"
++                                 width: "auto"
+-                                 width: "auto"
++                                 border: "none"
++                                 borderWidth: 0
++                                 padding: 0
++                                 margin: 0
++                                 flexBasis: 0
++                                 flexShrink: 1
++                                 overflow: "hidden"
++                                 flexGrow: 50
+-                                 min-height: "0px"
+-                                 max-height: "100%"
+-                                 min-width: "0px"
+-                                 max-width: "100%"
+-                                 border-top-style: "none"
+-                                 border-right-style: "none"
+-                                 border-bottom-style: "none"
+-                                 border-left-style: "none"
+-                                 border-top-color: "currentcolor"
+-                                 border-right-color: "currentcolor"
+-                                 border-bottom-color: "currentcolor"
+-                                 border-left-color: "currentcolor"
+-                                 border-image-source: "initial"
+-                                 border-image-slice: "initial"
+-                                 border-image-width: "initial"
+-                                 border-image-outset: "initial"
+-                                 border-image-repeat: "initial"
+-                                 border-top-width: "0px"
+-                                 border-right-width: "0px"
+-                                 border-bottom-width: "0px"
+-                                 border-left-width: "0px"
+-                                 padding-top: "0px"
+-                                 padding-right: "0px"
+-                                 padding-bottom: "0px"
+-                                 padding-left: "0px"
+-                                 margin-top: "0px"
+-                                 margin-right: "0px"
+-                                 margin-bottom: "0px"
+-                                 margin-left: "0px"
+-                                 flex-basis: "0px"
+-                                 flex-shrink: "1"
+-                                 overflow-x: "hidden"
+-                                 overflow-y: "hidden"
+-                                 flex-grow: "18"
+                                }}
+                              >
+                            <ResizableHandle>
+                            <Panel id="center" minSize="300px">
+                              <div
+                                data-panel={true}
+                                data-testid="center"
+                                id="center"
+                                ref={function}
+                                style={{
++                                 minHeight: 0
++                                 maxHeight: "100%"
++                                 height: "auto"
+-                                 height: "auto"
++                                 minWidth: 0
++                                 maxWidth: "100%"
++                                 width: "auto"
+-                                 width: "auto"
++                                 border: "none"
++                                 borderWidth: 0
++                                 padding: 0
++                                 margin: 0
++                                 flexBasis: 0
++                                 flexShrink: 1
++                                 overflow: "hidden"
++                                 flexGrow: 50
+-                                 min-height: "0px"
+-                                 max-height: "100%"
+-                                 min-width: "0px"
+-                                 max-width: "100%"
+-                                 border-top-style: "none"
+-                                 border-right-style: "none"
+-                                 border-bottom-style: "none"
+-                                 border-left-style: "none"
+-                                 border-top-color: "currentcolor"
+-                                 border-right-color: "currentcolor"
+-                                 border-bottom-color: "currentcolor"
+-                                 border-left-color: "currentcolor"
+-                                 border-image-source: "initial"
+-                                 border-image-slice: "initial"
+-                                 border-image-width: "initial"
+-                                 border-image-outset: "initial"
+-                                 border-image-repeat: "initial"
+-                                 border-top-width: "0px"
+-                                 border-right-width: "0px"
+-                                 border-bottom-width: "0px"
+-                                 border-left-width: "0px"
+-                                 padding-top: "0px"
+-                                 padding-right: "0px"
+-                                 padding-bottom: "0px"
+-                                 padding-left: "0px"
+-                                 margin-top: "0px"
+-                                 margin-right: "0px"
+-                                 margin-bottom: "0px"
+-                                 margin-left: "0px"
+-                                 flex-basis: "0px"
+-                                 flex-shrink: "1"
+-                                 overflow-x: "hidden"
+-                                 overflow-y: "hidden"
+-                                 flex-grow: "59"
+                                }}
+                              >
+                            <ResizableHandle>
+                            <Panel id="right" minSize="350px" collapsible={true} collapsedSize="0px" ...>
+                              <div
+                                data-panel={true}
+                                data-testid="right"
+                                id="right"
+                                ref={function}
+                                style={{
++                                 minHeight: 0
++                                 maxHeight: "100%"
++                                 height: "auto"
+-                                 height: "auto"
++                                 minWidth: 0
++                                 maxWidth: "100%"
++                                 width: "auto"
+-                                 width: "auto"
++                                 border: "none"
++                                 borderWidth: 0
++                                 padding: 0
++                                 margin: 0
++                                 flexBasis: 0
++                                 flexShrink: 1
++                                 overflow: "hidden"
++                                 flexGrow: 1
+-                                 min-height: "0px"
+-                                 max-height: "100%"
+-                                 min-width: "0px"
+-                                 max-width: "100%"
+-                                 border-top-style: "none"
+-                                 border-right-style: "none"
+-                                 border-bottom-style: "none"
+-                                 border-left-style: "none"
+-                                 border-top-color: "currentcolor"
+-                                 border-right-color: "currentcolor"
+-                                 border-bottom-color: "currentcolor"
+-                                 border-left-color: "currentcolor"
+-                                 border-image-source: "initial"
+-                                 border-image-slice: "initial"
+-                                 border-image-width: "initial"
+-                                 border-image-outset: "initial"
+-                                 border-image-repeat: "initial"
+-                                 border-top-width: "0px"
+-                                 border-right-width: "0px"
+-                                 border-bottom-width: "0px"
+-                                 border-left-width: "0px"
+-                                 padding-top: "0px"
+-                                 padding-right: "0px"
+-                                 padding-bottom: "0px"
+-                                 padding-left: "0px"
+-                                 margin-top: "0px"
+-                                 margin-right: "0px"
+-                                 margin-bottom: "0px"
+-                                 margin-left: "0px"
+-                                 flex-basis: "0px"
+-                                 flex-shrink: "1"
+-                                 overflow-x: "hidden"
+-                                 overflow-y: "hidden"
+-                                 flex-grow: "23"
+                                }}
+                              >
+                    ...
+              ...
+            ...
+ @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 2556906ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2557921ms] [LOG] [Fast Refresh] done in 1115ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2563804ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2563835ms] [LOG] [Fast Refresh] done in 132ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2582074ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2582099ms] [LOG] [Fast Refresh] done in 102ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2594175ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2594199ms] [LOG] [Fast Refresh] done in 86ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2724564ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2725398ms] [LOG] [Fast Refresh] done in 933ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2746073ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2748256ms] [LOG] [Fast Refresh] done in 2283ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2774816ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2775694ms] [LOG] [Fast Refresh] done in 978ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2850851ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2850922ms] [LOG] [Fast Refresh] done in 171ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2866373ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2868486ms] [LOG] [Fast Refresh] done in 2214ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2942948ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2943807ms] [LOG] [Fast Refresh] done in 959ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2985138ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 2986020ms] [LOG] [Fast Refresh] done in 983ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3024054ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3024091ms] [LOG] [Fast Refresh] done in 136ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3153639ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3154436ms] [LOG] [Fast Refresh] done in 897ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3239032ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3239210ms] [LOG] [Fast Refresh] done in 205ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3250376ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3250479ms] ReferenceError: Shuffle is not defined
+    at OnboardingIdeaCoCreation (http://localhost:3000/_next/static/chunks/src_components_onboarding_07691b41._.js?id=%255Bproject%255D%252Fsrc%252Fcomponents%252Fonboarding%252Fonboarding-idea-co-creation.tsx+%255Bapp-client%255D+%2528ecmascript%2529:398:236)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:14826:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:4651:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:6112:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:6708:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9562:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9456:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9440:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9105:47)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10238:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10154:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9237:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js:886:13
+[ 3250488ms] [LOG] [Fast Refresh] done in 127ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3259783ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3259786ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3259833ms] ReferenceError: onShowRandom is not defined
+    at OnboardingIdeaCoCreation (http://localhost:3000/_next/static/chunks/src_components_onboarding_07691b41._.js?id=%255Bproject%255D%252Fsrc%252Fcomponents%252Fonboarding%252Fonboarding-idea-co-creation.tsx+%255Bapp-client%255D+%2528ecmascript%2529:394:25)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:14826:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:4651:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:6112:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:6708:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9562:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9456:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9440:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9105:47)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10238:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10154:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9237:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js:886:13
+[ 3259837ms] [LOG] [Fast Refresh] done in 102ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3259937ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3259955ms] [LOG] [Fast Refresh] done in 118ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3261138ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3261207ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3299363ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3299388ms] [LOG] [Fast Refresh] done in 87ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3324778ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3324805ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3334963ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3334986ms] [LOG] [Fast Refresh] done in 90ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3335101ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3335127ms] [LOG] [Fast Refresh] done in 125ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3344695ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3344780ms] [ERROR] ./src/components/onboarding/project-onboarding-panel.tsx:142:16
+Parsing ecmascript source code failed
+  140 |                   onShowRandom={() => setShowRandomIdeas(true)}
+  141 |                 />
+> 142 |               )}
+      |                ^
+  143 |             </>
+  144 |           ) : null}
+  145 |           {selectedIdea && progressLoaded && step === 2 ? (
+
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+
+Import traces:
+  Client Component Browser:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Client Component Browser]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/onboarding/project-onboarding-panel.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Client Component SSR]
+    ./src/app/home-client.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 3380981ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3381233ms] [LOG] [Fast Refresh] done in 192ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3575433ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3575436ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3586011ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3587126ms] [LOG] [Fast Refresh] done in 1215ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3617971ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3618417ms] [LOG] [Fast Refresh] done in 545ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3619339ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3619765ms] [LOG] [Fast Refresh] done in 526ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3631529ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 3632302ms] [LOG] [Fast Refresh] done in 874ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[22360623ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=CA0sdQ6PtHz6pQ9Olr_66' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[22361628ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=CA0sdQ6PtHz6pQ9Olr_66' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[22362632ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=CA0sdQ6PtHz6pQ9Olr_66' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[22363633ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=CA0sdQ6PtHz6pQ9Olr_66' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[22364638ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=CA0sdQ6PtHz6pQ9Olr_66' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[22369644ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=CA0sdQ6PtHz6pQ9Olr_66' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[22374648ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=CA0sdQ6PtHz6pQ9Olr_66' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[22379658ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=CA0sdQ6PtHz6pQ9Olr_66' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[22384678ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=CA0sdQ6PtHz6pQ9Olr_66' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[22389744ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=CA0sdQ6PtHz6pQ9Olr_66' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[22394900ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=CA0sdQ6PtHz6pQ9Olr_66' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[22399996ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=CA0sdQ6PtHz6pQ9Olr_66' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[246004563ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246004730ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246017803ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246017867ms] [LOG] [Fast Refresh] done in 164ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246021150ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246023145ms] [LOG] [Fast Refresh] done in 2095ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246027267ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246027301ms] [LOG] [Fast Refresh] done in 112ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246049961ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246049982ms] [LOG] [Fast Refresh] done in 94ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246059091ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246059113ms] [LOG] [Fast Refresh] done in 95ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246073374ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246074447ms] [LOG] [Fast Refresh] done in 1173ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246230875ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246231237ms] [LOG] [Fast Refresh] done in 433ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246235785ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246236681ms] [LOG] [Fast Refresh] done in 997ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246253630ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246253651ms] [LOG] [Fast Refresh] done in 122ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246265682ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246265698ms] [LOG] [Fast Refresh] done in 102ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246337124ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246337151ms] [LOG] [Fast Refresh] done in 128ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246349510ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246349617ms] [LOG] [Fast Refresh] done in 208ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246396743ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246397943ms] [LOG] [Fast Refresh] done in 1300ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246397966ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246398830ms] [LOG] [Fast Refresh] done in 27ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246407577ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246407598ms] [LOG] [Fast Refresh] done in 102ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246485052ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246485525ms] [LOG] [Fast Refresh] done in 551ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246503880ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246503906ms] [LOG] [Fast Refresh] done in 93ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246513586ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246513613ms] [LOG] [Fast Refresh] done in 101ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246533098ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246533331ms] [LOG] [Fast Refresh] done in 310ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246609883ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246609902ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246726588ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246726692ms] [LOG] [Fast Refresh] done in 204ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246730301ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246731224ms] [LOG] [Fast Refresh] done in 1024ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246744373ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[246745153ms] [LOG] [Fast Refresh] done in 880ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247181028ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247181078ms] [LOG] [Fast Refresh] done in 131ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247197289ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247197298ms] [LOG] [Fast Refresh] done in 110ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247201494ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247201499ms] [LOG] [Fast Refresh] done in 106ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247207087ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247207504ms] [LOG] [Fast Refresh] done in 492ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247216360ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247216384ms] [LOG] [Fast Refresh] done in 89ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247220990ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247221015ms] [LOG] [Fast Refresh] done in 78ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247225409ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247225433ms] [LOG] [Fast Refresh] done in 88ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247232295ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247232894ms] [LOG] [Fast Refresh] done in 674ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247240068ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247240093ms] [LOG] [Fast Refresh] done in 86ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247251478ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247251528ms] [LOG] [Fast Refresh] done in 129ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247251710ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247251847ms] [LOG] [Fast Refresh] done in 238ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247255810ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247255832ms] [LOG] [Fast Refresh] done in 93ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247255951ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247256015ms] [LOG] [Fast Refresh] done in 165ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247260267ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247260284ms] [LOG] [Fast Refresh] done in 74ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247265053ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247265072ms] [LOG] [Fast Refresh] done in 93ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247270998ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247271046ms] [LOG] [Fast Refresh] done in 126ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247279527ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247279551ms] [LOG] [Fast Refresh] done in 95ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247285201ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247285226ms] [LOG] [Fast Refresh] done in 87ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247304346ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247304369ms] [LOG] [Fast Refresh] done in 62ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247311061ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247311084ms] [LOG] [Fast Refresh] done in 61ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247372838ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247372891ms] [LOG] [Fast Refresh] done in 153ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247377081ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247378007ms] [LOG] [Fast Refresh] done in 1026ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247384595ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247385721ms] [LOG] [Fast Refresh] done in 1227ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247570540ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247570589ms] [LOG] [Fast Refresh] done in 150ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247617710ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247617734ms] [LOG] [Fast Refresh] done in 81ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247625509ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247625535ms] [LOG] [Fast Refresh] done in 86ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247630266ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247630289ms] [LOG] [Fast Refresh] done in 84ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247633506ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247633513ms] [LOG] [Fast Refresh] done in 107ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247635213ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247635309ms] [LOG] [Fast Refresh] done in 172ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247643126ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247643151ms] [LOG] [Fast Refresh] done in 66ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247644852ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247647671ms] [LOG] [Fast Refresh] done in 2919ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247649689ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247649715ms] [LOG] [Fast Refresh] done in 65ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247654742ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247654768ms] [LOG] [Fast Refresh] done in 77ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247660560ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247660583ms] [LOG] [Fast Refresh] done in 70ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247669118ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247669622ms] [LOG] [Fast Refresh] done in 502ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247676741ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247676768ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247684903ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247684927ms] [LOG] [Fast Refresh] done in 82ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247692644ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247692668ms] [LOG] [Fast Refresh] done in 96ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247704307ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247704423ms] [LOG] [Fast Refresh] done in 216ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247714132ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247714158ms] [LOG] [Fast Refresh] done in 88ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247729670ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247729695ms] [LOG] [Fast Refresh] done in 75ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247734665ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247734687ms] [LOG] [Fast Refresh] done in 71ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247740113ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247740136ms] [LOG] [Fast Refresh] done in 86ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247745373ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247745389ms] [LOG] [Fast Refresh] done in 80ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247750145ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247750166ms] [LOG] [Fast Refresh] done in 64ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247756657ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247756682ms] [LOG] [Fast Refresh] done in 69ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247761919ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247761942ms] [LOG] [Fast Refresh] done in 89ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247775140ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247775161ms] [LOG] [Fast Refresh] done in 94ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247783848ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247783869ms] [LOG] [Fast Refresh] done in 61ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247802659ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247802681ms] [LOG] [Fast Refresh] done in 66ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247827976ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247827996ms] [LOG] [Fast Refresh] done in 97ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247832882ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247832902ms] [LOG] [Fast Refresh] done in 81ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247840461ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247840467ms] [LOG] [Fast Refresh] done in 106ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247847561ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247847583ms] [LOG] [Fast Refresh] done in 93ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247852583ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247852605ms] [LOG] [Fast Refresh] done in 70ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247861317ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247861336ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247868654ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247868675ms] [LOG] [Fast Refresh] done in 88ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247874184ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247874206ms] [LOG] [Fast Refresh] done in 68ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247880043ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247880062ms] [LOG] [Fast Refresh] done in 100ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247937610ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247937610ms] [LOG] [Fast Refresh] done in 101ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247964964ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247965050ms] [LOG] [Fast Refresh] done in 186ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247977146ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247977179ms] [LOG] [Fast Refresh] done in 113ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247981812ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[247982189ms] [LOG] [Fast Refresh] done in 453ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248105469ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248105491ms] [LOG] [Fast Refresh] done in 71ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248112256ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248112272ms] [LOG] [Fast Refresh] done in 96ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248136434ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248136489ms] [LOG] [Fast Refresh] done in 131ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248136696ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248136974ms] [LOG] [Fast Refresh] done in 379ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248145246ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248145269ms] [LOG] [Fast Refresh] done in 74ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248145378ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248145457ms] [LOG] [Fast Refresh] done in 179ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248152150ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248152175ms] [LOG] [Fast Refresh] done in 91ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248152277ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248152293ms] [LOG] [Fast Refresh] done in 117ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248153473ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248153499ms] [LOG] [Fast Refresh] done in 126ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248157161ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248157185ms] [LOG] [Fast Refresh] done in 67ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248157292ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248157313ms] [LOG] [Fast Refresh] done in 120ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248163080ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248163105ms] [LOG] [Fast Refresh] done in 94ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248163215ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248163232ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248164478ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248164519ms] [LOG] [Fast Refresh] done in 140ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248175594ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248175748ms] [LOG] [Fast Refresh] done in 67ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248194684ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248194708ms] [LOG] [Fast Refresh] done in 76ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248194823ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248194872ms] [LOG] [Fast Refresh] done in 150ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248196111ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248196126ms] [LOG] [Fast Refresh] done in 115ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248200188ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248200214ms] [LOG] [Fast Refresh] done in 65ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248200331ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248200380ms] [LOG] [Fast Refresh] done in 149ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248207595ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248207620ms] [LOG] [Fast Refresh] done in 81ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248250178ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248252758ms] [LOG] [Fast Refresh] done in 2680ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248263430ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248264153ms] [LOG] [Fast Refresh] done in 823ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248310084ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248310089ms] [LOG] [Fast Refresh] done in 106ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248325189ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248325195ms] [LOG] [Fast Refresh] done in 106ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248331222ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248333087ms] [LOG] [Fast Refresh] done in 1965ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248341687ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248341709ms] [LOG] [Fast Refresh] done in 92ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248347087ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248347110ms] [LOG] [Fast Refresh] done in 98ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248354859ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248354882ms] [LOG] [Fast Refresh] done in 86ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248354989ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248355009ms] [LOG] [Fast Refresh] done in 120ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248356671ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248356736ms] [LOG] [Fast Refresh] done in 165ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248368785ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248368808ms] [LOG] [Fast Refresh] done in 80ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248382482ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248382504ms] [LOG] [Fast Refresh] done in 86ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248399484ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248399578ms] [LOG] [Fast Refresh] done in 175ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248417117ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248417142ms] [LOG] [Fast Refresh] done in 97ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248424147ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248424171ms] [LOG] [Fast Refresh] done in 95ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248610510ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=tpDsibmvgoLXMAu44Wd67' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[248611514ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=tpDsibmvgoLXMAu44Wd67' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[248612518ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=tpDsibmvgoLXMAu44Wd67' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[248613522ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=tpDsibmvgoLXMAu44Wd67' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[248614527ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=tpDsibmvgoLXMAu44Wd67' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[248619533ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=tpDsibmvgoLXMAu44Wd67' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[248624546ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=tpDsibmvgoLXMAu44Wd67' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[248629564ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=tpDsibmvgoLXMAu44Wd67' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[248634644ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=tpDsibmvgoLXMAu44Wd67' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[248639720ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=tpDsibmvgoLXMAu44Wd67' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[248644796ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=tpDsibmvgoLXMAu44Wd67' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[248650108ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=tpDsibmvgoLXMAu44Wd67' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10876
+[248747299ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248747454ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248755415ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[248757832ms] [LOG] [Fast Refresh] done in 2518ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[250297213ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[250297216ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[250337942ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[250338788ms] [LOG] [Fast Refresh] done in 945ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297

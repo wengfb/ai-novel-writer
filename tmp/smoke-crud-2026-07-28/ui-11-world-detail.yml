@@ -1,0 +1,185 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "UI-CRUD测试项目" [level=2] [ref=e124]
+            - button "编辑项目" [ref=e125]:
+              - img
+          - paragraph [ref=e126]: 玄幻
+        - generic [ref=e11]:
+          - heading "本书" [level=3] [ref=e127]
+          - generic [ref=e128]:
+            - button "章节列表" [ref=e130]:
+              - img
+              - generic [ref=e131]: 章节列表
+              - img
+            - button "剧情大纲" [ref=e142]:
+              - img
+              - generic [ref=e143]: 剧情大纲
+              - img
+            - button "角色设定" [ref=e145]:
+              - img
+              - generic [ref=e146]: 角色设定
+              - img
+            - generic [ref=e147]:
+              - button "世界观" [expanded] [ref=e148]:
+                - img
+                - generic [ref=e149]: 世界观
+                - img
+              - generic [ref=e602]:
+                - button "新建世界观" [ref=e604]:
+                  - img
+                  - text: 新建世界观
+                - button "UI测试秘境 地点" [active] [ref=e609] [cursor=pointer]:
+                  - img [ref=e610]
+                  - generic [ref=e614]:
+                    - generic [ref=e615]: UI测试秘境
+                    - generic [ref=e616]: 地点
+                  - button [ref=e617]:
+                    - img
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: UI-CRUD测试项目
+            - img
+          - generic [ref=e37]: 第 1 章：新章节
+        - generic [ref=e38]:
+          - generic [ref=e39]: 已保存 23:56:59
+          - button "保存" [ref=e228]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [ref=e150]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [ref=e229]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e532]:
+        - generic [ref=e643]:
+          - generic [ref=e645]:
+            - button "返回" [ref=e646]:
+              - img
+            - generic [ref=e647]:
+              - generic [ref=e648]:
+                - img [ref=e650]
+                - heading "UI测试秘境" [level=1] [ref=e653]
+                - generic [ref=e654]: 地点
+              - paragraph [ref=e655]: 编辑设定细节，保持与正文世界观一致
+            - generic [ref=e656]:
+              - button "删除" [ref=e657]
+              - button "取消" [ref=e658]
+              - button "保存" [ref=e659]
+          - generic [ref=e663]:
+            - generic [ref=e664]:
+              - generic [ref=e665]:
+                - heading "基本信息" [level=2] [ref=e666]
+                - paragraph [ref=e667]: 名称、类型与分类
+              - generic [ref=e668]:
+                - generic [ref=e669]:
+                  - generic [ref=e670]:
+                    - generic [ref=e671]: 名称 *
+                    - textbox "名称 *" [ref=e672]:
+                      - /placeholder: 例如：天元大陆
+                      - text: UI测试秘境
+                  - generic [ref=e673]:
+                    - generic [ref=e674]: 类型
+                    - combobox "类型" [ref=e675]:
+                      - generic: 地点
+                      - img
+                    - combobox [ref=e676]
+                - generic [ref=e677]:
+                  - generic [ref=e678]:
+                    - generic [ref=e679]: 重要性 (1-10)
+                    - spinbutton "重要性 (1-10)" [ref=e680]: "5"
+                  - generic [ref=e681]:
+                    - generic [ref=e682]: 作用范围
+                    - combobox "作用范围" [ref=e683]:
+                      - generic: 局部
+                      - img
+                    - combobox [ref=e684]
+                  - generic [ref=e685]:
+                    - generic [ref=e686]: 分类
+                    - combobox "分类" [ref=e687]:
+                      - generic: 细节
+                      - img
+                    - combobox [ref=e688]
+            - generic [ref=e689]:
+              - generic [ref=e690]:
+                - heading "设定描述" [level=2] [ref=e691]
+                - paragraph [ref=e692]: 给 AI 与后续写作引用的详细说明
+              - generic [ref=e694]:
+                - generic [ref=e695]: 描述 *
+                - textbox "描述 *" [ref=e696]:
+                  - /placeholder: 描述这个世界观元素的详细信息、规则与边界...
+                  - text: 位于北境的禁地，常年被迷雾笼罩，适合 CRUD 测试。
+    - separator [ref=e171]
+    - generic [ref=e175]:
+      - generic [ref=e176]:
+        - button "协作" [ref=e177]
+        - button "上下文" [ref=e178]
+        - button "生成" [ref=e179]
+      - generic [ref=e180]:
+        - generic [ref=e181]:
+          - generic [ref=e182]:
+            - img [ref=e183]
+            - generic [ref=e186]: 创作助手 · 在线
+          - button "设定顾问 完善世界规则、势力与设定一致性。" [ref=e697]:
+            - generic [ref=e188]:
+              - generic [ref=e189]: 设定顾问
+              - generic [ref=e190]: 完善世界规则、势力与设定一致性。
+            - img
+          - paragraph [ref=e191]: 正在参考：UI测试秘境 · 世界观设定
+        - generic [ref=e197]:
+          - generic [ref=e698]:
+            - heading "和设定顾问一起创作" [level=1] [ref=e699]
+            - paragraph [ref=e700]: 正在参考：UI测试秘境 · 世界观设定
+          - generic [ref=e203]:
+            - textbox "Message input" [ref=e204]:
+              - /placeholder: Send a message...
+            - generic [ref=e205]:
+              - button "Add Attachment" [ref=e206]:
+                - img
+                - generic [ref=e207]: Add Attachment
+              - generic [ref=e208]:
+                - button "Send message" [disabled]:
+                  - img
+                  - generic: Send message
+        - generic [ref=e210]:
+          - button "检查设定矛盾" [ref=e701]:
+            - img
+            - text: 检查设定矛盾
+          - button "补充势力规则" [ref=e702]:
+            - img
+            - text: 补充势力规则
+          - button "梳理能力体系" [ref=e703]:
+            - img
+            - text: 梳理能力体系
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert [ref=e74]

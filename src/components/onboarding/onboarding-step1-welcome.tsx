@@ -10,7 +10,7 @@ import { FilterRow } from './step1/filter-row'
 import { StoryCardCarousel } from './step1/story-card-carousel'
 
 interface OnboardingStep1WelcomeProps {
-  onNext: (idea: StoryIdeaCard, preferences?: { audience?: string; genre?: string; tone?: string }) => void
+  onNext: (idea: StoryIdeaCard, preferences?: { audience?: string; genre?: string; tone?: string }, ideaId?: string) => void
   onSwitchToManual?: () => void
 }
 
@@ -65,7 +65,7 @@ export function OnboardingStep1Welcome({ onNext, onSwitchToManual }: OnboardingS
         audience: audience || undefined,
         genre: genre || undefined,
         tone: tone || undefined,
-      })
+      }, (selected as StoryIdeaCard & { ideaId?: string }).ideaId)
     }
   }
 

@@ -1,0 +1,191 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "神格觉醒" [level=2] [ref=e747]
+            - button "编辑项目" [ref=e748]:
+              - img
+          - paragraph [ref=e749]: 科幻
+        - generic [ref=e11]:
+          - heading "本书" [level=3] [ref=e750]
+          - generic [ref=e751]:
+            - button "章节列表" [ref=e753]:
+              - img
+              - generic [ref=e754]: 章节列表
+              - img
+            - button "剧情大纲" [ref=e786]:
+              - img
+              - generic [ref=e787]: 剧情大纲
+              - img
+            - button "角色设定" [ref=e789]:
+              - img
+              - generic [ref=e790]: 角色设定
+              - img
+            - generic [ref=e791]:
+              - button "世界观" [expanded] [active] [ref=e792]:
+                - img
+                - generic [ref=e793]: 世界观
+                - img
+              - generic [ref=e1246]:
+                - button "新建世界观" [ref=e1248]:
+                  - img
+                  - text: 新建世界观
+                - generic [ref=e1252]:
+                  - button "灰域（Grey Domain） 其他" [ref=e1253] [cursor=pointer]:
+                    - img [ref=e1254]
+                    - generic [ref=e1258]:
+                      - generic [ref=e1259]: 灰域（Grey Domain）
+                      - generic [ref=e1260]: 其他
+                    - button [ref=e1261]:
+                      - img
+                  - button "底层区与云端区 地点" [ref=e1262] [cursor=pointer]:
+                    - img [ref=e1263]
+                    - generic [ref=e1267]:
+                      - generic [ref=e1268]: 底层区与云端区
+                      - generic [ref=e1269]: 地点
+                    - button [ref=e1270]:
+                      - img
+                  - button "天网公司 其他" [ref=e1271] [cursor=pointer]:
+                    - img [ref=e1272]
+                    - generic [ref=e1276]:
+                      - generic [ref=e1277]: 天网公司
+                      - generic [ref=e1278]: 其他
+                    - button [ref=e1279]:
+                      - img
+                  - button "神格 其他" [ref=e1280] [cursor=pointer]:
+                    - img [ref=e1281]
+                    - generic [ref=e1285]:
+                      - generic [ref=e1286]: 神格
+                      - generic [ref=e1287]: 其他
+                    - button [ref=e1288]:
+                      - img
+                  - button "灰域 (Grey Domain) 组织" [ref=e1289] [cursor=pointer]:
+                    - img [ref=e1290]
+                    - generic [ref=e1294]:
+                      - generic [ref=e1295]: 灰域 (Grey Domain)
+                      - generic [ref=e1296]: 组织
+                    - button [ref=e1297]:
+                      - img
+                  - button "天网公司（SkyNet Inc.） 组织" [ref=e1298] [cursor=pointer]:
+                    - img [ref=e1299]
+                    - generic [ref=e1303]:
+                      - generic [ref=e1304]: 天网公司（SkyNet Inc.）
+                      - generic [ref=e1305]: 组织
+                    - button [ref=e1306]:
+                      - img
+                  - button "底层区与云端区 地点" [ref=e1307] [cursor=pointer]:
+                    - img [ref=e1308]
+                    - generic [ref=e1312]:
+                      - generic [ref=e1313]: 底层区与云端区
+                      - generic [ref=e1314]: 地点
+                    - button [ref=e1315]:
+                      - img
+                  - button "神格 魔法" [ref=e1316] [cursor=pointer]:
+                    - img [ref=e1317]
+                    - generic [ref=e1320]:
+                      - generic [ref=e1321]: 神格
+                      - generic [ref=e1322]: 魔法
+                    - button [ref=e1323]:
+                      - img
+                  - button "天网公司（SkyNet Inc.） 组织" [ref=e1324] [cursor=pointer]:
+                    - img [ref=e1325]
+                    - generic [ref=e1329]:
+                      - generic [ref=e1330]: 天网公司（SkyNet Inc.）
+                      - generic [ref=e1331]: 组织
+                    - button [ref=e1332]:
+                      - img
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 神格觉醒
+            - img
+          - generic [ref=e37]: 第 3 章：地下联络站
+        - generic [ref=e38]:
+          - generic [ref=e39]: 未保存
+          - button "保存" [ref=e794]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [ref=e795]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [ref=e796]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e1333]:
+        - generic [ref=e1335]:
+          - img [ref=e1337]
+          - heading "选择世界观" [level=2] [ref=e1340]
+          - paragraph [ref=e1341]: 在左侧列表中点击元素，可在此处查看与编辑详情。
+          - button "新建世界观" [ref=e1343]:
+            - img
+            - text: 新建世界观
+    - separator [ref=e58]
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - button "协作" [ref=e64]
+        - button "上下文" [ref=e65]
+        - button "生成" [ref=e66]
+      - generic [ref=e67]:
+        - generic [ref=e938]:
+          - generic [ref=e939]:
+            - img [ref=e940]
+            - generic [ref=e943]: 创作助手 · 在线
+          - button "创作总监 统筹项目方向、跨模块协作与下一步。" [ref=e1115]:
+            - generic [ref=e945]:
+              - generic [ref=e946]: 创作总监
+              - generic [ref=e947]: 统筹项目方向、跨模块协作与下一步。
+            - img
+          - paragraph [ref=e948]: 正在参考：神格觉醒 · 项目全局资料
+        - generic [ref=e954]:
+          - generic [ref=e1344]:
+            - heading "和创作总监一起创作" [level=1] [ref=e1345]
+            - paragraph [ref=e1346]: 正在参考：神格觉醒 · 项目全局资料
+          - generic [ref=e960]:
+            - textbox "Message input" [ref=e961]:
+              - /placeholder: Send a message...
+            - generic [ref=e962]:
+              - button "Add Attachment" [ref=e963]:
+                - img
+                - generic [ref=e964]: Add Attachment
+              - generic [ref=e965]:
+                - button "Send message" [disabled]:
+                  - img
+                  - generic: Send message
+        - generic [ref=e967]:
+          - button "补齐项目资料" [ref=e1119]:
+            - img
+            - text: 补齐项目资料
+          - button "检查初始化缺口" [ref=e1120]:
+            - img
+            - text: 检查初始化缺口
+          - button "规划下一步" [ref=e1121]:
+            - img
+            - text: 规划下一步
+  - button "Open Next.js Dev Tools" [ref=e114] [cursor=pointer]:
+    - img [ref=e115]
+  - alert [ref=e75]

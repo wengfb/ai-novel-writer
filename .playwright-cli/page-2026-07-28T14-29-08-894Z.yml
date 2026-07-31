@@ -1,0 +1,77 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "AI 小说工坊" [level=2] [ref=e10]
+        - generic [ref=e12]:
+          - img [ref=e13]
+          - paragraph [ref=e15]: 选择项目后可管理章节、大纲与设定
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 选择项目
+            - img
+          - generic [ref=e37]: 未选择章节
+        - generic [ref=e38]:
+          - generic [ref=e39]: 未保存
+          - button "保存" [disabled]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [disabled]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [disabled]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e42]:
+        - generic [ref=e46]:
+          - generic [ref=e47]:
+            - generic [ref=e48]:
+              - paragraph [ref=e49]: 全部项目
+              - heading "选择一个小说项目" [level=1] [ref=e50]
+              - paragraph [ref=e51]: 进入项目后可以继续编辑章节、管理角色与世界观，或从这里创建一个全新的故事。
+            - generic [ref=e52]:
+              - button "创意中心" [ref=e53]:
+                - img
+                - text: 创意中心
+              - button "新建项目" [ref=e54]:
+                - img
+                - text: 新建项目
+          - generic [ref=e55]:
+            - paragraph [ref=e56]: 暂无项目，创建一个项目开始写作
+            - button "新建项目" [ref=e57]:
+              - img
+              - text: 新建项目
+    - separator [ref=e58]
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - button "协作" [ref=e64]
+        - button "上下文" [ref=e65]
+        - button "生成" [ref=e66]
+      - generic [ref=e67]: 请先选择项目
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e73] [cursor=pointer]:
+    - img [ref=e74]

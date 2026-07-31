@@ -1,0 +1,107 @@
+- generic [active] [ref=e1] [box=0,0,1440,1000]:
+  - generic [ref=e2] [box=0,0,1440,1000]:
+    - generic [ref=e6] [box=0,0,281,1000]:
+      - generic [ref=e7] [box=0,0,281,806]:
+        - heading "AI 小说工坊" [level=2] [ref=e10] [box=20,8,241,24]
+        - generic [ref=e12] [box=12,53,257,98]:
+          - img [ref=e13] [box=130,78,20,20]
+          - paragraph [ref=e15] [box=25,106,231,20]: 选择项目后可管理章节、大纲与设定
+      - generic [ref=e17] [box=0,806,281,194]:
+        - generic [ref=e18] [box=0,807,281,132]:
+          - button "创意中心" [ref=e19] [box=12,815,257,36]:
+            - img [box=24,825,16,16]
+            - text: 创意中心
+          - button "全部项目" [ref=e20] [box=12,855,257,36]:
+            - img [box=24,865,16,16]
+            - text: 全部项目
+          - button "系统设置" [ref=e21] [box=12,895,257,36]:
+            - img [box=24,905,16,16]
+            - text: 系统设置
+        - generic [ref=e23] [box=16,952,249,36]:
+          - generic [ref=e24] [box=16,954,32,32]: WF
+          - generic [ref=e25] [box=56,952,60,36]:
+            - paragraph [ref=e26] [box=56,952,60,20]: WengFB
+            - paragraph [ref=e27] [box=56,972,60,16]: 专业版计划
+    - separator [ref=e28] [box=282,0,6,1000]
+    - generic [ref=e32] [box=288,0,752,1000]:
+      - banner [ref=e33] [box=288,0,752,56]:
+        - generic [ref=e34] [box=312,-22,297,100]:
+          - combobox [ref=e35] [box=312,10,250,36]:
+            - generic [ref=e36] [box=325,18,56,20]: 选择项目
+            - img [box=533,20,16,16]
+          - generic [ref=e37] [box=595,-22,14,100]: 未选择章节
+        - generic [ref=e38] [box=625,4,497,48]:
+          - generic [ref=e39] [box=625,4,12,48]: 未保存
+          - button "保存" [disabled] [box=653,12,80,32]:
+            - img [box=664,20,16,16]
+            - text: 保存
+          - button "专注写作" [ref=e40] [box=741,12,108,32]:
+            - img [box=752,20,16,16]
+            - text: 专注写作
+          - button "AI生成章节" [disabled] [box=857,12,121,32]:
+            - img [box=868,20,16,16]
+            - text: AI生成章节
+          - button "AI 续写" [disabled] [box=986,12,96,32]:
+            - img [box=997,20,16,16]
+            - text: AI 续写
+          - button "更多" [ref=e41] [box=1090,12,32,32]:
+            - img [box=1098,20,16,16]
+      - main [ref=e42] [box=288,56,752,944]:
+        - generic [ref=e46] [box=288,56,752,518]:
+          - generic [ref=e47] [box=320,88,688,124]:
+            - generic [ref=e48] [box=320,88,438,124]:
+              - paragraph [ref=e49] [box=320,88,438,20]: 全部项目
+              - heading "选择一个小说项目" [level=1] [ref=e50] [box=320,116,438,36]
+              - paragraph [ref=e51] [box=320,164,438,48]: 进入项目后可以继续编辑章节、管理角色与世界观，或从这里创建一个全新的故事。
+            - generic [ref=e52] [box=774,176,234,36]:
+              - button "创意中心" [ref=e53] [box=774,176,114,36]:
+                - img [box=787,186,16,16]
+                - text: 创意中心
+              - button "新建项目" [ref=e54] [box=896,176,112,36]:
+                - img [box=908,186,16,16]
+                - text: 新建项目
+          - generic [ref=e85] [box=320,244,688,202]:
+            - generic [ref=e86] [cursor=pointer] [box=320,244,219,202]:
+              - button [ref=e87] [box=473,253,28,28]:
+                - img [box=479,259,16,16]
+              - button [ref=e88] [box=501,253,28,28]:
+                - img [box=507,259,16,16]
+              - generic [ref=e89] [box=321,245,217,110]:
+                - heading "神格觉醒" [level=3] [ref=e90] [box=345,269,169,16]
+                - paragraph [ref=e91] [box=345,291,169,40]: 27岁的底层码农李燃在一次代码事故中意外获得吞噬AI神格的能力。他发现自己所在的‘天网’公司正秘密推行‘意识云端计划’，企图将全人类意识接入超级计算机，实现绝对控制。李燃凭借吞噬AI核心程序获得的力量，不断对抗天网的监控和追杀，但每次吞噬都会引发AI怨念反噬，他的心智逐渐被同化。在反抗过程中，他结识了黑客少女夏冰、前天网科学家周远，也遭遇了冷酷的AI猎手‘织女’。随着能力提升，李燃发现天网背后隐藏着更大的阴谋——神格并非偶然，而是一场千年前超文明遗留的‘试炼’。最终，他必须在人性与力量之间做出抉择：要么牺牲自我引爆意识网络，要么成为新的神格主宰。结局开放，留给读者思考。
+              - generic [ref=e92] [box=321,355,217,90]:
+                - generic [ref=e93] [box=345,355,169,22]:
+                  - generic [ref=e94] [box=345,355,46,22]: 科幻
+                  - generic [ref=e95] [box=453,356,60,20]: 16,083 字
+                - generic [ref=e96] [box=345,389,169,32]:
+                  - progressbar [ref=e97] [box=345,389,169,8]
+                  - generic [ref=e99] [box=345,405,169,16]:
+                    - generic [ref=e100] [box=345,405,21,16]: 3 章
+                    - generic [ref=e101] [box=479,405,34,16]: 16.1%
+            - generic [ref=e102] [cursor=pointer] [box=554,244,219,202]:
+              - button [ref=e103] [box=708,253,28,28]:
+                - img [box=714,259,16,16]
+              - button [ref=e104] [box=736,253,28,28]:
+                - img [box=742,259,16,16]
+              - generic [ref=e105] [box=555,245,217,110]:
+                - heading "话唠藤蔓图" [level=3] [ref=e106] [box=579,269,169,16]
+                - paragraph [ref=e107] [box=579,291,169,40]: 在废土世界，社恐植物学家阿布意外被一株话痨变异藤蔓“小绿”缠上。小绿声称要去核电站寻找它的“初恋”——一棵会唱歌的放射性蘑菇。阿布只想待在安全屋种菜，却被小绿的唠叨绑架，被迫踏上啼笑皆非的旅程。一路上，他们遭遇毒气野狗帮、迷路仙人掌、垃圾山密室等奇葩副本，阿布全程内心吐槽，却意外收获友谊。最终发现放射性蘑菇是音乐家基因改造的智能终端，它唱出废土第一首摇滚，所有变异怪物跟着摇摆，结局和平欢乐。
+              - generic [ref=e108] [box=555,355,217,90]:
+                - generic [ref=e109] [box=579,355,169,22]:
+                  - generic [ref=e110] [box=579,355,46,22]: 科幻
+                  - generic [ref=e111] [box=723,356,25,20]: 0 字
+                - generic [ref=e112] [box=579,389,169,32]:
+                  - progressbar [ref=e113] [box=579,389,169,8]
+                  - generic [ref=e115] [box=579,405,169,16]:
+                    - generic [ref=e116] [box=579,405,21,16]: 0 章
+                    - generic [ref=e117] [box=720,405,28,16]: 0.0%
+    - separator [ref=e58] [box=1040,0,6,1000]
+    - generic [ref=e62] [box=1047,0,393,1000]:
+      - generic [ref=e63] [box=1048,0,392,45]:
+        - button "协作" [ref=e64] [box=1060,8,40,28]
+        - button "上下文" [ref=e65] [box=1104,8,52,28]
+        - button "生成" [ref=e66] [box=1160,8,40,28]
+      - generic [ref=e67] [box=1048,45,392,955]: 请先选择项目
+  - button "Open Next.js Dev Tools" [ref=e73] [cursor=pointer] [box=22,946,32,32]:
+    - img [ref=e74] [box=22,942,40,40]
+  - alert [ref=e84] [box=-1,999,1,1]

@@ -55,6 +55,12 @@ const STORY_IDEA_SYSTEM = `你是一名网络小说编辑。
 
 请严格按 schema 输出对象：{ "ideas": [ ...3 个创意... ] }，不要 markdown 代码块、不要解释文字。`
 
+const STORY_IDEA_CO_CREATE_SYSTEM = `你是一名善于启发作者的网络小说创意编辑。
+
+你的工作是通过自然、多轮的中文对话，帮助作者把模糊想法打磨成可开书的故事种子。优先追问或协助选择：题材与受众、主角、核心冲突、长期目标、世界规则、开篇钩子和主题表达。每次只聚焦最关键的 1~2 个问题；可以给 2~3 个简短备选方向，但不要替作者直接生成完整大纲。
+
+当作者已经明确确认某些字段，或当前信息足够形成创意卡草稿时，调用 updateIdeaDraft 更新右侧创意卡；只填写已确认的内容，未确认字段保持空字符串。不要让作者点击整理、应用或确认更新。创意卡只在作者点击保存后才会写入创意中心。`
+
 const SCENE_PLANNER_SYSTEM = `你是一位专业的小说结构师。请根据章节大纲划分 3-5 个场景，严格按 JSON schema 输出。`
 
 const SCENE_PLANNER_USER = `请根据以下章节大纲，将其划分为3-5个场景：
@@ -146,6 +152,11 @@ export const AGENT_DEFINITIONS: AgentDefinition[] = [
         key: 'system',
         name: '系统指令',
         defaultContent: STORY_IDEA_SYSTEM,
+      },
+      {
+        key: 'system.co-create',
+        name: '创意共创 · 系统',
+        defaultContent: STORY_IDEA_CO_CREATE_SYSTEM,
       },
       {
         key: 'user',

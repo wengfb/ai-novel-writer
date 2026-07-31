@@ -1,0 +1,34 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic
+            - generic
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - banner
+            - main
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic
+            - generic
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert
+  - dialog "AI 将看到以下上下文" [ref=e1205]:
+    - heading "AI 将看到以下上下文" [level=2] [ref=e1207]:
+      - img [ref=e1208]
+      - text: AI 将看到以下上下文
+    - generic [ref=e1214]: "## 故事信息 - 当前章节：第2章 吞噬初醒 ## 角色信息 - 李燃（protagonist） - 李燃（supporting） - 织女（Vega）（antagonist） - 夏冰（supporting） - 夏冰（supporting） - 织女（supporting） - 江锋（supporting） - 周远（supporting） ## 世界观设定 - 天网公司（other） - 天网公司（SkyNet Inc.）（organization） - 底层区与云端区（location） - 天网公司（SkyNet Inc.）（organization） - 灰域 (Grey Domain)（organization） - 底层区与云端区（location） ## 前文摘要"
+    - button "Close" [active] [ref=e1215]:
+      - img
+      - generic [ref=e1216]: Close

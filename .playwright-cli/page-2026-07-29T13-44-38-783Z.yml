@@ -1,0 +1,82 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "AI 小说工坊" [level=2] [ref=e1348]
+        - generic [ref=e1349]:
+          - img [ref=e1350]
+          - paragraph [ref=e1352]: 选择项目后可管理章节、大纲与设定
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e1321]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e1322]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e1323]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 选择项目
+            - img
+          - generic [ref=e37]: 新建项目 · 选择开书方式
+        - button "取消创建" [ref=e1416]:
+          - img
+          - text: 取消创建
+      - main [ref=e1417]:
+        - generic [ref=e1456]:
+          - complementary [ref=e1457]:
+            - paragraph [ref=e1458]: 当前任务
+            - generic [ref=e1459]:
+              - generic [ref=e1460]:
+                - img [ref=e1461]
+                - text: 创意共创
+              - paragraph [ref=e1463]: 新建 · 未保存
+            - paragraph [ref=e1464]: 信息足够时会自动更新右侧创意卡；只有点保存才会写入创意中心。
+            - button "直接创建项目" [ref=e1465]
+          - generic [ref=e1466]:
+            - generic [ref=e1467]:
+              - generic [ref=e1468]:
+                - img [ref=e1470]
+                - generic [ref=e1473]:
+                  - heading "和创意编辑一起共创" [level=1] [ref=e1474]
+                  - paragraph [ref=e1475]: 从题材、人物或场景开始 · 专家对话
+                - button "返回" [ref=e1476]
+              - generic [ref=e1482]:
+                - generic [ref=e1483]:
+                  - paragraph [ref=e1487]: 我想和你一起打磨一个可以正式开书的小说创意。请先问我最关键的问题，必要时给我少量备选方向。
+                  - generic [ref=e1489]: ●
+                - generic [ref=e1493]:
+                  - textbox "Message input" [active] [ref=e1494]:
+                    - /placeholder: Send a message...
+                  - generic [ref=e1495]:
+                    - button "Add Attachment" [ref=e1496]:
+                      - img
+                      - generic [ref=e1497]: Add Attachment
+                    - button "Stop generating" [ref=e1499]:
+                      - img
+            - complementary [ref=e1500]:
+              - generic [ref=e1501]:
+                - generic [ref=e1502]:
+                  - img [ref=e1503]
+                  - generic [ref=e1505]: 创意卡
+                - paragraph [ref=e1506]: AI 回复后会自动同步；此时不会写入创意中心。
+              - paragraph [ref=e1509]: 开始和 AI 讨论后，这里会自动生成并持续更新创意卡。
+              - generic [ref=e1510]:
+                - button "确认创意并开始审核" [disabled]:
+                  - img
+                  - text: 确认创意并开始审核
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert [ref=e116]

@@ -1,0 +1,261 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - heading [level=2]: 神格觉醒
+                  - button:
+                    - img
+                  - button:
+                    - img
+                - generic:
+                  - button:
+                    - img
+                    - text: 工作台
+                  - button:
+                    - img
+                    - text: 科幻
+              - generic:
+                - heading [level=3]: 创作资源
+                - generic:
+                  - button:
+                    - img
+                    - text: 创意中心
+                  - button:
+                    - img
+                    - text: 剧情大纲
+                  - button:
+                    - img
+                    - text: 章节列表
+                  - button:
+                    - img
+                    - text: 角色设定
+                  - button:
+                    - img
+                    - text: 世界观
+              - generic:
+                - generic:
+                  - generic:
+                    - button:
+                      - img
+                      - text: 新建章节
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - button:
+                              - img
+                              - generic:
+                                - generic: 第 1 章
+                                - generic: 代码深渊
+                              - generic: "4902"
+                            - button:
+                              - img
+                          - generic:
+                            - button:
+                              - img
+                              - generic:
+                                - generic: 第 2 章
+                                - generic: 吞噬初醒
+                              - generic: "4524"
+                            - button:
+                              - img
+            - generic:
+              - generic:
+                - generic: WF
+                - generic:
+                  - paragraph: WengFB
+                  - paragraph: 专业版计划
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - banner:
+              - generic:
+                - combobox:
+                  - generic: 神格觉醒
+                  - img
+                - generic: 未选择章节
+              - generic:
+                - generic: 未保存
+                - button [disabled]:
+                  - img
+                  - text: 保存
+                - button:
+                  - img
+                  - text: AI生成章节
+                - button [disabled]:
+                  - img
+                  - text: AI 续写
+                - button:
+                  - img
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - paragraph: 开始你的创作...
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - img
+                  - text: AI 副驾驶
+                - tablist:
+                  - tab [selected]: 对话
+                  - tab: 上下文
+                  - tab: 工具箱
+              - tabpanel:
+                - generic:
+                  - generic:
+                    - button:
+                      - generic:
+                        - img
+                        - generic: AI 工具设置
+                      - img
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - heading [level=1]: 开始与 AI 助手对话
+                            - paragraph: 可以帮你分析剧情、完善角色、优化文笔…
+                          - generic:
+                            - generic:
+                              - generic:
+                                - textbox:
+                                  - /placeholder: Send a message...
+                                - generic:
+                                  - button:
+                                    - img
+                                    - generic: Add Attachment
+                                  - generic:
+                                    - button [disabled]:
+                                      - img
+                                      - generic: Send message
+  - button "Open Next.js Dev Tools" [ref=e80] [cursor=pointer]:
+    - img [ref=e81]
+  - alert
+  - dialog "创意中心" [ref=e391]:
+    - generic [ref=e392]:
+      - heading "创意中心" [level=2] [ref=e393]
+      - paragraph [ref=e394]: 浏览、评分和管理你的小说创意
+    - generic [ref=e395]:
+      - generic [ref=e396]:
+        - img [ref=e397]
+        - generic [ref=e399]: 创意中心
+      - generic [ref=e400]:
+        - button "生成新创意" [active] [ref=e401]:
+          - img
+          - text: 生成新创意
+        - button [ref=e402]:
+          - img
+    - generic [ref=e403]:
+      - generic [ref=e405]:
+        - generic [ref=e406]:
+          - generic [ref=e407]:
+            - img [ref=e408]
+            - textbox "搜索创意..." [ref=e411]
+          - generic [ref=e412]:
+            - combobox [ref=e413]:
+              - generic: 全部状态
+              - img
+            - combobox [ref=e414]:
+              - generic: 全部题材
+              - img
+          - generic [ref=e415]: 共 6 个创意
+        - generic [ref=e418]:
+          - generic [ref=e419]:
+            - button "废土曙光 在辐射废土上，一个避难所少年带领一群幸存者，对抗变异生物与掠夺者，重建人类文明。 科幻末世 未评分" [ref=e420]:
+              - generic [ref=e421]:
+                - generic [ref=e422]:
+                  - img [ref=e423]
+                  - generic [ref=e425]:
+                    - paragraph [ref=e426]: 废土曙光
+                    - paragraph [ref=e427]: 在辐射废土上，一个避难所少年带领一群幸存者，对抗变异生物与掠夺者，重建人类文明。
+                - generic [ref=e428]:
+                  - generic [ref=e429]: 科幻末世
+                  - generic [ref=e430]: 未评分
+            - button [ref=e431]:
+              - img [ref=e432]
+          - generic [ref=e435]:
+            - button "都市超凡 一个普通上班族意外觉醒超能力，在平凡生活与超凡责任间平衡，对抗罪犯与权贵。 都市异能 未评分" [ref=e436]:
+              - generic [ref=e437]:
+                - generic [ref=e438]:
+                  - img [ref=e439]
+                  - generic [ref=e441]:
+                    - paragraph [ref=e442]: 都市超凡
+                    - paragraph [ref=e443]: 一个普通上班族意外觉醒超能力，在平凡生活与超凡责任间平衡，对抗罪犯与权贵。
+                - generic [ref=e444]:
+                  - generic [ref=e445]: 都市异能
+                  - generic [ref=e446]: 未评分
+            - button [ref=e447]:
+              - img [ref=e448]
+          - generic [ref=e451]:
+            - button "仙道长生 一个普通青年获得上古仙帝传承，在残酷的修仙界步步为营，最终证道长生。 玄幻仙侠 未评分" [ref=e452]:
+              - generic [ref=e453]:
+                - generic [ref=e454]:
+                  - img [ref=e455]
+                  - generic [ref=e457]:
+                    - paragraph [ref=e458]: 仙道长生
+                    - paragraph [ref=e459]: 一个普通青年获得上古仙帝传承，在残酷的修仙界步步为营，最终证道长生。
+                - generic [ref=e460]:
+                  - generic [ref=e461]: 玄幻仙侠
+                  - generic [ref=e462]: 未评分
+            - button [ref=e463]:
+              - img [ref=e464]
+          - generic [ref=e467]:
+            - button "修真方程式 当科学遇上修真，能用万有引力解释飞剑，用量子纠缠解释符箓，修仙世界将何去何从？ 仙侠修真 未评分" [ref=e468]:
+              - generic [ref=e469]:
+                - generic [ref=e470]:
+                  - img [ref=e471]
+                  - generic [ref=e473]:
+                    - paragraph [ref=e474]: 修真方程式
+                    - paragraph [ref=e475]: 当科学遇上修真，能用万有引力解释飞剑，用量子纠缠解释符箓，修仙世界将何去何从？
+                - generic [ref=e476]:
+                  - generic [ref=e477]: 仙侠修真
+                  - generic [ref=e478]: 未评分
+            - button [ref=e479]:
+              - img [ref=e480]
+          - generic [ref=e483]:
+            - button "孢子纪元 当末日降临，一个微生物学家可能是人类存亡的唯一希望，她能从孢子中提取解药还是走向毁灭？ 科幻末世 未评分" [ref=e484]:
+              - generic [ref=e485]:
+                - generic [ref=e486]:
+                  - img [ref=e487]
+                  - generic [ref=e489]:
+                    - paragraph [ref=e490]: 孢子纪元
+                    - paragraph [ref=e491]: 当末日降临，一个微生物学家可能是人类存亡的唯一希望，她能从孢子中提取解药还是走向毁灭？
+                - generic [ref=e492]:
+                  - generic [ref=e493]: 科幻末世
+                  - generic [ref=e494]: 未评分
+            - button [ref=e495]:
+              - img [ref=e496]
+          - generic [ref=e499]:
+            - button "天机操纵 当一个小人物拥有了看穿金融未来三分钟的能力，他将在贪婪与良知之间如何抉择？ 都市异能 未评分" [ref=e500]:
+              - generic [ref=e501]:
+                - generic [ref=e502]:
+                  - img [ref=e503]
+                  - generic [ref=e505]:
+                    - paragraph [ref=e506]: 天机操纵
+                    - paragraph [ref=e507]: 当一个小人物拥有了看穿金融未来三分钟的能力，他将在贪婪与良知之间如何抉择？
+                - generic [ref=e508]:
+                  - generic [ref=e509]: 都市异能
+                  - generic [ref=e510]: 未评分
+            - button [ref=e511]:
+              - img [ref=e512]
+      - generic [ref=e519]:
+        - img [ref=e520]
+        - paragraph [ref=e522]: 选择一个创意查看详情
+        - paragraph [ref=e523]: 或点击右上角「生成新创意」

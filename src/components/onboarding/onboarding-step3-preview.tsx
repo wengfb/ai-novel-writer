@@ -1,17 +1,20 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import type { OnboardingStep3PreviewProps, StepKey, StepState, StepStatus } from './step3/types'
 import { STEP_DEFS } from './step3/constants'
 import { extractArray } from './step3/step-result-preview'
 import { ConfigPhase } from './step3/config-phase'
 import { CompletePhase } from './step3/complete-phase'
 import { ReviewPhase } from './step3/review-phase'
+import { normalizeProjectGenre } from '@/lib/ai/onboarding/normalize'
+import { projectsApi } from '@/lib/api/endpoints/projects'
 
 // ============ 主组件 ============
 
 export function OnboardingStep3Preview({
   idea,
+  ideaId,
   userPreferences,
   onComplete,
   onBack,
@@ -20,47 +23,95 @@ export function OnboardingStep3Preview({
   resumeProgress,
 }: OnboardingStep3PreviewProps) {
   const defaultTitle = idea.title || `${idea.genre || '新'}小说`
-  const [projectTitle, setProjectTitle] = useState(defaultTitle)
+  const [projectTitle, setProjectTitle] = useState(
+    resumeProgress ? defaultTitle : defaultTitle
+  )
   const [targetWords, setTargetWords] = useState(1000000)
   const [pace, setPace] = useState<'fast' | 'medium' | 'slow'>('medium')
   const [pov, setPov] = useState<'first_person' | 'third_person' | 'multiple_pov'>(
     (userPreferences?.pov as any) || 'third_person'
   )
 
-  // 续建模式：恢复进度，直接进入审核流程
   const doneSteps = resumeProgress?.doneSteps || []
-  const firstPending = STEP_DEFS.find(d => !doneSteps.includes(d.key))?.key || 'architecture'
+  const firstPending = STEP_DEFS.find((d) => !doneSteps.includes(d.key))?.key || 'architecture'
 
   const [phase, setPhase] = useState<'config' | 'review' | 'complete'>(
     resumeProgress ? 'review' : 'config'
   )
   const [activeStep, setActiveStep] = useState<StepKey>(firstPending)
 
-  // 通知父组件 phase 变化（用于调整模态框宽度）
   useEffect(() => {
     onPhaseChange?.(phase)
   }, [phase, onPhaseChange])
 
   const [steps, setSteps] = useState<StepState[]>(
-    STEP_DEFS.map(d => ({
+    STEP_DEFS.map((d) => ({
       key: d.key,
-      status: doneSteps.includes(d.key) ? 'done' as StepStatus : 'pending' as StepStatus,
+      status: doneSteps.includes(d.key) ? ('done' as StepStatus) : ('pending' as StepStatus),
       data: null,
       error: null,
     }))
   )
-  const [projectId, setProjectId] = useState<string | null>(null)
-  void projectId
+  /** 配置确认后即创建；续建则沿用已有 id */
+  const [projectId, setProjectId] = useState<string | null>(resumeProgress?.projectId ?? null)
+  const projectIdRef = useRef(projectId)
+  useEffect(() => {
+    projectIdRef.current = projectId
+  }, [projectId])
 
-  // 获取当前步骤状态
-  const getStep = useCallback((key: StepKey) => steps.find(s => s.key === key)!, [steps])
+  const [isCreatingProject, setIsCreatingProject] = useState(false)
+  const [configError, setConfigError] = useState<string | null>(null)
 
-  // 更新步骤
+  const getStep = useCallback((key: StepKey) => steps.find((s) => s.key === key)!, [steps])
+
   const updateStep = useCallback((key: StepKey, update: Partial<StepState>) => {
-    setSteps(prev => prev.map(s => s.key === key ? { ...s, ...update } : s))
+    setSteps((prev) => prev.map((s) => (s.key === key ? { ...s, ...update } : s)))
   }, [])
 
-  // 对话确认后写入本步 data + 进度
+  const persistProgress = useCallback((done: StepKey[], pid?: string | null) => {
+    const id = pid ?? projectIdRef.current
+    if (!id) return
+    localStorage.setItem(`init-progress-${id}`, JSON.stringify(done))
+    fetch(`/api/projects/${id}/init-progress`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ doneSteps: done }),
+    }).catch(() => {})
+  }, [])
+
+  /** 确保已有项目壳；新建时落库并初始化空进度 */
+  const ensureProjectShell = useCallback(async (): Promise<string> => {
+    if (projectIdRef.current) return projectIdRef.current
+
+    const title = projectTitle.trim()
+    if (!title) throw new Error('请填写项目名称')
+
+    const res = await projectsApi.create({
+      title,
+      description: idea.highConcept || idea.coreConflict || '',
+      genre: normalizeProjectGenre(idea.genre || userPreferences?.genre || '其他'),
+      status: 'draft',
+      pov,
+    })
+    const pid = res.data?.project?.id
+    if (!pid) throw new Error('创建项目失败：未返回项目 ID')
+
+    setProjectId(pid)
+    projectIdRef.current = pid
+    persistProgress([], pid)
+
+    // 若从创意中心开书，尽早关联，避免中途退出后创意与项目脱节
+    if (ideaId) {
+      fetch(`/api/ideas/${ideaId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'converted', convertedToProjectId: pid }),
+      }).catch(() => {})
+    }
+
+    return pid
+  }, [projectTitle, idea, userPreferences?.genre, pov, ideaId, persistProgress])
+
   const handleConfirmExtracted = useCallback(
     (stepKey: StepKey, data: Record<string, unknown>) => {
       setSteps((prev) => {
@@ -70,27 +121,18 @@ export function OnboardingStep3Preview({
             : s
         )
         const unique = next.filter((s) => s.status === 'done').map((s) => s.key)
-        const pid = resumeProgress?.projectId
-        if (pid) {
-          localStorage.setItem(`init-progress-${pid}`, JSON.stringify(unique))
-          fetch(`/api/projects/${pid}/init-progress`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ doneSteps: unique }),
-          }).catch(() => {})
-        }
+        persistProgress(unique)
         return next
       })
     },
-    [resumeProgress?.projectId]
+    [persistProgress]
   )
 
-  // 可选快路径：仍走旧 generate API（一键整步）
   const quickGenerate = async (stepKey: StepKey) => {
     updateStep(stepKey, { status: 'loading', error: null })
     onGeneratingChange?.(true)
     try {
-      const def = STEP_DEFS.find(d => d.key === stepKey)!
+      const def = STEP_DEFS.find((d) => d.key === stepKey)!
       const context = getRequestContext(stepKey)
 
       if (stepKey === 'styleAnchor') {
@@ -147,126 +189,129 @@ export function OnboardingStep3Preview({
     }
   }
 
-  const getRequestContext = useCallback((stepKey: StepKey) => {
-    const arch = getStep('architecture')
-    const chars = getStep('characters')
-    const world = getStep('world')
-    const vol = getStep('volume')
+  const getRequestContext = useCallback(
+    (stepKey: StepKey) => {
+      const arch = getStep('architecture')
+      const chars = getStep('characters')
+      const world = getStep('world')
+      const vol = getStep('volume')
 
-    const base = {
-      idea,
-      targetWords,
-      pace,
-      pov,
-      audience: userPreferences?.audience,
-      tone: userPreferences?.tone,
-    }
-
-    switch (stepKey) {
-      case 'architecture':
-        return { ...base }
-
-      case 'characters':
-        return { ...base, architecture: (arch.data as any)?.architecture || arch.data }
-
-      case 'world': {
-        const archData = (arch.data as any)?.architecture || arch.data
-        const charList = extractArray((chars.data as any)?.characters)
-        return {
-          ...base,
-          architecture: { storySummary: archData?.storySummary, mainConflict: archData?.mainConflict },
-          characters: charList.map((c: any) => ({ name: c.name, description: c.description })),
-        }
+      const base = {
+        idea,
+        targetWords,
+        pace,
+        pov,
+        audience: userPreferences?.audience,
+        tone: userPreferences?.tone,
       }
 
-      case 'volume': {
-        const archData = (arch.data as any)?.architecture || arch.data
-        const charList = extractArray((chars.data as any)?.characters)
-        const worldList = extractArray((world.data as any)?.worldSettings)
-        return {
-          ...base,
-          architecture: archData,
-          characters: charList.map((c: any) => ({ name: c.name, role: c.role })),
-          worldSettings: worldList.map((w: any) => ({ name: w.name, type: w.type })),
+      switch (stepKey) {
+        case 'architecture':
+          return { ...base }
+
+        case 'characters':
+          return { ...base, architecture: (arch.data as any)?.architecture || arch.data }
+
+        case 'world': {
+          const archData = (arch.data as any)?.architecture || arch.data
+          const charList = extractArray((chars.data as any)?.characters)
+          return {
+            ...base,
+            architecture: {
+              storySummary: archData?.storySummary,
+              mainConflict: archData?.mainConflict,
+            },
+            characters: charList.map((c: any) => ({ name: c.name, description: c.description })),
+          }
         }
-      }
 
-      case 'foreshadowings': {
-        const chData = vol.data as any
-        const fCharList = extractArray((chars.data as any)?.characters)
-        const fWorldList = extractArray((world.data as any)?.worldSettings)
-        const chList = extractArray(chData?.chapters)
-        return {
-          chapters: chList.map((c: any) => ({
-            chapterNumber: c.chapterNumber, title: c.title, summary: c.summary || '',
-          })),
-          characters: fCharList.map((c: any) => ({ name: c.name })),
-          worldSettings: fWorldList.map((w: any) => ({ name: w.name })),
+        case 'volume': {
+          const archData = (arch.data as any)?.architecture || arch.data
+          const charList = extractArray((chars.data as any)?.characters)
+          const worldList = extractArray((world.data as any)?.worldSettings)
+          return {
+            ...base,
+            architecture: archData,
+            characters: charList.map((c: any) => ({ name: c.name, role: c.role })),
+            worldSettings: worldList.map((w: any) => ({ name: w.name, type: w.type })),
+          }
         }
+
+        case 'foreshadowings': {
+          const chData = vol.data as any
+          const fCharList = extractArray((chars.data as any)?.characters)
+          const fWorldList = extractArray((world.data as any)?.worldSettings)
+          const chList = extractArray(chData?.chapters)
+          return {
+            chapters: chList.map((c: any) => ({
+              chapterNumber: c.chapterNumber,
+              title: c.title,
+              summary: c.summary || '',
+            })),
+            characters: fCharList.map((c: any) => ({ name: c.name })),
+            worldSettings: fWorldList.map((w: any) => ({ name: w.name })),
+          }
+        }
+
+        case 'styleAnchor':
+          return { idea, tone: userPreferences?.tone }
+
+        default:
+          return base
       }
+    },
+    [idea, targetWords, pace, userPreferences, getStep, pov]
+  )
 
-      case 'styleAnchor':
-        return { idea, tone: userPreferences?.tone }
-
-      default:
-        return base
-    }
-  }, [idea, targetWords, pace, userPreferences, getStep, pov])
-
-  // 每步完成时保存进度
   const saveCurrentProgress = (completedKey: StepKey) => {
     const done = steps
-      .filter(s => s.status === 'done' || s.key === completedKey)
-      .map(s => s.key)
+      .filter((s) => s.status === 'done' || s.key === completedKey)
+      .map((s) => s.key)
     const unique = [...new Set([...done, completedKey])]
-    const pid = resumeProgress?.projectId
-    if (pid) {
-      localStorage.setItem(`init-progress-${pid}`, JSON.stringify(unique))
-      fetch(`/api/projects/${pid}/init-progress`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ doneSteps: unique }),
-      }).catch(() => { /* 非关键路径 */ })
-    }
+    persistProgress(unique)
   }
 
-  // 跳过当前步骤
   const skipCurrent = () => {
     updateStep(activeStep, { status: 'skipped' })
     goNext()
   }
 
-  // 跳过后续全部
   const skipAll = async () => {
-    setSteps(prev => prev.map(s =>
-      s.status === 'pending' || s.status === 'loading' ? { ...s, status: 'skipped' as StepStatus } : s
-    ))
+    setSteps((prev) =>
+      prev.map((s) =>
+        s.status === 'pending' || s.status === 'loading'
+          ? { ...s, status: 'skipped' as StepStatus }
+          : s
+      )
+    )
     await finalize()
   }
 
-  // 下一步
   const goNext = () => {
-    const idx = STEP_DEFS.findIndex(d => d.key === activeStep)
+    const idx = STEP_DEFS.findIndex((d) => d.key === activeStep)
     const next = STEP_DEFS[idx + 1]
     if (next) {
       setActiveStep(next.key)
     } else {
-      finalize()
+      void finalize()
     }
   }
 
-  // 切换到已完成步骤（或当前可对话步）
   const switchToStep = (key: StepKey) => {
     const step = getStep(key)
-    if (step.status === 'done' || step.status === 'loading' || step.status === 'pending' || step.status === 'skipped') {
-      // 只允许访问：已完成、已跳过、或第一个未完成步及之前
-      const firstIncomplete = STEP_DEFS.find(d => {
+    if (
+      step.status === 'done' ||
+      step.status === 'loading' ||
+      step.status === 'pending' ||
+      step.status === 'skipped'
+    ) {
+      const firstIncomplete = STEP_DEFS.find((d) => {
         const s = getStep(d.key)
         return s.status === 'pending' || s.status === 'loading'
       })?.key
-      const keyIdx = STEP_DEFS.findIndex(d => d.key === key)
+      const keyIdx = STEP_DEFS.findIndex((d) => d.key === key)
       const lockIdx = firstIncomplete
-        ? STEP_DEFS.findIndex(d => d.key === firstIncomplete)
+        ? STEP_DEFS.findIndex((d) => d.key === firstIncomplete)
         : STEP_DEFS.length
       if (keyIdx <= lockIdx || step.status === 'done' || step.status === 'skipped') {
         setActiveStep(key)
@@ -274,13 +319,16 @@ export function OnboardingStep3Preview({
     }
   }
 
-  // 写入数据库
+  /** 把已确认步骤写入已有项目（项目壳应已存在） */
   const finalize = async () => {
     onGeneratingChange?.(true)
+    setConfigError(null)
     try {
+      const pid = await ensureProjectShell()
+
       const results: Record<string, unknown> = {}
       const completedSteps: StepKey[] = []
-      steps.forEach(s => {
+      steps.forEach((s) => {
         if (s.status === 'done' && s.data) {
           completedSteps.push(s.key)
           results[s.key === 'volume' ? 'chapters' : s.key] = s.data
@@ -294,40 +342,44 @@ export function OnboardingStep3Preview({
         results.styleAnchor = styleAnchorData.data
       }
 
-      const existingProjectId = resumeProgress?.projectId
-      const endpoint = existingProjectId
-        ? `/api/projects/${existingProjectId}/init`
-        : '/api/onboarding/finalize'
-      const body = existingProjectId
-        ? { results }
-        : { projectTitle, idea, results, pov }
-
-      const res = await fetch(endpoint, {
+      const res = await fetch(`/api/projects/${pid}/init`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ results }),
       })
       const json = await res.json()
       if (json.success) {
-        const pid = existingProjectId || json.data.projectId
-        localStorage.setItem(`init-progress-${pid}`, JSON.stringify(completedSteps))
-        fetch(`/api/projects/${pid}/init-progress`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ doneSteps: completedSteps }),
-        }).catch(() => { /* 非关键路径 */ })
+        persistProgress(completedSteps, pid)
         setProjectId(pid)
         setPhase('complete')
         setTimeout(() => onComplete(pid), 1200)
+      } else {
+        throw new Error(json.error?.message || '写入项目失败')
       }
     } catch (e) {
       console.error('Finalize failed:', e)
+      setConfigError(e instanceof Error ? e.message : '写入项目失败')
     } finally {
       onGeneratingChange?.(false)
     }
   }
 
-  // ======== 配置阶段 ========
+  /** 配置页：先建项目再进审核 */
+  const handleStartReview = async () => {
+    setIsCreatingProject(true)
+    setConfigError(null)
+    onGeneratingChange?.(true)
+    try {
+      await ensureProjectShell()
+      setPhase('review')
+    } catch (e) {
+      setConfigError(e instanceof Error ? e.message : '创建项目失败')
+    } finally {
+      setIsCreatingProject(false)
+      onGeneratingChange?.(false)
+    }
+  }
+
   if (phase === 'config') {
     return (
       <div className="h-full min-h-0 overflow-hidden">
@@ -342,14 +394,15 @@ export function OnboardingStep3Preview({
           setPov={setPov}
           userPreferences={userPreferences}
           onBack={onBack}
-          onSkipAll={skipAll}
-          onStart={() => setPhase('review')}
+          onSkipAll={() => void skipAll()}
+          onStart={() => void handleStartReview()}
+          isBusy={isCreatingProject}
+          error={configError}
         />
       </div>
     )
   }
 
-  // ======== 完成阶段 ========
   if (phase === 'complete') {
     return (
       <div className="h-full min-h-0 overflow-hidden">
@@ -358,7 +411,6 @@ export function OnboardingStep3Preview({
     )
   }
 
-  // ======== 审核阶段（对话式） ========
   return (
     <div className="h-full min-h-0 overflow-hidden">
       <ReviewPhase
@@ -374,10 +426,9 @@ export function OnboardingStep3Preview({
         switchToStep={switchToStep}
         updateStep={updateStep}
         skipCurrent={skipCurrent}
-        skipAll={skipAll}
+        skipAll={() => void skipAll()}
         goNext={goNext}
         onConfirmExtracted={handleConfirmExtracted}
-        onGeneratingChange={onGeneratingChange}
         onQuickGenerate={quickGenerate}
       />
     </div>

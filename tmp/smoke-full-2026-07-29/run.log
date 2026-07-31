@@ -1,0 +1,60 @@
+[PASS] FIX    fixture        create project  st=201 79ms 
+[PASS] FIX    fixture        create chapter 1  st=201 105ms 
+[PASS] FIX    fixture        create character string personality  st=200 11ms 
+[PASS] FIX    fixture        create world  st=200 11ms 
+[FAIL] FIX    fixture        create outline ch2  st=404 277ms <!DOCTYPE html><html lang="zh-CN" class="dark h-full"><head><meta charSet="utf-8"/><meta name="viewp
+[PASS] U-23a  export         export {'format': 'txt', 'includeChapters': True}  st=200 57ms raw_len=292
+[PASS] U-23b  export         export {'format': 'txt', 'includeChapters': True, 'includeCharacters': True}  st=200 11ms raw_len=315
+[PASS] U-23c  export         export {'format': 'markdown', 'includeChapters': True}  st=200 10ms raw_len=237
+[FAIL] U-23d  export         export {'format': 'markdown', 'includeChapters': True, 'includeCharacters': True}  st=500 92ms personality.join crash
+[PASS] U-23e  export         export {'format': 'markdown', 'includeChapters': True, 'includeWorldElements': True}  st=200 11ms raw_len=276
+[PASS] U-23f  export         export {'format': 'markdown', 'includeChapters': True, 'includeOutlines': True}  st=200 9ms raw_len=237
+[FAIL] U-23g  export         export {'format': 'markdown', 'includeChapters': True, 'includeCharacters': True, 'includeWorldElements': True, 'includeOutlines': True}  st=500 111ms personality.join crash
+[FAIL] U-10   ai-gen         generate foreshadowings  st=500 128597ms count=0 {"success":false,"data":null,"error":{"code":"SERVER_ERROR","message":"Failed after 3 attemp
+[FAIL] U-11   ai-gen         generate style-anchor  st=400 128904ms len=0 wc=None
+[FAIL] U-04a  ai-gen         generate architecture  st=500 130154ms keys=None
+[FAIL] U-04b  ai-gen         generate characters (batch)  st=0 0ms skip: no arch
+[FAIL] U-12   ai-gen         generate world-plan  st=0 0ms skip
+[FAIL] U-04c  ai-gen         generate volume-plan/chapters  st=0 0ms skip
+[PASS] U-04d0 ai-gen         create project for outline  st=201 23ms 
+[FAIL] U-04d  ai-gen         generate outline (writes DB)  st=500 123202ms {"success":false,"data":null,"error":{"code":"AI_GENERATION_FAILED","message":"大纲生成失败，无法解析AI返回结果"}}
+[PASS] U-04e  ai-gen         count after first outline  st=200 0ms {"characters": 0, "worlds": -1, "worlds_raw": "{'success': True, 'data': {'elements': [], 'paginatio
+[FAIL] U-05a  idempotency    init append does not duplicate existing names  st=200 1617ms init_st=200 林深x2 云端塔x0 names=['林深', '幂等测试角色A', '林深'] wnames=[]
+[PASS] U-05b  idempotency    second outline gen entity growth  st=500 123715ms after1={'characters': 0, 'worlds': -1, 'worlds_raw': "{'success': True, 'data': {'elements': [], 'pa
+[FAIL] U-03   ai-gen         generate chapter #2 short  st=200 260694ms types=['start', 'error'] content_len=0 title=None start=True done=False bytes=211
+[PASS] U-06   consistency    chapter title vs content H1  st=200 0ms title='' h1='' content_prefix=''
+[PASS] U-06b  consistency    神格觉醒 existing title/H1 audit  st=200 0ms []
+[PASS] U-01a  onboarding     finalize synthetic results -> project  st=201 282ms pid=cms657lqn000fofvrnt98y1l1 counts={'characters': 2, 'worlds': -1, 'worlds_raw': "{'success': True
+[PASS] U-02a  onboarding     create idea for open-book  st=201 22ms 
+[PASS] U-02b  onboarding     convert idea  st=200 731ms 
+[PASS] U-02c  onboarding     finalize from idea + link  st=201 94ms project=cms657mih000qofvr0kfkf2me idea.convertedToProjectId=cms657mih000qofvr0kfkf2me
+[FAIL] U-01b  onboarding     idea-extract from conversation  st=500 132540ms title=None genre=None
+[FAIL] U-01c  onboarding     bootstrap full AI pipeline SSE  st=200 122062ms events=['start', 'step_error'] done=False err=None project=False counts={} bytes=278
+[FAIL] U-27a  agent-conv     list endpoint  st=404 0ms only [id] dir exists; no collection route
+[PASS] U-27b  agent-conv     handoff creates conversation  st=200 1640ms conv_id=None keys=['id', 'changeSetId', 'fromAgentId', 'toAgentId', 'targetConversationId', 'brief',
+[PASS] U-22a  settings       GET settings  st=200 6ms keys=['ai.baseUrl', 'ai.contextMaxTokens', 'ai.maxTokens', 'ai.model', 'ai.provider', 'project.cmpp4
+[PASS] U-22b  settings       PUT editor settings  st=200 19ms 
+[PASS] U-22c  settings       verify editor settings persisted  st=200 0ms font=18 theme=dark
+[FAIL] U-50   settings       reject absurd contextMaxTokens  st=200 21ms accepted=True value=999999999
+[PASS] U-24   context        context package for chapter  st=200 1727ms keys=['projectId', 'chapterId', 'totalTokens', 'characters', 'worldElements', 'previousChapters'] to
+[PASS] U-25   ai             consistency-check API  st=200 130066ms {"success":true,"data":{"report":"# 世界观一致性检查报告\n\n✅ 未发现明显的世界观冲突\n","conflicts":[],"summary":{"high":
+[PASS] U-26   stats          project stats  st=200 775ms {"overview": {"totalChapters": 1, "completedChapters": 1, "totalWords": 92, "completionRate": 0, "to
+[PASS] U-43a  stream         continue SSE partial read (cancel-ish)  st=200 130498ms bytes=152
+[PASS] U-14a  ai             rewrite SSE full  st=200 86804ms bytes=95 preview='data: {"type":"start"}\n\ndata: {"type":"error","error":"AI 改写失败，返回了空内容"}\n\n'
+[PASS] U-21   agents         multi-slot save on story-idea  st=200 10891ms system:save=True,catalog=True; system.co-create:save=True,catalog=True; user:save=True,catalog=True
+[FAIL] U-20a  models         model test endpoint  st=400 7512ms {"success":false,"data":null,"error":{"code":"AI_MODEL_ERROR","message":"Failed after 3 attempts. La
+[FAIL] U-15a  idea           random-story-idea  st=405 7933ms 
+[FAIL] P1-sort ideas          sortBy=updatedAt  st=400 110ms {"success":false,"data":null,"error":{"code":"INVALID_PARAMS","message":"参数验证失败","details":[{"field"
+[PASS] U-49   security       store script tag in chapter title (behavior)  st=201 846ms stored_title='<script>alert(1)</script>' (note: client must escape)
+[PASS] U-chat ai             studio chat UIMessage stream  st=200 7060ms bytes=95 preview='data: {"type":"start"}\n\ndata: {"type":"error","errorText":"An error occurred."}\
+[PASS] U-sum  ai             summarize chapters  st=200 932ms {"success":true,"data":{"chapterCount":0,"message":"所有章节已有摘要，无需更新"},"error":null}
+
+=== SUMMARY pass=31 fail=19 total=50 ===
+wrote /home/wengfb/code/ai-novel-writer/tmp/smoke-full-2026-07-29/full-results.md
+
+--- cleanup ---
+  deleted project cms64ocvg0005ofvrpcrnjoss
+  deleted project cms64wolh0009ofvr1u097wsm
+  deleted project cms657lqn000fofvrnt98y1l1
+  deleted project cms657mih000qofvr0kfkf2me
+total wall time: 1545s

@@ -19,7 +19,7 @@ export function createDefaultOutlineForm(params: {
   parentId?: string | null
 }): OutlineFormData {
   return {
-    type: params.defaultType || 'chapter',
+    type: params.defaultType || (params.parentId ? 'chapter' : 'volume'),
     parentId: params.parentId || '__none__',
     order: '1',
     title: '',

@@ -57,6 +57,13 @@ export function OutlineItem({
 
   const hasChildren = outline.children && outline.children.length > 0
 
+  const childActions =
+    outline.type === 'volume'
+      ? [{ type: 'chapter' as const, label: '添加章节' }]
+      : outline.type === 'chapter'
+        ? [{ type: 'scene' as const, label: '添加场景' }]
+        : []
+
   // 获取节点类型图标
   const getTypeIcon = () => {
     switch (outline.type) {
@@ -235,10 +242,18 @@ export function OutlineItem({
               <Edit2 className="mr-2 h-3.5 w-3.5" />
               编辑
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleCreateChild('scene') }}>
-                <Plus className="mr-2 h-3.5 w-3.5" />
-                添加场景
-              </DropdownMenuItem>
+              {childActions.map(({ type, label }) => (
+                <DropdownMenuItem
+                  key={type}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleCreateChild(type)
+                  }}
+                >
+                  <Plus className="mr-2 h-3.5 w-3.5" />
+                  {label}
+                </DropdownMenuItem>
+              ))}
               <DropdownMenuItem onClick={(e) => { e.stopPropagation(); setDeleteDialogOpen(true) }}>
                 <Trash2 className="mr-2 h-3.5 w-3.5" />
                 删除

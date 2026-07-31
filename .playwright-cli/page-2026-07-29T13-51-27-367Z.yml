@@ -1,0 +1,97 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "AI 小说工坊" [level=2] [ref=e1348]
+        - generic [ref=e1349]:
+          - img [ref=e1350]
+          - paragraph [ref=e1352]: 选择项目后可管理章节、大纲与设定
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e1321]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e1322]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e1323]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 选择项目
+            - img
+          - generic [ref=e37]: 新建项目 · 选择开书方式
+        - button "取消创建" [ref=e2079]:
+          - img
+          - text: 取消创建
+      - main [ref=e2080]:
+        - generic [ref=e2087]:
+          - generic [ref=e2088]:
+            - heading "准备创建你的小说项目" [level=2] [ref=e2089]
+            - paragraph [ref=e2090]: 确认后会先创建项目，再分步生成架构、角色、世界观与大纲；中途退出可稍后继续。
+          - generic [ref=e2091]:
+            - generic [ref=e2092]: 项目名称
+            - textbox "项目名称" [ref=e2093]: 铸剑听风录
+          - generic [ref=e2094]:
+            - generic [ref=e2095]:
+              - generic [ref=e2096]:
+                - img [ref=e2097]
+                - text: 目标总字数
+              - generic [ref=e2101]: 100万字
+            - generic [ref=e2102]:
+              - button "50万" [ref=e2103]
+              - button "100万" [ref=e2104]
+              - button "200万" [ref=e2105]
+              - button "300万" [ref=e2106]
+              - button "500万" [ref=e2107]
+              - button "1000万" [ref=e2108]
+          - generic [ref=e2109]:
+            - generic [ref=e2110]:
+              - img [ref=e2111]
+              - text: 叙事节奏
+            - generic [ref=e2114]:
+              - button "快节奏 短章快更，情节紧凑" [ref=e2115]:
+                - text: 快节奏
+                - paragraph [ref=e2116]: 短章快更，情节紧凑
+              - button "中等 标准篇幅，张弛有度" [ref=e2117]:
+                - text: 中等
+                - paragraph [ref=e2118]: 标准篇幅，张弛有度
+              - button "慢节奏 长章慢展，细节丰富" [ref=e2119]:
+                - text: 慢节奏
+                - paragraph [ref=e2120]: 长章慢展，细节丰富
+            - generic [ref=e2121]:
+              - generic [ref=e2122]:
+                - img [ref=e2123]
+                - text: 叙事人称
+              - generic [ref=e2125]:
+                - button "第三人称 他/她视角，叙述灵活" [ref=e2126]:
+                  - text: 第三人称
+                  - paragraph [ref=e2127]: 他/她视角，叙述灵活
+                - button "第一人称 我视角，代入感强" [ref=e2128]:
+                  - text: 第一人称
+                  - paragraph [ref=e2129]: 我视角，代入感强
+                - button "多视角 切换多人物视角" [ref=e2130]:
+                  - text: 多视角
+                  - paragraph [ref=e2131]: 切换多人物视角
+          - generic [ref=e2132]:
+            - button "返回修改" [ref=e2133]
+            - generic [ref=e2134]:
+              - button "跳过全部，直接创建项目" [ref=e2135]:
+                - img
+                - text: 跳过全部，直接创建项目
+              - button "开始创作" [ref=e2136]:
+                - img
+                - text: 开始创作
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert [ref=e116]

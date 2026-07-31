@@ -1,0 +1,135 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "神格觉醒" [level=2] [ref=e77]
+            - button "编辑项目" [ref=e78]:
+              - img
+          - paragraph [ref=e79]: 科幻
+        - generic [ref=e11]:
+          - heading "本书" [level=3] [ref=e80]
+          - generic [ref=e81]:
+            - button "章节列表" [ref=e83]:
+              - img
+              - generic [ref=e84]: 章节列表
+              - img
+            - button "剧情大纲" [active] [ref=e86]:
+              - img
+              - generic [ref=e87]: 剧情大纲
+              - img
+            - button "角色设定" [ref=e95]:
+              - img
+              - generic [ref=e96]: 角色设定
+              - img
+            - button "世界观" [ref=e98]:
+              - img
+              - generic [ref=e99]: 世界观
+              - img
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 神格觉醒
+            - img
+          - generic [ref=e37]: 第 3 章：地下联络站
+        - generic [ref=e38]:
+          - generic [ref=e39]: 未保存
+          - button "保存" [ref=e276]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [ref=e100]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [ref=e277]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e101]:
+        - generic [ref=e103]:
+          - img [ref=e105]
+          - heading "选择大纲节点" [level=2] [ref=e278]
+          - paragraph [ref=e110]: 在左侧大纲树中选择节点查看详情，或让 AI 协助调整整本大纲。
+          - generic [ref=e111]:
+            - button "新建节点" [ref=e112]:
+              - img
+              - text: 新建节点
+            - button "AI 协作调整" [ref=e279]:
+              - img
+              - text: AI 协作调整
+    - separator [ref=e58]
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - button "协作" [ref=e64]
+        - button "上下文" [ref=e65]
+        - button "生成" [ref=e66]
+      - generic [ref=e67]:
+        - generic [ref=e114]:
+          - generic [ref=e115]:
+            - img [ref=e116]
+            - generic [ref=e119]: 创作助手 · 在线
+          - button "创作总监 统筹项目方向、跨模块协作与下一步。" [ref=e120]:
+            - generic [ref=e121]:
+              - generic [ref=e122]: 创作总监
+              - generic [ref=e123]: 统筹项目方向、跨模块协作与下一步。
+            - img
+          - paragraph [ref=e124]: 正在参考：神格觉醒 · 项目全局资料
+        - generic [ref=e130]:
+          - generic [ref=e315]:
+            - heading "和创作总监一起创作" [level=1] [ref=e316]
+            - paragraph [ref=e317]: 正在参考：神格觉醒 · 项目全局资料
+          - generic [ref=e136]:
+            - textbox "Message input" [ref=e137]:
+              - /placeholder: Send a message...
+            - generic [ref=e138]:
+              - button "Add Attachment" [ref=e139]:
+                - img
+                - generic [ref=e140]: Add Attachment
+              - generic [ref=e141]:
+                - button "Send message" [disabled]:
+                  - img
+                  - generic: Send message
+        - generic [ref=e143]:
+          - button "补齐项目资料" [ref=e144]:
+            - img
+            - text: 补齐项目资料
+          - button "检查初始化缺口" [ref=e145]:
+            - img
+            - text: 检查初始化缺口
+          - button "规划下一步" [ref=e146]:
+            - img
+            - text: 规划下一步
+  - generic [ref=e72] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e73]:
+      - img [ref=e74]
+    - generic [ref=e283]:
+      - button "Open issues overlay" [ref=e284]:
+        - generic [ref=e285]:
+          - generic [ref=e286]: "0"
+          - generic [ref=e287]: "1"
+        - generic [ref=e288]: Issue
+      - button "Collapse issues badge" [ref=e289]:
+        - img [ref=e290]
+  - alert [ref=e147]

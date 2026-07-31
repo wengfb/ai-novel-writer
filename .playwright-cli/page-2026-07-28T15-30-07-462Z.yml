@@ -1,0 +1,66 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "AI 小说工坊" [level=2] [ref=e1461]
+        - generic [ref=e1462]:
+          - img [ref=e1463]
+          - paragraph [ref=e1465]: 选择项目后可管理章节、大纲与设定
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 选择项目
+            - img
+          - generic [ref=e37]: 新建项目 · 选择开书方式
+        - button "取消创建" [ref=e1513]:
+          - img
+          - text: 取消创建
+      - main [ref=e1514]:
+        - generic [ref=e1518]:
+          - button "取消" [ref=e1520]:
+            - img
+            - text: 取消
+          - generic [ref=e1522]:
+            - generic [ref=e1523]:
+              - heading "你想怎么开书？" [level=2] [ref=e1524]
+              - paragraph [ref=e1525]: 先选一条路径。创意共创不是唯一入口，也可以用已有创意或直接建空项目。
+            - generic [ref=e1526]:
+              - button "和 AI 一起想创意 推荐 从零聊出一张可开书的创意卡，再进入项目初始化。" [ref=e1527]:
+                - img [ref=e1529]
+                - generic [ref=e1531]:
+                  - generic [ref=e1532]:
+                    - generic [ref=e1533]: 和 AI 一起想创意
+                    - generic [ref=e1534]: 推荐
+                  - paragraph [ref=e1535]: 从零聊出一张可开书的创意卡，再进入项目初始化。
+              - button "用已有创意 打开创意中心，选一张卡后在详情页点「创建项目」。" [ref=e1536]:
+                - img [ref=e1538]
+                - generic [ref=e1540]:
+                  - generic [ref=e1542]: 用已有创意
+                  - paragraph [ref=e1543]: 打开创意中心，选一张卡后在详情页点「创建项目」。
+              - button "直接创建空项目 只填书名和题材，稍后再补设定与大纲。" [ref=e1544]:
+                - img [ref=e1546]
+                - generic [ref=e1549]:
+                  - generic [ref=e1551]: 直接创建空项目
+                  - paragraph [ref=e1552]: 只填书名和题材，稍后再补设定与大纲。
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert [ref=e74]

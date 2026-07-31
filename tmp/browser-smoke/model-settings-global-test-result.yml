@@ -1,0 +1,118 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "AI 小说工坊" [level=2] [ref=e10]
+        - generic [ref=e12]:
+          - img [ref=e13]
+          - paragraph [ref=e15]: 选择项目后可管理章节、大纲与设定
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 选择项目
+            - img
+          - generic [ref=e37]: 未选择章节
+        - generic [ref=e38]:
+          - generic [ref=e39]: 未保存
+          - button "保存" [disabled]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [disabled]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [disabled]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e118]:
+        - generic [ref=e119]:
+          - generic [ref=e120]:
+            - generic [ref=e121]:
+              - button "返回" [ref=e122]:
+                - img
+                - text: 返回
+              - generic [ref=e123]:
+                - heading "系统设置" [level=1] [ref=e124]
+                - paragraph [ref=e125]: AI 模型、Agent 提示词、编辑器与项目默认值
+            - button "保存设置" [ref=e126]
+          - generic [ref=e129]:
+            - tablist [ref=e130]:
+              - tab "AI 配置" [selected] [ref=e131]
+              - tab "Agent 提示词" [ref=e132]
+              - tab "编辑器" [ref=e133]
+              - tab "项目默认值" [ref=e134]
+            - tabpanel "AI 配置" [ref=e135]:
+              - generic [ref=e136]:
+                - alert [ref=e137]:
+                  - img [ref=e138]
+                  - generic [ref=e140]: AI 配置保存在数据库，优先于环境变量。模型列表与测试会使用当前已保存的服务商、地址和密钥。
+                - generic [ref=e141]:
+                  - generic [ref=e142]: AI 服务商
+                  - combobox "AI 服务商" [ref=e143]:
+                    - generic: OpenAI 兼容接口
+                    - img
+                  - combobox [ref=e144]
+                  - paragraph [ref=e145]: 保存服务商和地址后，再刷新模型列表。
+                - generic [ref=e146]:
+                  - generic [ref=e147]: API Key
+                  - textbox "API Key" [ref=e148]:
+                    - /placeholder: 留空使用环境变量中的 Key
+                - generic [ref=e149]:
+                  - generic [ref=e150]: API 地址
+                  - textbox "API 地址" [ref=e151]:
+                    - /placeholder: 留空使用默认地址或环境变量
+                    - text: http://aiapi.wengfb.com/v1
+                - generic [ref=e152]:
+                  - generic [ref=e153]:
+                    - generic [ref=e154]: 默认模型
+                    - generic [ref=e155]:
+                      - button "获取列表" [ref=e156]:
+                        - img
+                        - text: 获取列表
+                      - button "测试" [ref=e157]:
+                        - img
+                        - text: 测试
+                  - combobox "默认模型" [ref=e158]: gemini-3-flash
+                  - paragraph [ref=e159]: 可直接输入模型 ID；“测试”会发送最小请求，不会保存设置。
+                - generic [ref=e160]:
+                  - generic [ref=e161]: 全局默认温度：0.7
+                  - slider [ref=e166]
+                  - paragraph [ref=e167]: 未在 Agent 中单独配置时使用。
+                - generic [ref=e168]:
+                  - generic [ref=e169]: 全局最大输出 Token
+                  - spinbutton "全局最大输出 Token" [ref=e170]: "100000"
+                - generic [ref=e171]:
+                  - generic [ref=e172]: 上下文窗口上限 (Token)
+                  - spinbutton "上下文窗口上限 (Token)" [ref=e173]: "100000000"
+    - separator [ref=e58]
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - button "协作" [ref=e64]
+        - button "上下文" [ref=e65]
+        - button "生成" [ref=e66]
+      - generic [ref=e67]: 请先选择项目
+  - button "Open Next.js Dev Tools" [ref=e73] [cursor=pointer]:
+    - img [ref=e74]
+  - alert [ref=e84]

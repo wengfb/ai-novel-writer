@@ -1,0 +1,197 @@
+{
+  "total": 38,
+  "passed": 38,
+  "failed": 0,
+  "results": [
+    {
+      "name": "health projects",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "create project",
+      "ok": true,
+      "detail": "201 cms7oyfhk000025vrqwr24ktt"
+    },
+    {
+      "name": "create character string personality",
+      "ok": true,
+      "detail": "201"
+    },
+    {
+      "name": "create world element",
+      "ok": true,
+      "detail": "201"
+    },
+    {
+      "name": "export markdown + chars + world",
+      "ok": true,
+      "detail": "status=200 len=151"
+    },
+    {
+      "name": "create outline volume",
+      "ok": true,
+      "detail": "201"
+    },
+    {
+      "name": "create outline chapter",
+      "ok": true,
+      "detail": "201"
+    },
+    {
+      "name": "list outlines after create",
+      "ok": true,
+      "detail": "['第一卷·开端', '第一章·觉醒']"
+    },
+    {
+      "name": "update outline title",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "list after outline update",
+      "ok": true,
+      "detail": "['第一卷·开端', '第一章·更新后的标题']"
+    },
+    {
+      "name": "create chapter with outline title",
+      "ok": true,
+      "detail": "201"
+    },
+    {
+      "name": "chapter title independent of outline",
+      "ok": true,
+      "detail": "ch=用户改过的章节名"
+    },
+    {
+      "name": "init with duplicates",
+      "ok": true,
+      "detail": "200 {\"success\":true,\"data\":{\"projectId\":\"cms7oyfhk000025vrqwr24ktt\",\"updated\":true},\"error\":null}"
+    },
+    {
+      "name": "init dedupe characters",
+      "ok": true,
+      "detail": "names=['新角色甲', '测人设']"
+    },
+    {
+      "name": "init dedupe world",
+      "ok": true,
+      "detail": "names=['云端区', '天网公司']"
+    },
+    {
+      "name": "ideas sortBy=updatedAt",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "ideas sortBy=createdAt",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "reject huge contextMaxTokens",
+      "ok": true,
+      "detail": "{\"success\":false,\"data\":null,\"error\":{\"code\":\"INVALID_SETTINGS\",\"message\":\"上下文窗口上限不能超过 2,000,000\"}}"
+    },
+    {
+      "name": "reject huge maxTokens",
+      "ok": true,
+      "detail": "{\"success\":false,\"data\":null,\"error\":{\"code\":\"INVALID_SETTINGS\",\"message\":\"最大输出 Token 不能超过 200,000\"}}"
+    },
+    {
+      "name": "accept valid tokens",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "save agent prompt",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "prompt cache immediate read",
+      "ok": true,
+      "detail": "marker present"
+    },
+    {
+      "name": "reset agent prompt",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "finalize invalid JSON → 400",
+      "ok": true,
+      "detail": "400"
+    },
+    {
+      "name": "finalize empty → 400",
+      "ok": true,
+      "detail": "400"
+    },
+    {
+      "name": "idea-extract empty → 400",
+      "ok": true,
+      "detail": "400"
+    },
+    {
+      "name": "chat empty messages → 400",
+      "ok": true,
+      "detail": "400"
+    },
+    {
+      "name": "chat missing content → 400",
+      "ok": true,
+      "detail": "400"
+    },
+    {
+      "name": "chat content string not 500",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "name": "chat i18n placeholder zh",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "chat i18n send zh",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "idea card a11y open label",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "idea card no role=button wrapper",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "layout center overflow-hidden",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "outline root default volume",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "outline edit delete confirm",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "outline force bypass isLoading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "cleanup project",
+      "ok": true,
+      "detail": "200"
+    }
+  ]
+}

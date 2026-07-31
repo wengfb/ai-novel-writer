@@ -1,0 +1,197 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "AI 小说工坊" [level=2] [ref=e10]
+        - generic [ref=e12]:
+          - img [ref=e13]
+          - paragraph [ref=e15]: 选择项目后可管理章节、大纲与设定
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 选择项目
+            - img
+          - generic [ref=e37]: 未选择章节
+        - generic [ref=e38]:
+          - generic [ref=e39]: 未保存
+          - button "保存" [disabled]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [disabled]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [disabled]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e76]:
+        - generic [ref=e77]:
+          - generic [ref=e78]:
+            - generic [ref=e79]:
+              - button "返回" [ref=e80]:
+                - img
+                - text: 返回
+              - generic [ref=e81]:
+                - heading "系统设置" [level=1] [ref=e82]
+                - paragraph [ref=e83]: AI 模型、Agent 参数与提示词、编辑器与项目默认值
+            - button "保存设置" [ref=e84]
+          - generic [ref=e87]:
+            - tablist [ref=e88]:
+              - tab "AI 配置" [ref=e89]
+              - tab "Agent 配置" [selected] [ref=e90]
+              - tab "编辑器" [ref=e91]
+              - tab "项目默认值" [ref=e92]
+            - tabpanel "Agent 配置" [ref=e198]:
+              - generic [ref=e199]:
+                - paragraph [ref=e200]:
+                  - text: 每个 AI 功能对应一个 Agent。可分别配置模型、温度与最大输出 Token，也可编辑提示词。聊天面板与界面按钮共用同一套定义。 使用
+                  - code [ref=e201]: "{变量名}"
+                  - text: 作为运行时变量占位符。
+                - generic [ref=e202]:
+                  - generic [ref=e203]:
+                    - generic [ref=e204]: 选择 Agent
+                    - combobox [ref=e205]:
+                      - generic:
+                        - generic:
+                          - generic: Studio 创作助手
+                          - generic: 对话
+                      - img
+                    - combobox [ref=e206]
+                    - generic [ref=e207]:
+                      - generic [ref=e208]:
+                        - generic [ref=e209]: 对话
+                        - generic [ref=e210]: 可对话
+                        - generic [ref=e211]: studio-chat
+                      - paragraph [ref=e212]: 项目内多轮对话助手，支持角色/世界观/章节等工具操作。
+                      - generic [ref=e213]:
+                        - generic [ref=e214]:
+                          - generic [ref=e215]: 运行参数
+                          - button "获取列表" [ref=e216]:
+                            - img
+                            - text: 获取列表
+                        - generic [ref=e217]:
+                          - textbox "模型（留空继承全局）" [ref=e218]
+                          - button "打开模型列表" [expanded] [active] [ref=e219]:
+                            - img
+                        - generic [ref=e220]:
+                          - spinbutton [ref=e221]
+                          - spinbutton [ref=e222]
+                        - generic [ref=e223]:
+                          - button "测试模型" [ref=e224]:
+                            - img
+                            - text: 测试模型
+                          - button "保存参数" [ref=e225]
+                      - generic [ref=e226]:
+                        - generic [ref=e227]: 提示词槽位
+                        - button "系统指令" [ref=e229]:
+                          - generic [ref=e230]: 系统指令
+                  - generic [ref=e231]:
+                    - generic [ref=e233]:
+                      - heading "系统指令" [level=4] [ref=e234]
+                      - paragraph [ref=e235]: Studio 聊天的主系统提示词。
+                    - generic [ref=e236]:
+                      - text: 可用变量：
+                      - list [ref=e237]:
+                        - listitem [ref=e238]:
+                          - code [ref=e239]: "{projectTitle}"
+                          - text: — 项目标题（必填）
+                        - listitem [ref=e240]:
+                          - code [ref=e241]: "{genre}"
+                          - text: — 小说类型（必填）
+                        - listitem [ref=e242]:
+                          - code [ref=e243]: "{styleAnchor}"
+                          - text: — 风格锚点文本（可为空）
+                        - listitem [ref=e244]:
+                          - code [ref=e245]: "{contextPrompt}"
+                          - text: — 上下文管理器格式化后的项目上下文
+                    - textbox [ref=e249]: "你是一个专业的小说创作助手，正在帮助作者创作《{projectTitle}》这部{genre}小说。 {styleAnchor} {contextPrompt} 当用户需要创建/新增/保存/修改/更新角色、世界观、章节内容，或查询项目信息时，请优先考虑调用工具完成操作；如果用户意图明确且信息足够，直接使用对应工具比只给文字建议更合适。用户说\"创建角色/新增设定/追加章节/查询项目\"等操作类请求时，通常是在要求你操作当前项目数据，而不是只生成一段可复制的文本。写操作会先交由用户确认，不要因为需要确认而回避工具调用。工具完成后，用简洁的中文说明你做了什么，并给出下一步建议。若缺少必要信息，请先向用户提问再行动。"
+                    - generic [ref=e250]:
+                      - button "恢复默认" [disabled]:
+                        - img
+                        - text: 恢复默认
+                      - button "保存提示词" [disabled]:
+                        - img
+                        - text: 保存提示词
+    - separator [ref=e58]
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - button "协作" [ref=e64]
+        - button "上下文" [ref=e65]
+        - button "生成" [ref=e66]
+      - generic [ref=e67]: 请先选择项目
+  - button "Open Next.js Dev Tools" [ref=e139] [cursor=pointer]:
+    - img [ref=e140]
+  - alert [ref=e75]
+  - dialog [ref=e252]:
+    - generic [ref=e253]:
+      - generic [ref=e255]:
+        - img [ref=e256]
+        - combobox [expanded] [ref=e259]
+      - listbox "Suggestions" [ref=e260]:
+        - generic [ref=e261]:
+          - generic [ref=e262]: 可用模型（14）
+          - group "可用模型（14）" [ref=e263]:
+            - option "claude-opus-4-6-thinking" [selected] [ref=e264]:
+              - img
+              - paragraph [ref=e266]: claude-opus-4-6-thinking
+            - option "claude-sonnet-4-6" [ref=e267]:
+              - img
+              - paragraph [ref=e269]: claude-sonnet-4-6
+            - option "gemini-3-flash" [ref=e270]:
+              - img
+              - paragraph [ref=e272]: gemini-3-flash
+            - option "gpt-5.3-codex-spark" [ref=e273]:
+              - img
+              - paragraph [ref=e275]: gpt-5.3-codex-spark
+            - option "gpt-5.4" [ref=e276]:
+              - img
+              - paragraph [ref=e278]: gpt-5.4
+            - option "gpt-5.4-mini" [ref=e279]:
+              - img
+              - paragraph [ref=e281]: gpt-5.4-mini
+            - option "gpt-5.5" [ref=e282]:
+              - img
+              - paragraph [ref=e284]: gpt-5.5
+            - option "gpt-5.6-luna" [ref=e285]:
+              - img
+              - paragraph [ref=e287]: gpt-5.6-luna
+            - option "gpt-5.6-sol" [ref=e288]:
+              - img
+              - paragraph [ref=e290]: gpt-5.6-sol
+            - option "gpt-5.6-terra" [ref=e291]:
+              - img
+              - paragraph [ref=e293]: gpt-5.6-terra
+            - option "gpt-image-2" [ref=e294]:
+              - img
+              - paragraph [ref=e296]: gpt-image-2
+            - option "grok-4.5" [ref=e297]:
+              - img
+              - paragraph [ref=e299]: grok-4.5
+            - option "grok-build-0.1" [ref=e300]:
+              - img
+              - paragraph [ref=e302]: grok-build-0.1
+            - option "ZhipuAI/GLM-5.2" [ref=e303]:
+              - img
+              - paragraph [ref=e305]: ZhipuAI/GLM-5.2

@@ -24,7 +24,7 @@ export function useIdeas(query?: Record<string, string>) {
     currentIdea, currentIdeaComments,
     isGenerating, generatedCards,
     hasExamples, positiveExampleCount, negativeExampleCount,
-    refetch: () => fetchIdeas(query),
+    refetch: () => fetchIdeas(query ?? {}),
     fetchIdea, saveIdea, updateIdea, deleteIdea,
     rateIdea, fetchComments, addComment,
     generateIdeas, clearGeneratedCards,

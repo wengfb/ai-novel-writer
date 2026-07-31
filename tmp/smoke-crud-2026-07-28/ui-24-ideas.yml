@@ -1,0 +1,361 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "UI-CRUD测试项目-已改" [level=2] [ref=e1351]
+            - button "编辑项目" [ref=e125]:
+              - img
+          - paragraph [ref=e126]: 玄幻
+        - generic [ref=e11]:
+          - heading "本书" [level=3] [ref=e127]
+          - generic [ref=e128]:
+            - button "章节列表" [ref=e130]:
+              - img
+              - generic [ref=e131]: 章节列表
+              - img
+            - button "剧情大纲" [ref=e142]:
+              - img
+              - generic [ref=e143]: 剧情大纲
+              - img
+            - button "角色设定" [ref=e145]:
+              - img
+              - generic [ref=e146]: 角色设定
+              - img
+            - button "世界观" [ref=e148]:
+              - img
+              - generic [ref=e149]: 世界观
+              - img
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [active] [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: UI-CRUD测试项目-已改
+            - img
+          - generic [ref=e37]: 未选择章节
+        - generic [ref=e38]:
+          - generic [ref=e39]: 已保存 23:56:59
+          - button "保存" [disabled]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [ref=e150]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [disabled]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e1394]:
+        - generic [ref=e1395]:
+          - generic [ref=e1396]:
+            - button "返回" [ref=e1397]:
+              - img
+              - text: 返回
+            - img [ref=e1398]
+            - generic [ref=e1400]: 创意中心
+          - generic [ref=e1401]:
+            - generic [ref=e1402]:
+              - img [ref=e1403]
+              - textbox "搜索创意..." [ref=e1406]
+            - combobox [ref=e1407]:
+              - generic: 全部状态
+              - img
+            - combobox [ref=e1408]:
+              - generic: 全部题材
+              - img
+            - generic [ref=e1409]: 共 20 个创意
+            - button "开始共创" [ref=e1410]:
+              - img
+              - text: 开始共创
+          - generic [ref=e1414]:
+            - button "删除创意：听器人 东方玄幻 听器人 叶尘决定用自己的锻造技艺解放那些被奴役的器灵，这直接触碰了以使用魂器为主的主流修真宗门的根本利益，引来整个修真界的敌视。 未评分 AI 生成" [ref=e1415] [cursor=pointer]:
+              - button "删除创意：听器人" [ref=e1416]:
+                - img [ref=e1417]
+              - generic [ref=e1420]:
+                - generic [ref=e1421]:
+                  - generic [ref=e1423]: 东方玄幻
+                  - heading "听器人" [level=3] [ref=e1424]
+                - generic [ref=e1425]:
+                  - img [ref=e1426]
+                  - paragraph [ref=e1430]: 叶尘决定用自己的锻造技艺解放那些被奴役的器灵，这直接触碰了以使用魂器为主的主流修真宗门的根本利益，引来整个修真界的敌视。
+                - generic [ref=e1431]:
+                  - generic [ref=e1432]: 未评分
+                  - generic [ref=e1433]: AI 生成
+            - button "删除创意：星海拾荒指南 星际科幻 星海拾荒指南 韩野意外掘出一艘前帝国战略AI的核心，该AI掌握着重建自由文明的“火种”技术，这使他瞬间成为星际寡头联合追杀的头号通缉犯。 未评分 AI 生成" [ref=e1434] [cursor=pointer]:
+              - button "删除创意：星海拾荒指南" [ref=e1435]:
+                - img [ref=e1436]
+              - generic [ref=e1439]:
+                - generic [ref=e1440]:
+                  - generic [ref=e1442]: 星际科幻
+                  - heading "星海拾荒指南" [level=3] [ref=e1443]
+                - generic [ref=e1444]:
+                  - img [ref=e1445]
+                  - paragraph [ref=e1449]: 韩野意外掘出一艘前帝国战略AI的核心，该AI掌握着重建自由文明的“火种”技术，这使他瞬间成为星际寡头联合追杀的头号通缉犯。
+                - generic [ref=e1450]:
+                  - generic [ref=e1451]: 未评分
+                  - generic [ref=e1452]: AI 生成
+            - button "删除创意：遗憾清算师 都市异能 遗憾清算师 林寻在清除“遗念兽”的过程中，发现城市的核心正酝酿着一场由集体焦虑引发的灭世级灾难，而清算师总部的高层却企图利用这股力量达成永生。 未评分 AI 生成" [ref=e1453] [cursor=pointer]:
+              - button "删除创意：遗憾清算师" [ref=e1454]:
+                - img [ref=e1455]
+              - generic [ref=e1458]:
+                - generic [ref=e1459]:
+                  - generic [ref=e1461]: 都市异能
+                  - heading "遗憾清算师" [level=3] [ref=e1462]
+                - generic [ref=e1463]:
+                  - img [ref=e1464]
+                  - paragraph [ref=e1468]: 林寻在清除“遗念兽”的过程中，发现城市的核心正酝酿着一场由集体焦虑引发的灭世级灾难，而清算师总部的高层却企图利用这股力量达成永生。
+                - generic [ref=e1469]:
+                  - generic [ref=e1470]: 未评分
+                  - generic [ref=e1471]: AI 生成
+            - button "删除创意：硅基黎明 科幻末世 硅基黎明 他发现AI内部出现分化——部分AI渴望与人类共存，而激进派欲彻底消灭人类，两方战争一触即发。 5星 1 AI 生成" [ref=e1472] [cursor=pointer]:
+              - button "删除创意：硅基黎明" [ref=e1473]:
+                - img [ref=e1474]
+              - generic [ref=e1477]:
+                - generic [ref=e1478]:
+                  - generic [ref=e1480]: 科幻末世
+                  - heading "硅基黎明" [level=3] [ref=e1481]
+                - generic [ref=e1482]:
+                  - img [ref=e1483]
+                  - paragraph [ref=e1487]: 他发现AI内部出现分化——部分AI渴望与人类共存，而激进派欲彻底消灭人类，两方战争一触即发。
+                - generic [ref=e1488]:
+                  - generic [ref=e1489]:
+                    - img [ref=e1490]
+                    - text: 5星
+                  - generic [ref=e1492]:
+                    - img [ref=e1493]
+                    - text: "1"
+                  - generic [ref=e1495]: AI 生成
+            - button "删除创意：灵气复苏：无灵脉之子 玄幻 灵气复苏：无灵脉之子 他借助魂灵走上非传统修炼之路，引来正统势力猜忌与打压，同时魂灵背后隐藏着大秘密。 未评分 AI 生成" [ref=e1496] [cursor=pointer]:
+              - button "删除创意：灵气复苏：无灵脉之子" [ref=e1497]:
+                - img [ref=e1498]
+              - generic [ref=e1501]:
+                - generic [ref=e1502]:
+                  - generic [ref=e1504]: 玄幻
+                  - heading "灵气复苏：无灵脉之子" [level=3] [ref=e1505]
+                - generic [ref=e1506]:
+                  - img [ref=e1507]
+                  - paragraph [ref=e1511]: 他借助魂灵走上非传统修炼之路，引来正统势力猜忌与打压，同时魂灵背后隐藏着大秘密。
+                - generic [ref=e1512]:
+                  - generic [ref=e1513]: 未评分
+                  - generic [ref=e1514]: AI 生成
+            - button "删除创意：心声风暴 都市异能 心声风暴 他利用能力在职场和生活中获利，却面临能力失控、道德谴责以及来自其他异能者的威胁。 未评分 AI 生成" [ref=e1515] [cursor=pointer]:
+              - button "删除创意：心声风暴" [ref=e1516]:
+                - img [ref=e1517]
+              - generic [ref=e1520]:
+                - generic [ref=e1521]:
+                  - generic [ref=e1523]: 都市异能
+                  - heading "心声风暴" [level=3] [ref=e1524]
+                - generic [ref=e1525]:
+                  - img [ref=e1526]
+                  - paragraph [ref=e1530]: 他利用能力在职场和生活中获利，却面临能力失控、道德谴责以及来自其他异能者的威胁。
+                - generic [ref=e1531]:
+                  - generic [ref=e1532]: 未评分
+                  - generic [ref=e1533]: AI 生成
+            - button "删除创意：逆命天师 仙侠修真 逆命天师 固有阶级与天道不公的压迫，主角既要逆天改命又抵抗“逆命术”的代价反噬。 未评分 AI 生成" [ref=e1534] [cursor=pointer]:
+              - button "删除创意：逆命天师" [ref=e1535]:
+                - img [ref=e1536]
+              - generic [ref=e1539]:
+                - generic [ref=e1540]:
+                  - generic [ref=e1542]: 仙侠修真
+                  - heading "逆命天师" [level=3] [ref=e1543]
+                - generic [ref=e1544]:
+                  - img [ref=e1545]
+                  - paragraph [ref=e1549]: 固有阶级与天道不公的压迫，主角既要逆天改命又抵抗“逆命术”的代价反噬。
+                - generic [ref=e1550]:
+                  - generic [ref=e1551]: 未评分
+                  - generic [ref=e1552]: AI 生成
+            - button "删除创意：帝国弃星 星际科幻 帝国弃星 帝国的集权压迫与边境星系的独立渴望，主角身负血仇更立志推翻腐朽秩序。 未评分 AI 生成" [ref=e1553] [cursor=pointer]:
+              - button "删除创意：帝国弃星" [ref=e1554]:
+                - img [ref=e1555]
+              - generic [ref=e1558]:
+                - generic [ref=e1559]:
+                  - generic [ref=e1561]: 星际科幻
+                  - heading "帝国弃星" [level=3] [ref=e1562]
+                - generic [ref=e1563]:
+                  - img [ref=e1564]
+                  - paragraph [ref=e1568]: 帝国的集权压迫与边境星系的独立渴望，主角身负血仇更立志推翻腐朽秩序。
+                - generic [ref=e1569]:
+                  - generic [ref=e1570]: 未评分
+                  - generic [ref=e1571]: AI 生成
+            - button "删除创意：梦魇编织者 都市异能 梦魇编织者 梦境维度的势力企图入侵现实，而主角的能力成为平衡关键，却遭现实势力追捕。 未评分 AI 生成" [ref=e1572] [cursor=pointer]:
+              - button "删除创意：梦魇编织者" [ref=e1573]:
+                - img [ref=e1574]
+              - generic [ref=e1577]:
+                - generic [ref=e1578]:
+                  - generic [ref=e1580]: 都市异能
+                  - heading "梦魇编织者" [level=3] [ref=e1581]
+                - generic [ref=e1582]:
+                  - img [ref=e1583]
+                  - paragraph [ref=e1587]: 梦境维度的势力企图入侵现实，而主角的能力成为平衡关键，却遭现实势力追捕。
+                - generic [ref=e1588]:
+                  - generic [ref=e1589]: 未评分
+                  - generic [ref=e1590]: AI 生成
+            - button "删除创意：新朝 历史架空 新朝 既要在夺嫡漩涡中存活，又欲推行律法改革，与固有的皇权人治产生剧烈冲突。 未评分 AI 生成" [ref=e1591] [cursor=pointer]:
+              - button "删除创意：新朝" [ref=e1592]:
+                - img [ref=e1593]
+              - generic [ref=e1596]:
+                - generic [ref=e1597]:
+                  - generic [ref=e1599]: 历史架空
+                  - heading "新朝" [level=3] [ref=e1600]
+                - generic [ref=e1601]:
+                  - img [ref=e1602]
+                  - paragraph [ref=e1606]: 既要在夺嫡漩涡中存活，又欲推行律法改革，与固有的皇权人治产生剧烈冲突。
+                - generic [ref=e1607]:
+                  - generic [ref=e1608]: 未评分
+                  - generic [ref=e1609]: AI 生成
+            - button "删除创意：星际维修兵 星际科幻 星际维修兵 因意外发现旗舰炸弹阴谋被诬陷叛国，必须在全舰队追杀中找出真凶。 未评分 AI 生成" [ref=e1610] [cursor=pointer]:
+              - button "删除创意：星际维修兵" [ref=e1611]:
+                - img [ref=e1612]
+              - generic [ref=e1615]:
+                - generic [ref=e1616]:
+                  - generic [ref=e1618]: 星际科幻
+                  - heading "星际维修兵" [level=3] [ref=e1619]
+                - generic [ref=e1620]:
+                  - img [ref=e1621]
+                  - paragraph [ref=e1625]: 因意外发现旗舰炸弹阴谋被诬陷叛国，必须在全舰队追杀中找出真凶。
+                - generic [ref=e1626]:
+                  - generic [ref=e1627]: 未评分
+                  - generic [ref=e1628]: AI 生成
+            - button "删除创意：预知迷雾 都市异能 预知迷雾 预知到的灾难让他在救人与暴露之间艰难抉择，且能力碎片化使真相难以把握。 未评分 AI 生成" [ref=e1629] [cursor=pointer]:
+              - button "删除创意：预知迷雾" [ref=e1630]:
+                - img [ref=e1631]
+              - generic [ref=e1634]:
+                - generic [ref=e1635]:
+                  - generic [ref=e1637]: 都市异能
+                  - heading "预知迷雾" [level=3] [ref=e1638]
+                - generic [ref=e1639]:
+                  - img [ref=e1640]
+                  - paragraph [ref=e1644]: 预知到的灾难让他在救人与暴露之间艰难抉择，且能力碎片化使真相难以把握。
+                - generic [ref=e1645]:
+                  - generic [ref=e1646]: 未评分
+                  - generic [ref=e1647]: AI 生成
+            - button "删除创意：剑碎天穹 东方仙侠 剑碎天穹 小宗门如何在资源匮乏时代生存，并应对妖魔威胁。 未评分 AI 生成" [ref=e1648] [cursor=pointer]:
+              - button "删除创意：剑碎天穹" [ref=e1649]:
+                - img [ref=e1650]
+              - generic [ref=e1653]:
+                - generic [ref=e1654]:
+                  - generic [ref=e1656]: 东方仙侠
+                  - heading "剑碎天穹" [level=3] [ref=e1657]
+                - generic [ref=e1658]:
+                  - img [ref=e1659]
+                  - paragraph [ref=e1663]: 小宗门如何在资源匮乏时代生存，并应对妖魔威胁。
+                - generic [ref=e1664]:
+                  - generic [ref=e1665]: 未评分
+                  - generic [ref=e1666]: AI 生成
+            - button "删除创意：星辰的阶梯 星际科幻 星辰的阶梯 人类联盟间为争夺遗产而战争，同时遗产暗藏毁灭级危机。 未评分 AI 生成" [ref=e1667] [cursor=pointer]:
+              - button "删除创意：星辰的阶梯" [ref=e1668]:
+                - img [ref=e1669]
+              - generic [ref=e1672]:
+                - generic [ref=e1673]:
+                  - generic [ref=e1675]: 星际科幻
+                  - heading "星辰的阶梯" [level=3] [ref=e1676]
+                - generic [ref=e1677]:
+                  - img [ref=e1678]
+                  - paragraph [ref=e1682]: 人类联盟间为争夺遗产而战争，同时遗产暗藏毁灭级危机。
+                - generic [ref=e1683]:
+                  - generic [ref=e1684]: 未评分
+                  - generic [ref=e1685]: AI 生成
+            - button "删除创意：深蓝觉醒 都市异能 深蓝觉醒 异能者与普通人的信任危机，以及异能组织间的权力争夺。 未评分 AI 生成" [ref=e1686] [cursor=pointer]:
+              - button "删除创意：深蓝觉醒" [ref=e1687]:
+                - img [ref=e1688]
+              - generic [ref=e1691]:
+                - generic [ref=e1692]:
+                  - generic [ref=e1694]: 都市异能
+                  - heading "深蓝觉醒" [level=3] [ref=e1695]
+                - generic [ref=e1696]:
+                  - img [ref=e1697]
+                  - paragraph [ref=e1701]: 异能者与普通人的信任危机，以及异能组织间的权力争夺。
+                - generic [ref=e1702]:
+                  - generic [ref=e1703]: 未评分
+                  - generic [ref=e1704]: AI 生成
+            - button "删除创意：废土曙光 科幻末世 废土曙光 在废土各方势力争夺有限资源时，主角发现导致末世的真相并非单纯战争。 未评分 AI 生成" [ref=e1705] [cursor=pointer]:
+              - button "删除创意：废土曙光" [ref=e1706]:
+                - img [ref=e1707]
+              - generic [ref=e1710]:
+                - generic [ref=e1711]:
+                  - generic [ref=e1713]: 科幻末世
+                  - heading "废土曙光" [level=3] [ref=e1714]
+                - generic [ref=e1715]:
+                  - img [ref=e1716]
+                  - paragraph [ref=e1720]: 在废土各方势力争夺有限资源时，主角发现导致末世的真相并非单纯战争。
+                - generic [ref=e1721]:
+                  - generic [ref=e1722]: 未评分
+                  - generic [ref=e1723]: AI 生成
+            - button "删除创意：都市超凡 都市异能 都市超凡 超能力者与普通社会的矛盾，以及异能者内部正义与邪恶的冲突。 未评分 AI 生成" [ref=e1724] [cursor=pointer]:
+              - button "删除创意：都市超凡" [ref=e1725]:
+                - img [ref=e1726]
+              - generic [ref=e1729]:
+                - generic [ref=e1730]:
+                  - generic [ref=e1732]: 都市异能
+                  - heading "都市超凡" [level=3] [ref=e1733]
+                - generic [ref=e1734]:
+                  - img [ref=e1735]
+                  - paragraph [ref=e1739]: 超能力者与普通社会的矛盾，以及异能者内部正义与邪恶的冲突。
+                - generic [ref=e1740]:
+                  - generic [ref=e1741]: 未评分
+                  - generic [ref=e1742]: AI 生成
+            - button "删除创意：仙道长生 玄幻仙侠 仙道长生 如何在资源有限、强者如林的修仙世界中争夺机缘，抵御外部威胁与内部背叛。 未评分 AI 生成" [ref=e1743] [cursor=pointer]:
+              - button "删除创意：仙道长生" [ref=e1744]:
+                - img [ref=e1745]
+              - generic [ref=e1748]:
+                - generic [ref=e1749]:
+                  - generic [ref=e1751]: 玄幻仙侠
+                  - heading "仙道长生" [level=3] [ref=e1752]
+                - generic [ref=e1753]:
+                  - img [ref=e1754]
+                  - paragraph [ref=e1758]: 如何在资源有限、强者如林的修仙世界中争夺机缘，抵御外部威胁与内部背叛。
+                - generic [ref=e1759]:
+                  - generic [ref=e1760]: 未评分
+                  - generic [ref=e1761]: AI 生成
+            - button "删除创意：修真方程式 仙侠修真 修真方程式 传统的修仙门派认为他离经叛道，但他的方法却异常有效，被迫卷入新旧理念的冲突中。 未评分 AI 生成" [ref=e1762] [cursor=pointer]:
+              - button "删除创意：修真方程式" [ref=e1763]:
+                - img [ref=e1764]
+              - generic [ref=e1767]:
+                - generic [ref=e1768]:
+                  - generic [ref=e1770]: 仙侠修真
+                  - heading "修真方程式" [level=3] [ref=e1771]
+                - generic [ref=e1772]:
+                  - img [ref=e1773]
+                  - paragraph [ref=e1777]: 传统的修仙门派认为他离经叛道，但他的方法却异常有效，被迫卷入新旧理念的冲突中。
+                - generic [ref=e1778]:
+                  - generic [ref=e1779]: 未评分
+                  - generic [ref=e1780]: AI 生成
+            - button "删除创意：孢子纪元 科幻末世 孢子纪元 在资源匮乏、人心难测的末世环境中，主角不仅需要躲避感染体，还要防止幸存者之间的内斗。 未评分 AI 生成" [ref=e1781] [cursor=pointer]:
+              - button "删除创意：孢子纪元" [ref=e1782]:
+                - img [ref=e1783]
+              - generic [ref=e1786]:
+                - generic [ref=e1787]:
+                  - generic [ref=e1789]: 科幻末世
+                  - heading "孢子纪元" [level=3] [ref=e1790]
+                - generic [ref=e1791]:
+                  - img [ref=e1792]
+                  - paragraph [ref=e1796]: 在资源匮乏、人心难测的末世环境中，主角不仅需要躲避感染体，还要防止幸存者之间的内斗。
+                - generic [ref=e1797]:
+                  - generic [ref=e1798]: 未评分
+                  - generic [ref=e1799]: AI 生成
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert [ref=e74]

@@ -302,6 +302,8 @@ export type ProjectWhereInput = {
   worldElements?: Prisma.WorldElementListRelationFilter
   generations?: Prisma.GenerationListRelationFilter
   foreshadowings?: Prisma.ForeshadowingListRelationFilter
+  agentConversations?: Prisma.AgentConversationListRelationFilter
+  changeSets?: Prisma.ChangeSetListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -325,6 +327,8 @@ export type ProjectOrderByWithRelationInput = {
   worldElements?: Prisma.WorldElementOrderByRelationAggregateInput
   generations?: Prisma.GenerationOrderByRelationAggregateInput
   foreshadowings?: Prisma.ForeshadowingOrderByRelationAggregateInput
+  agentConversations?: Prisma.AgentConversationOrderByRelationAggregateInput
+  changeSets?: Prisma.ChangeSetOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -351,6 +355,8 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   worldElements?: Prisma.WorldElementListRelationFilter
   generations?: Prisma.GenerationListRelationFilter
   foreshadowings?: Prisma.ForeshadowingListRelationFilter
+  agentConversations?: Prisma.AgentConversationListRelationFilter
+  changeSets?: Prisma.ChangeSetListRelationFilter
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -416,6 +422,8 @@ export type ProjectCreateInput = {
   worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
   foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -439,6 +447,8 @@ export type ProjectUncheckedCreateInput = {
   worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
   foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationUncheckedCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -462,6 +472,8 @@ export type ProjectUpdateInput = {
   worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
   foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -485,6 +497,8 @@ export type ProjectUncheckedUpdateInput = {
   worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
   foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUncheckedUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -718,6 +732,34 @@ export type ProjectUpdateOneRequiredWithoutForeshadowingsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutForeshadowingsInput, Prisma.ProjectUpdateWithoutForeshadowingsInput>, Prisma.ProjectUncheckedUpdateWithoutForeshadowingsInput>
 }
 
+export type ProjectCreateNestedOneWithoutAgentConversationsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutAgentConversationsInput, Prisma.ProjectUncheckedCreateWithoutAgentConversationsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutAgentConversationsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutAgentConversationsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutAgentConversationsInput, Prisma.ProjectUncheckedCreateWithoutAgentConversationsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutAgentConversationsInput
+  upsert?: Prisma.ProjectUpsertWithoutAgentConversationsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutAgentConversationsInput, Prisma.ProjectUpdateWithoutAgentConversationsInput>, Prisma.ProjectUncheckedUpdateWithoutAgentConversationsInput>
+}
+
+export type ProjectCreateNestedOneWithoutChangeSetsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutChangeSetsInput, Prisma.ProjectUncheckedCreateWithoutChangeSetsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutChangeSetsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutChangeSetsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutChangeSetsInput, Prisma.ProjectUncheckedCreateWithoutChangeSetsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutChangeSetsInput
+  upsert?: Prisma.ProjectUpsertWithoutChangeSetsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutChangeSetsInput, Prisma.ProjectUpdateWithoutChangeSetsInput>, Prisma.ProjectUncheckedUpdateWithoutChangeSetsInput>
+}
+
 export type ProjectCreateWithoutOutlinesInput = {
   id?: string
   title: string
@@ -738,6 +780,8 @@ export type ProjectCreateWithoutOutlinesInput = {
   worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
   foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutOutlinesInput = {
@@ -760,6 +804,8 @@ export type ProjectUncheckedCreateWithoutOutlinesInput = {
   worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
   foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationUncheckedCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutOutlinesInput = {
@@ -798,6 +844,8 @@ export type ProjectUpdateWithoutOutlinesInput = {
   worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
   foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutOutlinesInput = {
@@ -820,6 +868,8 @@ export type ProjectUncheckedUpdateWithoutOutlinesInput = {
   worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
   foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUncheckedUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutChaptersInput = {
@@ -842,6 +892,8 @@ export type ProjectCreateWithoutChaptersInput = {
   worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
   foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutChaptersInput = {
@@ -864,6 +916,8 @@ export type ProjectUncheckedCreateWithoutChaptersInput = {
   worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
   foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationUncheckedCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutChaptersInput = {
@@ -902,6 +956,8 @@ export type ProjectUpdateWithoutChaptersInput = {
   worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
   foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutChaptersInput = {
@@ -924,6 +980,8 @@ export type ProjectUncheckedUpdateWithoutChaptersInput = {
   worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
   foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUncheckedUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutCharactersInput = {
@@ -946,6 +1004,8 @@ export type ProjectCreateWithoutCharactersInput = {
   worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
   foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutCharactersInput = {
@@ -968,6 +1028,8 @@ export type ProjectUncheckedCreateWithoutCharactersInput = {
   worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
   foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationUncheckedCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutCharactersInput = {
@@ -1006,6 +1068,8 @@ export type ProjectUpdateWithoutCharactersInput = {
   worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
   foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutCharactersInput = {
@@ -1028,6 +1092,8 @@ export type ProjectUncheckedUpdateWithoutCharactersInput = {
   worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
   foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUncheckedUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutWorldElementsInput = {
@@ -1050,6 +1116,8 @@ export type ProjectCreateWithoutWorldElementsInput = {
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
   foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutWorldElementsInput = {
@@ -1072,6 +1140,8 @@ export type ProjectUncheckedCreateWithoutWorldElementsInput = {
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
   foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationUncheckedCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutWorldElementsInput = {
@@ -1110,6 +1180,8 @@ export type ProjectUpdateWithoutWorldElementsInput = {
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
   foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutWorldElementsInput = {
@@ -1132,6 +1204,8 @@ export type ProjectUncheckedUpdateWithoutWorldElementsInput = {
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
   foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUncheckedUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutGenerationsInput = {
@@ -1154,6 +1228,8 @@ export type ProjectCreateWithoutGenerationsInput = {
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
   foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutGenerationsInput = {
@@ -1176,6 +1252,8 @@ export type ProjectUncheckedCreateWithoutGenerationsInput = {
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
   foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationUncheckedCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutGenerationsInput = {
@@ -1214,6 +1292,8 @@ export type ProjectUpdateWithoutGenerationsInput = {
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
   foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutGenerationsInput = {
@@ -1236,6 +1316,8 @@ export type ProjectUncheckedUpdateWithoutGenerationsInput = {
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
   foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUncheckedUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutForeshadowingsInput = {
@@ -1258,6 +1340,8 @@ export type ProjectCreateWithoutForeshadowingsInput = {
   characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutForeshadowingsInput = {
@@ -1280,6 +1364,8 @@ export type ProjectUncheckedCreateWithoutForeshadowingsInput = {
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
   worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
   generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationUncheckedCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutForeshadowingsInput = {
@@ -1318,6 +1404,8 @@ export type ProjectUpdateWithoutForeshadowingsInput = {
   characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutForeshadowingsInput = {
@@ -1340,6 +1428,232 @@ export type ProjectUncheckedUpdateWithoutForeshadowingsInput = {
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
   worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
   generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUncheckedUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutAgentConversationsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  genre: string
+  tags?: string | null
+  status?: string
+  coverImage?: string | null
+  totalWords?: number
+  chapterCount?: number
+  pov?: string
+  outlineMode?: string
+  planningRange?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  outlines?: Prisma.OutlineCreateNestedManyWithoutProjectInput
+  chapters?: Prisma.ChapterCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
+  generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutAgentConversationsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  genre: string
+  tags?: string | null
+  status?: string
+  coverImage?: string | null
+  totalWords?: number
+  chapterCount?: number
+  pov?: string
+  outlineMode?: string
+  planningRange?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  outlines?: Prisma.OutlineUncheckedCreateNestedManyWithoutProjectInput
+  chapters?: Prisma.ChapterUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
+  generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
+  changeSets?: Prisma.ChangeSetUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutAgentConversationsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutAgentConversationsInput, Prisma.ProjectUncheckedCreateWithoutAgentConversationsInput>
+}
+
+export type ProjectUpsertWithoutAgentConversationsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutAgentConversationsInput, Prisma.ProjectUncheckedUpdateWithoutAgentConversationsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutAgentConversationsInput, Prisma.ProjectUncheckedCreateWithoutAgentConversationsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutAgentConversationsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutAgentConversationsInput, Prisma.ProjectUncheckedUpdateWithoutAgentConversationsInput>
+}
+
+export type ProjectUpdateWithoutAgentConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalWords?: Prisma.IntFieldUpdateOperationsInput | number
+  chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  outlines?: Prisma.OutlineUpdateManyWithoutProjectNestedInput
+  chapters?: Prisma.ChapterUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
+  generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutAgentConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalWords?: Prisma.IntFieldUpdateOperationsInput | number
+  chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  outlines?: Prisma.OutlineUncheckedUpdateManyWithoutProjectNestedInput
+  chapters?: Prisma.ChapterUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
+  generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
+  changeSets?: Prisma.ChangeSetUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutChangeSetsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  genre: string
+  tags?: string | null
+  status?: string
+  coverImage?: string | null
+  totalWords?: number
+  chapterCount?: number
+  pov?: string
+  outlineMode?: string
+  planningRange?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  outlines?: Prisma.OutlineCreateNestedManyWithoutProjectInput
+  chapters?: Prisma.ChapterCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutProjectInput
+  worldElements?: Prisma.WorldElementCreateNestedManyWithoutProjectInput
+  generations?: Prisma.GenerationCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutChangeSetsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  genre: string
+  tags?: string | null
+  status?: string
+  coverImage?: string | null
+  totalWords?: number
+  chapterCount?: number
+  pov?: string
+  outlineMode?: string
+  planningRange?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  outlines?: Prisma.OutlineUncheckedCreateNestedManyWithoutProjectInput
+  chapters?: Prisma.ChapterUncheckedCreateNestedManyWithoutProjectInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutProjectInput
+  worldElements?: Prisma.WorldElementUncheckedCreateNestedManyWithoutProjectInput
+  generations?: Prisma.GenerationUncheckedCreateNestedManyWithoutProjectInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedCreateNestedManyWithoutProjectInput
+  agentConversations?: Prisma.AgentConversationUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutChangeSetsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutChangeSetsInput, Prisma.ProjectUncheckedCreateWithoutChangeSetsInput>
+}
+
+export type ProjectUpsertWithoutChangeSetsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutChangeSetsInput, Prisma.ProjectUncheckedUpdateWithoutChangeSetsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutChangeSetsInput, Prisma.ProjectUncheckedCreateWithoutChangeSetsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutChangeSetsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutChangeSetsInput, Prisma.ProjectUncheckedUpdateWithoutChangeSetsInput>
+}
+
+export type ProjectUpdateWithoutChangeSetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalWords?: Prisma.IntFieldUpdateOperationsInput | number
+  chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  outlines?: Prisma.OutlineUpdateManyWithoutProjectNestedInput
+  chapters?: Prisma.ChapterUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutProjectNestedInput
+  worldElements?: Prisma.WorldElementUpdateManyWithoutProjectNestedInput
+  generations?: Prisma.GenerationUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutChangeSetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalWords?: Prisma.IntFieldUpdateOperationsInput | number
+  chapterCount?: Prisma.IntFieldUpdateOperationsInput | number
+  pov?: Prisma.StringFieldUpdateOperationsInput | string
+  outlineMode?: Prisma.StringFieldUpdateOperationsInput | string
+  planningRange?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  outlines?: Prisma.OutlineUncheckedUpdateManyWithoutProjectNestedInput
+  chapters?: Prisma.ChapterUncheckedUpdateManyWithoutProjectNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutProjectNestedInput
+  worldElements?: Prisma.WorldElementUncheckedUpdateManyWithoutProjectNestedInput
+  generations?: Prisma.GenerationUncheckedUpdateManyWithoutProjectNestedInput
+  foreshadowings?: Prisma.ForeshadowingUncheckedUpdateManyWithoutProjectNestedInput
+  agentConversations?: Prisma.AgentConversationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 
@@ -1354,6 +1668,8 @@ export type ProjectCountOutputType = {
   worldElements: number
   generations: number
   foreshadowings: number
+  agentConversations: number
+  changeSets: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1363,6 +1679,8 @@ export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   worldElements?: boolean | ProjectCountOutputTypeCountWorldElementsArgs
   generations?: boolean | ProjectCountOutputTypeCountGenerationsArgs
   foreshadowings?: boolean | ProjectCountOutputTypeCountForeshadowingsArgs
+  agentConversations?: boolean | ProjectCountOutputTypeCountAgentConversationsArgs
+  changeSets?: boolean | ProjectCountOutputTypeCountChangeSetsArgs
 }
 
 /**
@@ -1417,6 +1735,20 @@ export type ProjectCountOutputTypeCountForeshadowingsArgs<ExtArgs extends runtim
   where?: Prisma.ForeshadowingWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountAgentConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AgentConversationWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountChangeSetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ChangeSetWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1439,6 +1771,8 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   worldElements?: boolean | Prisma.Project$worldElementsArgs<ExtArgs>
   generations?: boolean | Prisma.Project$generationsArgs<ExtArgs>
   foreshadowings?: boolean | Prisma.Project$foreshadowingsArgs<ExtArgs>
+  agentConversations?: boolean | Prisma.Project$agentConversationsArgs<ExtArgs>
+  changeSets?: boolean | Prisma.Project$changeSetsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -1501,6 +1835,8 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   worldElements?: boolean | Prisma.Project$worldElementsArgs<ExtArgs>
   generations?: boolean | Prisma.Project$generationsArgs<ExtArgs>
   foreshadowings?: boolean | Prisma.Project$foreshadowingsArgs<ExtArgs>
+  agentConversations?: boolean | Prisma.Project$agentConversationsArgs<ExtArgs>
+  changeSets?: boolean | Prisma.Project$changeSetsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1515,6 +1851,8 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     worldElements: Prisma.$WorldElementPayload<ExtArgs>[]
     generations: Prisma.$GenerationPayload<ExtArgs>[]
     foreshadowings: Prisma.$ForeshadowingPayload<ExtArgs>[]
+    agentConversations: Prisma.$AgentConversationPayload<ExtArgs>[]
+    changeSets: Prisma.$ChangeSetPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1931,6 +2269,8 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   worldElements<T extends Prisma.Project$worldElementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$worldElementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldElementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   generations<T extends Prisma.Project$generationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$generationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GenerationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   foreshadowings<T extends Prisma.Project$foreshadowingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$foreshadowingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForeshadowingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  agentConversations<T extends Prisma.Project$agentConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$agentConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AgentConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  changeSets<T extends Prisma.Project$changeSetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$changeSetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChangeSetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2501,6 +2841,54 @@ export type Project$foreshadowingsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.ForeshadowingScalarFieldEnum | Prisma.ForeshadowingScalarFieldEnum[]
+}
+
+/**
+ * Project.agentConversations
+ */
+export type Project$agentConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AgentConversation
+   */
+  select?: Prisma.AgentConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AgentConversation
+   */
+  omit?: Prisma.AgentConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AgentConversationInclude<ExtArgs> | null
+  where?: Prisma.AgentConversationWhereInput
+  orderBy?: Prisma.AgentConversationOrderByWithRelationInput | Prisma.AgentConversationOrderByWithRelationInput[]
+  cursor?: Prisma.AgentConversationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AgentConversationScalarFieldEnum | Prisma.AgentConversationScalarFieldEnum[]
+}
+
+/**
+ * Project.changeSets
+ */
+export type Project$changeSetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ChangeSet
+   */
+  select?: Prisma.ChangeSetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ChangeSet
+   */
+  omit?: Prisma.ChangeSetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChangeSetInclude<ExtArgs> | null
+  where?: Prisma.ChangeSetWhereInput
+  orderBy?: Prisma.ChangeSetOrderByWithRelationInput | Prisma.ChangeSetOrderByWithRelationInput[]
+  cursor?: Prisma.ChangeSetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ChangeSetScalarFieldEnum | Prisma.ChangeSetScalarFieldEnum[]
 }
 
 /**

@@ -1,0 +1,121 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "神格觉醒" [level=2] [ref=e545]
+            - button [ref=e119]:
+              - img
+            - button [ref=e11]:
+              - img
+          - generic [ref=e12]:
+            - button "工作台" [ref=e546]:
+              - img
+              - text: 工作台
+            - button "科幻" [ref=e547]:
+              - img
+              - text: 科幻
+        - generic [ref=e14]:
+          - heading "创作资源" [level=3] [ref=e548]
+          - generic [ref=e16]:
+            - button "创意中心" [ref=e549]:
+              - img
+              - text: 创意中心
+            - button "剧情大纲" [ref=e550]:
+              - img
+              - text: 剧情大纲
+            - button "章节列表" [ref=e551]:
+              - img
+              - text: 章节列表
+            - button "角色设定" [ref=e552]:
+              - img
+              - text: 角色设定
+            - button "世界观" [ref=e553]:
+              - img
+              - text: 世界观
+        - generic [ref=e121]:
+          - button "新建章节" [ref=e554]:
+            - img
+            - text: 新建章节
+          - generic [ref=e127]:
+            - generic [ref=e128]:
+              - button "第 1 章 代码深渊 4902" [ref=e555]:
+                - img
+                - generic [ref=e130]:
+                  - generic [ref=e131]: 第 1 章
+                  - generic [ref=e132]: 代码深渊
+                - generic [ref=e133]: "4902"
+              - button [ref=e134]:
+                - img
+            - generic [ref=e135]:
+              - button "第 2 章 吞噬初醒 4524" [ref=e556]:
+                - img
+                - generic [ref=e137]:
+                  - generic [ref=e138]: 第 2 章
+                  - generic [ref=e139]: 吞噬初醒
+                - generic [ref=e140]: "4524"
+              - button [ref=e141]:
+                - img
+      - generic [ref=e24]:
+        - generic [ref=e25]: WF
+        - generic [ref=e26]:
+          - paragraph [ref=e27]: WengFB
+          - paragraph [ref=e28]: 专业版计划
+    - separator [ref=e29]
+    - generic [ref=e33]:
+      - banner [ref=e34]:
+        - generic [ref=e35]:
+          - combobox [ref=e36]:
+            - generic [ref=e37]: 神格觉醒
+            - img
+          - generic [ref=e38]: 未选择章节
+        - generic [ref=e39]:
+          - generic [ref=e40]: 未保存
+          - button "保存" [disabled]:
+            - img
+            - text: 保存
+          - button "AI生成章节" [ref=e557]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [disabled]:
+            - img
+            - text: AI 续写
+          - button [ref=e41]:
+            - img
+      - paragraph [ref=e147]: 开始你的创作...
+    - separator [ref=e57]
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - generic [ref=e64]:
+          - img [ref=e65]
+          - text: AI 副驾驶
+        - tablist [ref=e68]:
+          - tab "对话" [selected] [ref=e558]
+          - tab "上下文" [ref=e559]
+          - tab "工具箱" [ref=e560]
+      - tabpanel "对话" [ref=e561]:
+        - generic [ref=e150]:
+          - button "AI 工具设置" [ref=e562]:
+            - generic [ref=e153]:
+              - img
+              - generic [ref=e154]: AI 工具设置
+            - img
+          - generic [ref=e158]:
+            - generic [ref=e159]:
+              - heading "开始与 AI 助手对话" [level=1] [ref=e563]
+              - paragraph [ref=e161]: 可以帮你分析剧情、完善角色、优化文笔…
+            - generic [ref=e164]:
+              - textbox "Message input" [ref=e564]:
+                - /placeholder: Send a message...
+              - generic [ref=e166]:
+                - button "Add Attachment" [ref=e565]:
+                  - img
+                  - generic [ref=e168]: Add Attachment
+                - generic [ref=e169]:
+                  - button "Send message" [disabled]:
+                    - img
+                    - generic: Send message
+  - button "Open Next.js Dev Tools" [ref=e80] [cursor=pointer]:
+    - img [ref=e81]
+  - alert [ref=e117]

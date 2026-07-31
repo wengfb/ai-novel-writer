@@ -1,0 +1,99 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "AI 小说工坊" [level=2] [ref=e10]
+        - generic [ref=e12]:
+          - img [ref=e13]
+          - paragraph [ref=e15]: 选择项目后可管理章节、大纲与设定
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 选择项目
+            - img
+          - generic [ref=e37]: 未选择章节
+        - generic [ref=e38]:
+          - generic [ref=e39]: 未保存
+          - button "保存" [disabled]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [disabled]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [disabled]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e118]:
+        - generic [ref=e481]:
+          - generic [ref=e482]:
+            - button "返回创意中心" [ref=e483]:
+              - img
+              - text: 返回创意中心
+            - generic [ref=e484]:
+              - heading "新创意共创" [level=1] [ref=e485]
+              - paragraph [ref=e486]: 从模糊想法开始，逐步确认可以开书的故事种子
+          - generic [ref=e488]:
+            - generic [ref=e489]:
+              - generic [ref=e490]:
+                - img [ref=e492]
+                - generic [ref=e494]:
+                  - heading "和创意编辑一起共创" [level=2] [ref=e495]
+                  - paragraph [ref=e496]: 创意编辑会在信息足够时更新右侧创意卡；你可以随时直接修改。
+              - paragraph [ref=e497]: 对话仅用于本次共创。只有点击保存，创意卡才会写入创意中心。
+            - generic [ref=e498]:
+              - generic [ref=e504]:
+                - generic [ref=e505]:
+                  - paragraph [ref=e509]: 我想和你一起打磨一个可以正式开书的小说创意。请先问我最关键的问题，必要时给我少量备选方向。
+                  - generic [ref=e511]: ●
+                - generic [ref=e515]:
+                  - textbox "Message input" [active] [ref=e516]:
+                    - /placeholder: Send a message...
+                  - generic [ref=e517]:
+                    - button "Add Attachment" [ref=e518]:
+                      - img
+                      - generic [ref=e519]: Add Attachment
+                    - button "Stop generating" [ref=e521]:
+                      - img
+              - complementary [ref=e522]:
+                - generic [ref=e523]:
+                  - img [ref=e524]
+                  - heading "创意卡" [level=3] [ref=e526]
+                - generic [ref=e527]: 开始和 AI 讨论后，这里会自动生成并持续更新创意卡。
+                - generic [ref=e528]:
+                  - button "保存创意卡" [disabled]:
+                    - img
+                    - text: 保存创意卡
+            - button "取消" [ref=e530]
+    - separator [ref=e58]
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - button "协作" [ref=e64]
+        - button "上下文" [ref=e65]
+        - button "生成" [ref=e66]
+      - generic [ref=e67]: 请先选择项目
+  - button "Open Next.js Dev Tools" [ref=e73] [cursor=pointer]:
+    - img [ref=e74]
+  - alert [ref=e84]

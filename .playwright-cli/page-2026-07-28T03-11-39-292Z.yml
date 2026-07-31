@@ -1,0 +1,191 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - heading [level=2]: AI 小说工坊
+              - generic:
+                - generic:
+                  - img
+                  - paragraph: 选择项目后可管理章节、大纲与设定
+            - generic:
+              - generic:
+                - button:
+                  - img
+                  - text: 创意中心
+                - button:
+                  - img
+                  - text: 全部项目
+                - button:
+                  - img
+                  - text: 系统设置
+              - generic:
+                - generic:
+                  - generic: WF
+                  - generic:
+                    - paragraph: WengFB
+                    - paragraph: 专业版计划
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - banner:
+              - generic:
+                - combobox:
+                  - generic: 选择项目
+                  - img
+                - generic: 未选择章节
+              - generic:
+                - generic: 未保存
+                - button [disabled]:
+                  - img
+                  - text: 保存
+                - button:
+                  - img
+                  - text: 专注写作
+                - button [disabled]:
+                  - img
+                  - text: AI生成章节
+                - button [disabled]:
+                  - img
+                  - text: AI 续写
+                - button:
+                  - img
+            - main:
+              - generic:
+                - generic:
+                  - generic:
+                    - button:
+                      - img
+                      - text: 返回
+                    - generic:
+                      - heading [level=1]: 系统设置
+                      - paragraph: AI 模型、Agent 参数与提示词、编辑器与项目默认值
+                  - button: 保存设置
+                - generic:
+                  - generic:
+                    - generic:
+                      - tablist:
+                        - tab [selected]: AI 配置
+                        - tab: Agent 配置
+                        - tab: 编辑器
+                        - tab: 项目默认值
+                      - tabpanel:
+                        - generic:
+                          - alert:
+                            - img
+                            - generic: AI 配置保存在数据库，优先于环境变量。模型列表与测试会使用当前已保存的服务商、地址和密钥。
+                          - generic:
+                            - generic: AI 服务商
+                            - combobox:
+                              - generic: OpenAI 兼容接口
+                              - img
+                            - combobox
+                            - paragraph: 保存服务商和地址后，再刷新模型列表。
+                          - generic:
+                            - generic: API Key
+                            - textbox:
+                              - /placeholder: 留空使用环境变量中的 Key
+                          - generic:
+                            - generic: API 地址
+                            - textbox:
+                              - /placeholder: 留空使用默认地址或环境变量
+                              - text: http://aiapi.wengfb.com/v1
+                          - generic:
+                            - generic:
+                              - generic: 默认模型
+                              - generic:
+                                - button:
+                                  - img
+                                  - text: 获取列表
+                                - button:
+                                  - img
+                                  - text: 测试
+                            - generic:
+                              - textbox:
+                                - /placeholder: 输入或选择模型 ID
+                                - text: gemini-3-flash
+                              - button [expanded] [active]:
+                                - img
+                            - paragraph: 打开下拉时会自动拉取一次列表（有缓存则复用）；也可直接输入模型 ID。
+                          - generic:
+                            - generic: 全局默认温度：0.7
+                            - generic:
+                              - generic:
+                                - slider
+                            - paragraph: 未在 Agent 中单独配置时使用。
+                          - generic:
+                            - generic: 全局最大输出 Token
+                            - spinbutton: "100000"
+                          - generic:
+                            - generic: 上下文窗口上限 (Token)
+                            - spinbutton: "100000000"
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - button: 协作
+              - button: 上下文
+              - button: 生成
+            - generic: 请先选择项目
+  - button "Open Next.js Dev Tools" [ref=e73] [cursor=pointer]:
+    - img [ref=e74]
+  - alert
+  - dialog [ref=e169]:
+    - generic [ref=e170]:
+      - generic [ref=e172]:
+        - img [ref=e173]
+        - combobox [expanded] [ref=e176]
+      - listbox "Suggestions" [ref=e177]:
+        - generic [ref=e178]:
+          - generic [ref=e179]: 可用模型（14）
+          - group "可用模型（14）" [ref=e180]:
+            - option "claude-opus-4-6-thinking" [ref=e181]:
+              - img
+              - paragraph [ref=e183]: claude-opus-4-6-thinking
+            - option "claude-sonnet-4-6" [ref=e184]:
+              - img
+              - paragraph [ref=e186]: claude-sonnet-4-6
+            - option "gemini-3-flash" [ref=e187]:
+              - img
+              - paragraph [ref=e189]: gemini-3-flash
+            - option "gpt-5.3-codex-spark" [ref=e190]:
+              - img
+              - paragraph [ref=e192]: gpt-5.3-codex-spark
+            - option "gpt-5.4" [ref=e193]:
+              - img
+              - paragraph [ref=e195]: gpt-5.4
+            - option "gpt-5.4-mini" [ref=e196]:
+              - img
+              - paragraph [ref=e198]: gpt-5.4-mini
+            - option "gpt-5.5" [ref=e199]:
+              - img
+              - paragraph [ref=e201]: gpt-5.5
+            - option "gpt-5.6-luna" [ref=e202]:
+              - img
+              - paragraph [ref=e204]: gpt-5.6-luna
+            - option "gpt-5.6-sol" [ref=e205]:
+              - img
+              - paragraph [ref=e207]: gpt-5.6-sol
+            - option "gpt-5.6-terra" [ref=e208]:
+              - img
+              - paragraph [ref=e210]: gpt-5.6-terra
+            - option "gpt-image-2" [ref=e211]:
+              - img
+              - paragraph [ref=e213]: gpt-image-2
+            - option "grok-4.5" [ref=e214]:
+              - img
+              - paragraph [ref=e216]: grok-4.5
+            - option "grok-build-0.1" [ref=e217]:
+              - img
+              - paragraph [ref=e219]: grok-build-0.1
+            - option "ZhipuAI/GLM-5.2" [ref=e220]:
+              - img
+              - paragraph [ref=e222]: ZhipuAI/GLM-5.2

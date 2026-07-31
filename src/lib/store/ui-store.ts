@@ -4,6 +4,7 @@ import type { StoryIdeaCard } from '@/types'
 import type { Outline } from '@/lib/store/outline-store'
 import type { Character } from '@/lib/store/character-store'
 import type { WorldElement } from '@/lib/store/world-store'
+import type { AssistantScope, AssistantScopeType } from '@/lib/ai/agent-workspace'
 
 /** 中间主内容区视图 */
 export type MainView =
@@ -20,8 +21,8 @@ export type MainView =
 /** 左侧本书资源分区；null 表示全部收起 */
 export type BookSection = 'chapters' | 'outline' | 'characters' | 'world'
 
-/** 大纲中间区：空态 / 生成 / 节点详情编辑 */
-export type OutlineCenterMode = 'empty' | 'generate' | 'edit'
+/** 大纲中间区：概览 / 共创规划 / 节点详情编辑 */
+export type OutlineCenterMode = 'empty' | 'planning' | 'edit'
 
 export interface OnboardingContext {
   mode: 'new' | 'resume' | 'prefill'
@@ -48,12 +49,15 @@ interface UIState {
   leftSidebarCollapsed: boolean
   rightSidebarCollapsed: boolean
   activeTab: 'chat' | 'context' | 'generate'
+  activeAssistantAgentId: string | null
+  assistantScope: AssistantScope | null
   mainView: MainView
   bookSection: BookSection | null
 
   generateChapterPanelOpen: boolean
 
   outlineCenterMode: OutlineCenterMode
+  isOutlineNodeCoCreating: boolean
   outlineEditPayload: OutlineEditPayload | null
   characterEditPayload: CharacterEditPayload | null
   worldEditPayload: WorldEditPayload | null
@@ -62,14 +66,18 @@ interface UIState {
 
   toggleLeftSidebar: () => void
   toggleRightSidebar: () => void
+  setRightSidebarCollapsed: (collapsed: boolean) => void
   setActiveTab: (tab: 'chat' | 'context' | 'generate') => void
+  setActiveAssistantAgent: (agentId: string | null) => void
+  openAssistantForScope: (scope: AssistantScope, agentId?: string) => void
   setMainView: (view: MainView) => void
   selectBookSection: (section: BookSection) => void
   setGenerateChapterPanelOpen: (open: boolean) => void
 
-  openOutlineGenerate: () => void
+  openOutlinePlanning: () => void
   openOutlineEdit: (payload?: OutlineEditPayload) => void
   closeOutlineCenter: () => void
+  setOutlineNodeCoCreating: (active: boolean) => void
 
   openCharacterEdit: (payload?: CharacterEditPayload) => void
   closeCharacterEdit: () => void
@@ -102,10 +110,13 @@ export const useUIStore = create<UIState>()(
       leftSidebarCollapsed: false,
       rightSidebarCollapsed: false,
       activeTab: 'chat',
+      activeAssistantAgentId: null,
+      assistantScope: null,
       mainView: 'projects',
       bookSection: 'chapters',
       generateChapterPanelOpen: false,
       outlineCenterMode: 'empty',
+      isOutlineNodeCoCreating: false,
       outlineEditPayload: null,
       characterEditPayload: null,
       worldEditPayload: null,
@@ -119,8 +130,25 @@ export const useUIStore = create<UIState>()(
         set((state) => ({ rightSidebarCollapsed: !state.rightSidebarCollapsed }))
       },
 
+      setRightSidebarCollapsed: (collapsed) => {
+        set({ rightSidebarCollapsed: collapsed })
+      },
+
       setActiveTab: (tab) => {
         set({ activeTab: tab })
+      },
+
+      setActiveAssistantAgent: (agentId) => {
+        set({ activeAssistantAgentId: agentId, activeTab: 'chat' })
+      },
+
+      openAssistantForScope: (scope, agentId) => {
+        set({
+          assistantScope: scope,
+          activeAssistantAgentId: agentId ?? null,
+          activeTab: 'chat',
+          rightSidebarCollapsed: false,
+        })
       },
 
       setMainView: (view) => {
@@ -141,6 +169,7 @@ export const useUIStore = create<UIState>()(
             bookSection: section,
             mainView: mainViewForSection(section),
             outlineCenterMode: 'empty' as OutlineCenterMode,
+            isOutlineNodeCoCreating: false,
             outlineEditPayload: null,
             characterEditPayload: null,
             worldEditPayload: null,
@@ -153,30 +182,40 @@ export const useUIStore = create<UIState>()(
         set({ generateChapterPanelOpen: open })
       },
 
-      openOutlineGenerate: () => {
+      openOutlinePlanning: () => {
         set({
           bookSection: 'outline',
           mainView: 'outline',
-          outlineCenterMode: 'generate',
+          outlineCenterMode: 'planning',
+          isOutlineNodeCoCreating: false,
           outlineEditPayload: null,
         })
       },
 
       openOutlineEdit: (payload = {}) => {
+        const parentId = payload.parentId ?? null
+        // 根级新建默认卷；有父节点时默认章；显式传入 type 时优先。
+        const defaultType =
+          payload.defaultType ?? (parentId ? 'chapter' : 'volume')
         set({
           bookSection: 'outline',
           mainView: 'outline',
           outlineCenterMode: 'edit',
+          isOutlineNodeCoCreating: false,
           outlineEditPayload: {
             editingOutline: payload.editingOutline ?? null,
-            parentId: payload.parentId ?? null,
-            defaultType: payload.defaultType ?? 'chapter',
+            parentId,
+            defaultType,
           },
         })
       },
 
       closeOutlineCenter: () => {
-        set({ outlineCenterMode: 'empty', outlineEditPayload: null })
+        set({ outlineCenterMode: 'empty', isOutlineNodeCoCreating: false, outlineEditPayload: null })
+      },
+
+      setOutlineNodeCoCreating: (active) => {
+        set({ isOutlineNodeCoCreating: active })
       },
 
       openCharacterEdit: (payload = {}) => {
@@ -224,6 +263,7 @@ export const useUIStore = create<UIState>()(
           bookSection: 'chapters',
           generateChapterPanelOpen: false,
           outlineCenterMode: 'empty',
+          isOutlineNodeCoCreating: false,
           outlineEditPayload: null,
           characterEditPayload: null,
           worldEditPayload: null,

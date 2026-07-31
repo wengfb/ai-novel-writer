@@ -1,16 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+import { Check, Flag, Globe, Lightbulb, Pencil, Play, Sparkles, Star, Target, TrendingUp, User, X } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Globe, User, Target, Flag, Lightbulb, TrendingUp, Play, Pencil, Check, X } from 'lucide-react'
-import { IdeaRating } from '@/components/ideas/idea-rating'
-import { IdeaComments } from '@/components/ideas/idea-comments'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { Sparkles, Star } from 'lucide-react'
 import { Textarea } from '@/components/ui/textarea'
-import type { IdeaItem, IdeaComment } from '@/types'
+import { IdeaComments } from '@/components/ideas/idea-comments'
+import { IdeaRating } from '@/components/ideas/idea-rating'
+import type { UpdateIdeaInput } from '@/lib/api/endpoints/ideas'
+import type { IdeaComment, IdeaItem, StoryIdeaCard } from '@/types'
 
 interface IdeaDetailProps {
   idea: IdeaItem | null
@@ -20,11 +20,15 @@ interface IdeaDetailProps {
   onFetchComments: (id: string, page?: number) => Promise<void>
   onCreateProject: (idea: IdeaItem) => void
   onToggleFavorite: (id: string, isFavorited: boolean) => void
-  onUpdateIdea: (id: string, data: Partial<{
-    title: string; genre: string; worldBuilding: string; protagonist: string;
-    coreConflict: string; mainGoal: string; highConcept: string;
-    sublimation: string; openingHook: string; aiGenerated: boolean;
-  }>) => Promise<void>
+  onUpdateIdea: (id: string, data: UpdateIdeaInput) => Promise<void>
+}
+
+type IdeaFieldKey = Exclude<keyof StoryIdeaCard, 'id'>
+
+interface FieldDefinition {
+  key: IdeaFieldKey
+  label: string
+  icon: React.ReactNode
 }
 
 function BookOpenIcon({ className }: { className?: string }) {
@@ -35,11 +39,7 @@ function BookOpenIcon({ className }: { className?: string }) {
   )
 }
 
-type FieldDef = {
-  key: string; label: string; icon: React.ReactNode
-}
-
-const FIELDS: FieldDef[] = [
+const IDEA_FIELDS: FieldDefinition[] = [
   { key: 'genre', label: '题材', icon: <BookOpenIcon className="h-3 w-3" /> },
   { key: 'worldBuilding', label: '世界观', icon: <Globe className="h-3 w-3" /> },
   { key: 'protagonist', label: '主角', icon: <User className="h-3 w-3" /> },
@@ -50,21 +50,27 @@ const FIELDS: FieldDef[] = [
   { key: 'openingHook', label: '开篇切入点', icon: <Play className="h-3 w-3" /> },
 ]
 
+/** 展示、点评并直接编辑已经保存的创意卡。 */
 export function IdeaDetail({
-  idea, comments,
-  onRate, onComment, onFetchComments,
-  onCreateProject, onToggleFavorite, onUpdateIdea,
+  idea,
+  comments,
+  onRate,
+  onComment,
+  onFetchComments,
+  onCreateProject,
+  onToggleFavorite,
+  onUpdateIdea,
 }: IdeaDetailProps) {
-  const [editingField, setEditingField] = useState<string | null>(null)
+  const [editingField, setEditingField] = useState<IdeaFieldKey | null>(null)
   const [editValue, setEditValue] = useState('')
   const [isSaving, setIsSaving] = useState(false)
 
   if (!idea) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-        <Lightbulb className="h-12 w-12 mb-3 opacity-20" />
+      <div className="flex h-full flex-col items-center justify-center text-muted-foreground">
+        <Lightbulb className="mb-3 h-12 w-12 opacity-20" />
         <p className="text-sm">选择一个创意查看详情</p>
-        <p className="text-xs mt-1">或点击右上角「生成新创意」</p>
+        <p className="mt-1 text-xs">或点击「返回创意中心」开始共创</p>
       </div>
     )
   }
@@ -73,109 +79,77 @@ export function IdeaDetail({
   const isConverted = idea.status === 'converted'
   const isEdited = !idea.aiGenerated
 
-  const handleStartEdit = (key: string, value: string) => {
-    setEditingField(key)
+  const startEditing = (field: IdeaFieldKey, value: string) => {
+    setEditingField(field)
     setEditValue(value)
   }
 
-  const handleCancelEdit = () => {
+  const cancelEditing = () => {
     setEditingField(null)
     setEditValue('')
   }
 
-  const handleSaveEdit = async (id: string, key: string) => {
+  const saveField = async (field: IdeaFieldKey) => {
     setIsSaving(true)
-    // Pass aiGenerated: false to mark as edited
-    await onUpdateIdea(id, { [key]: editValue, aiGenerated: false })
-    setIsSaving(false)
-    setEditingField(null)
-    setEditValue('')
+    try {
+      await onUpdateIdea(idea.id, { [field]: editValue, aiGenerated: false })
+      cancelEditing()
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (
-    <div className="p-5 space-y-4">
-      {/* 标题 + 操作 */}
+    <div className="space-y-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="flex items-center gap-1.5 flex-wrap mb-1">
+          <div className="mb-1 flex flex-wrap items-center gap-1.5">
             <Badge variant="secondary" className="text-xs">{idea.genre}</Badge>
-            {isEdited ? (
-              <Badge variant="outline" className="text-[10px] px-1 border-amber-500/30 text-amber-600">已编辑</Badge>
-            ) : idea.aiGenerated && (
-              <Badge variant="outline" className="text-[10px] px-1">AI</Badge>
-            )}
-            {isFavorited && (
-              <Badge className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20 text-[10px] px-1">
-                <Star className="h-2.5 w-2.5 mr-0.5" />已收藏
-              </Badge>
-            )}
+            {isEdited ? <Badge variant="outline" className="border-amber-500/30 px-1 text-[10px] text-amber-600">已编辑</Badge> : null}
+            {!isEdited && idea.aiGenerated ? <Badge variant="outline" className="px-1 text-[10px]">AI</Badge> : null}
+            {isFavorited ? <Badge className="border-yellow-500/20 bg-yellow-500/10 px-1 text-[10px] text-yellow-600"><Star className="mr-0.5 h-2.5 w-2.5" />已收藏</Badge> : null}
           </div>
           <h2 className="text-lg font-bold">{idea.title}</h2>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0">
-          {!isConverted && (
-            <Button variant={isFavorited ? 'secondary' : 'outline'} size="sm" className="h-8 text-xs"
-              onClick={() => onToggleFavorite(idea.id, isFavorited)}>
-              <Star className={`h-3.5 w-3.5 mr-1 ${isFavorited ? 'fill-yellow-500 text-yellow-500' : ''}`} />
+        {!isConverted ? (
+          <div className="flex shrink-0 items-center gap-1.5">
+            <Button variant={isFavorited ? 'secondary' : 'outline'} size="sm" className="h-8 text-xs" onClick={() => onToggleFavorite(idea.id, isFavorited)}>
+              <Star className={`mr-1 h-3.5 w-3.5 ${isFavorited ? 'fill-yellow-500 text-yellow-500' : ''}`} />
               {isFavorited ? '取消' : '收藏'}
             </Button>
-          )}
-          {!isConverted && (
             <Button size="sm" className="h-8 text-xs" onClick={() => onCreateProject(idea)}>
               <Sparkles className="mr-1 h-3.5 w-3.5" />创建项目
             </Button>
-          )}
-        </div>
+          </div>
+        ) : null}
       </div>
 
-      {/* 评分 */}
-      <Card className="py-2">
-        <CardContent className="p-3">
-          <IdeaRating ideaId={idea.id} rating={idea.rating} onRate={onRate} />
-        </CardContent>
-      </Card>
+      <Card className="py-2"><CardContent className="p-3"><IdeaRating ideaId={idea.id} rating={idea.rating} onRate={onRate} /></CardContent></Card>
 
-      {/* 详情 —— 两列网格，省空间 */}
       <Card>
         <CardContent className="p-3">
           <div className="grid grid-cols-2 gap-x-5 gap-y-2.5">
-            {FIELDS.filter(f => f.key !== 'genre').map((f) => {
-              const value = (idea as any)[f.key] as string | undefined
-              if (!value && editingField !== f.key) return null
+            {IDEA_FIELDS.filter((field) => field.key !== 'genre').map((field) => {
+              const value = idea[field.key]
+              const isEditing = editingField === field.key
+              if (!value && !isEditing) return null
+
               return (
-                <div key={f.key} className="flex items-start gap-1.5 min-w-0 group">
+                <div key={field.key} className="group flex min-w-0 items-start gap-1.5">
                   <div className="min-w-0 flex-1">
-                    <span className="text-[11px] text-muted-foreground font-medium inline-flex items-center gap-1">
-                      <span className="inline-flex -mt-px">{f.icon}</span>
-                      {f.label}
-                    </span>
-                    {editingField === f.key ? (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground"><span className="-mt-px inline-flex">{field.icon}</span>{field.label}</span>
+                    {isEditing ? (
                       <div className="mt-1 space-y-1.5">
-                        <Textarea
-                          value={editValue}
-                          onChange={(e) => setEditValue(e.target.value)}
-                          className="min-h-[60px] text-xs resize-none"
-                          autoFocus
-                        />
+                        <Textarea value={editValue} onChange={(event) => setEditValue(event.target.value)} className="min-h-[60px] resize-none text-xs" autoFocus />
                         <div className="flex items-center gap-1">
-                          <Button size="sm" className="h-6 text-xs px-2" onClick={() => handleSaveEdit(idea.id, f.key)} disabled={isSaving}>
-                            <Check className="h-3 w-3 mr-0.5" />保存
-                          </Button>
-                          <Button size="sm" variant="ghost" className="h-6 text-xs px-2" onClick={handleCancelEdit} disabled={isSaving}>
-                            <X className="h-3 w-3 mr-0.5" />取消
-                          </Button>
+                          <Button size="sm" className="h-6 px-2 text-xs" onClick={() => void saveField(field.key)} disabled={isSaving}><Check className="mr-0.5 h-3 w-3" />保存</Button>
+                          <Button size="sm" variant="ghost" className="h-6 px-2 text-xs" onClick={cancelEditing} disabled={isSaving}><X className="mr-0.5 h-3 w-3" />取消</Button>
                         </div>
                       </div>
                     ) : (
                       <div className="flex items-start gap-1">
                         <p className="text-xs leading-relaxed">{value}</p>
-                        <button
-                          type="button"
-                          onClick={() => handleStartEdit(f.key, value || '')}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 mt-0.5 p-0.5 hover:bg-muted rounded"
-                        >
-                          <Pencil className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                        </button>
+                        <button type="button" onClick={() => startEditing(field.key, value)} className="mt-0.5 shrink-0 rounded p-0.5 opacity-0 transition-opacity hover:bg-muted group-hover:opacity-100"><Pencil className="h-3 w-3 text-muted-foreground hover:text-foreground" /></button>
                       </div>
                     )}
                   </div>
@@ -187,9 +161,7 @@ export function IdeaDetail({
       </Card>
 
       <Separator />
-
-      <IdeaComments ideaId={idea.id} comments={comments}
-        onAddComment={onComment} onFetchComments={onFetchComments} />
+      <IdeaComments ideaId={idea.id} comments={comments} onAddComment={onComment} onFetchComments={onFetchComments} />
     </div>
   )
 }

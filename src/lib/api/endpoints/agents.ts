@@ -29,6 +29,15 @@ export const agentsApi = {
     }>(`/ai/agents/${encodeURIComponent(agentId)}/prompts${qs}`)
   },
 
+  /** 保存 Agent 专属运行参数；空值回退到全局配置。 */
+  saveRuntimeConfig: (
+    agentId: string,
+    data: { model?: string; temperature?: number | null; maxTokens?: number | null }
+  ) => apiClient.put<{ agent: AgentCatalogItem }>(
+    `/ai/agents/${encodeURIComponent(agentId)}/runtime`,
+    data
+  ),
+
   /** 任务型运行 */
   run: (body: {
     agentId: string

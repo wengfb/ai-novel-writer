@@ -1,0 +1,171 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "神格觉醒" [level=2] [ref=e798]
+            - button "编辑项目" [ref=e799]:
+              - img
+          - paragraph [ref=e800]: 科幻
+        - generic [ref=e11]:
+          - heading "本书" [level=3] [ref=e801]
+          - generic [ref=e802]:
+            - button "章节列表" [ref=e804]:
+              - img
+              - generic [ref=e805]: 章节列表
+              - img
+            - button "剧情大纲" [ref=e830]:
+              - img
+              - generic [ref=e831]: 剧情大纲
+              - img
+            - button "角色设定" [ref=e833]:
+              - img
+              - generic [ref=e834]: 角色设定
+              - img
+            - generic [ref=e835]:
+              - button "世界观" [expanded] [active] [ref=e836]:
+                - img
+                - generic [ref=e837]: 世界观
+                - img
+              - generic [ref=e1212]:
+                - button "新建世界观" [ref=e1214]:
+                  - img
+                  - text: 新建世界观
+                - generic [ref=e1218]:
+                  - button "底层区与云端区 地点" [ref=e1219] [cursor=pointer]:
+                    - img [ref=e1220]
+                    - generic [ref=e1224]:
+                      - generic [ref=e1225]: 底层区与云端区
+                      - generic [ref=e1226]: 地点
+                    - button [ref=e1227]:
+                      - img
+                  - button "天网公司 其他" [ref=e1228] [cursor=pointer]:
+                    - img [ref=e1229]
+                    - generic [ref=e1233]:
+                      - generic [ref=e1234]: 天网公司
+                      - generic [ref=e1235]: 其他
+                    - button [ref=e1236]:
+                      - img
+                  - button "灰域 (Grey Domain) 组织" [ref=e1237] [cursor=pointer]:
+                    - img [ref=e1238]
+                    - generic [ref=e1242]:
+                      - generic [ref=e1243]: 灰域 (Grey Domain)
+                      - generic [ref=e1244]: 组织
+                    - button [ref=e1245]:
+                      - img
+                  - button "天网公司（SkyNet Inc.） 组织" [ref=e1246] [cursor=pointer]:
+                    - img [ref=e1247]
+                    - generic [ref=e1251]:
+                      - generic [ref=e1252]: 天网公司（SkyNet Inc.）
+                      - generic [ref=e1253]: 组织
+                    - button [ref=e1254]:
+                      - img
+                  - button "底层区与云端区 地点" [ref=e1255] [cursor=pointer]:
+                    - img [ref=e1256]
+                    - generic [ref=e1260]:
+                      - generic [ref=e1261]: 底层区与云端区
+                      - generic [ref=e1262]: 地点
+                    - button [ref=e1263]:
+                      - img
+                  - button "天网公司（SkyNet Inc.） 组织" [ref=e1264] [cursor=pointer]:
+                    - img [ref=e1265]
+                    - generic [ref=e1269]:
+                      - generic [ref=e1270]: 天网公司（SkyNet Inc.）
+                      - generic [ref=e1271]: 组织
+                    - button [ref=e1272]:
+                      - img
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 神格觉醒
+            - img
+          - generic [ref=e37]: 第 2 章：吞噬初醒
+        - generic [ref=e38]:
+          - generic [ref=e39]: 未保存
+          - button "保存" [ref=e838]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [ref=e839]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [ref=e840]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e1273]:
+        - generic [ref=e1275]:
+          - img [ref=e1277]
+          - heading "选择世界观" [level=2] [ref=e1280]
+          - paragraph [ref=e1281]: 在左侧列表中点击元素，可在此处查看与编辑详情。
+          - button "新建世界观" [ref=e1283]:
+            - img
+            - text: 新建世界观
+    - separator [ref=e942]
+    - generic [ref=e946]:
+      - generic [ref=e947]:
+        - button "协作" [ref=e948]
+        - button "上下文" [ref=e949]
+        - button "生成" [ref=e950]
+      - generic [ref=e951]:
+        - generic [ref=e952]:
+          - generic [ref=e953]:
+            - img [ref=e954]
+            - generic [ref=e957]: 创作助手 · 在线
+          - button "创作总监 统筹项目方向、跨模块协作与下一步。" [ref=e1108]:
+            - generic [ref=e959]:
+              - generic [ref=e960]: 创作总监
+              - generic [ref=e961]: 统筹项目方向、跨模块协作与下一步。
+            - img
+          - paragraph [ref=e962]: 正在参考：神格觉醒 · 项目全局资料
+        - generic [ref=e968]:
+          - generic [ref=e1284]:
+            - heading "和创作总监一起创作" [level=1] [ref=e1285]
+            - paragraph [ref=e1286]: 正在参考：神格觉醒 · 项目全局资料
+          - generic [ref=e974]:
+            - textbox "Message input" [ref=e975]:
+              - /placeholder: Send a message...
+            - generic [ref=e976]:
+              - button "Add Attachment" [ref=e977]:
+                - img
+                - generic [ref=e978]: Add Attachment
+              - generic [ref=e979]:
+                - button "Send message" [disabled]:
+                  - img
+                  - generic: Send message
+        - generic [ref=e981]:
+          - button "补齐项目资料" [ref=e1112]:
+            - img
+            - text: 补齐项目资料
+          - button "检查初始化缺口" [ref=e1113]:
+            - img
+            - text: 检查初始化缺口
+          - button "规划下一步" [ref=e1114]:
+            - img
+            - text: 规划下一步
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert [ref=e74]

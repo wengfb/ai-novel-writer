@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import { useOutlineStore } from '@/lib/store/outline-store'
+import { useUIStore } from '@/lib/store/ui-store'
 import { useOutlines } from '@/hooks/use-outlines'
 import { toast } from 'sonner'
 import type { Outline } from '@/lib/store/outline-store'
@@ -10,8 +11,19 @@ import { createDefaultOutlineForm, type OutlineFormData } from './outline-form/t
 import { OutlineBasicFields } from './outline-form/basic-fields'
 import { OutlineIntentFields } from './outline-form/intent-fields'
 import { OutlinePlanningFields } from './outline-form/planning-fields'
-import { LayoutTemplate, Loader2 } from 'lucide-react'
+import { LayoutTemplate, Loader2, Sparkles } from 'lucide-react'
 import { DetailSection, DetailWorkspace } from '@/components/studio/detail-workspace'
+import { OutlineNodeCoCreation } from './outline-node-co-creation'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 interface OutlineEditPanelProps {
   projectId: string
@@ -22,19 +34,35 @@ interface OutlineEditPanelProps {
   onSaved?: () => void
 }
 
-/** 大纲节点创建/编辑 — 与角色/世界观统一的中间区工作页 */
+type OutlineDraftUpdate = Partial<Pick<
+  OutlineFormData,
+  'type' | 'title' | 'description' | 'emotionalGoal' | 'plotFunction'
+>> & {
+  targetWords?: number
+  tensionLevel?: number
+}
+
+function isOutlineDraftResult(result: unknown): result is { draft: OutlineDraftUpdate } {
+  return typeof result === 'object' && result !== null &&
+    'draft' in result && typeof result.draft === 'object' && result.draft !== null
+}
+
+/** 大纲节点创建/编辑 — 与角色/世界观统一的中间区工作页。 */
 export function OutlineEditPanel({
   projectId,
   editingOutline,
   parentId,
-  defaultType = 'chapter',
+  defaultType = 'volume',
   onClose,
   onSaved,
 }: OutlineEditPanelProps) {
   const { createOutline, updateOutline, deleteOutline } = useOutlineStore()
+  const { openAssistantForScope, setOutlineNodeCoCreating } = useUIStore()
   const { flatOutlines } = useOutlines(projectId)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [isDeleting, setIsDeleting] = React.useState(false)
+  const [isCoCreating, setIsCoCreating] = React.useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
 
   const isEditing = !!editingOutline
   const [formData, setFormData] = React.useState<OutlineFormData>(() =>
@@ -66,6 +94,32 @@ export function OutlineEditPanel({
       resetForm()
     }
   }, [editingOutline, resetForm])
+
+  const handleDraftToolCall = React.useCallback((toolName: string, result: unknown) => {
+    if (toolName !== 'updateOutlineDraft' || !isOutlineDraftResult(result)) return
+
+    const { draft } = result
+    setFormData((current) => ({
+      ...current,
+      ...draft,
+      targetWords: draft.targetWords ? String(draft.targetWords) : current.targetWords,
+      tensionLevel: draft.tensionLevel ? [draft.tensionLevel] : current.tensionLevel,
+    }))
+  }, [])
+
+  const openCoCreation = () => {
+    setOutlineNodeCoCreating(true)
+    setIsCoCreating(true)
+  }
+
+  const closeCoCreation = () => {
+    setIsCoCreating(false)
+    setOutlineNodeCoCreating(false)
+  }
+
+  React.useEffect(() => () => {
+    setOutlineNodeCoCreating(false)
+  }, [setOutlineNodeCoCreating])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -131,6 +185,7 @@ export function OutlineEditPanel({
     try {
       await deleteOutline(editingOutline.id)
       toast.success('大纲删除成功')
+      setDeleteDialogOpen(false)
       onSaved?.()
       onClose?.()
     } catch {
@@ -141,17 +196,11 @@ export function OutlineEditPanel({
   }
 
   const getAvailableParents = () => {
-    if (!isEditing || !editingOutline) {
-      return flatOutlines
-    }
+    if (!isEditing || !editingOutline) return flatOutlines
 
     const getDescendantIds = (node: Outline): string[] => {
       const ids = [node.id]
-      if (node.children) {
-        node.children.forEach((child) => {
-          ids.push(...getDescendantIds(child))
-        })
-      }
+      node.children?.forEach((child) => ids.push(...getDescendantIds(child)))
       return ids
     }
 
@@ -160,46 +209,88 @@ export function OutlineEditPanel({
   }
 
   const availableParents = getAvailableParents()
-  const typeLabel =
-    formData.type === 'volume' ? '卷' : formData.type === 'scene' ? '场景' : '章'
+  const typeLabel = formData.type === 'volume' ? '卷' : formData.type === 'scene' ? '场景' : '章'
+  const pageTitle = isEditing ? formData.title.trim() || editingOutline?.title || '大纲详情' : '新建大纲节点'
 
-  const pageTitle = isEditing
-    ? formData.title.trim() || editingOutline?.title || '大纲详情'
-    : '新建大纲节点'
+  if (!isEditing && isCoCreating) {
+    return (
+      <OutlineNodeCoCreation
+        projectId={projectId}
+        draft={formData}
+        onDraftToolCall={handleDraftToolCall}
+        onExit={closeCoCreation}
+      />
+    )
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="flex h-full min-h-0 flex-col">
+    <div className="flex h-full min-h-0 flex-col">
+      <form id="outline-edit-form" onSubmit={handleSubmit} />
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>确认删除大纲节点</AlertDialogTitle>
+            <AlertDialogDescription>
+              确定要删除「{editingOutline?.title || pageTitle}」吗？
+              若该节点下有子节点，将一并删除且不可恢复。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>取消</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={(event) => {
+                event.preventDefault()
+                void handleDelete()
+              }}
+              disabled={isDeleting}
+            >
+              {isDeleting ? '删除中...' : '确认删除'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <DetailWorkspace
         title={pageTitle}
-        description={
-          isEditing
-            ? '调整节点结构、叙事意图与规划参数，保存后左侧树同步更新'
-            : '创建卷 / 章 / 场景节点，并挂到合适的父级下'
-        }
+        description={isEditing ? '调整节点结构、叙事意图与规划参数，保存后左侧树同步更新' : '创建卷 / 章 / 场景节点，并挂到合适的父级下'}
         icon={LayoutTemplate}
         badges={[typeLabel]}
         onBack={onClose}
-        dangerAction={
-          isEditing ? (
-            <Button
-              type="button"
-              variant="outline"
-              className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-              onClick={handleDelete}
-              disabled={isSubmitting || isDeleting}
-            >
-              {isDeleting ? '删除中...' : '删除'}
-            </Button>
-          ) : null
-        }
+        dangerAction={isEditing ? (
+          <Button
+            type="button"
+            variant="outline"
+            className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+            onClick={() => setDeleteDialogOpen(true)}
+            disabled={isSubmitting || isDeleting}
+          >
+            {isDeleting ? '删除中...' : '删除'}
+          </Button>
+        ) : null}
         actions={
           <>
-            {onClose && (
-              <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
-                取消
+            {isEditing && editingOutline ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => openAssistantForScope({
+                  type: 'outline',
+                  id: editingOutline.id,
+                  title: editingOutline.title,
+                  subtitle: '剧情大纲',
+                  contextAppend: `\n当前正在协作的大纲节点：${editingOutline.title}\n节点描述：${editingOutline.description || '未填写'}\n请围绕这个节点的节奏、因果与伏笔提供建议。`,
+                }, 'outline')}
+              >
+                AI 优化此节点
+              </Button>
+            ) : (
+              <Button type="button" variant="outline" onClick={openCoCreation}>
+                <Sparkles className="mr-2 h-4 w-4" />
+                AI 协助创建
               </Button>
             )}
-            <Button type="submit" disabled={isSubmitting}>
+            {onClose && <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>取消</Button>}
+            <Button type="submit" form="outline-edit-form" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isSubmitting ? '保存中...' : isEditing ? '保存' : '创建'}
             </Button>
@@ -208,25 +299,16 @@ export function OutlineEditPanel({
       >
         <div className="space-y-8">
           <DetailSection title="节点结构" description="类型、排序、标题、父级与目标字数">
-            <OutlineBasicFields
-              formData={formData}
-              setFormData={setFormData}
-              availableParents={availableParents}
-            />
+            <OutlineBasicFields formData={formData} setFormData={setFormData} availableParents={availableParents} />
           </DetailSection>
-
-          <DetailSection
-            title="叙事意图"
-            description="作为 AI 生成章节时的 prompt 约束"
-          >
+          <DetailSection title="叙事意图" description="作为 AI 生成章节时的 prompt 约束">
             <OutlineIntentFields formData={formData} setFormData={setFormData} />
           </DetailSection>
-
           <DetailSection title="规划参数" description="规划模式、弹性范围与置信度">
             <OutlinePlanningFields formData={formData} setFormData={setFormData} />
           </DetailSection>
         </div>
       </DetailWorkspace>
-    </form>
+    </div>
   )
 }

@@ -8,7 +8,34 @@ import {
   normalizeWorldElementType,
   normalizePlotFunction,
   normalizeTensionLevel,
+  dedupeGeneratedEntities,
+  normalizeGeneratedEntityName,
 } from '@/lib/ai/onboarding/normalize'
+
+type GeneratedCharacterInput = {
+  name: string
+  role?: string
+  description?: string
+  personality?: string | string[]
+  goal?: string
+  dialogueStyle?: string
+  characterArc?: string
+  relationships?: Array<{ targetName?: string; description?: string; relation?: string }>
+}
+
+type GeneratedWorldElementInput = {
+  name: string
+  type?: string
+  description?: string
+  importance?: number
+  scope?: string
+  category?: string
+  isEvolvable?: boolean
+  constraints?: unknown[]
+  exceptions?: unknown[]
+  evolutionSpace?: string
+  relatedTo?: unknown[]
+}
 
 const InitSchema = z.object({
   results: z.object({
@@ -43,9 +70,20 @@ export async function POST(
         })
       }
 
-      // 角色（追加——不删除已有的）
+      // 角色（只补充 AI 尚未创建的角色；用户手动数据不受约束）
       if (r.characters?.characters?.length) {
-        const chars = r.characters.characters.filter((c: any) => c.name).map((c: any) => ({
+        const existingCharacterNames = new Set(
+          (await tx.character.findMany({ where: { projectId }, select: { name: true } }))
+            .map((character) => normalizeGeneratedEntityName(character.name))
+        )
+        const chars = dedupeGeneratedEntities(
+          r.characters.characters as GeneratedCharacterInput[]
+        )
+          .filter((c) => {
+            const key = normalizeGeneratedEntityName(c.name)
+            return key && !existingCharacterNames.has(key)
+          })
+          .map((c) => ({
           projectId,
           name: c.name,
           role: normalizeCharacterRole(c.role),
@@ -55,17 +93,31 @@ export async function POST(
           dialogueStyle: c.dialogueStyle || '',
           characterArc: c.characterArc || '',
           relationships: c.relationships?.length
-            ? JSON.stringify(c.relationships.reduce((acc: any, r: any) => {
-                acc[r.targetName] = r.description || r.relation; return acc
-              }, {} as Record<string, string>))
+            ? JSON.stringify(c.relationships.reduce((acc: Record<string, string>, relation) => {
+                if (relation.targetName) {
+                  acc[relation.targetName] = relation.description || relation.relation || ''
+                }
+                return acc
+              }, {}))
             : '',
         }))
         if (chars.length > 0) await tx.character.createMany({ data: chars })
       }
 
-      // 世界观
+      // 世界观（只补充 AI 尚未创建的设定；用户手动数据不受约束）
       if (r.worldSettings?.worldSettings?.length) {
-        const ws = r.worldSettings.worldSettings.filter((w: any) => w.name).map((w: any) => ({
+        const existingWorldElementNames = new Set(
+          (await tx.worldElement.findMany({ where: { projectId }, select: { name: true } }))
+            .map((element) => normalizeGeneratedEntityName(element.name))
+        )
+        const ws = dedupeGeneratedEntities(
+          r.worldSettings.worldSettings as GeneratedWorldElementInput[]
+        )
+          .filter((w) => {
+            const key = normalizeGeneratedEntityName(w.name)
+            return key && !existingWorldElementNames.has(key)
+          })
+          .map((w) => ({
           projectId,
           name: w.name,
           type: normalizeWorldElementType(w.type),

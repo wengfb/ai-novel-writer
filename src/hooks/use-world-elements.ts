@@ -17,6 +17,6 @@ export function useWorldElements(projectId: string) {
     worldElements,
     isLoading,
     error,
-    refetch: () => fetchWorldElements(projectId),
+    refetch: () => fetchWorldElements(projectId, true),
   }
 }

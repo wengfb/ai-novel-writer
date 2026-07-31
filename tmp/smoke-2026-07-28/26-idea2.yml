@@ -1,0 +1,178 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "冒烟测试项目-2330" [level=2] [ref=e1822]
+            - button "编辑项目" [ref=e1823]:
+              - img
+          - paragraph [ref=e1576]: 玄幻
+        - generic [ref=e11]:
+          - heading "本书" [level=3] [ref=e1824]
+          - generic [ref=e1578]:
+            - button "章节列表" [ref=e1825]:
+              - img
+              - generic [ref=e1581]: 章节列表
+              - img
+            - button "剧情大纲" [ref=e1828]:
+              - img
+              - generic [ref=e1593]: 剧情大纲
+              - img
+            - button "角色设定" [ref=e1829]:
+              - img
+              - generic [ref=e1596]: 角色设定
+              - img
+            - button "世界观" [ref=e1830]:
+              - img
+              - generic [ref=e1599]: 世界观
+              - img
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [active] [ref=e1831]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e1832]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e1833]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 冒烟测试项目-2330
+            - img
+          - generic [ref=e37]: 第 1 章：新章节
+        - generic [ref=e1600]:
+          - generic [ref=e1601]: 已保存 23:32:02
+          - button "保存" [ref=e1834]:
+            - img
+            - text: 保存
+          - button "显示助手" [ref=e1850]:
+            - img
+            - text: 显示助手
+          - button "AI生成章节" [ref=e1836]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [ref=e1837]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e1838]:
+            - img
+      - main [ref=e1857]:
+        - generic [ref=e2225]:
+          - generic [ref=e2226]:
+            - button "返回创意中心" [ref=e2227]:
+              - img
+              - text: 返回创意中心
+            - generic [ref=e2228]:
+              - heading "心声风暴" [level=1] [ref=e2229]
+              - paragraph [ref=e2230]: 审阅创意、记录反馈，或继续与创意编辑打磨
+            - button "继续共创" [ref=e2232]:
+              - img
+              - text: 继续共创
+          - generic [ref=e2237]:
+            - generic [ref=e2238]:
+              - generic [ref=e2239]:
+                - generic [ref=e2240]:
+                  - generic [ref=e2241]: 都市异能
+                  - generic [ref=e2242]: AI
+                - heading "心声风暴" [level=2] [ref=e2243]
+              - generic [ref=e2244]:
+                - button "收藏" [ref=e2245]:
+                  - img
+                  - text: 收藏
+                - button "创建项目" [ref=e2246]:
+                  - img
+                  - text: 创建项目
+            - generic [ref=e2249]:
+              - button "1 星" [ref=e2250]:
+                - img [ref=e2251]
+              - button "2 星" [ref=e2253]:
+                - img [ref=e2254]
+              - button "3 星" [ref=e2256]:
+                - img [ref=e2257]
+              - button "4 星" [ref=e2259]:
+                - img [ref=e2260]
+              - button "5 星" [ref=e2262]:
+                - img [ref=e2263]
+              - generic [ref=e2265]: 暂无
+            - generic [ref=e2268]:
+              - generic [ref=e2270]:
+                - generic [ref=e2271]:
+                  - img [ref=e2273]
+                  - text: 世界观
+                - generic [ref=e2276]:
+                  - paragraph [ref=e2277]: 现代都市，人们日常表面与内心想法并存，但读心能力觉醒者极少。
+                  - button [ref=e2278]:
+                    - img [ref=e2279]
+              - generic [ref=e2283]:
+                - generic [ref=e2284]:
+                  - img [ref=e2286]
+                  - text: 主角
+                - generic [ref=e2289]:
+                  - paragraph [ref=e2290]: 28岁程序员李默，普通但渴望改变，因一次意外获得读心能力。
+                  - button [ref=e2291]:
+                    - img [ref=e2292]
+              - generic [ref=e2296]:
+                - generic [ref=e2297]:
+                  - img [ref=e2299]
+                  - text: 核心冲突
+                - generic [ref=e2303]:
+                  - paragraph [ref=e2304]: 他利用能力在职场和生活中获利，却面临能力失控、道德谴责以及来自其他异能者的威胁。
+                  - button [ref=e2305]:
+                    - img [ref=e2306]
+              - generic [ref=e2310]:
+                - generic [ref=e2311]:
+                  - img [ref=e2313]
+                  - text: 主线目标
+                - generic [ref=e2315]:
+                  - paragraph [ref=e2316]: 控制能力，找出其起源，在保护身边人的同时决定如何使用这份力量。
+                  - button [ref=e2317]:
+                    - img [ref=e2318]
+              - generic [ref=e2322]:
+                - generic [ref=e2323]:
+                  - img [ref=e2325]
+                  - text: 高概念梗概
+                - generic [ref=e2327]:
+                  - paragraph [ref=e2328]: 一个能听到所有人内心独白的普通人，如何保守秘密并做出艰难选择。
+                  - button [ref=e2329]:
+                    - img [ref=e2330]
+              - generic [ref=e2334]:
+                - generic [ref=e2335]:
+                  - img [ref=e2337]
+                  - text: 内容升华
+                - generic [ref=e2340]:
+                  - paragraph [ref=e2341]: 探讨信任与隐私的边界，以及在知晓他人真实想法后能否依然保持善良。
+                  - button [ref=e2342]:
+                    - img [ref=e2343]
+              - generic [ref=e2347]:
+                - generic [ref=e2348]:
+                  - img [ref=e2350]
+                  - text: 开篇切入点
+                - generic [ref=e2352]:
+                  - paragraph [ref=e2353]: 李默在地铁上听到同事脑海里正在抱怨老板的每一句话，脸色惊变——这能力不是暂时的。
+                  - button [ref=e2354]:
+                    - img [ref=e2355]
+            - generic [ref=e2358]:
+              - generic [ref=e2359]:
+                - img [ref=e2360]
+                - heading "评论 (0)" [level=3] [ref=e2362]
+              - generic [ref=e2363]:
+                - textbox "写下你的想法..." [ref=e2364]
+                - button [disabled]:
+                  - img
+              - generic [ref=e2365]: 0/500
+              - paragraph [ref=e2367]: 暂无评论，来说两句吧
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert [ref=e74]

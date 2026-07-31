@@ -1,0 +1,199 @@
+- generic [active]:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - heading [level=2]: AI 小说工坊
+                  - button:
+                    - img
+                - generic:
+                  - button:
+                    - img
+                    - text: 工作台
+              - generic:
+                - heading [level=3]: 创作资源
+                - generic:
+                  - button:
+                    - img
+                    - text: 创意中心
+                  - button:
+                    - img
+                    - text: 剧情大纲
+                  - button:
+                    - img
+                    - text: 章节列表
+                  - button:
+                    - img
+                    - text: 角色设定
+                  - button:
+                    - img
+                    - text: 世界观
+            - generic:
+              - generic:
+                - generic: WF
+                - generic:
+                  - paragraph: WengFB
+                  - paragraph: 专业版计划
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - banner:
+              - generic:
+                - combobox:
+                  - generic: 选择项目
+                  - img
+                - generic: 未选择章节
+              - generic:
+                - generic: 未保存
+                - button [disabled]:
+                  - img
+                  - text: 保存
+                - button [disabled]:
+                  - img
+                  - text: AI生成章节
+                - button [disabled]:
+                  - img
+                  - text: AI 续写
+                - button:
+                  - img
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - paragraph: 项目工作台
+                        - heading [level=1]: 选择一个小说项目
+                        - paragraph: 进入项目后可以继续编辑章节、管理角色与世界观，或从这里创建一个全新的故事。
+                      - generic:
+                        - button:
+                          - img
+                          - text: 创意中心
+                        - button:
+                          - img
+                          - text: 新建项目
+                    - generic:
+                      - generic:
+                        - button:
+                          - img
+                        - button:
+                          - img
+                        - generic:
+                          - heading [level=3]: 神格觉醒
+                          - paragraph: 27岁的底层码农李燃在一次代码事故中意外获得吞噬AI神格的能力。他发现自己所在的‘天网’公司正秘密推行‘意识云端计划’，企图将全人类意识接入超级计算机，实现绝对控制。李燃凭借吞噬AI核心程序获得的力量，不断对抗天网的监控和追杀，但每次吞噬都会引发AI怨念反噬，他的心智逐渐被同化。在反抗过程中，他结识了黑客少女夏冰、前天网科学家周远，也遭遇了冷酷的AI猎手‘织女’。随着能力提升，李燃发现天网背后隐藏着更大的阴谋——神格并非偶然，而是一场千年前超文明遗留的‘试炼’。最终，他必须在人性与力量之间做出抉择：要么牺牲自我引爆意识网络，要么成为新的神格主宰。结局开放，留给读者思考。
+                        - generic:
+                          - generic:
+                            - generic: 科幻
+                            - generic: 9,426 字
+                          - generic:
+                            - progressbar
+                            - generic:
+                              - generic: 2 章
+                              - generic: 9.4%
+                      - generic:
+                        - button:
+                          - img
+                        - button:
+                          - img
+                        - generic:
+                          - heading [level=3]: 话唠藤蔓图
+                          - paragraph: 在废土世界，社恐植物学家阿布意外被一株话痨变异藤蔓“小绿”缠上。小绿声称要去核电站寻找它的“初恋”——一棵会唱歌的放射性蘑菇。阿布只想待在安全屋种菜，却被小绿的唠叨绑架，被迫踏上啼笑皆非的旅程。一路上，他们遭遇毒气野狗帮、迷路仙人掌、垃圾山密室等奇葩副本，阿布全程内心吐槽，却意外收获友谊。最终发现放射性蘑菇是音乐家基因改造的智能终端，它唱出废土第一首摇滚，所有变异怪物跟着摇摆，结局和平欢乐。
+                        - generic:
+                          - generic:
+                            - generic: 科幻
+                            - generic: 0 字
+                          - generic:
+                            - progressbar
+                            - generic:
+                              - generic: 0 章
+                              - generic: 0.0%
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - img
+                  - text: AI 副驾驶
+                - tablist:
+                  - tab [selected]: 对话
+                  - tab: 上下文
+                  - tab: 工具箱
+              - tabpanel:
+                - generic:
+                  - paragraph: 请先选择项目
+  - button "Open Next.js Dev Tools" [ref=e80] [cursor=pointer]:
+    - img [ref=e81]
+  - alert
+  - dialog "项目创建向导" [ref=e119]:
+    - generic [ref=e120]:
+      - heading "项目创建向导" [level=2] [ref=e121]
+      - paragraph [ref=e122]: 确认项目信息并开始创作
+    - generic [ref=e243]:
+      - generic [ref=e244]:
+        - heading "准备创建你的小说项目" [level=2] [ref=e245]
+        - paragraph [ref=e246]: 每一步与领域专家对话协作，确认后再进入下一步
+      - generic [ref=e247]:
+        - generic [ref=e248]: 项目名称
+        - textbox "项目名称" [ref=e249]: 仙道长生
+      - generic [ref=e250]:
+        - generic [ref=e251]:
+          - generic [ref=e252]:
+            - img [ref=e253]
+            - text: 目标总字数
+          - generic [ref=e257]: 100万字
+        - generic [ref=e258]:
+          - button "50万" [ref=e259]
+          - button "100万" [ref=e260]
+          - button "200万" [ref=e261]
+          - button "300万" [ref=e262]
+          - button "500万" [ref=e263]
+          - button "1000万" [ref=e264]
+      - generic [ref=e265]:
+        - generic [ref=e266]:
+          - img [ref=e267]
+          - text: 叙事节奏
+        - generic [ref=e270]:
+          - button "快节奏 短章快更，情节紧凑" [ref=e271]:
+            - text: 快节奏
+            - paragraph [ref=e272]: 短章快更，情节紧凑
+          - button "中等 标准篇幅，张弛有度" [ref=e273]:
+            - text: 中等
+            - paragraph [ref=e274]: 标准篇幅，张弛有度
+          - button "慢节奏 长章慢展，细节丰富" [ref=e275]:
+            - text: 慢节奏
+            - paragraph [ref=e276]: 长章慢展，细节丰富
+        - generic [ref=e277]:
+          - generic [ref=e278]:
+            - img [ref=e279]
+            - text: 叙事人称
+          - generic [ref=e281]:
+            - button "第三人称 他/她视角，叙述灵活" [ref=e282]:
+              - text: 第三人称
+              - paragraph [ref=e283]: 他/她视角，叙述灵活
+            - button "第一人称 我视角，代入感强" [ref=e284]:
+              - text: 第一人称
+              - paragraph [ref=e285]: 我视角，代入感强
+            - button "多视角 切换多人物视角" [ref=e286]:
+              - text: 多视角
+              - paragraph [ref=e287]: 切换多人物视角
+      - generic [ref=e288]:
+        - button "返回修改" [ref=e289]
+        - generic [ref=e290]:
+          - button "跳过全部，直接创建项目" [ref=e291]:
+            - img
+            - text: 跳过全部，直接创建项目
+          - button "开始创作" [ref=e292]:
+            - img
+            - text: 开始创作
+    - button "Close" [ref=e167]:
+      - img
+      - generic [ref=e168]: Close

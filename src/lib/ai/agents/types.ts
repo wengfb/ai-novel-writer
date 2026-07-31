@@ -4,7 +4,7 @@
  * 设计目标：
  * 1. 一个领域能力 = 一个 Agent；领域内多模板 = 多 Slot
  * 2. 结构化任务走 runAgentObject（Zod schema）；散文走 runAgent / streamAgent
- * 3. 提示词可在「设置 → Agent 提示词」查看/编辑（DB 覆盖）
+ * 3. 模型/温度/提示词可在「设置 → Agent 配置」查看/编辑（DB 覆盖）
  */
 
 /** 提示词槽位中可用变量的元信息（供设置页展示） */
@@ -99,7 +99,16 @@ export interface AgentCatalogItem {
   description: string
   category: AgentCategory
   chatCompatible: boolean
+  /** Agent 专属运行参数；缺失字段回退至全局配置。 */
+  runtimeConfig: AgentRuntimeConfig
   promptSlots: ResolvedPromptSlot[]
+}
+
+/** 单个 Agent 的运行参数覆盖；未设置字段回退至全局配置或 Agent 默认值。 */
+export interface AgentRuntimeConfig {
+  model?: string
+  temperature?: number
+  maxTokens?: number
 }
 
 /**

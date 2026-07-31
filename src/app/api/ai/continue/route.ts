@@ -2,10 +2,10 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getChapterGenerator } from '@/lib/ai/chapter-generator'
 import { getContextManager } from '@/lib/ai/context-manager'
-import { withErrorHandler, ApiErrors } from '@/lib/api/response'
+import { ApiErrors } from '@/lib/api/response'
 import { parseJsonBody, validateRequest } from '@/lib/api/validators'
 import { ContinueChapterSchema } from '@/lib/api/schemas'
-import { plainTextToHtml } from '@/lib/utils/text-format'
+import { plainTextToHtml, stripLeadingChapterHeading } from '@/lib/utils/text-format'
 import { countWords } from '@/lib/utils/word-count'
 
 /**
@@ -71,9 +71,10 @@ export async function POST(request: NextRequest) {
           })
 
           // 计算新增字数
-          const addedWordCount = countWords(continuation)
+          const cleanedContinuation = stripLeadingChapterHeading(continuation)
+          const addedWordCount = countWords(cleanedContinuation)
           // continuation 是纯文本，转换为 HTML 后追加到已有内容
-          const fullContent = data.currentContent + plainTextToHtml(continuation)
+          const fullContent = data.currentContent + plainTextToHtml(cleanedContinuation)
           const totalWordCount = countWords(fullContent)
 
           // 使用 AI 重新生成章节摘要
@@ -103,7 +104,7 @@ export async function POST(request: NextRequest) {
                 type: 'done',
                 data: {
                   chapterId: chapter.id,
-                  addedContent: continuation,
+                  addedContent: cleanedContinuation,
                   addedWordCount,
                   totalWordCount: updatedChapter.wordCount,
                 },

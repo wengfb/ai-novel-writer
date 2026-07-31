@@ -19,6 +19,8 @@ export interface StepState {
 
 export interface OnboardingStep3PreviewProps {
   idea: StoryIdeaCard
+  /** 已保存创意的 ID；存在时 finalization 将原子标记为 converted。 */
+  ideaId?: string
   userPreferences?: UserPreferences
   onComplete: (projectId: string) => void
   onBack?: () => void

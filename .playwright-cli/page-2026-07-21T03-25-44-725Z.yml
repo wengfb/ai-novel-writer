@@ -1,0 +1,179 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - heading [level=2]: AI 小说工坊
+                  - button:
+                    - img
+                - generic:
+                  - button:
+                    - img
+                    - text: 工作台
+              - generic:
+                - heading [level=3]: 创作资源
+                - generic:
+                  - button:
+                    - img
+                    - text: 创意中心
+                  - button:
+                    - img
+                    - text: 剧情大纲
+                  - button:
+                    - img
+                    - text: 章节列表
+                  - button:
+                    - img
+                    - text: 角色设定
+                  - button:
+                    - img
+                    - text: 世界观
+            - generic:
+              - generic:
+                - generic: WF
+                - generic:
+                  - paragraph: WengFB
+                  - paragraph: 专业版计划
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - banner:
+              - generic:
+                - combobox:
+                  - generic: 选择项目
+                  - img
+                - generic: 未选择章节
+              - generic:
+                - generic: 未保存
+                - button [disabled]:
+                  - img
+                  - text: 保存
+                - button [disabled]:
+                  - img
+                  - text: AI生成章节
+                - button [disabled]:
+                  - img
+                  - text: AI 续写
+                - button:
+                  - img
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - paragraph: 项目工作台
+                        - heading [level=1]: 选择一个小说项目
+                        - paragraph: 进入项目后可以继续编辑章节、管理角色与世界观，或从这里创建一个全新的故事。
+                      - generic:
+                        - button:
+                          - img
+                          - text: 创意中心
+                        - button:
+                          - img
+                          - text: 新建项目
+                    - generic:
+                      - generic:
+                        - button:
+                          - img
+                        - button:
+                          - img
+                        - generic:
+                          - heading [level=3]: 神格觉醒
+                          - paragraph: 27岁的底层码农李燃在一次代码事故中意外获得吞噬AI神格的能力。他发现自己所在的‘天网’公司正秘密推行‘意识云端计划’，企图将全人类意识接入超级计算机，实现绝对控制。李燃凭借吞噬AI核心程序获得的力量，不断对抗天网的监控和追杀，但每次吞噬都会引发AI怨念反噬，他的心智逐渐被同化。在反抗过程中，他结识了黑客少女夏冰、前天网科学家周远，也遭遇了冷酷的AI猎手‘织女’。随着能力提升，李燃发现天网背后隐藏着更大的阴谋——神格并非偶然，而是一场千年前超文明遗留的‘试炼’。最终，他必须在人性与力量之间做出抉择：要么牺牲自我引爆意识网络，要么成为新的神格主宰。结局开放，留给读者思考。
+                        - generic:
+                          - generic:
+                            - generic: 科幻
+                            - generic: 3,227 字
+                          - generic:
+                            - progressbar
+                            - generic:
+                              - generic: 1 章
+                              - generic: 3.2%
+                      - generic:
+                        - button:
+                          - img
+                        - button:
+                          - img
+                        - generic:
+                          - heading [level=3]: 话唠藤蔓图
+                          - paragraph: 在废土世界，社恐植物学家阿布意外被一株话痨变异藤蔓“小绿”缠上。小绿声称要去核电站寻找它的“初恋”——一棵会唱歌的放射性蘑菇。阿布只想待在安全屋种菜，却被小绿的唠叨绑架，被迫踏上啼笑皆非的旅程。一路上，他们遭遇毒气野狗帮、迷路仙人掌、垃圾山密室等奇葩副本，阿布全程内心吐槽，却意外收获友谊。最终发现放射性蘑菇是音乐家基因改造的智能终端，它唱出废土第一首摇滚，所有变异怪物跟着摇摆，结局和平欢乐。
+                        - generic:
+                          - generic:
+                            - generic: 科幻
+                            - generic: 0 字
+                          - generic:
+                            - progressbar
+                            - generic:
+                              - generic: 0 章
+                              - generic: 0.0%
+    - separator
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - img
+                  - text: AI 副驾驶
+                - tablist:
+                  - tab [selected]: 对话
+                  - tab: 上下文
+                  - tab: 工具箱
+              - tabpanel:
+                - generic:
+                  - paragraph: 请先选择项目
+  - button "Open Next.js Dev Tools" [ref=e158] [cursor=pointer]:
+    - img [ref=e159]
+  - alert
+  - dialog "项目创建向导" [ref=e1108]:
+    - generic [ref=e1109]:
+      - heading "项目创建向导" [level=2] [ref=e1110]
+      - paragraph [ref=e1111]: 设置偏好，让 AI 为你生成创意方向
+    - generic [ref=e1114]:
+      - generic [ref=e1115]:
+        - img [ref=e1118]
+        - heading "你想写个什么故事？" [level=1] [ref=e1121]
+        - paragraph [ref=e1122]: 设置筛选条件，让 AI 随机生成 3 个创意方向供你选择
+      - generic [ref=e1123]:
+        - generic [ref=e1124]:
+          - generic [ref=e1125]:
+            - generic [ref=e1126]: 目标受众
+            - button "不限" [active] [ref=e1127]
+            - button "男频" [ref=e1128]
+            - button "女频" [ref=e1129]
+          - generic [ref=e1130]:
+            - generic [ref=e1131]: 题材类型
+            - button "不限" [ref=e1132]
+            - button "玄幻修仙" [ref=e1133]
+            - button "都市" [ref=e1134]
+            - button "科幻" [ref=e1135]
+            - button "悬疑灵异" [ref=e1136]
+            - button "历史" [ref=e1137]
+            - button "游戏异界" [ref=e1138]
+            - button "末世" [ref=e1139]
+          - generic [ref=e1140]:
+            - generic [ref=e1141]: 故事基调
+            - button "不限" [ref=e1142]
+            - button "热血爽文" [ref=e1143]
+            - button "轻松搞笑" [ref=e1144]
+            - button "正剧严肃" [ref=e1145]
+            - button "悬疑惊悚" [ref=e1146]
+            - button "温馨治愈" [ref=e1147]
+        - generic [ref=e1148]:
+          - generic [ref=e1149]: 自定义要求 （可选）
+          - textbox "例如：我希望主角是女性，故事发生在现代都市，带一点悬疑元素..." [ref=e1150]
+        - button "随机生成创意" [ref=e1152]:
+          - img [ref=e1153]
+          - text: 随机生成创意
+      - button "手动创建项目" [ref=e1161]
+    - button "Close" [ref=e1162]:
+      - img
+      - generic [ref=e1163]: Close

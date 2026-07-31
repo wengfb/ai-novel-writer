@@ -12,6 +12,20 @@ export function createCharacterTools({ projectId }: ChatToolOptions) {
       inputSchema: zodSchema(CreateCharacterInputSchema),
       needsApproval: true,
       execute: async (input) => {
+        const existing = await prisma.character.findFirst({
+          where: {
+            projectId,
+            name: { equals: input.name.trim() },
+          },
+          select: { id: true, name: true, role: true, importance: true },
+        })
+
+        // AI 可能在长对话中重复提出同一张角色卡；复用已有记录，
+        // 但不限制用户通过常规表单创建有意同名的不同角色。
+        if (existing) {
+          return { ok: true, reused: true, character: existing }
+        }
+
         const character = await prisma.character.create({
           data: {
             projectId,

@@ -6,7 +6,7 @@
  * - 对外清单：listAgentCatalog / getAgentCatalogItem（设置页、API）
  */
 
-import type { AgentCatalogItem, AgentDefinition, ResolvedPromptSlot } from './types'
+import type { AgentCatalogItem, AgentDefinition, AgentRuntimeConfig, ResolvedPromptSlot } from './types'
 import {
   getAgentDefinition,
   listAgentDefinitions,
@@ -14,6 +14,7 @@ import {
   LEGACY_AGENT_MAP,
 } from './definitions/catalog'
 import { resolveAgentPrompts } from './prompt-store'
+import { getAgentRuntimeConfig } from './runtime-config'
 
 /**
  * 获取 Agent 定义；不存在则抛错
@@ -43,8 +44,11 @@ export async function listAgentCatalog(): Promise<AgentCatalogItem[]> {
   const items: AgentCatalogItem[] = []
 
   for (const def of defs) {
-    const promptSlots = await resolveAgentPrompts(def)
-    items.push(toCatalogItem(def, promptSlots))
+    const [promptSlots, runtimeConfig] = await Promise.all([
+      resolveAgentPrompts(def),
+      getAgentRuntimeConfig(def.id),
+    ])
+    items.push(toCatalogItem(def, promptSlots, runtimeConfig))
   }
 
   return items
@@ -56,18 +60,26 @@ export async function listAgentCatalog(): Promise<AgentCatalogItem[]> {
  */
 export async function getAgentCatalogItem(agentId: string): Promise<AgentCatalogItem> {
   const def = requireAgentDefinition(agentId)
-  const promptSlots = await resolveAgentPrompts(def)
-  return toCatalogItem(def, promptSlots)
+  const [promptSlots, runtimeConfig] = await Promise.all([
+    resolveAgentPrompts(def),
+    getAgentRuntimeConfig(def.id),
+  ])
+  return toCatalogItem(def, promptSlots, runtimeConfig)
 }
 
 /** 组装 API/UI 用的目录结构 */
-function toCatalogItem(def: AgentDefinition, promptSlots: ResolvedPromptSlot[]): AgentCatalogItem {
+function toCatalogItem(
+  def: AgentDefinition,
+  promptSlots: ResolvedPromptSlot[],
+  runtimeConfig: AgentRuntimeConfig
+): AgentCatalogItem {
   return {
     id: def.id,
     name: def.name,
     description: def.description,
     category: def.category,
     chatCompatible: Boolean(def.chatCompatible),
+    runtimeConfig,
     promptSlots,
   }
 }

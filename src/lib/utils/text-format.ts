@@ -1,4 +1,18 @@
 /**
+ * 去除 AI 偶发输出的章节总标题。
+ *
+ * 章节标题属于 Chapter 元数据，由界面单独展示；正文不应携带 H1。
+ * 仅在 AI 生成/续写结果入库前调用，不影响用户自行编辑的内容。
+ */
+export function stripLeadingChapterHeading(text: string): string {
+  return text
+    .trim()
+    .replace(/^\s*<h1\b[^>]*>[\s\S]*?<\/h1>\s*/i, '')
+    .replace(/^\s*#(?!#)\s+[^\n]+(?:\n|$)/, '')
+    .trim()
+}
+
+/**
  * 将纯文本（\n\n 分隔段落）转换为 HTML（<p> 标签包裹）
  * 如果内容已经是 HTML 格式则直接返回
  */

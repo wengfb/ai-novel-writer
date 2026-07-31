@@ -16,7 +16,7 @@ interface OutlineGeneratePanelProps {
   onClose?: () => void
 }
 
-/** AI 生成大纲 — 中间区工作页 */
+/** 大纲工作台的 AI 规划页，仅用于从空大纲创建首版章节结构。 */
 export function OutlineGeneratePanel({
   projectId,
   onComplete,
@@ -94,11 +94,11 @@ export function OutlineGeneratePanel({
 
   return (
     <DetailWorkspace
-      title="AI 生成大纲"
+      title="开始规划大纲"
       description={
         step === 'config'
           ? '描述故事核心创意，生成结构化章节大纲'
-          : '预览已保存的大纲结构，确认后可继续编辑节点'
+          : '预览生成的章节规划，完成后可继续编辑节点'
       }
       icon={Sparkles}
       badges={[step === 'config' ? '配置' : '预览']}
@@ -144,7 +144,7 @@ export function OutlineGeneratePanel({
             ) : (
               <>
                 <Sparkles className="mr-2 h-4 w-4" />
-                开始生成
+                开始规划
               </>
             )}
           </Button>

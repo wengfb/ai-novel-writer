@@ -17,6 +17,6 @@ export function useCharacters(projectId: string) {
     characters,
     isLoading,
     error,
-    refetch: () => fetchCharacters(projectId),
+    refetch: () => fetchCharacters(projectId, true),
   }
 }

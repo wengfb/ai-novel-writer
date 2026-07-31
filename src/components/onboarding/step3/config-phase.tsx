@@ -22,6 +22,8 @@ interface ConfigPhaseProps {
   onBack?: () => void
   onSkipAll: () => void
   onStart: () => void
+  isBusy?: boolean
+  error?: string | null
 }
 
 export function ConfigPhase({
@@ -37,13 +39,17 @@ export function ConfigPhase({
   onBack,
   onSkipAll,
   onStart,
+  isBusy = false,
+  error = null,
 }: ConfigPhaseProps) {
   return (
     <div className="flex flex-col h-full overflow-auto px-8 py-6">
       <div className="w-full max-w-lg mx-auto space-y-6">
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold">准备创建你的小说项目</h2>
-          <p className="text-muted-foreground">AI 将分步生成故事架构、角色、世界观、分卷大纲</p>
+          <p className="text-muted-foreground">
+            确认后会先创建项目，再分步生成架构、角色、世界观与大纲；中途退出可稍后继续。
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -155,20 +161,29 @@ export function ConfigPhase({
           </div>
         </div>
 
+        {error ? (
+          <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
+        ) : null}
+
         <div className="flex justify-between pt-4">
           {onBack && (
-            <Button variant="outline" onClick={onBack}>
+            <Button variant="outline" onClick={onBack} disabled={isBusy}>
               返回修改
             </Button>
           )}
           <div className="flex gap-2">
-            <Button variant="ghost" onClick={onSkipAll}>
+            <Button variant="ghost" onClick={onSkipAll} disabled={isBusy || !projectTitle.trim()}>
               <SkipForward className="mr-2 h-4 w-4" />
               跳过全部，直接创建项目
             </Button>
-            <Button onClick={onStart} size="lg" className="px-8">
+            <Button
+              onClick={onStart}
+              size="lg"
+              className="px-8"
+              disabled={isBusy || !projectTitle.trim()}
+            >
               <Sparkles className="mr-2 h-4 w-4" />
-              开始创作
+              {isBusy ? '创建项目中…' : '开始创作'}
             </Button>
           </div>
         </div>

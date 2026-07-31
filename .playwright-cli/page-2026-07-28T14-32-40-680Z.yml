@@ -1,0 +1,177 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "神格觉醒" [level=2] [ref=e77]
+            - button "编辑项目" [ref=e78]:
+              - img
+          - paragraph [ref=e79]: 科幻
+        - generic [ref=e11]:
+          - heading "本书" [level=3] [ref=e80]
+          - generic [ref=e81]:
+            - button "章节列表" [ref=e83]:
+              - img
+              - generic [ref=e84]: 章节列表
+              - img
+            - button "剧情大纲" [ref=e86]:
+              - img
+              - generic [ref=e87]: 剧情大纲
+              - img
+            - button "角色设定" [ref=e89]:
+              - img
+              - generic [ref=e90]: 角色设定
+              - img
+            - button "世界观" [ref=e92]:
+              - img
+              - generic [ref=e93]: 世界观
+              - img
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 神格觉醒
+            - img
+          - generic [ref=e37]: 第 3 章：地下联络站
+        - generic [ref=e38]:
+          - generic [ref=e39]: 未保存
+          - button "保存" [ref=e94]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [ref=e95]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [ref=e96]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e97]:
+        - generic [ref=e494]:
+          - generic [ref=e495]:
+            - button "返回创意中心" [ref=e496]:
+              - img
+              - text: 返回创意中心
+            - generic [ref=e497]:
+              - heading "新创意共创" [level=1] [ref=e498]
+              - paragraph [ref=e499]: 从模糊想法开始，逐步确认可以开书的故事种子
+          - generic [ref=e501]:
+            - complementary [ref=e502]:
+              - paragraph [ref=e503]: 当前任务
+              - generic [ref=e504]:
+                - generic [ref=e505]:
+                  - img [ref=e506]
+                  - text: 创意共创
+                - paragraph [ref=e508]: 新建 · 未保存
+              - paragraph [ref=e509]: 信息足够时会自动更新右侧创意卡；只有点保存才会写入创意中心。
+            - generic [ref=e510]:
+              - generic [ref=e511]:
+                - generic [ref=e512]:
+                  - img [ref=e514]
+                  - generic [ref=e517]:
+                    - heading "和创意编辑一起共创" [level=1] [ref=e518]
+                    - paragraph [ref=e519]: 从题材、人物或场景开始 · 专家对话
+                - generic [ref=e525]:
+                  - generic [ref=e526]:
+                    - paragraph [ref=e530]: 我想和你一起打磨一个可以正式开书的小说创意。请先问我最关键的问题，必要时给我少量备选方向。
+                    - generic [ref=e532]:
+                      - generic [ref=e533]:
+                        - button "Reasoning" [ref=e535]:
+                          - img [ref=e536]
+                          - generic [ref=e544]: Reasoning
+                          - img [ref=e545]
+                        - button "1 tool call" [ref=e548]:
+                          - generic [ref=e549]: 1 tool call
+                          - img [ref=e550]
+                      - text: ●
+                  - generic [ref=e553]:
+                    - button "Scroll to bottom" [ref=e554]:
+                      - img
+                      - generic [ref=e555]: Scroll to bottom
+                    - generic [ref=e557]:
+                      - textbox "Message input" [active] [ref=e558]:
+                        - /placeholder: Send a message...
+                      - generic [ref=e559]:
+                        - button "Add Attachment" [ref=e560]:
+                          - img
+                          - generic [ref=e561]: Add Attachment
+                        - button "Stop generating" [ref=e563]:
+                          - img
+              - complementary [ref=e564]:
+                - generic [ref=e565]:
+                  - generic [ref=e566]:
+                    - img [ref=e567]
+                    - generic [ref=e569]: 创意卡
+                  - paragraph [ref=e570]: AI 回复后会自动同步；此时不会写入创意中心。
+                - paragraph [ref=e573]: 开始和 AI 讨论后，这里会自动生成并持续更新创意卡。
+                - generic [ref=e574]:
+                  - button "保存创意卡" [disabled]:
+                    - img
+                    - text: 保存创意卡
+    - separator [ref=e58]
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - button "协作" [ref=e64]
+        - button "上下文" [ref=e65]
+        - button "生成" [ref=e66]
+      - generic [ref=e67]:
+        - generic [ref=e460]:
+          - generic [ref=e461]:
+            - img [ref=e462]
+            - generic [ref=e465]: 创作助手 · 在线
+          - button "创作总监 统筹项目方向、跨模块协作与下一步。" [ref=e466]:
+            - generic [ref=e467]:
+              - generic [ref=e468]: 创作总监
+              - generic [ref=e469]: 统筹项目方向、跨模块协作与下一步。
+            - img
+          - paragraph [ref=e470]: 正在参考：神格觉醒 · 项目全局资料
+        - generic [ref=e476]:
+          - generic [ref=e477]:
+            - heading "和创作总监一起创作" [level=1] [ref=e478]
+            - paragraph [ref=e479]: 正在参考：神格觉醒 · 项目全局资料
+          - generic [ref=e482]:
+            - textbox "Message input" [ref=e483]:
+              - /placeholder: Send a message...
+            - generic [ref=e484]:
+              - button "Add Attachment" [ref=e485]:
+                - img
+                - generic [ref=e486]: Add Attachment
+              - generic [ref=e487]:
+                - button "Send message" [disabled]:
+                  - img
+                  - generic: Send message
+        - generic [ref=e489]:
+          - button "补齐项目资料" [ref=e490]:
+            - img
+            - text: 补齐项目资料
+          - button "检查初始化缺口" [ref=e491]:
+            - img
+            - text: 检查初始化缺口
+          - button "规划下一步" [ref=e492]:
+            - img
+            - text: 规划下一步
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e73] [cursor=pointer]:
+    - img [ref=e74]
+  - alert [ref=e493]

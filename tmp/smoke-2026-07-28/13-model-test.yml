@@ -1,0 +1,180 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - heading "神格觉醒" [level=2] [ref=e798]
+            - button "编辑项目" [ref=e799]:
+              - img
+          - paragraph [ref=e800]: 科幻
+        - generic [ref=e11]:
+          - heading "本书" [level=3] [ref=e801]
+          - generic [ref=e802]:
+            - button "章节列表" [ref=e804]:
+              - img
+              - generic [ref=e805]: 章节列表
+              - img
+            - button "剧情大纲" [ref=e830]:
+              - img
+              - generic [ref=e831]: 剧情大纲
+              - img
+            - button "角色设定" [ref=e833]:
+              - img
+              - generic [ref=e834]: 角色设定
+              - img
+            - button "世界观" [ref=e836]:
+              - img
+              - generic [ref=e837]: 世界观
+              - img
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - button "创意中心" [ref=e19]:
+            - img
+            - text: 创意中心
+          - button "全部项目" [ref=e20]:
+            - img
+            - text: 全部项目
+          - button "系统设置" [ref=e21]:
+            - img
+            - text: 系统设置
+        - generic [ref=e23]:
+          - generic [ref=e24]: WF
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: WengFB
+            - paragraph [ref=e27]: 专业版计划
+    - separator [ref=e28]
+    - generic [ref=e32]:
+      - banner [ref=e33]:
+        - generic [ref=e34]:
+          - combobox [ref=e35]:
+            - generic [ref=e36]: 神格觉醒
+            - img
+          - generic [ref=e37]: 第 2 章：吞噬初醒
+        - generic [ref=e38]:
+          - generic [ref=e39]: 未保存
+          - button "保存" [ref=e838]:
+            - img
+            - text: 保存
+          - button "专注写作" [ref=e40]:
+            - img
+            - text: 专注写作
+          - button "AI生成章节" [ref=e839]:
+            - img
+            - text: AI生成章节
+          - button "AI 续写" [ref=e840]:
+            - img
+            - text: AI 续写
+          - button "更多" [ref=e41]:
+            - img
+      - main [ref=e1287]:
+        - generic [ref=e1288]:
+          - generic [ref=e1289]:
+            - generic [ref=e1290]:
+              - button "返回" [ref=e1291]:
+                - img
+                - text: 返回
+              - generic [ref=e1292]:
+                - heading "系统设置" [level=1] [ref=e1293]
+                - paragraph [ref=e1294]: AI 模型、Agent 参数与提示词、编辑器与项目默认值
+            - button "保存设置" [ref=e1295]
+          - generic [ref=e1298]:
+            - tablist [ref=e1299]:
+              - tab "AI 配置" [active] [selected] [ref=e1300]
+              - tab "Agent 配置" [ref=e1301]
+              - tab "编辑器" [ref=e1302]
+              - tab "项目默认值" [ref=e1303]
+            - tabpanel "AI 配置" [ref=e1401]:
+              - generic [ref=e1402]:
+                - alert [ref=e1403]:
+                  - img [ref=e1404]
+                  - generic [ref=e1406]: AI 配置保存在数据库，优先于环境变量。模型列表与测试会使用当前已保存的服务商、地址和密钥。
+                - generic [ref=e1407]:
+                  - generic [ref=e1408]: AI 服务商
+                  - combobox "AI 服务商" [ref=e1409]:
+                    - generic: OpenAI 兼容接口
+                    - img
+                  - combobox [ref=e1410]
+                  - paragraph [ref=e1411]: 保存服务商和地址后，再刷新模型列表。
+                - generic [ref=e1412]:
+                  - generic [ref=e1413]: API Key
+                  - textbox "API Key" [ref=e1414]:
+                    - /placeholder: 留空使用环境变量中的 Key
+                - generic [ref=e1415]:
+                  - generic [ref=e1416]: API 地址
+                  - textbox "API 地址" [ref=e1417]:
+                    - /placeholder: 留空使用默认地址或环境变量
+                    - text: http://aiapi.wengfb.com/v1
+                - generic [ref=e1418]:
+                  - generic [ref=e1419]:
+                    - generic [ref=e1420]: 默认模型
+                    - generic [ref=e1421]:
+                      - button "获取列表" [ref=e1422]:
+                        - img
+                        - text: 获取列表
+                      - button "测试" [ref=e1423]:
+                        - img
+                        - text: 测试
+                  - generic [ref=e1424]:
+                    - textbox "默认模型" [ref=e1425]:
+                      - /placeholder: 输入或选择模型 ID
+                      - text: gemini-3-flash
+                    - button "打开模型列表" [ref=e1426]:
+                      - img
+                  - paragraph [ref=e1427]: 打开下拉时会自动拉取一次列表（有缓存则复用）；也可直接输入模型 ID。
+                - generic [ref=e1428]:
+                  - generic [ref=e1429]: 全局默认温度：0.7
+                  - slider [ref=e1434]
+                  - paragraph [ref=e1435]: 未在 Agent 中单独配置时使用。
+                - generic [ref=e1436]:
+                  - generic [ref=e1437]: 全局最大输出 Token
+                  - spinbutton "全局最大输出 Token" [ref=e1438]: "100000"
+                - generic [ref=e1439]:
+                  - generic [ref=e1440]: 上下文窗口上限 (Token)
+                  - spinbutton "上下文窗口上限 (Token)" [ref=e1441]: "100000000"
+    - separator [ref=e942]
+    - generic [ref=e946]:
+      - generic [ref=e947]:
+        - button "协作" [ref=e948]
+        - button "上下文" [ref=e949]
+        - button "生成" [ref=e950]
+      - generic [ref=e951]:
+        - generic [ref=e952]:
+          - generic [ref=e953]:
+            - img [ref=e954]
+            - generic [ref=e957]: 创作助手 · 在线
+          - button "创作总监 统筹项目方向、跨模块协作与下一步。" [ref=e1108]:
+            - generic [ref=e959]:
+              - generic [ref=e960]: 创作总监
+              - generic [ref=e961]: 统筹项目方向、跨模块协作与下一步。
+            - img
+          - paragraph [ref=e962]: 正在参考：神格觉醒 · 项目全局资料
+        - generic [ref=e968]:
+          - generic [ref=e1345]:
+            - heading "和创作总监一起创作" [level=1] [ref=e1346]
+            - paragraph [ref=e1347]: 正在参考：神格觉醒 · 项目全局资料
+          - generic [ref=e974]:
+            - textbox "Message input" [ref=e975]:
+              - /placeholder: Send a message...
+            - generic [ref=e976]:
+              - button "Add Attachment" [ref=e977]:
+                - img
+                - generic [ref=e978]: Add Attachment
+              - generic [ref=e979]:
+                - button "Send message" [disabled]:
+                  - img
+                  - generic: Send message
+        - generic [ref=e981]:
+          - button "补齐项目资料" [ref=e1112]:
+            - img
+            - text: 补齐项目资料
+          - button "检查初始化缺口" [ref=e1113]:
+            - img
+            - text: 检查初始化缺口
+          - button "规划下一步" [ref=e1114]:
+            - img
+            - text: 规划下一步
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e63] [cursor=pointer]:
+    - img [ref=e64]
+  - alert [ref=e74]

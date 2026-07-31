@@ -12,8 +12,10 @@ import { Agent } from '@mastra/core/agent'
 import type { ToolsInput } from '@mastra/core/agent'
 import type { z } from 'zod'
 import { getLanguageModelAsync, getAIProviderAsync } from '@/lib/ai/providers'
+import { getAIDefaultGenerationConfig } from '@/lib/ai/config'
 import { requireAgentDefinition, resolveAgentId } from './registry'
 import { getPromptContent, resolveAgentPrompts } from './prompt-store'
+import { getAgentRuntimeConfig } from './runtime-config'
 import { interpolatePrompt } from './prompt-utils'
 import type {
   AgentObjectResult,
@@ -38,8 +40,9 @@ export async function createMastraAgent(options: CreateAgentOptions): Promise<{
   systemPrompt: string
 }> {
   const definition = requireAgentDefinition(options.agentId)
+  const runtimeConfig = await getAgentRuntimeConfig(definition.id)
   const legacy = resolveAgentId(options.agentId)
-  const { model } = await getLanguageModelAsync(options.modelOverride)
+  const { model } = await getLanguageModelAsync(options.modelOverride || runtimeConfig.model)
 
   const systemTemplate = await getPromptContent(
     definition,
@@ -60,7 +63,7 @@ export async function createMastraAgent(options: CreateAgentOptions): Promise<{
     tools: options.tools,
     defaultOptions: {
       modelSettings: {
-        temperature: options.temperature ?? definition.temperature ?? 0.7,
+        temperature: options.temperature ?? runtimeConfig.temperature ?? definition.temperature ?? 0.7,
       },
       maxSteps: definition.maxSteps ?? 5,
     },
@@ -73,11 +76,17 @@ export async function resolveAgentPromptsForRun(request: AgentRunRequest): Promi
   systemPrompt: string
   userPrompt: string
   temperature: number
+  maxTokens?: number
+  model?: string
   definition: ReturnType<typeof requireAgentDefinition>
   resolvedAgentId: string
 }> {
   const legacy = resolveAgentId(request.agentId)
   const definition = requireAgentDefinition(request.agentId)
+  const [runtimeConfig, globalConfig] = await Promise.all([
+    getAgentRuntimeConfig(definition.id),
+    getAIDefaultGenerationConfig(),
+  ])
   const slots = await resolveAgentPrompts(definition)
   const variables = request.variables ?? {}
   const systemKey = request.systemSlot || legacy.systemSlot || 'system'
@@ -117,7 +126,9 @@ export async function resolveAgentPromptsForRun(request: AgentRunRequest): Promi
   return {
     systemPrompt,
     userPrompt,
-    temperature: request.temperature ?? definition.temperature ?? 0.7,
+    temperature: request.temperature ?? runtimeConfig.temperature ?? globalConfig.temperature ?? definition.temperature ?? 0.7,
+    maxTokens: request.maxTokens ?? runtimeConfig.maxTokens ?? globalConfig.maxTokens,
+    model: request.model ?? runtimeConfig.model,
     definition,
     resolvedAgentId: legacy.agentId,
   }
@@ -125,16 +136,16 @@ export async function resolveAgentPromptsForRun(request: AgentRunRequest): Promi
 
 export async function runAgent(request: AgentRunRequest): Promise<AgentRunResult> {
   const resolved = await resolveAgentPromptsForRun(request)
-  const ai = await getAIProviderAsync(request.model)
+  const ai = await getAIProviderAsync(resolved.model)
   const startTime = Date.now()
 
   const result = await ai.generate({
     type: 'chapter',
-    model: request.model,
+    model: resolved.model,
     prompt: resolved.userPrompt,
     systemPrompt: resolved.systemPrompt || undefined,
     temperature: resolved.temperature,
-    maxTokens: request.maxTokens,
+    maxTokens: resolved.maxTokens,
   })
 
   const duration = Date.now() - startTime
@@ -333,16 +344,16 @@ export async function* streamAgent(
   request: AgentRunRequest
 ): AsyncGenerator<string, AgentRunResult, unknown> {
   const resolved = await resolveAgentPromptsForRun(request)
-  const ai = await getAIProviderAsync(request.model)
+  const ai = await getAIProviderAsync(resolved.model)
 
   let fullText = ''
   const generator = ai.streamGenerate({
     type: 'chapter',
-    model: request.model,
+    model: resolved.model,
     prompt: resolved.userPrompt,
     systemPrompt: resolved.systemPrompt || undefined,
     temperature: resolved.temperature,
-    maxTokens: request.maxTokens,
+    maxTokens: resolved.maxTokens,
   })
 
   for await (const chunk of generator) {

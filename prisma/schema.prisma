@@ -38,6 +38,8 @@ model Project {
   worldElements WorldElement[]
   generations   Generation[]
   foreshadowings Foreshadowing[]
+  agentConversations AgentConversation[]
+  changeSets     ChangeSet[]
 
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
@@ -410,6 +412,93 @@ model AgentPrompt {
 
   @@unique([agentId, slotKey])
   @@index([agentId])
+}
+
+// 创意中心 — 创意主表
+model AgentConversation {
+  id              String                     @id @default(cuid())
+  projectId       String
+  project         Project                    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  scopeType       String
+  scopeId         String?
+  agentId         String
+  systemSlot      String?
+  title           String
+  contextSnapshot String?
+  handoff         AgentHandoff?              @relation("HandoffTargetConversation")
+  messages        AgentConversationMessage[]
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+  archivedAt      DateTime?
+
+  @@index([projectId, scopeType, scopeId, agentId, updatedAt])
+}
+
+model AgentConversationMessage {
+  id              String            @id @default(cuid())
+  conversationId  String
+  conversation    AgentConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  clientMessageId String?
+  role            String
+  parts           String
+  status          String            @default("completed")
+  createdAt       DateTime          @default(now())
+
+  @@index([conversationId, createdAt])
+  @@unique([conversationId, clientMessageId])
+}
+
+model ChangeSet {
+  id                   String        @id @default(cuid())
+  projectId            String
+  project              Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sourceConversationId String?
+  sourceAgentId        String
+  title                String
+  requestSummary       String
+  confirmedFacts       String        @default("[]")
+  openQuestions        String        @default("[]")
+  status               String        @default("draft")
+  items                ChangeSetItem[]
+  handoffs             AgentHandoff[]
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  @@index([projectId, status, updatedAt])
+}
+
+model ChangeSetItem {
+  id             String    @id @default(cuid())
+  changeSetId    String
+  changeSet      ChangeSet @relation(fields: [changeSetId], references: [id], onDelete: Cascade)
+  resourceType   String
+  resourceId     String
+  resourceTitle  String
+  impactKind     String
+  evidence       String
+  confidence     String    @default("medium")
+  proposedAction String    @default("review")
+  status         String    @default("candidate")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([changeSetId, status])
+}
+
+model AgentHandoff {
+  id                   String             @id @default(cuid())
+  changeSetId          String
+  changeSet            ChangeSet          @relation(fields: [changeSetId], references: [id], onDelete: Cascade)
+  fromAgentId          String
+  toAgentId            String
+  targetConversationId String             @unique
+  targetConversation   AgentConversation  @relation("HandoffTargetConversation", fields: [targetConversationId], references: [id], onDelete: Cascade)
+  brief                String
+  status               String             @default("draft")
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  @@index([changeSetId, status])
 }
 
 // 创意中心 — 创意主表
